@@ -19,15 +19,43 @@ O Volter é uma plataforma de treinamento técnico focada em **diagnóstico de f
 
 O conteúdo incluído é **demonstrativo**: 4 casos didáticos, 5 lições, 1 história de exemplo e 2 notícias-modelo, todos identificados como tal.
 
-## Como rodar
+## Instalar no computador (Windows e Mac)
 
-Não há instalação nem dependências. Basta abrir o `index.html` no navegador.
+Os instaladores ficam na página **Releases** do repositório, gerados automaticamente pelo GitHub Actions, do mesmo jeito que no Finora e no Helyx.
 
-Se preferir um servidor local:
+- **Windows:** baixe `Instalar-Volter-Windows.exe`, dê dois cliques e siga o instalador. Se aparecer o aviso azul "O Windows protegeu o computador", clique em **Mais informações → Executar assim mesmo**.
+- **Mac com chip Apple (M1 a M4):** baixe `Volter-Mac-chip-Apple-M1-a-M4.zip`, abra e arraste o **Volter** para **Aplicativos**. Na primeira vez, botão direito → **Abrir** → **Abrir**.
+- **Mac Intel:** mesmo procedimento com `Volter-Mac-Intel.zip`.
+
+No programa instalado, o progresso fica num arquivo com cópia automática diária (últimos 30 dias). O menu **Arquivo** abre a pasta dos dados e a das cópias; o menu **Ferramentas → Ativar o editor de conteúdo** libera a edição.
+
+- Windows: `%APPDATA%\Volter\volter.json`
+- Mac: `~/Library/Application Support/Volter/volter.json`
+
+### Gerar uma nova versão dos instaladores
+
+1. Altere o número em `"version"` no `package.json` (ex.: `1.0.0` → `1.1.0`).
+2. Acrescente as novidades em `.github/notas-da-versao.md`.
+3. Envie para a branch `main`. O fluxo **Gerar instaladores** roda sozinho e cria a release `v1.1.0`. Também dá para rodá-lo pela aba **Actions → Gerar instaladores → Run workflow**.
+
+Se o número da versão não mudar, os arquivos da release existente são substituídos.
+
+## Rodar no navegador ou em modo de desenvolvimento
+
+Abra o `index.html` no navegador, ou use um servidor local:
 
 ```bash
 python3 -m http.server 8000
 # abra http://localhost:8000
+```
+
+Para abrir como programa (Electron) e gerar instaladores na sua máquina:
+
+```bash
+npm install
+npm start          # abre o programa
+npm run dist:win   # instalador Windows (rodar no Windows)
+npm run dist:mac   # app para Mac (rodar no Mac)
 ```
 
 ## Publicar no GitHub Pages
@@ -49,24 +77,29 @@ Nesta versão o conteúdo fica no arquivo `data/conteudo.js`. Para editar pelo p
 
 O progresso dos alunos (notas, lições concluídas, favoritos) fica no navegador de cada um (`localStorage`).
 
-## Duas versões do Volter
+## Três jeitos de usar o Volter
 
-| | Versão do GitHub (este repositório) | Versão no claude.ai |
-|---|---|---|
-| Conteúdo | Arquivo `data/conteudo.js` | Banco de dados compartilhado |
-| Edição | Local, publicada por commit | Direta, para administradores |
-| Progresso do aluno | No navegador | Na conta do aluno |
-| Volter Assist (IA) | Precisa de servidor próprio (fase 2) | Funciona |
-| Upload de imagens | Fase 2 | Funciona |
+| | Programa instalado | Navegador (GitHub Pages) | claude.ai |
+|---|---|---|---|
+| Conteúdo | `data/conteudo.js` | `data/conteudo.js` | Banco de dados compartilhado |
+| Edição | Local, exportada para o repositório | Local, exportada para o repositório | Direta, para administradores |
+| Progresso do aluno | Arquivo no computador, com cópias diárias | No navegador | Na conta do aluno |
+| Volter Assist (IA) | Fase 2 (servidor próprio) | Fase 2 (servidor próprio) | Funciona |
+| Upload de imagens | Fase 2 | Fase 2 | Funciona |
 
 O código é o mesmo: o app detecta onde está rodando e escolhe o modo.
 
 ## Estrutura
 
 ```
-index.html          aplicação completa (HTML, CSS e JavaScript)
-data/conteudo.js    conteúdo: casos, lições, histórias e notícias
-docs/               especificações do projeto
+index.html                          aplicação completa (HTML, CSS e JavaScript)
+data/conteudo.js                    conteúdo: casos, lições, histórias e notícias
+main.js, preload.js                 programa desktop (Electron): janela, dados em arquivo, cópias diárias
+package.json                        versão e configuração dos instaladores (electron-builder)
+build/                              ícones (volter.ico, volter.icns, icon.png)
+.github/workflows/instaladores.yml  gera os instaladores e publica em Releases
+.github/notas-da-versao.md          texto da página de cada versão
+docs/                               especificações do projeto
 ```
 
 ### Formato de um caso

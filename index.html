@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'none'">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%221%22 y=%221%22 width=%2230%22 height=%2230%22 rx=%225%22 fill=%22%233cc5dc%22/%3E%3Cpath d=%22M8 8 L16 25 L24 8%22 fill=%22none%22 stroke=%22%230b1622%22 stroke-width=%223.4%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E">
 <title>Volter</title>
 <meta name="description" content="Volter — plataforma de treinamento técnico com Bancada Virtual de diagnóstico de falhas.">
@@ -186,7 +187,8 @@ label.chk input{margin-top:4px;accent-color:var(--accent)}
 /* ===== cartões de caso (etiqueta de manutenção) ===== */
 .tag{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;text-align:left;cursor:pointer;color:inherit;padding:0;overflow:hidden;min-width:0;transition:border-color .15s,transform .15s}
 .tag:hover{border-color:var(--accent);transform:translateY(-1px)}
-.tag-top{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:var(--surface-2);border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.tag > *{align-self:stretch;width:100%}
+.tag-top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 14px;background:var(--surface-2);border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
 .tag-body{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}
 .tag-body h3{font-size:1.28rem}
 .tag-eq{font-family:var(--f-mono);font-size:.76rem;color:var(--muted)}
@@ -206,12 +208,12 @@ label.chk input{margin-top:4px;accent-color:var(--accent)}
 .step .dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:2px solid var(--line);font-family:var(--f-mono);font-size:.8rem;font-weight:500;color:var(--muted)}
 .step.done .dot{border-color:var(--accent);color:var(--accent)}
 .step.cur .dot{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:0 0 0 4px var(--accent-soft)}
-.step span{font-family:var(--f-display);font-size:.98rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.step.cur span{color:var(--ink)}
-@media (max-width:700px){.step span{display:none}.step.cur span{display:block;position:absolute;top:42px;white-space:nowrap;overflow:visible}.stepper{padding-bottom:22px}.step .dot{width:30px;height:30px}.stepper::before,.stepper .prog{top:14px}}
+.step .lb{font-family:var(--f-display);font-size:.98rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.step.cur .lb{color:var(--ink)}
+@media (max-width:700px){.step .lb{display:none}.step.cur .lb{display:block;position:absolute;top:38px;white-space:nowrap;overflow:visible}.stepper{padding-bottom:22px}.step .dot{width:30px;height:30px}.stepper::before,.stepper .prog{top:14px}}
 .bench{display:grid;grid-template-columns:360px minmax(0,1fr);gap:22px;align-items:start}
 .bench > aside{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto}
-@media (max-width:1100px){.bench{grid-template-columns:1fr}.bench > aside{position:static;max-height:none}}
+@media (max-width:1100px){.bench{grid-template-columns:1fr}.bench > aside{position:static;max-height:none;order:2}.bench.s1 > aside{order:0}}
 .ficha dl{display:flex;flex-direction:column;gap:12px;margin:0}
 .ficha dt{font-family:var(--f-mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
 .ficha dd{margin:3px 0 0;font-size:.92rem}
@@ -364,8 +366,14 @@ const slug = s => String(s || "item").toLowerCase().normalize("NFD").replace(/[�
 const fmtDate = iso => { if (!iso) return ""; const d = new Date(iso.length === 10 ? iso + "T12:00:00" : iso); return isNaN(d) ? "" : d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" }); };
 const getPath = (o, p) => p.split(".").reduce((a, k) => a == null ? a : a[k], o);
 const setPath = (o, p, v) => { const ks = p.split("."); let a = o; ks.slice(0, -1).forEach((k, i) => { if (a[k] == null) a[k] = /^\d+$/.test(ks[i + 1]) ? [] : {}; a = a[k]; }); a[ks[ks.length - 1]] = v; };
-const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
-const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+/* armazenamento: no programa instalado (Electron) os dados vão para um arquivo com cópias diárias; no navegador, localStorage */
+const DESK = window.volterDesktop || null;
+let DSTORE = null, dTimer = null;
+const dFlush = () => { clearTimeout(dTimer); dTimer = null; if (DESK && DSTORE) DESK.saveSync(JSON.stringify(DSTORE)); };
+const lsGet = (k, d) => { if (DSTORE) return k in DSTORE ? clone(DSTORE[k]) : d; try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
+const lsSet = (k, v) => { if (DSTORE) { DSTORE[k] = clone(v); clearTimeout(dTimer); dTimer = setTimeout(dFlush, 400); return; } try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const lsDel = k => { if (DSTORE) { delete DSTORE[k]; dFlush(); return; } try { localStorage.removeItem(k); } catch (e) {} };
+window.addEventListener("beforeunload", () => { if (dTimer) dFlush(); });
 function md(t) {
   return String(t || "").split(/\n\s*\n/).map(b => {
     const lines = b.split("\n");
@@ -434,6 +442,7 @@ function localWrite(t, id, doc) { const ov = lsGet("volter.content", {}); ov[t] 
 function exportContent() {
   const out = {}; ["cases", "lessons", "stories", "news"].forEach(t => { out[t] = {}; S.content[t].forEach(x => { const d = clone(x); delete d.id; out[t][x.id] = d; }); });
   const js = "// Conteúdo do Volter — gerado pelo painel de administração em " + new Date().toLocaleString("pt-BR") + "\nwindow.VOLTER_SEED = " + JSON.stringify(out, null, 1) + ";\n";
+  if (DESK && DESK.saveFile) { DESK.saveFile("conteudo.js", js).then(r => toast(r && r.saved ? "conteudo.js salvo" : "Exportação cancelada")); return; }
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([js], { type: "text/javascript" })); a.download = "conteudo.js"; document.body.appendChild(a); a.click(); a.remove();
   toast("Arquivo conteudo.js gerado");
 }
@@ -468,7 +477,7 @@ function renderChrome() {
   const navHTML = navItems().map(([g, items]) => (g ? '<div class="grp">' + g + "</div>" : "") + items.map(([r, l]) => '<button data-act="go" data-r="' + r + '"' + (grp === r ? ' aria-current="page"' : "") + ">" + (IC[r] || "") + "<span>" + l + "</span>" + (counts[r] ? '<span class="count">' + counts[r] + "</span>" : "") + "</button>").join("")).join("");
   $("#snav").innerHTML = navHTML;
   const xp = calcXP(), lv = levelFor(xp), pct = lv.next ? Math.round((xp - lv.min) / (lv.next[0] - lv.min) * 100) : 100;
-  const modeTxt = S.mode === "local" ? "Modo local" : S.mode === "claude" ? (S.admin ? "Administrador" : S.uid ? "Aluno" : "Visitante") : "Carregando";
+  const modeTxt = S.mode === "local" ? (DESK ? "Programa instalado" : "Modo local") : S.mode === "claude" ? (S.admin ? "Administrador" : S.uid ? "Aluno" : "Visitante") : "Carregando";
   $("#sfoot").innerHTML = '<div class="lvcard"><div class="row1"><b>' + lv.name + '</b><span class="xp">' + xp + " XP</span></div><div class=\"xpbar\"><i style=\"width:" + pct + '%"></i></div><span class="xp">' + (lv.next ? (lv.next[0] - xp) + " XP para " + lv.next[1] : "Nível máximo") + '</span></div><div class="meta"><span>' + modeTxt + '</span><button data-act="go" data-r="roteiro">Próximas etapas</button></div>';
   $("#toplv").textContent = lv.name + " · " + xp + " XP";
   const tabG = TABS.some(t => t[0] === grp) ? grp : "mais";
@@ -564,7 +573,7 @@ function caseCard(c) {
   const at = S.prog.attempts[c.id], run = S.prog.runs[c.id];
   const best = at && at.length ? Math.max(...at.map(a => a.score)) : null;
   const st = run ? '<span class="chip acc">Em andamento · etapa ' + run.stage + "</span>" : best != null ? '<span class="chip ok">Resolvido · ' + best + "/100</span>" : '<span class="chip">Aberto</span>';
-  return '<button class="tag" data-act="go" data-r="caso" data-id="' + esc(c.id) + '"><div class="tag-top"><span>' + caseNo(c) + " · " + esc(c.area) + "</span>" + lvl(c.level) + '</div><div class="tag-body"><h3>' + esc(c.title) + '</h3><span class="tag-eq">' + esc(c.equipment) + '</span><p class="tag-sym">' + esc(arr(c.symptoms)[0] || c.summary) + '</p></div><div class="tag-foot">' + st + (c.demo ? '<span class="chip demo">Demo</span>' : "") + (c.source === "campo" ? '<span class="chip acc">Relato de campo</span>' : "") + "</div></button>";
+  return '<button class="tag" data-act="go" data-r="caso" data-id="' + esc(c.id) + '"><div class="tag-top"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + caseNo(c) + " · " + esc(c.area) + "</span>" + lvl(c.level) + '</div><div class="tag-body"><h3>' + esc(c.title) + '</h3><span class="tag-eq">' + esc(c.equipment) + '</span><p class="tag-sym">' + esc(arr(c.symptoms)[0] || c.summary) + '</p></div><div class="tag-foot">' + st + (c.demo ? '<span class="chip demo">Demo</span>' : "") + (c.source === "campo" ? '<span class="chip acc">Relato de campo</span>' : "") + "</div></button>";
 }
 
 function fichaInner(c, full) {
@@ -584,13 +593,13 @@ VIEWS.caso = id => {
   const at = S.prog.attempts[id] || [];
   return head(caseNo(c) + " · " + esc(c.area) + " · Nível " + c.level, esc(c.title), esc(c.summary), favBtn("cases:" + id), ["bancada", "Bancada"]) +
     '<div class="bench"><aside>' + fichaHTML(c, false) + '</aside><div class="stack" style="gap:18px">' + (c.diagram === "partida-direta" ? '<div class="panel"><h3>Diagrama de comando</h3>' + diagramPartida() + "</div>" : "") +
-    '<div class="panel stack"><h3>Como funciona o diagnóstico</h3><div class="stepper" aria-hidden="true">' + STAGES.map((s, i) => '<span class="step"><span class="dot">' + (i + 1) + "</span><span>" + s + "</span></span>").join("") + '</div><p class="small muted">A nota soma raciocínio (hipóteses), investigação (testes úteis), diagnóstico, solução e segurança. Testes inseguros tiram 10 pontos e cada dica tira 5.</p><div class="row"><button class="btn primary" data-act="start" data-id="' + esc(id) + '">' + (at.length ? "Refazer diagnóstico" : "Iniciar diagnóstico") + "</button>" + (at.length ? '<button class="btn" data-act="go" data-r="correcao" data-id="' + esc(id) + '">Ver correção da última tentativa</button>' : "") + "</div></div>" +
+    '<div class="panel stack"><h3>Como funciona o diagnóstico</h3><div class="stepper" aria-hidden="true">' + STAGES.map((s, i) => '<span class="step"><span class="dot">' + (i + 1) + '</span><span class="lb">' + s + "</span></span>").join("") + '</div><p class="small muted">A nota soma raciocínio (hipóteses), investigação (testes úteis), diagnóstico, solução e segurança. Testes inseguros tiram 10 pontos e cada dica tira 5.</p><div class="row"><button class="btn primary" data-act="start" data-id="' + esc(id) + '">' + (at.length ? "Refazer diagnóstico" : "Iniciar diagnóstico") + "</button>" + (at.length ? '<button class="btn" data-act="go" data-r="correcao" data-id="' + esc(id) + '">Ver correção da última tentativa</button>' : "") + "</div></div>" +
     (at.length ? '<div class="panel"><h3>Suas tentativas</h3><div class="list">' + at.slice().reverse().map(a => '<div><span class="small">' + fmtDate(a.at) + (a.unsafe ? ' · <span style="color:var(--bad)">procedimento inseguro</span>' : "") + '</span><span class="mono">' + a.score + "/100</span></div>").join("") + "</div></div>" : "") + "</div></div>";
 };
 
 function stepper(run) {
   const pct = (Math.min(run.max, 7) - 1) / 6 * (100 - 100 / 7);
-  return '<div class="stepper"><span class="prog" style="width:' + pct + '%"></span>' + STAGES.map((s, i) => { const n = i + 1; const can = n <= run.max && n < 7 && !(run.locked && n < 5); return "<button " + (can ? 'data-act="stage" data-n="' + n + '"' : "disabled") + ' class="step ' + (n === run.stage ? "cur" : n <= run.max ? "done" : "") + '" aria-label="Etapa ' + n + ": " + s + '"><span class="dot">' + (n < run.stage || (n <= run.max && n !== run.stage) ? "✓" : n) + "</span><span>" + s + "</span></button>"; }).join("") + "</div>";
+  return '<div class="stepper"><span class="prog" style="width:' + pct + '%"></span>' + STAGES.map((s, i) => { const n = i + 1; const can = n <= run.max && n < 7 && !(run.locked && n < 5); return "<button " + (can ? 'data-act="stage" data-n="' + n + '"' : "disabled") + ' class="step ' + (n === run.stage ? "cur" : n <= run.max ? "done" : "") + '" aria-label="Etapa ' + n + ": " + s + '"><span class="dot">' + (n < run.stage || (n <= run.max && n !== run.stage) ? "✓" : n) + "</span><span class=\"lb\">" + s + "</span></button>"; }).join("") + "</div>";
 }
 function runView(c, run) {
   const st = run.stage;
@@ -623,11 +632,11 @@ function runView(c, run) {
   const asideFicha = st === 1 ? fichaHTML(c, true) : '<details class="panel ficha fold" open><summary>Ficha do caso</summary>' + fichaInner(c, false) + "</details>";
   return head(caseNo(c) + " · " + esc(c.equipment), esc(c.title), "", (c.demo ? '<span class="chip demo">Demo</span>' : "") + favBtn("cases:" + c.id) + '<button class="btn sm ghost" data-act="abandon" data-id="' + esc(c.id) + '">Recomeçar</button>', ["bancada", "Bancada"]) +
     '<div class="panel" style="padding:18px 14px">' + stepper(run) + "</div>" +
-    '<div class="bench"><aside>' + asideFicha + '</aside><div class="stack" style="gap:16px">' + main + (st >= 2 ? '<div class="tools">' + hintPanel + assistPanel(c) + "</div>" : '<div class="tools">' + assistPanel(c) + "</div>") + "</div></div>";
+    '<div class="bench' + (st === 1 ? " s1" : "") + '"><aside>' + asideFicha + '</aside><div class="stack" style="gap:16px">' + main + (st >= 2 ? '<div class="tools">' + hintPanel + assistPanel(c) + "</div>" : '<div class="tools">' + assistPanel(c) + "</div>") + "</div></div>";
 }
 
 function assistPanel(c) {
-  if (!S.sample) return '<div class="panel stack"><div class="ph" style="margin:0"><h3>Volter Assist</h3><span class="chip">IA</span></div><p class="small muted">' + (S.mode === "local" ? "Na versão publicada no GitHub, o assistente precisa de um servidor próprio para chamar a API de IA sem expor chaves. Ele está previsto para a fase 2." : "O assistente de IA aparece quando o Volter é aberto pelo claude.ai com uma conta conectada.") + "</p></div>";
+  if (!S.sample) return '<div class="panel stack"><div class="ph" style="margin:0"><h3>Volter Assist</h3><span class="chip">IA</span></div><p class="small muted">' + (S.mode === "local" ? "Fora do claude.ai, o assistente precisa de um servidor próprio para chamar a API de IA sem expor chaves. Ele está previsto para a fase 2." : "O assistente de IA aparece quando o Volter é aberto pelo claude.ai com uma conta conectada.") + "</p></div>";
   const a = S.assist[c.id] || { msgs: [], busy: false };
   return '<div class="panel assist"><div class="ph" style="margin:0"><h3>Volter Assist</h3><span class="chip acc">IA</span></div><p class="small muted">Ajuda a organizar o raciocínio. Não entrega a causa nem inventa valores.</p><div class="msgs" id="msgs">' +
     (a.msgs.length ? a.msgs.map(m => '<div class="msg ' + (m.role === "user" ? "u" : "a") + '">' + esc(m.content) + "</div>").join("") : '<div class="small muted">Exemplos: "Que informação ainda falta?", "Por que medir tensão sobre um contato?", "Minhas hipóteses fazem sentido?"</div>') +
@@ -787,7 +796,7 @@ VIEWS.progresso = () => {
   const recCase = pub("cases").find(c => !S.prog.attempts[c.id]); const recLesson = ls.find(l => !(S.prog.lessons[l.id] && S.prog.lessons[l.id].done));
   const weak = ["hyp", "inv", "diag", "sol"].map(k => [k, comp(k)]).sort((a, b) => a[1] - b[1])[0];
   const weakTip = { hyp: "Treine a formulação de hipóteses: releia a lição “O método do diagnóstico”.", inv: "Escolha testes que separam hipóteses. Reveja “Tensão, corrente e continuidade”.", diag: "Antes de confirmar a causa, use o comparador de hipóteses na etapa 4.", sol: "Na etapa 6, prefira ações que resolvem a causa, não o sintoma." }[weak[0]];
-  const where = S.mode === "local" ? "Seu progresso fica salvo neste navegador." : S.progWhere === "conta" ? "Seu progresso está salvo na sua conta e acompanha você em outros dispositivos." : S.uid && S.progWhere !== "local-only" ? "Sincronizando com a sua conta…" : "Seu progresso está salvo apenas neste navegador.";
+  const where = S.mode === "local" ? (DESK ? "Seu progresso fica salvo neste computador, com uma cópia automática por dia." : "Seu progresso fica salvo neste navegador.") : S.progWhere === "conta" ? "Seu progresso está salvo na sua conta e acompanha você em outros dispositivos." : S.uid && S.progWhere !== "local-only" ? "Sincronizando com a sua conta…" : "Seu progresso está salvo apenas neste navegador.";
   return head("Área do aluno", "Meu Progresso", where) +
     '<section class="stats"><div class="stat"><span class="eyebrow">Nível</span><b>' + lv.name + '</b><span class="small muted">' + (lv.next ? (lv.next[0] - xp) + " XP para " + lv.next[1] : "Nível máximo") + '</span><div class="meter"><i style="width:' + (lv.next ? Math.round((xp - lv.min) / (lv.next[0] - lv.min) * 100) : 100) + '%"></i></div></div><div class="stat"><span class="eyebrow">Experiência</span><b>' + xp + '</b><span class="small muted">XP</span></div><div class="stat"><span class="eyebrow">Tentativas</span><b>' + atts.length + '</b></div><div class="stat"><span class="eyebrow">Lições</span><b>' + Object.values(S.prog.lessons).filter(l => l.done).length + "</b></div></section>" +
     '<div class="split"><div class="stack" style="gap:18px"><div class="panel"><h3>Competências</h3>' + (atts.length ? '<div class="bars">' + [["Raciocínio", "hyp"], ["Investigação", "inv"], ["Diagnóstico", "diag"], ["Solução", "sol"], ["Segurança", "seg"]].map(([l, k]) => { const v = comp(k); return '<div class="bar"><span>' + l + '</span><span class="tr"><i style="width:' + v + '%"></i></span><span class="v">' + v + "%</span></div>"; }).join("") + "</div>" : '<p class="muted small">Conclua um caso na Bancada para ver suas competências.</p>') + "</div>" +
@@ -812,7 +821,7 @@ VIEWS.roteiro = () => {
     ["Fase 2 · Aprimoramento", "Planejada", "acc", ["Servidor próprio (banco de dados e IA) para a versão do GitHub", "Biblioteca Técnica com documentos e normas por edição", "Mais tipos de desafio: associação, ordenação, interpretação de diagrama", "Estatísticas de aprendizagem para o administrador", "Área Programação & IA: lógica, Python, web, IA na prática e agentes"]],
     ["Fase 3 · Expansão", "Planejada", "", ["Modo empresa: turmas, atribuição de desafios e relatórios", "Simulador de instrumentos (multímetro e alicate)", "Importação de notícias por RSS ou API autorizada", "Aplicativo instalável e modo offline", "Certificados com critérios de avaliação definidos"]]];
   const L = S.mode === "local";
-  const I = [["Conteúdo", L ? "Arquivo data/conteudo.js" : S.db ? "Banco de dados do app" : "Indisponível", true], ["Progresso do aluno", L ? "Neste navegador" : S.uid ? "Na conta do aluno" : "Neste navegador", true], ["Edição de conteúdo", L ? "Local, com exportação" : S.admin ? "Compartilhada" : "Somente administradores", true], ["Volter Assist (IA)", S.sample ? "Funcionando" : L ? "Precisa de servidor (fase 2)" : "Indisponível nesta visualização", !!S.sample], ["Envio de imagens", S.assets ? "Funcionando" : "Indisponível neste modo", !!S.assets], ["Notícias automáticas", "Não implementado", false]];
+  const I = [["Conteúdo", L ? "Arquivo data/conteudo.js" : S.db ? "Banco de dados do app" : "Indisponível", true], ["Progresso do aluno", L ? (DESK ? "Neste computador" : "Neste navegador") : S.uid ? "Na conta do aluno" : "Neste navegador", true], ["Edição de conteúdo", L ? "Local, com exportação" : S.admin ? "Compartilhada" : "Somente administradores", true], ["Volter Assist (IA)", S.sample ? "Funcionando" : L ? "Precisa de servidor (fase 2)" : "Indisponível nesta visualização", !!S.sample], ["Envio de imagens", S.assets ? "Funcionando" : "Indisponível neste modo", !!S.assets], ["Notícias automáticas", "Não implementado", false]];
   return head("Transparência", "Próximas etapas", "O que já funciona no Volter, o que depende de configuração e o que está planejado.") +
     '<div class="split"><div class="panel">' + P.map(([t, s, cl, items]) => '<div class="phase"><div><b>' + t + '</b><br><span class="chip ' + cl + '">' + s + '</span></div><ul style="margin:0;padding-left:18px">' + items.map(i => "<li>" + i + "</li>").join("") + "</ul></div>").join("") + '</div><div class="panel"><h3>Integrações ' + (L ? "· modo local" : "· claude.ai") + '</h3><div class="list">' + I.map(([n, s, ok]) => "<div><span>" + n + '</span><span class="chip ' + (ok ? "ok" : "") + '">' + s + "</span></div>").join("") + "</div></div></div>";
 };
@@ -916,7 +925,7 @@ VIEWS.admin = () => {
   const items = all(t).filter(x => !f || x.status === f).sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
   const cnt = s => all(t).filter(x => x.status === s).length;
   return dbNotice() + head(L ? "Editor de conteúdo · modo local" : "Administração", "Conteúdo do Volter", "Cadastre e publique casos, histórias, notícias e lições por formulário. Rascunhos e itens em revisão não aparecem para os alunos.", '<button class="btn primary" data-act="new" data-t="' + t + '">' + { cases: "Novo caso", stories: "Nova história", news: "Nova notícia", lessons: "Nova lição" }[t] + "</button>") +
-    (L ? '<div class="notice info"><b>Modo local:</b> as alterações ficam salvas neste navegador. Para publicá-las no site, gere o arquivo <span class="mono">conteudo.js</span> e substitua o arquivo <span class="mono">data/conteudo.js</span> do repositório.<div class="row" style="margin-top:10px"><button class="btn sm primary" data-act="export">Gerar conteudo.js</button><button class="btn sm" data-act="resetlocal">Descartar alterações locais</button></div></div>' : "") +
+    (L ? '<div class="notice info"><b>Modo local:</b> as alterações ficam salvas ' + (DESK ? "neste computador" : "neste navegador") + '. Para publicá-las no site, gere o arquivo <span class="mono">conteudo.js</span> e substitua o arquivo <span class="mono">data/conteudo.js</span> do repositório.<div class="row" style="margin-top:10px"><button class="btn sm primary" data-act="export">Gerar conteudo.js</button><button class="btn sm" data-act="resetlocal">Descartar alterações locais</button></div></div>' : "") +
     '<div class="tabs" role="tablist">' + Object.entries(TYPES).map(([k, v]) => '<button role="tab" aria-selected="' + (k === t) + '" data-act="ui" data-k="stab" data-v="' + k + '">' + v.label + " (" + all(k).length + ")</button>").join("") + "</div>" +
     '<div class="filters"><div class="seg"><button data-act="ui" data-k="sfilter" data-v="" aria-pressed="' + (!f) + '">Todos</button>' + Object.entries(STATUS).map(([k, v]) => '<button data-act="ui" data-k="sfilter" data-v="' + k + '" aria-pressed="' + (f === k) + '">' + v + " (" + cnt(k) + ")</button>").join("") + "</div></div>" +
     '<div class="panel tbl-wrap">' + (items.length ? "<table><thead><tr><th>Título</th><th>Status</th><th>Atualizado</th><th></th></tr></thead><tbody>" + items.map(x => "<tr><td><b>" + esc(x.title || "(sem título)") + "</b>" + (x.demo ? ' <span class="chip demo">Demo</span>' : "") + '</td><td><span class="chip st-' + x.status + '">' + (STATUS[x.status] || x.status) + '</span></td><td class="num small">' + fmtDate(x.updatedAt) + '</td><td><div class="row" style="justify-content:flex-end;flex-wrap:nowrap;gap:6px"><button class="btn sm" data-act="edit" data-t="' + t + '" data-id="' + esc(x.id) + '">Editar</button>' + (x.status === "published" ? '<button class="btn sm ghost" data-act="go" data-r="' + ROUTE_OF[t] + '" data-id="' + esc(t === "news" ? "" : x.id) + '">Ver</button>' : "") + (t === "stories" ? '<button class="btn sm ghost" data-act="tocase" data-id="' + esc(x.id) + '">Criar desafio</button>' : "") + "</div></td></tr>").join("") + "</tbody></table>" : emptyBox("Nenhum item " + (f ? "com status " + STATUS[f].toLowerCase() : "cadastrado") + ".")) + "</div>" +
@@ -1008,7 +1017,7 @@ async function saveEditor(status) {
     if (E.t === "cases" && doc.storyId) { const st = find("stories", doc.storyId); if (st && st.caseId !== id) { if (S.mode === "local") { const s2 = clone(st); delete s2.id; s2.caseId = id; localWrite("stories", st.id, s2); st.caseId = id; } else await S.db.doc("stories/" + doc.storyId).update({ caseId: id }).catch(() => {}); } }
     E.id = id; E.saving = false; E.errors = [];
     const ix = S.content[E.t].findIndex(x => x.id === id); const row = Object.assign({ id }, doc); if (ix >= 0) S.content[E.t][ix] = row; else S.content[E.t].push(row);
-    toast({ draft: "Rascunho salvo", review: "Enviado para revisão", published: "Publicado", archived: "Arquivado" }[status] + (S.mode === "local" ? " neste navegador" : "")); render(true);
+    toast({ draft: "Rascunho salvo", review: "Enviado para revisão", published: "Publicado", archived: "Arquivado" }[status] + (S.mode === "local" ? (DESK ? " neste computador" : " neste navegador") : "")); render(true);
   } catch (e) { E.saving = false; E.errors = [e && e.code === "invalid_argument" ? "Sua conta não tem permissão para alterar o conteúdo." : e && e.code === "quota_exceeded" ? "Limite de armazenamento atingido: " + e.message : "Não foi possível salvar agora. Tente de novo."]; render(true); }
 }
 
@@ -1049,7 +1058,7 @@ const ACT = {
   repmove: el => { const p = el.dataset.path, i = Number(el.dataset.i), j = i + Number(el.dataset.d); const a = arr(getPath(S.editor.draft, p)); [a[i], a[j]] = [a[j], a[i]]; render(true); },
   rmimg: el => { setPath(S.editor.draft, el.dataset.path, ""); render(true); },
   export: () => exportContent(),
-  resetlocal: el => { if (el.dataset.confirm !== "1") { el.dataset.confirm = "1"; el.textContent = "Clique de novo para confirmar"; el.classList.add("danger"); return; } try { localStorage.removeItem("volter.content"); } catch (e) {} localLoad(); toast("Alterações locais descartadas"); render(true); },
+  resetlocal: el => { if (el.dataset.confirm !== "1") { el.dataset.confirm = "1"; el.textContent = "Clique de novo para confirmar"; el.classList.add("danger"); return; } lsDel("volter.content"); localLoad(); toast("Alterações locais descartadas"); render(true); },
   tocase: el => { const s = find("stories", el.dataset.id); if (!s) return; startEditor("cases"); const d = S.editor.draft; const lines = t => String(t || "").split(/\n|\.\s+/).map(x => x.trim()).filter(Boolean);
     Object.assign(d, { title: "Desafio: " + s.title, area: AREAS.includes(s.category) ? s.category : AREAS[0], source: s.kind === "campo" ? "campo" : "didatico", demo: s.kind !== "campo", summary: s.summary, context: s.context, symptoms: lines(s.symptoms), hypotheses: lines(s.firstHypotheses).map(t => ({ id: "h" + uid8(), text: t, correct: false })).concat([{ id: "h" + uid8(), text: s.rootCause, correct: true }]), causes: [{ id: "c" + uid8(), text: s.rootCause, correct: true }], actions: [{ id: "a" + uid8(), text: s.solution, correct: true, unsafe: false, feedback: "" }], storyId: s.id, solution: { explanation: [s.rootCause, s.solution].filter(Boolean).join(" "), logic: lines(s.tests), mistakes: lines(s.difficulties), lessons: lines(s.lessons) } });
     toast("Rascunho criado a partir da história. Complete os testes e as alternativas."); render(true); },
@@ -1098,8 +1107,10 @@ async function uploadImg(el) {
 }
 
 /* ================= INICIALIZAÇÃO ================= */
-function startLocal() {
-  S.mode = "local"; localLoad();
+async function startLocal() {
+  S.mode = "local";
+  if (DESK) { try { const raw = await DESK.load(); DSTORE = raw ? JSON.parse(raw) : {}; } catch (e) { DSTORE = {}; } S.prog = Object.assign(defProg(), lsGet("volter.prog", {})); }
+  localLoad();
   S.dbState = Object.values(S.content).some(a => a.length) ? "ok" : "none";
   if (/(^|[#&])admin\b/.test(location.hash.slice(1))) lsSet("volter.admin", true);
   S.admin = !!lsGet("volter.admin", false);
