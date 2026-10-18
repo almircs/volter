@@ -1,0 +1,1137 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%221%22 y=%221%22 width=%2230%22 height=%2230%22 rx=%225%22 fill=%22%233cc5dc%22/%3E%3Cpath d=%22M8 8 L16 25 L24 8%22 fill=%22none%22 stroke=%22%230b1622%22 stroke-width=%223.4%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E">
+<title>Volter</title>
+<meta name="description" content="Volter — plataforma de treinamento técnico com Bancada Virtual de diagnóstico de falhas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: barra lateral azul-marinho fixa (desktop) ou barra inferior (celular); área de trabalho com até 1180px.
+   Bancada: stepper de 7 etapas no topo, ficha do caso fixa à esquerda, etapa ativa à direita. */
+:root{
+  --bg:#edf1f5; --surface:#ffffff; --surface-2:#e3e9ef; --ink:#0f1b2b; --muted:#536176; --line:#cdd5df;
+  --side:#11233a; --side-2:#18304d; --side-ink:#e6edf5; --side-muted:#8ea3bc;
+  --accent:#08869e; --accent-ink:#ffffff; --accent-soft:#d5eef3;
+  --warn:#c45808; --warn-soft:#fbe6d4; --ok:#1d7f46; --ok-soft:#d8efe1; --bad:#b8352a; --bad-soft:#f7dcd9;
+  --lcd:#0b1c21; --lcd-ink:#7ff0ff; --signal:#3cc5dc;
+  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:6px; --side-w:252px; --tab-h:62px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0a121b; --surface:#111c28; --surface-2:#192635; --ink:#e5ecf3; --muted:#93a2b5; --line:#243447;
+  --side:#0b1622; --side-2:#13243a; --side-ink:#e6edf5; --side-muted:#8399b2;
+  --accent:#3cc5dc; --accent-ink:#04202a; --accent-soft:#123a45;
+  --warn:#f08b3e; --warn-soft:#3a2414; --ok:#45c07c; --ok-soft:#11301f; --bad:#ee6d60; --bad-soft:#3b1916;
+  --lcd:#050f12; --lcd-ink:#7ff0ff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0a121b; --surface:#111c28; --surface-2:#192635; --ink:#e5ecf3; --muted:#93a2b5; --line:#243447;
+  --side:#0b1622; --side-2:#13243a; --side-ink:#e6edf5; --side-muted:#8399b2;
+  --accent:#3cc5dc; --accent-ink:#04202a; --accent-soft:#123a45;
+  --warn:#f08b3e; --warn-soft:#3a2414; --ok:#45c07c; --ok-soft:#11301f; --bad:#ee6d60; --bad-soft:#3b1916;
+  --lcd:#050f12; --lcd-ink:#7ff0ff; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;margin:0}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:600;line-height:1.08;margin:0;text-wrap:balance;letter-spacing:.005em}
+h1{font-size:2.25rem} h2{font-size:1.65rem} h3{font-size:1.22rem} h4{font-size:1.05rem}
+p{margin:0}
+a{color:var(--accent)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--f-mono)}
+.muted{color:var(--muted)}
+.small{font-size:.86rem}
+.eyebrow{font-family:var(--f-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:500}
+
+/* ===== casca do app ===== */
+.side{position:fixed;inset:0 auto 0 0;width:var(--side-w);background:var(--side);color:var(--side-ink);display:flex;flex-direction:column;z-index:15;padding-top:env(safe-area-inset-top,0px);padding-left:env(safe-area-inset-left,0px);border-right:1px solid #000}
+.brand{display:flex;align-items:center;gap:10px;background:none;border:0;cursor:pointer;color:inherit;padding:20px 20px 18px;text-align:left}
+.brand svg{width:32px;height:32px;flex-shrink:0}
+.brand b{font-family:var(--f-display);font-size:1.65rem;letter-spacing:.16em;font-weight:700;display:block;line-height:1}
+.brand small{font-family:var(--f-mono);font-size:.62rem;letter-spacing:.08em;color:var(--side-muted);text-transform:uppercase}
+.snav{flex:1;overflow-y:auto;padding:4px 12px 12px;display:flex;flex-direction:column;gap:2px}
+.snav .grp{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--side-muted);padding:14px 10px 6px;opacity:.8}
+.snav button{display:flex;align-items:center;gap:11px;background:none;border:0;color:var(--side-muted);padding:9px 10px;border-radius:5px;cursor:pointer;text-align:left;font-size:.93rem;width:100%}
+.snav button svg{width:19px;height:19px;flex-shrink:0}
+.snav button:hover{color:var(--side-ink);background:rgba(255,255,255,.05)}
+.snav button[aria-current="page"]{color:var(--side-ink);background:var(--side-2)}
+.snav button[aria-current="page"] svg{color:var(--signal)}
+.snav .count{margin-left:auto;font-family:var(--f-mono);font-size:.7rem;color:var(--side-muted)}
+.sfoot{padding:14px 16px calc(16px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:10px}
+.lvcard{display:flex;flex-direction:column;gap:6px}
+.lvcard .row1{display:flex;justify-content:space-between;align-items:baseline}
+.lvcard b{font-family:var(--f-display);font-size:1.15rem;font-weight:600}
+.lvcard .xp{font-family:var(--f-mono);font-size:.72rem;color:var(--side-muted)}
+.xpbar{height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
+.xpbar i{display:block;height:100%;background:var(--signal)}
+.sfoot .meta{font-family:var(--f-mono);font-size:.66rem;color:var(--side-muted);display:flex;justify-content:space-between;gap:8px}
+.sfoot .meta button{background:none;border:0;padding:0;color:var(--side-muted);cursor:pointer;font:inherit;text-decoration:underline}
+
+.topbar{display:none}
+.wrap{margin-left:var(--side-w)}
+main{max-width:1180px;margin:0 auto;padding-block:32px 72px;padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:26px}
+.tabbar{display:none}
+.sheet{display:none}
+
+@media (max-width:960px){
+  .side{display:none}
+  .wrap{margin-left:0}
+  .topbar{display:flex;position:sticky;top:env(safe-area-inset-top,0px);z-index:12;background:var(--side);color:var(--side-ink);align-items:center;justify-content:space-between;gap:12px;padding-block:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .topbar .brand{padding:4px 0}
+  .topbar .brand svg{width:26px;height:26px}
+  .topbar .brand b{font-size:1.35rem}
+  .topbar .lv{font-family:var(--f-mono);font-size:.72rem;color:var(--side-muted);text-align:right}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:13;background:var(--side)}
+  main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px calc(var(--tab-h) + 40px + env(safe-area-inset-bottom,0px));gap:20px}
+  .tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:14;background:var(--side);border-top:1px solid #000;padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+  .tabbar button{background:none;border:0;color:var(--side-muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 2px 8px;font-size:.68rem;cursor:pointer;min-height:var(--tab-h)}
+  .tabbar button svg{width:21px;height:21px}
+  .tabbar button[aria-current="page"]{color:var(--side-ink)}
+  .tabbar button[aria-current="page"] svg{color:var(--signal)}
+  .sheet{display:block;position:fixed;left:0;right:0;bottom:calc(var(--tab-h) + env(safe-area-inset-bottom,0px));z-index:14;background:var(--side);color:var(--side-ink);border-top:1px solid rgba(255,255,255,.1);padding:10px max(12px,env(safe-area-inset-right,0px)) 12px max(12px,env(safe-area-inset-left,0px));box-shadow:0 -12px 30px rgba(0,0,0,.35)}
+  .sheet .snav{padding:0}
+  h1{font-size:1.9rem}
+}
+
+/* ===== componentes ===== */
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.stack{display:flex;flex-direction:column;gap:12px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.split{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start}
+@media (max-width:1100px){.split{grid-template-columns:1fr}}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.page-head .lead{max-width:64ch;color:var(--muted);margin-top:8px}
+.back{background:none;border:0;padding:0;color:var(--muted);cursor:pointer;font-family:var(--f-mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:inline-block}
+.back:hover{color:var(--accent)}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;min-width:0}
+.panel > h3:first-child,.ph{margin-bottom:12px}
+.ph{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ph h3{margin:0}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:4px;cursor:pointer;font-weight:500;font-size:.9rem;text-decoration:none;white-space:nowrap;min-height:38px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.warn{border-color:var(--warn);color:var(--warn)}
+.btn.danger{border-color:var(--bad);color:var(--bad)}
+.btn.ghost{border-color:transparent;background:none}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.sm{padding:4px 10px;font-size:.82rem;min-height:30px}
+
+.chip{display:inline-flex;align-items:center;gap:4px;font-family:var(--f-mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;padding:2px 7px;border-radius:3px;border:1px solid var(--line);color:var(--muted);white-space:nowrap;line-height:1.5}
+.chip.demo{border-color:var(--warn);color:var(--warn)}
+.chip.ok{border-color:var(--ok);color:var(--ok)}
+.chip.acc{border-color:var(--accent);color:var(--accent)}
+.chip.bad{border-color:var(--bad);color:var(--bad)}
+.chip.st-review{color:var(--warn);border-color:var(--warn)} .chip.st-published{color:var(--ok);border-color:var(--ok)} .chip.st-archived{border-style:dashed}
+.lvl{display:inline-flex;gap:2px;vertical-align:middle;align-items:flex-end}
+.lvl i{width:5px;background:var(--line);border-radius:1px}
+.lvl i:nth-child(1){height:6px}.lvl i:nth-child(2){height:8px}.lvl i:nth-child(3){height:10px}.lvl i:nth-child(4){height:12px}.lvl i:nth-child(5){height:14px}
+.lvl i.on{background:var(--accent)}
+
+.notice{border-left:3px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 4px 4px 0;font-size:.9rem}
+.notice.info{border-color:var(--accent);background:var(--accent-soft)}
+.notice.bad{border-color:var(--bad);background:var(--bad-soft)}
+.notice.ok{border-color:var(--ok);background:var(--ok-soft)}
+
+.list{display:flex;flex-direction:column}
+.list > *{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);min-width:0}
+.list > *:last-child{border-bottom:0}
+.link{background:none;border:0;padding:0;color:var(--ink);text-align:left;cursor:pointer;font-weight:500;min-width:0}
+.link:hover{color:var(--accent)}
+
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;flex-wrap:wrap;background:var(--surface)}
+.seg button{background:none;border:0;border-right:1px solid var(--line);padding:6px 11px;cursor:pointer;font-size:.84rem;color:var(--muted)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+input[type=search],input[type=text],input[type=number],input[type=date],input[type=url],select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:8px 10px;width:100%;min-width:0}
+textarea{min-height:84px;resize:vertical;line-height:1.5}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:.85rem;font-weight:500}
+label.f small{font-weight:400;color:var(--muted)}
+label.chk{display:flex;gap:8px;align-items:flex-start;font-size:.9rem;cursor:pointer}
+label.chk input{margin-top:4px;accent-color:var(--accent)}
+
+/* ===== painel ===== */
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:22px;align-items:stretch}
+@media (max-width:1100px){.hero{grid-template-columns:1fr}}
+.hero-msg{display:flex;flex-direction:column;justify-content:center;gap:14px;padding:8px 0}
+.hero-msg h1{font-size:2.9rem;font-weight:700;line-height:1}
+.hero-msg h1 em{font-style:normal;color:var(--accent)}
+.hero-msg p{color:var(--muted);max-width:52ch}
+@media (max-width:960px){.hero-msg h1{font-size:2.2rem}}
+/* ordem de serviço */
+.os{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;overflow:hidden}
+.os-head{background:var(--side);color:var(--side-ink);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase}
+.os-head b{color:var(--signal);font-weight:500}
+.os-body{padding:16px;display:flex;flex-direction:column;gap:12px;flex:1}
+.os-body h3{font-size:1.5rem}
+.os dl{display:grid;grid-template-columns:110px minmax(0,1fr);gap:6px 12px;margin:0;font-size:.88rem}
+.os dt{font-family:var(--f-mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding-top:3px}
+.os dd{margin:0}
+.os-foot{padding:12px 16px;border-top:1px dashed var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.stat b{font-family:var(--f-display);font-size:2rem;font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
+.stat .meter{height:4px;background:var(--surface-2);border-radius:2px;overflow:hidden;margin-top:6px}
+.stat .meter i{display:block;height:100%;background:var(--accent)}
+
+/* ===== cartões de caso (etiqueta de manutenção) ===== */
+.tag{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;text-align:left;cursor:pointer;color:inherit;padding:0;overflow:hidden;min-width:0;transition:border-color .15s,transform .15s}
+.tag:hover{border-color:var(--accent);transform:translateY(-1px)}
+.tag-top{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:var(--surface-2);border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.tag-body{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}
+.tag-body h3{font-size:1.28rem}
+.tag-eq{font-family:var(--f-mono);font-size:.76rem;color:var(--muted)}
+.tag-sym{font-size:.88rem;border-left:2px solid var(--line);padding-left:10px;color:var(--ink)}
+.tag-foot{padding:10px 14px;border-top:1px dashed var(--line);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0;text-align:left;cursor:pointer;color:inherit}
+.card:hover{border-color:var(--accent)}
+.card h3{font-size:1.22rem}
+.card .foot{margin-top:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+
+/* ===== Bancada ===== */
+.stepper{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));position:relative}
+.stepper::before{content:"";position:absolute;left:calc(100%/14);right:calc(100%/14);top:16px;height:2px;background:var(--line)}
+.stepper .prog{position:absolute;left:calc(100%/14);top:16px;height:2px;background:var(--accent)}
+.step{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0;cursor:pointer;color:var(--muted);min-width:0}
+.step[disabled]{cursor:default}
+.step .dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:2px solid var(--line);font-family:var(--f-mono);font-size:.8rem;font-weight:500;color:var(--muted)}
+.step.done .dot{border-color:var(--accent);color:var(--accent)}
+.step.cur .dot{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:0 0 0 4px var(--accent-soft)}
+.step span{font-family:var(--f-display);font-size:.98rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.step.cur span{color:var(--ink)}
+@media (max-width:700px){.step span{display:none}.step.cur span{display:block;position:absolute;top:42px;white-space:nowrap;overflow:visible}.stepper{padding-bottom:22px}.step .dot{width:30px;height:30px}.stepper::before,.stepper .prog{top:14px}}
+.bench{display:grid;grid-template-columns:360px minmax(0,1fr);gap:22px;align-items:start}
+.bench > aside{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto}
+@media (max-width:1100px){.bench{grid-template-columns:1fr}.bench > aside{position:static;max-height:none}}
+.ficha dl{display:flex;flex-direction:column;gap:12px;margin:0}
+.ficha dt{font-family:var(--f-mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.ficha dd{margin:3px 0 0;font-size:.92rem}
+.ficha ul,.prose ul{margin:4px 0 0;padding-left:18px}
+.ficha li,.prose li{margin:3px 0}
+details.fold summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;font-family:var(--f-display);font-size:1.22rem;font-weight:600}
+details.fold summary::-webkit-details-marker{display:none}
+details.fold summary::after{content:"+";font-family:var(--f-mono);color:var(--muted)}
+details.fold[open] summary::after{content:"−"}
+details.fold[open] summary{margin-bottom:12px}
+.stage-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+.stage-head .n{font-family:var(--f-display);font-size:2.6rem;font-weight:700;line-height:.9;color:var(--accent);font-variant-numeric:tabular-nums}
+.stage-head p{color:var(--muted);margin-top:4px;max-width:62ch}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:4px;background:var(--surface);cursor:pointer;text-align:left;width:100%;color:inherit}
+.opt:hover{border-color:var(--accent)}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt input{margin-top:4px;accent-color:var(--accent)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.tests{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.test{border:1px solid var(--line);border-radius:4px;padding:12px 14px;background:var(--surface);display:flex;flex-direction:column;gap:8px}
+.test .how{font-size:.78rem;color:var(--muted)}
+.test.ran{border-color:var(--accent)}
+.test.unsafe{border-color:var(--bad);background:var(--bad-soft)}
+.test .tt{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.reading{font-family:var(--f-mono);background:var(--lcd);color:var(--lcd-ink);padding:6px 10px;border-radius:3px;display:inline-block;font-size:.95rem;letter-spacing:.04em;font-variant-numeric:tabular-nums;align-self:flex-start;box-shadow:inset 0 0 0 1px rgba(127,240,255,.15)}
+.marks{display:flex;gap:4px;flex-wrap:wrap}
+.marks button{border:1px solid var(--line);background:var(--surface);padding:4px 9px;border-radius:3px;font-size:.8rem;cursor:pointer;color:var(--muted)}
+.marks button[aria-pressed="true"].sup{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.marks button[aria-pressed="true"].wk{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.marks button[aria-pressed="true"].inc{background:var(--surface-2);color:var(--ink)}
+.tools{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:16px;align-items:start}
+@media (max-width:800px){.tools{grid-template-columns:1fr}}
+.hintbox{border:1px dashed var(--warn);border-radius:4px;padding:10px 12px;font-size:.9rem}
+.assist{display:flex;flex-direction:column;gap:10px}
+.msgs{display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto}
+.msg{padding:8px 12px;border-radius:4px;font-size:.9rem;white-space:pre-wrap}
+.msg.u{background:var(--accent-soft);align-self:flex-end;max-width:90%}
+.msg.a{background:var(--surface-2)}
+.score{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.ring{position:relative;width:132px;height:132px;flex-shrink:0}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--f-display);font-size:2.6rem;font-weight:700;font-variant-numeric:tabular-nums}
+.ring .v small{display:block;font-size:.9rem;color:var(--muted);text-align:center;margin-top:-6px;font-weight:500}
+.bars{display:flex;flex-direction:column;gap:9px;flex:1;min-width:220px}
+.bar{display:grid;grid-template-columns:110px minmax(0,1fr) 52px;gap:10px;align-items:center;font-size:.86rem}
+.bar .tr{height:8px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.bar .tr i{display:block;height:100%;background:var(--accent)}
+.bar .v{font-family:var(--f-mono);font-size:.78rem;text-align:right;font-variant-numeric:tabular-nums}
+
+/* ===== trilha ===== */
+.timeline{display:flex;flex-direction:column;position:relative}
+.tl-item{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:14px;align-items:flex-start;padding:14px 0;position:relative}
+.tl-item::before{content:"";position:absolute;left:19px;top:0;bottom:0;width:2px;background:var(--line)}
+.tl-item:first-child::before{top:28px}.tl-item:last-child::before{bottom:calc(100% - 28px)}
+.tl-dot{width:40px;height:40px;border-radius:50%;background:var(--surface);border:2px solid var(--line);display:grid;place-items:center;font-family:var(--f-mono);font-size:.85rem;position:relative;z-index:1;color:var(--muted)}
+.tl-item.done .tl-dot{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tl-item.next .tl-dot{border-color:var(--accent);color:var(--accent)}
+.tl-item h3{font-size:1.2rem}
+.prose{max-width:68ch;display:flex;flex-direction:column;gap:12px}
+.prose h3{margin-top:12px;font-size:1.35rem}
+.lnav{display:flex;flex-direction:column;gap:2px}
+.lnav button{display:flex;gap:10px;align-items:center;background:none;border:0;padding:7px 8px;border-radius:4px;cursor:pointer;text-align:left;color:var(--muted);font-size:.88rem}
+.lnav button:hover{background:var(--surface-2);color:var(--ink)}
+.lnav button[aria-current="page"]{background:var(--accent-soft);color:var(--ink)}
+.lnav .d{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-family:var(--f-mono);font-size:.66rem;flex-shrink:0}
+.lnav .d.ok{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.diag{width:100%;height:auto;color:var(--ink)}
+.diag-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px}
+.diag-wrap svg{min-width:620px}
+.story-sec{display:grid;grid-template-columns:160px minmax(0,1fr);gap:16px;padding:16px 0;border-top:1px solid var(--line)}
+.story-sec:first-child{border-top:0;padding-top:0}
+.story-sec h4{font-family:var(--f-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:500;padding-top:4px}
+@media (max-width:640px){.story-sec{grid-template-columns:1fr;gap:4px}}
+.cover{width:100%;max-height:320px;object-fit:cover;border-radius:var(--r);border:1px solid var(--line);display:block}
+
+/* ===== admin ===== */
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-family:var(--f-mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:500}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.fgrid .wide,.fgrid .sec{grid-column:1/-1}
+.fgrid .sec{padding-top:14px;margin-top:6px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:2px}
+.fgrid .sec:first-child{border-top:0;margin-top:0;padding-top:0}
+@media (max-width:700px){.fgrid{grid-template-columns:1fr}}
+.rep{border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+.rep-row{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.rep-row .wide{grid-column:1/-1}
+@media (max-width:700px){.rep-row{grid-template-columns:1fr}}
+.rep-row .rhead{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center}
+.sticky-actions{position:sticky;bottom:0;z-index:5;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;box-shadow:0 -6px 18px rgba(0,0,0,.06)}
+@media (max-width:960px){.sticky-actions{bottom:calc(var(--tab-h) + env(safe-area-inset-bottom,0px) + 8px)}}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs button{background:none;border:0;padding:9px 14px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.empty{border:1px dashed var(--line);border-radius:var(--r);padding:32px;text-align:center;color:var(--muted);display:flex;flex-direction:column;gap:12px;align-items:center}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.badge{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.badge .ico{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);color:var(--muted);flex-shrink:0;font-family:var(--f-display);font-weight:700;font-size:.9rem}
+.badge.on .ico{background:var(--accent);color:var(--accent-ink)}
+.badge:not(.on){opacity:.55}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:4px;font-size:.9rem;z-index:30;max-width:calc(100% - 32px)}
+@media (max-width:960px){.toast{bottom:calc(var(--tab-h) + 16px + env(safe-area-inset-bottom,0px))}}
+.fav{background:none;border:1px solid var(--line);border-radius:4px;padding:6px 10px;cursor:pointer;color:var(--muted);font-size:.85rem;min-height:34px}
+.fav[aria-pressed="true"]{color:var(--warn);border-color:var(--warn)}
+.phase{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:16px 0;border-top:1px solid var(--line)}
+.phase:first-child{border-top:0;padding-top:0}
+@media (max-width:640px){.phase{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head>
+<body>
+<aside class="side" aria-label="Navegação principal">
+  <button class="brand" data-act="go" data-r="painel" aria-label="Volter — painel">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="5" fill="#3cc5dc"/><path d="M8 8 L16 25 L24 8" fill="none" stroke="#0b1622" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="16" cy="8" r="2.2" fill="#0b1622"/></svg>
+    <span><b>VOLTER</b><small>Experiência real</small></span>
+  </button>
+  <nav class="snav" id="snav"></nav>
+  <div class="sfoot" id="sfoot"></div>
+</aside>
+<div class="wrap">
+  <header class="topbar">
+    <button class="brand" data-act="go" data-r="painel" aria-label="Volter — painel">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="5" fill="#3cc5dc"/><path d="M8 8 L16 25 L24 8" fill="none" stroke="#0b1622" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="16" cy="8" r="2.2" fill="#0b1622"/></svg>
+      <span><b>VOLTER</b></span>
+    </button>
+    <span class="lv" id="toplv"></span>
+  </header>
+  <main id="view" aria-live="polite"></main>
+</div>
+<div class="sheet" id="sheet" hidden></div>
+<nav class="tabbar" id="tabbar" aria-label="Navegação"></nav>
+<div class="toast" id="toast" hidden></div>
+<script src="data/conteudo.js"></script>
+<script>
+"use strict";
+/* ---------- utilidades ---------- */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const inl = s => esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+const clone = o => JSON.parse(JSON.stringify(o));
+const arr = v => Array.isArray(v) ? v : (v ? [v] : []);
+const clean = a => arr(a).map(s => String(s).trim()).filter(Boolean);
+const uid8 = () => Math.random().toString(36).slice(2, 10);
+const slug = s => String(s || "item").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "item";
+const fmtDate = iso => { if (!iso) return ""; const d = new Date(iso.length === 10 ? iso + "T12:00:00" : iso); return isNaN(d) ? "" : d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" }); };
+const getPath = (o, p) => p.split(".").reduce((a, k) => a == null ? a : a[k], o);
+const setPath = (o, p, v) => { const ks = p.split("."); let a = o; ks.slice(0, -1).forEach((k, i) => { if (a[k] == null) a[k] = /^\d+$/.test(ks[i + 1]) ? [] : {}; a = a[k]; }); a[ks[ks.length - 1]] = v; };
+const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+function md(t) {
+  return String(t || "").split(/\n\s*\n/).map(b => {
+    const lines = b.split("\n");
+    if (lines[0].startsWith("## ")) { const rest = lines.slice(1).join("\n"); return "<h3>" + inl(lines[0].slice(3)) + "</h3>" + (rest.trim() ? md(rest) : ""); }
+    const out = []; let para = [], list = [];
+    const flushP = () => { if (para.length) { out.push("<p>" + inl(para.join(" ")) + "</p>"); para = []; } };
+    const flushL = () => { if (list.length) { out.push("<ul>" + list.map(x => "<li>" + inl(x) + "</li>").join("") + "</ul>"); list = []; } };
+    lines.forEach(l => { const s = l.trim(); if (s.startsWith("- ")) { flushP(); list.push(s.slice(2)); } else if (s) { flushL(); para.push(s); } });
+    flushP(); flushL(); return out.join("");
+  }).join("");
+}
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, 3200); }
+
+/* ---------- vocabulário ---------- */
+const LEVELS = [[1, "1 · Fundamentos"], [2, "2 · Comandos e manutenção"], [3, "3 · Automação industrial"], [4, "4 · Diagnóstico avançado"], [5, "5 · Casos profissionais"]];
+const AREAS = ["Comandos elétricos", "Motores e acionamentos", "Automação e CLP", "Eletrônica", "Instrumentação", "Equipamentos biomédicos", "Segurança elétrica"];
+const NEWS_CATS = ["Automação industrial e Indústria 4.0", "Inteligência artificial aplicada à manutenção", "Manutenção preditiva e análise de falhas", "CLPs, sensores e instrumentação", "Motores elétricos e acionamentos", "Inversores de frequência e servodrives", "Robótica industrial", "Eletrônica e sistemas embarcados", "Equipamentos biomédicos", "Segurança elétrica e normas técnicas", "Novas ferramentas, equipamentos e tecnologias", "Cursos, eventos e oportunidades de capacitação"];
+const TESTVAL = [["util", "Útil — aproxima da causa"], ["neutro", "Neutro — válido, elimina pouco"], ["irrelevante", "Irrelevante — desperdício"], ["inseguro", "Inseguro — penaliza e não executa"]];
+const STATUS = { draft: "Rascunho", review: "Em revisão", published: "Publicado", archived: "Arquivado" };
+const STAGES = ["Investigar", "Hipóteses", "Testes", "Resultados", "Causa", "Resolver", "Aprender"];
+const STAGE_TXT = ["Leia a ficha com atenção. Antes de pensar em causas: o que o equipamento deveria fazer, o que está fazendo e o que mudou?", "Selecione as causas que você considera possíveis. De duas a quatro é uma boa faixa; hipóteses demais mostram falta de foco.", "Cada teste custa tempo. Escolha os que mais separam as suas hipóteses. O resultado aparece quando você executa.", "Revise as leituras e marque, para cada hipótese, se as evidências a sustentam ou a enfraquecem.", "Com base nas evidências, qual é a causa mais provável? Ao confirmar, as etapas anteriores ficam travadas.", "Escolha a ação corretiva. Pense em segurança e em resolver a causa, não só o sintoma."];
+const TYPES = { cases: { label: "Casos", one: "caso" }, stories: { label: "Histórias", one: "história" }, news: { label: "Notícias", one: "notícia" }, lessons: { label: "Lições", one: "lição" } };
+const TRACK = { id: "diagnostico-eletrico", title: "Diagnóstico elétrico básico", desc: "Do método de investigação à leitura de diagramas e aos defeitos clássicos de comandos. É a base para a Bancada Virtual." };
+const ROUTE_OF = { cases: "caso", stories: "historia", news: "noticias", lessons: "licao" };
+const lvl = n => '<span class="lvl" title="Nível ' + n + '">' + [1, 2, 3, 4, 5].map(i => '<i class="' + (i <= n ? "on" : "") + '"></i>').join("") + "</span>";
+
+/* ---------- estado ---------- */
+const S = {
+  mode: "loading", db: null, user: null, assets: null, sample: null, uid: null, admin: false,
+  dbState: "loading", content: { cases: [], stories: [], news: [], lessons: [] },
+  prog: null, progWhere: "local", route: { name: "painel", id: null },
+  editor: null, quiz: null, assist: {}, ui: { area: "", level: 0, q: "", ncat: "", stab: "cases", sfilter: "", open: {}, more: false }, pending: false
+};
+function defProg() { return { v: 1, attempts: {}, runs: {}, favorites: [], lessons: {}, quick: [], recent: [], settings: { hintPenalty: true }, updatedAt: "" }; }
+S.prog = Object.assign(defProg(), lsGet("volter.prog", {}));
+let pushQ = Promise.resolve(), pushT = null;
+function saveProg() {
+  S.prog.updatedAt = new Date().toISOString();
+  lsSet("volter.prog", S.prog);
+  clearTimeout(pushT); pushT = setTimeout(() => { pushQ = pushQ.then(pushProg); }, 700);
+}
+async function pushProg() {
+  if (!S.db || !S.uid || S.progWhere === "local-only") return;
+  try { await S.db.doc("data/users/" + S.uid + "/main").set(clone(S.prog)); S.progWhere = "conta"; }
+  catch (e) { S.progWhere = "local-only"; }
+}
+
+/* ---------- conteúdo ---------- */
+const all = t => S.content[t];
+const pub = t => S.content[t].filter(x => x.status === "published");
+const find = (t, id) => S.content[t].find(x => x.id === id);
+const visible = (t, id) => { const x = find(t, id); return x && (x.status === "published" || S.admin) ? x : null; };
+function touchRecent(type, id) { const r = S.prog.recent.filter(x => !(x.type === type && x.id === id)); r.unshift({ type, id, at: new Date().toISOString() }); S.prog.recent = r.slice(0, 8); saveProg(); }
+const isFav = k => S.prog.favorites.includes(k);
+function favBtn(k) { const on = isFav(k); return '<button class="fav" data-act="fav" data-k="' + esc(k) + '" aria-pressed="' + on + '">' + (on ? "★ Favorito" : "☆ Favoritar") + "</button>"; }
+
+/* modo local (GitHub Pages / arquivo aberto no navegador) */
+function localLoad() {
+  const seed = window.VOLTER_SEED || {}; const ov = lsGet("volter.content", {});
+  ["cases", "stories", "news", "lessons"].forEach(t => {
+    const base = Object.assign({}, seed[t] || {}, ov[t] || {});
+    S.content[t] = Object.entries(base).filter(([, d]) => d).map(([id, d]) => Object.assign({ id }, d));
+  });
+}
+function localWrite(t, id, doc) { const ov = lsGet("volter.content", {}); ov[t] = ov[t] || {}; ov[t][id] = doc; lsSet("volter.content", ov); }
+function exportContent() {
+  const out = {}; ["cases", "lessons", "stories", "news"].forEach(t => { out[t] = {}; S.content[t].forEach(x => { const d = clone(x); delete d.id; out[t][x.id] = d; }); });
+  const js = "// Conteúdo do Volter — gerado pelo painel de administração em " + new Date().toLocaleString("pt-BR") + "\nwindow.VOLTER_SEED = " + JSON.stringify(out, null, 1) + ";\n";
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([js], { type: "text/javascript" })); a.download = "conteudo.js"; document.body.appendChild(a); a.click(); a.remove();
+  toast("Arquivo conteudo.js gerado");
+}
+
+/* ---------- navegação ---------- */
+const NAVDEF = [
+  ["", [["painel", "Painel"]]],
+  ["Praticar", [["bancada", "Bancada Virtual"], ["desafios", "Desafios"]]],
+  ["Estudar", [["aprender", "Aprender"], ["historias", "Histórias de Campo"], ["noticias", "Notícias Técnicas"]]],
+  ["Você", [["progresso", "Meu Progresso"], ["favoritos", "Favoritos"]]]
+];
+const TABS = [["painel", "Painel"], ["bancada", "Bancada"], ["aprender", "Aprender"], ["progresso", "Progresso"]];
+function go(name, id) { S.route = { name, id: id || null }; S.ui.more = false; window.scrollTo(0, 0); render(true); }
+function navGroup() { return { caso: "bancada", correcao: "bancada", licao: "aprender", historia: "historias", editor: "admin" }[S.route.name] || S.route.name; }
+
+/* ---------- render ---------- */
+function render(force) {
+  const ae = document.activeElement;
+  if (!force && ae && $("#view").contains(ae) && /INPUT|TEXTAREA|SELECT/.test(ae.tagName)) { S.pending = true; return; }
+  S.pending = false;
+  renderChrome();
+  let html;
+  try { html = (VIEWS[S.route.name] || VIEWS.painel)(S.route.id); }
+  catch (e) { console.error(e); html = '<div class="notice bad">Não foi possível abrir esta tela: ' + esc(e.message) + '</div><div><button class="btn" data-act="go" data-r="painel">Voltar ao painel</button></div>'; }
+  $("#view").innerHTML = html;
+}
+document.addEventListener("focusout", () => setTimeout(() => { if (S.pending) render(); }, 50));
+function navItems() { const g = NAVDEF.map(x => x); if (S.admin) g.push(["Gestão", [["admin", S.mode === "local" ? "Editor de conteúdo" : "Administração"]]]); return g; }
+function renderChrome() {
+  const grp = navGroup();
+  const counts = { bancada: pub("cases").length, aprender: pub("lessons").length, favoritos: S.prog.favorites.length || "" };
+  const navHTML = navItems().map(([g, items]) => (g ? '<div class="grp">' + g + "</div>" : "") + items.map(([r, l]) => '<button data-act="go" data-r="' + r + '"' + (grp === r ? ' aria-current="page"' : "") + ">" + (IC[r] || "") + "<span>" + l + "</span>" + (counts[r] ? '<span class="count">' + counts[r] + "</span>" : "") + "</button>").join("")).join("");
+  $("#snav").innerHTML = navHTML;
+  const xp = calcXP(), lv = levelFor(xp), pct = lv.next ? Math.round((xp - lv.min) / (lv.next[0] - lv.min) * 100) : 100;
+  const modeTxt = S.mode === "local" ? "Modo local" : S.mode === "claude" ? (S.admin ? "Administrador" : S.uid ? "Aluno" : "Visitante") : "Carregando";
+  $("#sfoot").innerHTML = '<div class="lvcard"><div class="row1"><b>' + lv.name + '</b><span class="xp">' + xp + " XP</span></div><div class=\"xpbar\"><i style=\"width:" + pct + '%"></i></div><span class="xp">' + (lv.next ? (lv.next[0] - xp) + " XP para " + lv.next[1] : "Nível máximo") + '</span></div><div class="meta"><span>' + modeTxt + '</span><button data-act="go" data-r="roteiro">Próximas etapas</button></div>';
+  $("#toplv").textContent = lv.name + " · " + xp + " XP";
+  const tabG = TABS.some(t => t[0] === grp) ? grp : "mais";
+  $("#tabbar").innerHTML = TABS.map(([r, l]) => '<button data-act="go" data-r="' + r + '"' + (tabG === r && !S.ui.more ? ' aria-current="page"' : "") + ">" + (IC[r] || "") + l + "</button>").join("") + '<button data-act="more"' + ((tabG === "mais" || S.ui.more) ? ' aria-current="page"' : "") + ' aria-expanded="' + S.ui.more + '">' + IC.mais + "Mais</button>";
+  const sh = $("#sheet"); sh.hidden = !S.ui.more;
+  if (S.ui.more) sh.innerHTML = '<nav class="snav">' + navHTML + '<div class="grp">Sobre</div><button data-act="go" data-r="roteiro">' + IC.roteiro + "<span>Próximas etapas</span></button></nav>";
+}
+
+function dbNotice() {
+  if (S.dbState === "loading") return '<div class="notice info">Carregando conteúdo…</div>';
+  if (S.dbState === "none") return '<div class="notice">O conteúdo do Volter não pôde ser carregado. No claude.ai, abra o app com a sua conta conectada. Na versão do GitHub, confira se o arquivo <span class="mono">data/conteudo.js</span> está junto do <span class="mono">index.html</span>.</div>';
+  return "";
+}
+function emptyBox(msg, act) { return '<div class="empty"><p>' + msg + "</p>" + (act || "") + "</div>"; }
+function head(eyebrow, title, lead, right, back) {
+  return '<div class="page-head"><div style="min-width:0">' + (back ? '<button class="back" data-act="go" data-r="' + back[0] + '"' + (back[2] ? ' data-id="' + esc(back[2]) + '"' : "") + ">← " + back[1] + "</button><br>" : "") + '<span class="eyebrow">' + eyebrow + "</span><h1>" + title + "</h1>" + (lead ? '<p class="lead">' + lead + "</p>" : "") + "</div>" + (right ? '<div class="row">' + right + "</div>" : "") + "</div>";
+}
+
+/* ---------- ícones ---------- */
+const svg = p => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + "</svg>";
+const IC = {
+  painel: svg('<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>'),
+  bancada: svg('<path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.5-.7-.7-2.5z"/>'),
+  aprender: svg('<path d="M3 6l9-3 9 3-9 3-9-3zM6 8v6c0 2 3 3 6 3s6-1 6-3V8"/>'),
+  desafios: svg('<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>'),
+  historias: svg('<path d="M5 4h11l3 3v13H5zM9 10h7M9 14h7M9 18h4"/>'),
+  noticias: svg('<path d="M4 5h13v14H6a2 2 0 01-2-2zM17 9h3v8a2 2 0 01-2 2M8 9h5M8 13h5"/>'),
+  progresso: svg('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'),
+  favoritos: svg('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'),
+  admin: svg('<path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/>'),
+  roteiro: svg('<path d="M4 6h16M4 12h10M4 18h6"/><circle cx="19" cy="17" r="3"/>'),
+  mais: svg('<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>')
+};
+
+/* ---------- diagrama de partida direta ---------- */
+function diagramPartida() {
+  const contact = (x, y, nf, name, term) => '<line x1="' + x + '" y1="' + (y - 14) + '" x2="' + x + '" y2="' + (y + 14) + '"/><line x1="' + (x + 14) + '" y1="' + (y - 14) + '" x2="' + (x + 14) + '" y2="' + (y + 14) + '"/>' + (nf ? '<line x1="' + (x - 6) + '" y1="' + (y + 16) + '" x2="' + (x + 20) + '" y2="' + (y - 16) + '"/>' : "") +
+    '<text x="' + (x + 7) + '" y="' + (y - 24) + '" class="t1">' + name + '</text><text x="' + (x + 7) + '" y="' + (y + 32) + '" class="t2">' + term + "</text>";
+  const y = 90, y2 = 170;
+  return '<div class="diag-wrap"><svg class="diag" viewBox="0 0 720 220" role="img" aria-label="Diagrama de comando de partida direta: fusível F2, contato 95-96 do relé térmico F7, emergência S2, desliga S0, liga S1 em paralelo com o selo K1 13-14, bobina K1">' +
+    '<style>.diag text{font-family:var(--f-mono);font-size:12px;fill:currentColor;text-anchor:middle;stroke:none}.diag .t2{font-size:10px;fill:var(--muted)}.diag .rl{font-size:11px;fill:var(--accent)}</style>' +
+    '<g stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round">' +
+    '<line x1="30" y1="40" x2="30" y2="200" stroke="var(--accent)"/><line x1="690" y1="40" x2="690" y2="200" stroke="var(--accent)"/>' +
+    '<line x1="30" y1="' + y + '" x2="70" y2="' + y + '"/><rect x="70" y="' + (y - 8) + '" width="40" height="16"/><line x1="70" y1="' + y + '" x2="110" y2="' + y + '"/>' +
+    '<line x1="110" y1="' + y + '" x2="150" y2="' + y + '"/>' + contact(150, y, true, "F7", "95-96") +
+    '<line x1="164" y1="' + y + '" x2="226" y2="' + y + '"/>' + contact(226, y, true, "S2", "emerg.") +
+    '<line x1="240" y1="' + y + '" x2="302" y2="' + y + '"/>' + contact(302, y, true, "S0", "desliga") +
+    '<line x1="316" y1="' + y + '" x2="420" y2="' + y + '"/>' + contact(420, y, false, "S1", "liga") +
+    '<line x1="390" y1="' + y + '" x2="390" y2="' + y2 + '"/><line x1="390" y1="' + y2 + '" x2="420" y2="' + y2 + '"/>' + contact(420, y2, false, "K1", "13-14") +
+    '<line x1="434" y1="' + y2 + '" x2="480" y2="' + y2 + '"/><line x1="480" y1="' + y2 + '" x2="480" y2="' + y + '"/>' +
+    '<line x1="434" y1="' + y + '" x2="560" y2="' + y + '"/><circle cx="576" cy="' + y + '" r="16"/><line x1="592" y1="' + y + '" x2="690" y2="' + y + '"/>' +
+    '</g><text x="90" y="' + (y - 16) + '">F2</text><text x="576" y="' + (y + 4) + '">K1</text><text x="576" y="' + (y + 32) + '" class="t2">A1-A2</text>' +
+    '<text x="30" y="30" class="rl">L 220 V</text><text x="690" y="30" class="rl">N</text></svg></div>';
+}
+
+/* ================= TELAS ================= */
+const VIEWS = {};
+const caseNo = c => "CASO " + String(pub("cases").slice().sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)) || a.id.localeCompare(b.id)).findIndex(x => x.id === c.id) + 1).padStart(2, "0");
+
+VIEWS.painel = () => {
+  const cases = pub("cases"), daily = dailyCase();
+  const xp = calcXP(), lv = levelFor(xp);
+  const lessons = trackLessons(), done = lessons.filter(l => S.prog.lessons[l.id] && S.prog.lessons[l.id].done).length;
+  const doneCases = Object.keys(S.prog.attempts).filter(id => find("cases", id)).length;
+  const runs = Object.keys(S.prog.runs).map(id => visible("cases", id)).filter(Boolean);
+  const next = lessons.find(l => !(S.prog.lessons[l.id] && S.prog.lessons[l.id].done));
+  const fresh = ["cases", "stories", "news", "lessons"].flatMap(t => pub(t).map(x => ({ t, x }))).sort((a, b) => String(b.x.updatedAt).localeCompare(String(a.x.updatedAt))).slice(0, 6);
+  const today = new Date(); const osNo = "OS " + today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + String(today.getDate()).padStart(2, "0");
+  const os = daily ? '<article class="os"><div class="os-head"><span>Ordem de serviço do dia</span><b>' + osNo + '</b></div><div class="os-body"><h3>' + esc(daily.title) + '</h3><dl><dt>Equipamento</dt><dd>' + esc(daily.equipment) + "</dd><dt>Sintoma</dt><dd>" + esc(arr(daily.symptoms)[0] || daily.summary) + "</dd><dt>Área</dt><dd>" + esc(daily.area) + "</dd><dt>Nível</dt><dd>" + lvl(daily.level) + " " + daily.level + '</dd></dl></div><div class="os-foot"><span class="small muted">' + (S.prog.attempts[daily.id] ? "Já resolvido · melhor nota " + Math.max(...S.prog.attempts[daily.id].map(a => a.score)) : "Ainda não resolvido") + '</span><button class="btn primary" data-act="go" data-r="caso" data-id="' + esc(daily.id) + '">Atender a OS</button></div></article>' : '<article class="os"><div class="os-head"><span>Ordem de serviço do dia</span></div><div class="os-body"><p class="muted">Nenhum caso publicado ainda.</p></div></article>';
+  return dbNotice() +
+    '<section class="hero"><div class="hero-msg"><span class="eyebrow">Experiência real. Conhecimento aplicado.</span><h1>Aprenda a pensar como um <em>técnico experiente</em>.</h1><p>Na Bancada Virtual você recebe o defeito, levanta hipóteses, escolhe os testes, interpreta as leituras e só então chega à causa. A nota avalia raciocínio, segurança e escolha dos testes.</p><div class="row"><button class="btn primary" data-act="go" data-r="bancada">Abrir a Bancada</button><button class="btn" data-act="go" data-r="aprender">Começar a trilha</button></div></div>' + os + "</section>" +
+    '<section class="stats"><div class="stat"><span class="eyebrow">Nível</span><b>' + esc(lv.name) + '</b><span class="small muted">' + xp + ' XP</span><div class="meter"><i style="width:' + (lv.next ? Math.round((xp - lv.min) / (lv.next[0] - lv.min) * 100) : 100) + '%"></i></div></div><div class="stat"><span class="eyebrow">Casos resolvidos</span><b>' + doneCases + ' <span class="muted" style="font-size:1rem">/ ' + cases.length + '</span></b><div class="meter"><i style="width:' + (cases.length ? Math.round(doneCases / cases.length * 100) : 0) + '%"></i></div></div><div class="stat"><span class="eyebrow">Trilha</span><b>' + done + ' <span class="muted" style="font-size:1rem">/ ' + lessons.length + ' lições</span></b><div class="meter"><i style="width:' + (lessons.length ? Math.round(done / lessons.length * 100) : 0) + '%"></i></div></div><div class="stat"><span class="eyebrow">Média na Bancada</span><b>' + avgBest() + '</b><span class="small muted">melhor nota por caso</span></div></section>' +
+    '<section class="split"><div class="stack" style="gap:22px"><div class="panel"><div class="ph"><h3>Continue de onde parou</h3></div><div class="list">' +
+    (runs.map(c => '<div><button class="link" data-act="go" data-r="caso" data-id="' + esc(c.id) + '">' + esc(c.title) + '</button><span class="chip acc">Etapa ' + S.prog.runs[c.id].stage + " de 7</span></div>").join("") +
+      (next ? '<div><div style="min-width:0"><span class="eyebrow">Próxima lição</span><br><button class="link" data-act="go" data-r="licao" data-id="' + esc(next.id) + '">' + esc(next.title) + '</button></div><span class="chip">' + (next.minutes || 5) + " min</span></div>" : "") ||
+      '<div><span class="muted">Nada em andamento. Comece pela ordem de serviço do dia.</span></div>') +
+    '</div></div><div class="panel"><div class="ph"><h3>Na Bancada</h3><button class="btn sm ghost" data-act="go" data-r="bancada">Ver todos →</button></div><div class="grid">' + cases.slice(0, 2).map(caseCard).join("") + '</div></div></div>' +
+    '<div class="panel"><div class="ph"><h3>Publicados recentemente</h3></div><div class="list">' + (fresh.map(({ t, x }) => '<div><div style="min-width:0"><span class="eyebrow">' + TYPES[t].one + '</span><br><button class="link" data-act="open" data-t="' + t + '" data-id="' + esc(x.id) + '">' + esc(x.title) + "</button></div>" + (x.demo ? '<span class="chip demo">Demo</span>' : "") + "</div>").join("") || '<div class="muted">Sem conteúdo publicado.</div>') + "</div></div></section>";
+};
+function dailyCase() { const c = pub("cases").slice().sort((a, b) => a.id.localeCompare(b.id)); if (!c.length) return null; const d = Math.floor(Date.now() / 864e5); return c[d % c.length]; }
+
+/* ----- Bancada ----- */
+VIEWS.bancada = () => {
+  const u = S.ui;
+  let list = pub("cases").filter(c => (!u.area || c.area === u.area) && (!u.level || c.level === u.level));
+  list.sort((a, b) => (a.level - b.level) || a.title.localeCompare(b.title));
+  const areas = [...new Set(pub("cases").map(c => c.area).filter(Boolean))];
+  return dbNotice() + head("Diagnóstico", "Bancada Virtual", "Cada caso traz sintomas, histórico e testes com resultados definidos. Você investiga em sete etapas; a solução só aparece no final ou quando pede dica.") +
+    '<div class="filters"><div class="seg" role="group" aria-label="Área"><button data-act="ui" data-k="area" data-v="" aria-pressed="' + (!u.area) + '">Todas as áreas</button>' + areas.map(a => '<button data-act="ui" data-k="area" data-v="' + esc(a) + '" aria-pressed="' + (u.area === a) + '">' + esc(a) + "</button>").join("") + '</div><div class="seg" role="group" aria-label="Nível"><button data-act="ui" data-k="level" data-v="0" aria-pressed="' + (!u.level) + '">Todos</button>' + [1, 2, 3, 4, 5].map(n => '<button data-act="ui" data-k="level" data-v="' + n + '" aria-pressed="' + (u.level === n) + '">N' + n + "</button>").join("") + "</div></div>" +
+    (list.length ? '<div class="grid">' + list.map(caseCard).join("") + "</div>" : emptyBox(S.dbState === "ok" ? "Nenhum caso com esses filtros." : "Os casos aparecem aqui quando o conteúdo carregar."));
+};
+function caseCard(c) {
+  const at = S.prog.attempts[c.id], run = S.prog.runs[c.id];
+  const best = at && at.length ? Math.max(...at.map(a => a.score)) : null;
+  const st = run ? '<span class="chip acc">Em andamento · etapa ' + run.stage + "</span>" : best != null ? '<span class="chip ok">Resolvido · ' + best + "/100</span>" : '<span class="chip">Aberto</span>';
+  return '<button class="tag" data-act="go" data-r="caso" data-id="' + esc(c.id) + '"><div class="tag-top"><span>' + caseNo(c) + " · " + esc(c.area) + "</span>" + lvl(c.level) + '</div><div class="tag-body"><h3>' + esc(c.title) + '</h3><span class="tag-eq">' + esc(c.equipment) + '</span><p class="tag-sym">' + esc(arr(c.symptoms)[0] || c.summary) + '</p></div><div class="tag-foot">' + st + (c.demo ? '<span class="chip demo">Demo</span>' : "") + (c.source === "campo" ? '<span class="chip acc">Relato de campo</span>' : "") + "</div></button>";
+}
+
+function fichaInner(c, full) {
+  const li = a => "<ul>" + arr(a).map(s => "<li>" + esc(s) + "</li>").join("") + "</ul>";
+  return "<dl><div><dt>Equipamento</dt><dd>" + esc(c.equipment) + "</dd></div><div><dt>Contexto</dt><dd>" + esc(c.context) + "</dd></div><div><dt>Sintomas</dt><dd>" + li(c.symptoms) + "</dd></div><div><dt>Histórico</dt><dd>" + esc(c.history) + "</dd></div><div><dt>Quando acontece</dt><dd>" + esc(c.conditions) + "</dd></div>" +
+    (arr(c.techInfo).length ? "<div><dt>Informações técnicas</dt><dd>" + li(c.techInfo) + "</dd></div>" : "") +
+    (c.image ? '<div><dt>Imagem</dt><dd><img class="cover" src="/_blob/' + esc(c.image) + '" alt="Imagem do caso"></dd></div>' : "") +
+    "<div><dt>Objetivo</dt><dd>" + esc(c.objective) + "</dd></div></dl>" + (c.diagram === "partida-direta" && full ? '<div style="margin-top:14px"><span class="eyebrow">Diagrama de comando</span>' + diagramPartida() + "</div>" : "");
+}
+function fichaHTML(c, full) { return '<div class="panel ficha"><div class="ph"><h3>Ficha do caso</h3>' + (c.demo ? '<span class="chip demo">Demo</span>' : "") + "</div>" + fichaInner(c, full) + "</div>"; }
+
+VIEWS.caso = id => {
+  const c = visible("cases", id);
+  if (!c) return dbNotice() || emptyBox("Caso não encontrado.", '<button class="btn" data-act="go" data-r="bancada">Voltar à Bancada</button>');
+  const run = S.prog.runs[id];
+  if (run) return runView(c, run);
+  const at = S.prog.attempts[id] || [];
+  return head(caseNo(c) + " · " + esc(c.area) + " · Nível " + c.level, esc(c.title), esc(c.summary), favBtn("cases:" + id), ["bancada", "Bancada"]) +
+    '<div class="bench"><aside>' + fichaHTML(c, false) + '</aside><div class="stack" style="gap:18px">' + (c.diagram === "partida-direta" ? '<div class="panel"><h3>Diagrama de comando</h3>' + diagramPartida() + "</div>" : "") +
+    '<div class="panel stack"><h3>Como funciona o diagnóstico</h3><div class="stepper" aria-hidden="true">' + STAGES.map((s, i) => '<span class="step"><span class="dot">' + (i + 1) + "</span><span>" + s + "</span></span>").join("") + '</div><p class="small muted">A nota soma raciocínio (hipóteses), investigação (testes úteis), diagnóstico, solução e segurança. Testes inseguros tiram 10 pontos e cada dica tira 5.</p><div class="row"><button class="btn primary" data-act="start" data-id="' + esc(id) + '">' + (at.length ? "Refazer diagnóstico" : "Iniciar diagnóstico") + "</button>" + (at.length ? '<button class="btn" data-act="go" data-r="correcao" data-id="' + esc(id) + '">Ver correção da última tentativa</button>' : "") + "</div></div>" +
+    (at.length ? '<div class="panel"><h3>Suas tentativas</h3><div class="list">' + at.slice().reverse().map(a => '<div><span class="small">' + fmtDate(a.at) + (a.unsafe ? ' · <span style="color:var(--bad)">procedimento inseguro</span>' : "") + '</span><span class="mono">' + a.score + "/100</span></div>").join("") + "</div></div>" : "") + "</div></div>";
+};
+
+function stepper(run) {
+  const pct = (Math.min(run.max, 7) - 1) / 6 * (100 - 100 / 7);
+  return '<div class="stepper"><span class="prog" style="width:' + pct + '%"></span>' + STAGES.map((s, i) => { const n = i + 1; const can = n <= run.max && n < 7 && !(run.locked && n < 5); return "<button " + (can ? 'data-act="stage" data-n="' + n + '"' : "disabled") + ' class="step ' + (n === run.stage ? "cur" : n <= run.max ? "done" : "") + '" aria-label="Etapa ' + n + ": " + s + '"><span class="dot">' + (n < run.stage || (n <= run.max && n !== run.stage) ? "✓" : n) + "</span><span>" + s + "</span></button>"; }).join("") + "</div>";
+}
+function runView(c, run) {
+  const st = run.stage;
+  const hypMap = Object.fromEntries(arr(c.hypotheses).map(h => [h.id, h]));
+  const testMap = Object.fromEntries(arr(c.tests).map(t => [t.id, t]));
+  const sh = '<div class="stage-head"><span class="n">' + st + '</span><div><h2>' + STAGES[st - 1] + "</h2><p>" + STAGE_TXT[st - 1] + "</p></div></div>";
+  let main = "";
+  if (st === 1) {
+    main = '<div class="panel">' + sh + '<div class="stack"><label class="f" for="run-notes">Anotações de campo<small>Ficam salvas com o seu progresso e aparecem ao lado durante o caso.</small><textarea id="run-notes" data-act-input="notes" rows="6" placeholder="Ex.: a falha começou depois da troca do relé…">' + esc(run.notes) + '</textarea></label><div><button class="btn primary" data-act="stage" data-n="2">Formular hipóteses →</button></div></div></div>';
+  } else if (st === 2) {
+    main = '<div class="panel">' + sh + '<div class="stack" style="gap:8px">' + arr(c.hypotheses).map(h => { const on = run.hyps.includes(h.id); return '<label class="opt' + (on ? " sel" : "") + '"><input type="checkbox" data-act="hyp" data-id="' + esc(h.id) + '"' + (on ? " checked" : "") + "><span>" + esc(h.text) + "</span></label>"; }).join("") + '</div><div class="row" style="margin-top:14px;justify-content:space-between"><span class="small muted">' + run.hyps.length + ' selecionada(s)</span><button class="btn primary" data-act="stage" data-n="3"' + (run.hyps.length ? "" : " disabled") + ">Escolher testes →</button></div></div>";
+  } else if (st === 3) {
+    main = '<div class="panel">' + sh + '<div class="tests">' + arr(c.tests).map(t => {
+      const ran = run.tests.includes(t.id), unsafe = t.value === "inseguro";
+      return '<div class="test' + (ran ? (unsafe ? " unsafe" : " ran") : "") + '"><div class="tt"><b>' + esc(t.name) + "</b>" + (ran ? '<span class="chip ' + (unsafe ? "bad" : "acc") + '">' + (unsafe ? "Bloqueado" : "Feito") + "</span>" : "") + '</div><div class="how">' + esc(t.how) + "</div>" +
+        (ran ? (t.reading ? '<span class="reading">' + esc(t.reading) + "</span>" : "") + '<p class="small">' + esc(t.result) + "</p>" : '<div><button class="btn sm" data-act="runtest" data-id="' + esc(t.id) + '">Executar teste</button></div>') + "</div>";
+    }).join("") + '</div><div class="row" style="margin-top:14px;justify-content:space-between"><span class="small muted">' + run.tests.length + " de " + arr(c.tests).length + ' testes executados</span><button class="btn primary" data-act="stage" data-n="4"' + (run.tests.length ? "" : " disabled") + ">Analisar resultados →</button></div></div>";
+  } else if (st === 4) {
+    main = '<div class="panel">' + sh + '<div class="tbl-wrap"><table><thead><tr><th>Teste</th><th>Leitura</th><th>Resultado</th></tr></thead><tbody>' +
+      run.tests.map(id => testMap[id]).filter(Boolean).map(t => "<tr><td>" + esc(t.name) + "</td><td>" + (t.reading ? '<span class="reading" style="font-size:.8rem">' + esc(t.reading) + "</span>" : "—") + '</td><td class="small">' + esc(t.result) + "</td></tr>").join("") + '</tbody></table></div><h3 style="margin-top:20px">Comparador de hipóteses</h3><div class="list">' +
+      run.hyps.map(id => hypMap[id]).filter(Boolean).map(h => { const m = run.marks[h.id] || ""; return '<div><span style="min-width:0">' + esc(h.text) + '</span><span class="marks">' + [["sup", "Sustentada"], ["wk", "Enfraquecida"], ["inc", "Inconclusiva"]].map(([k, l]) => '<button class="' + k + '" data-act="mark" data-id="' + esc(h.id) + '" data-v="' + k + '" aria-pressed="' + (m === k) + '">' + l + "</button>").join("") + "</span></div>"; }).join("") +
+      '</div><div class="row" style="margin-top:14px;justify-content:space-between"><button class="btn" data-act="stage" data-n="3">← Fazer mais testes</button><button class="btn primary" data-act="stage" data-n="5">Identificar a causa →</button></div></div>';
+  } else if (st === 5) {
+    main = '<div class="panel">' + sh + '<div class="stack" style="gap:8px">' + arr(c.causes).map(k => '<label class="opt' + (run.cause === k.id ? " sel" : "") + '"><input type="radio" name="cause" data-act="pick" data-f="cause" data-id="' + esc(k.id) + '"' + (run.cause === k.id ? " checked" : "") + "><span>" + esc(k.text) + "</span></label>").join("") + '</div><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn primary" data-act="lockcause"' + (run.cause ? "" : " disabled") + ">Confirmar causa →</button></div></div>";
+  } else if (st === 6) {
+    main = '<div class="panel">' + sh + '<div class="stack" style="gap:8px">' + arr(c.actions).map(k => '<label class="opt' + (run.action === k.id ? " sel" : "") + '"><input type="radio" name="action" data-act="pick" data-f="action" data-id="' + esc(k.id) + '"' + (run.action === k.id ? " checked" : "") + "><span>" + esc(k.text) + "</span></label>").join("") + '</div><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn primary" data-act="finish"' + (run.action ? "" : " disabled") + ">Concluir e ver correção →</button></div></div>";
+  }
+  const hints = arr(c.hints);
+  const hintPanel = st >= 2 && hints.length ? '<div class="panel stack"><div class="ph" style="margin:0"><h3>Dicas</h3><span class="chip">' + run.hints + "/" + hints.length + "</span></div>" + hints.slice(0, run.hints).map((h, i) => '<div class="hintbox"><b>Dica ' + (i + 1) + ":</b> " + esc(h) + "</div>").join("") + (run.hints < hints.length ? '<div><button class="btn warn sm" data-act="hint">Pedir dica ' + (run.hints + 1) + (S.prog.settings.hintPenalty ? " (−5 pontos)" : "") + "</button></div>" : '<span class="small muted">Todas as dicas usadas.</span>') + (run.notes ? '<div style="border-top:1px solid var(--line);padding-top:10px"><span class="eyebrow">Suas anotações</span><p class="small" style="white-space:pre-wrap;margin-top:4px">' + esc(run.notes) + "</p></div>" : "") + "</div>" : "";
+  const asideFicha = st === 1 ? fichaHTML(c, true) : '<details class="panel ficha fold" open><summary>Ficha do caso</summary>' + fichaInner(c, false) + "</details>";
+  return head(caseNo(c) + " · " + esc(c.equipment), esc(c.title), "", (c.demo ? '<span class="chip demo">Demo</span>' : "") + favBtn("cases:" + c.id) + '<button class="btn sm ghost" data-act="abandon" data-id="' + esc(c.id) + '">Recomeçar</button>', ["bancada", "Bancada"]) +
+    '<div class="panel" style="padding:18px 14px">' + stepper(run) + "</div>" +
+    '<div class="bench"><aside>' + asideFicha + '</aside><div class="stack" style="gap:16px">' + main + (st >= 2 ? '<div class="tools">' + hintPanel + assistPanel(c) + "</div>" : '<div class="tools">' + assistPanel(c) + "</div>") + "</div></div>";
+}
+
+function assistPanel(c) {
+  if (!S.sample) return '<div class="panel stack"><div class="ph" style="margin:0"><h3>Volter Assist</h3><span class="chip">IA</span></div><p class="small muted">' + (S.mode === "local" ? "Na versão publicada no GitHub, o assistente precisa de um servidor próprio para chamar a API de IA sem expor chaves. Ele está previsto para a fase 2." : "O assistente de IA aparece quando o Volter é aberto pelo claude.ai com uma conta conectada.") + "</p></div>";
+  const a = S.assist[c.id] || { msgs: [], busy: false };
+  return '<div class="panel assist"><div class="ph" style="margin:0"><h3>Volter Assist</h3><span class="chip acc">IA</span></div><p class="small muted">Ajuda a organizar o raciocínio. Não entrega a causa nem inventa valores.</p><div class="msgs" id="msgs">' +
+    (a.msgs.length ? a.msgs.map(m => '<div class="msg ' + (m.role === "user" ? "u" : "a") + '">' + esc(m.content) + "</div>").join("") : '<div class="small muted">Exemplos: "Que informação ainda falta?", "Por que medir tensão sobre um contato?", "Minhas hipóteses fazem sentido?"</div>') +
+    (a.busy ? '<div class="msg a muted">Pensando…</div>' : "") + (a.err ? '<div class="notice bad small">' + esc(a.err) + "</div>" : "") +
+    '</div><form class="stack" style="gap:8px" data-form="assist" data-id="' + esc(c.id) + '"><textarea id="assist-q" rows="2" placeholder="Pergunte sobre o caso…" required></textarea><div><button class="btn primary sm" type="submit"' + (a.busy ? " disabled" : "") + ">Perguntar</button></div></form></div>";
+}
+
+async function askAssist(caseId, q) {
+  const c = find("cases", caseId), run = S.prog.runs[caseId];
+  if (!c || !S.sample) return;
+  const a = S.assist[caseId] || (S.assist[caseId] = { msgs: [], busy: false });
+  a.msgs.push({ role: "user", content: q }); a.busy = true; a.err = ""; render(true);
+  const hyp = arr(c.hypotheses).filter(h => run && run.hyps.includes(h.id)).map(h => "- " + h.text).join("\n") || "(nenhuma ainda)";
+  const tests = arr(c.tests).filter(t => run && run.tests.includes(t.id)).map(t => "- " + t.name + ": " + t.result).join("\n") || "(nenhum ainda)";
+  const sys = "Você é o Volter Assist, tutor de diagnóstico de manutenção elétrica e industrial da plataforma educacional Volter. O aluno está resolvendo um caso na Bancada Virtual.\n" +
+    "Regras: 1) Ensine o raciocínio; NÃO revele qual é a causa nem a ação correta, mesmo se pedirem. 2) Não invente especificações de fabricante, códigos de falha ou valores de medição; use só os dados do caso. 3) Diferencie fatos do caso, hipóteses e sugestões. 4) Se faltar informação, diga o que falta. 5) Segurança em primeiro lugar: bloqueio e etiquetagem, verificação de ausência de tensão, EPI, habilitação; nunca oriente jumpear proteções ou intervir energizado sem habilitação. 6) Responda em português do Brasil, em no máximo 150 palavras, em texto simples sem markdown.\n\n" +
+    "CASO: " + c.title + "\nEquipamento: " + c.equipment + "\nContexto: " + c.context + "\nSintomas: " + arr(c.symptoms).join(" | ") + "\nHistórico: " + c.history + "\nQuando acontece: " + c.conditions + "\nInformações técnicas: " + arr(c.techInfo).join(" | ") +
+    "\nHipóteses escolhidas pelo aluno:\n" + hyp + "\nTestes já executados e resultados:\n" + tests + "\nEtapa atual: " + (run ? STAGES[run.stage - 1] : "-");
+  const msgs = a.msgs.map((m, i) => ({ role: m.role, content: i === 0 ? sys + "\n\nPERGUNTA DO ALUNO: " + m.content : m.content }));
+  try {
+    const res = await S.sample(msgs, { cache: false, onText: ({ text }) => { const box = $("#msgs"); if (box) { let el = $("#live", box); if (!el) { el = document.createElement("div"); el.id = "live"; el.className = "msg a"; box.appendChild(el); } el.textContent = text; box.scrollTop = box.scrollHeight; } } });
+    a.msgs.push({ role: "assistant", content: res.text });
+  } catch (e) {
+    a.msgs.pop(); a.err = e && e.code === "not_granted" ? "O assistente não foi autorizado nesta visualização." : e && e.code === "rate_limited" ? "Muitas perguntas seguidas. Aguarde um pouco e tente de novo." : "Não foi possível obter resposta agora. Tente de novo em instantes.";
+  }
+  a.busy = false; render(true);
+  const box = $("#msgs"); if (box) box.scrollTop = box.scrollHeight;
+}
+
+/* pontuação */
+function scoreRun(c, run) {
+  const correctHyp = arr(c.hypotheses).filter(h => h.correct).map(h => h.id);
+  let hyp = run.hyps.some(id => correctHyp.includes(id)) ? 20 : 5; hyp -= Math.max(0, run.hyps.length - 3) * 3; hyp = Math.max(0, Math.min(20, hyp));
+  const tests = arr(c.tests), used = tests.filter(t => run.tests.includes(t.id));
+  const need = Math.max(1, Math.min(3, tests.filter(t => t.value === "util").length));
+  const u = used.filter(t => t.value === "util").length, irr = used.filter(t => t.value === "irrelevante").length, neu = used.filter(t => t.value === "neutro").length;
+  let inv = 30 * Math.min(1, u / need) - irr * 4 - Math.max(0, neu - 2); inv = Math.max(0, Math.min(30, Math.round(inv)));
+  const cause = arr(c.causes).find(k => k.id === run.cause), action = arr(c.actions).find(k => k.id === run.action);
+  const diag = cause && cause.correct ? 30 : 0, sol = action && action.correct ? 20 : 0;
+  const unsafe = used.filter(t => t.value === "inseguro").length + (action && action.unsafe ? 1 : 0);
+  const hintPen = S.prog.settings.hintPenalty ? run.hints * 5 : 0;
+  return { score: Math.max(0, Math.min(100, hyp + inv + diag + sol - unsafe * 10 - hintPen)), parts: { hyp, inv, diag, sol, seg: unsafe ? 0 : 100 }, unsafe, hintPen };
+}
+function ring(v) { const r = 54, c = 2 * Math.PI * r; return '<div class="ring"><svg viewBox="0 0 132 132" aria-hidden="true"><circle cx="66" cy="66" r="' + r + '" fill="none" stroke="var(--surface-2)" stroke-width="12"/><circle cx="66" cy="66" r="' + r + '" fill="none" stroke="' + (v >= 70 ? "var(--accent)" : v >= 40 ? "var(--warn)" : "var(--bad)") + '" stroke-width="12" stroke-linecap="round" stroke-dasharray="' + (c * v / 100).toFixed(1) + " " + c.toFixed(1) + '"/></svg><div class="v"><div>' + v + "<small>de 100</small></div></div></div>"; }
+
+VIEWS.correcao = id => {
+  const c = visible("cases", id); const at = (S.prog.attempts[id] || []).slice(-1)[0];
+  if (!c || !at) return emptyBox("Nenhuma tentativa concluída para este caso.", '<button class="btn" data-act="go" data-r="bancada">Voltar à Bancada</button>');
+  const P = at.parts, bars = [["Raciocínio", P.hyp, 20], ["Investigação", P.inv, 30], ["Diagnóstico", P.diag, 30], ["Solução", P.sol, 20], ["Segurança", P.seg, 100]];
+  const cause = arr(c.causes).find(k => k.correct), myCause = arr(c.causes).find(k => k.id === at.cause);
+  const act = arr(c.actions).find(k => k.correct), myAct = arr(c.actions).find(k => k.id === at.action);
+  const SO = c.solution || {}; const li = a => '<ul style="margin:0;padding-left:18px">' + arr(a).map(s => "<li>" + esc(s) + "</li>").join("") + "</ul>";
+  const tv = { util: ["acc", "Útil"], neutro: ["", "Neutro"], irrelevante: ["bad", "Irrelevante"], inseguro: ["bad", "Inseguro"] };
+  return head("Etapa 7 · Aprender · " + caseNo(c), esc(c.title), "", favBtn("cases:" + id) + '<button class="btn primary" data-act="start" data-id="' + esc(id) + '">Refazer</button>', ["bancada", "Bancada"]) +
+    '<div class="panel score">' + ring(at.score) + '<div class="bars">' + bars.map(([l, v, m]) => '<div class="bar"><span>' + l + '</span><span class="tr"><i style="width:' + Math.round(v / m * 100) + '%"></i></span><span class="v">' + (m === 100 ? (v ? "OK" : "falhou") : v + "/" + m) + "</span></div>").join("") + "</div></div>" +
+    (at.unsafe ? '<div class="notice bad"><b>Atenção à segurança:</b> você escolheu ' + at.unsafe + " procedimento(s) inseguro(s). Cada um tirou 10 pontos. Veja os comentários abaixo.</div>" : "") +
+    (at.hints ? '<div class="notice">Você usou ' + at.hints + " dica(s)" + (at.hintPen ? " (−" + at.hintPen + " pontos)" : "") + ".</div>" : "") +
+    '<div class="split"><div class="stack" style="gap:18px"><div class="panel stack"><h3>Solução comentada</h3><p>' + esc(SO.explanation) + '</p><div class="stack" style="gap:8px"><div class="opt ' + (myCause && myCause.correct ? "right" : "wrong") + '"><span><b>Sua causa:</b> ' + esc(myCause ? myCause.text : "—") + "</span></div>" + (myCause && myCause.correct ? "" : '<div class="opt right"><span><b>Causa correta:</b> ' + esc(cause ? cause.text : "") + "</span></div>") +
+    '<div class="opt ' + (myAct && myAct.correct ? "right" : "wrong") + '"><span><b>Sua ação:</b> ' + esc(myAct ? myAct.text : "—") + (myAct && myAct.feedback ? '<br><span class="small">' + esc(myAct.feedback) + "</span>" : "") + "</span></div>" + (myAct && myAct.correct ? "" : '<div class="opt right"><span><b>Ação recomendada:</b> ' + esc(act ? act.text : "") + "</span></div>") + "</div></div>" +
+    '<div class="panel"><h3>A lógica do diagnóstico</h3><div class="timeline">' + arr(SO.logic).map((s, i) => '<div class="tl-item done" style="padding:8px 0"><span class="tl-dot" style="width:32px;height:32px">' + (i + 1) + '</span><p style="padding-top:5px">' + esc(s) + "</p><span></span></div>").join("") + "</div></div>" +
+    '<div class="panel"><h3>Seus testes</h3><div class="list">' + arr(c.tests).map(t => { const ran = at.tests.includes(t.id); const [cl, lb] = tv[t.value] || ["", t.value]; return '<div style="align-items:flex-start"><div style="min-width:0"><b class="small">' + (ran ? "✓ " : "") + esc(t.name) + '</b><div class="small muted">' + esc(t.insight) + '</div></div><span class="chip ' + cl + '">' + lb + (ran ? "" : " · não feito") + "</span></div>"; }).join("") + "</div></div></div>" +
+    '<div class="stack" style="gap:18px"><div class="panel"><h3>Erros comuns</h3>' + li(SO.mistakes) + '</div><div class="panel"><h3>Lições do caso</h3>' + li(SO.lessons) + "</div></div></div>";
+};
+
+/* ----- Aprender ----- */
+function trackLessons() { return pub("lessons").filter(l => (l.track || TRACK.id) === TRACK.id).sort((a, b) => (a.order || 0) - (b.order || 0)); }
+VIEWS.aprender = () => {
+  const ls = trackLessons(); const done = ls.filter(l => S.prog.lessons[l.id] && S.prog.lessons[l.id].done).length;
+  const firstOpen = ls.find(l => !(S.prog.lessons[l.id] && S.prog.lessons[l.id].done));
+  const levels = [["Nível 1", "Fundamentos", "Grandezas, instrumentos, diagramas e componentes."], ["Nível 2", "Comandos e manutenção", "Contatores, motores, métodos de medição."], ["Nível 3", "Automação industrial", "Sensores, CLPs, inversores, redes."], ["Nível 4", "Diagnóstico avançado", "Falhas intermitentes, causa raiz, preditiva."], ["Nível 5", "Casos profissionais", "Casos integrados e decisão sob restrição."]];
+  return dbNotice() + head("Trilhas", "Aprender", "Comece pela trilha de diagnóstico elétrico. As outras trilhas da progressão serão publicadas nas próximas etapas.") +
+    '<div class="split"><div class="panel"><div class="ph"><div><span class="eyebrow">Trilha disponível</span><h2>' + TRACK.title + '</h2></div><span class="chip ' + (done === ls.length && ls.length ? "ok" : "acc") + '">' + done + "/" + ls.length + ' concluídas</span></div><p class="muted" style="margin-bottom:8px">' + TRACK.desc + '</p><div class="timeline">' +
+    (ls.map((l, i) => { const p = S.prog.lessons[l.id]; const cls = p && p.done ? "done" : l === firstOpen ? "next" : ""; return '<div class="tl-item ' + cls + '"><span class="tl-dot">' + (p && p.done ? "✓" : i + 1) + '</span><div style="min-width:0"><span class="eyebrow">Lição ' + (i + 1) + " · " + (l.minutes || 5) + ' min</span><h3><button class="link" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">' + esc(l.title) + '</button></h3><p class="small muted">' + esc(l.summary) + "</p></div>" + (p && p.done ? '<span class="chip ok">' + p.score + "/" + arr(l.questions).length + "</span>" : l === firstOpen ? '<button class="btn sm primary" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">Estudar</button>' : "<span></span>") + "</div>"; }).join("") || '<p class="muted">Nenhuma lição publicada.</p>') +
+    '</div></div><div class="panel"><h3>Progressão completa</h3><div class="list">' + levels.map(([n, t, d], i) => '<div style="align-items:flex-start"><div><span class="eyebrow">' + n + "</span><br><b>" + t + '</b><div class="small muted">' + d + "</div></div>" + (i < 2 ? '<span class="chip acc">Na trilha</span>' : '<span class="chip">Em breve</span>') + "</div>").join("") + "</div></div></div>";
+};
+
+VIEWS.licao = id => {
+  const l = visible("lessons", id); if (!l) return dbNotice() || emptyBox("Lição não encontrada.", '<button class="btn" data-act="go" data-r="aprender">Voltar</button>');
+  const ls = trackLessons(), idx = ls.findIndex(x => x.id === id), next = ls[idx + 1], prev = ls[idx - 1];
+  const p = S.prog.lessons[id] || { answers: {} }; const qs = arr(l.questions);
+  return head("Lição " + (idx + 1) + " de " + ls.length + " · " + (l.minutes || 5) + " min", esc(l.title), esc(l.summary), favBtn("lessons:" + id), ["aprender", TRACK.title]) +
+    '<div class="split"><div class="stack" style="gap:20px"><div class="panel"><div class="prose">' + md(l.body) + "</div></div>" + (l.diagram === "partida-direta" ? diagramPartida() : "") +
+    '<div class="panel stack"><div class="ph" style="margin:0"><h3>Verifique o aprendizado</h3>' + (p.done ? '<span class="chip ok">' + p.score + "/" + qs.length + "</span>" : "") + "</div>" + qs.map((q, qi) => quizQ(q, p.answers[qi], "lq", id, qi)).join('<hr style="border:0;border-top:1px solid var(--line);margin:4px 0">') + (p.done ? '<div class="row"><span class="notice ok" style="flex:1">Lição concluída.</span><button class="btn sm" data-act="resetlesson" data-id="' + esc(id) + '">Refazer exercícios</button></div>' : "") + "</div>" +
+    '<div class="row" style="justify-content:space-between">' + (prev ? '<button class="btn" data-act="go" data-r="licao" data-id="' + esc(prev.id) + '">← Anterior</button>' : "<span></span>") + (next ? '<button class="btn primary" data-act="go" data-r="licao" data-id="' + esc(next.id) + '">Próxima: ' + esc(next.title) + " →</button>" : '<button class="btn primary" data-act="go" data-r="bancada">Praticar na Bancada →</button>') + "</div></div>" +
+    '<div class="stack" style="gap:18px"><div class="panel"><h3>Pontos-chave</h3><ul style="margin:0;padding-left:18px">' + arr(l.keypoints).map(k => "<li>" + esc(k) + "</li>").join("") + '</ul></div><div class="panel"><h3>Nesta trilha</h3><div class="lnav">' + ls.map((x, i) => { const pp = S.prog.lessons[x.id]; return '<button data-act="go" data-r="licao" data-id="' + esc(x.id) + '"' + (x.id === id ? ' aria-current="page"' : "") + '><span class="d' + (pp && pp.done ? " ok" : "") + '">' + (pp && pp.done ? "✓" : i + 1) + "</span>" + esc(x.title) + "</button>"; }).join("") + "</div></div></div></div>";
+};
+function quizQ(q, chosen, kind, ref, qi, noNum) {
+  const opts = q.type === "vf" ? ["Verdadeiro", "Falso"] : arr(q.options);
+  const ans = Number(q.answer) - 1, answered = chosen != null;
+  return '<div class="stack" style="gap:8px"><b>' + (noNum ? "" : (qi + 1) + ". ") + esc(q.prompt) + '</b><div class="stack" style="gap:6px">' + opts.map((o, oi) => {
+    let cls = ""; if (answered) { if (oi === ans) cls = " right"; else if (oi === chosen) cls = " wrong"; }
+    return '<button class="opt' + cls + '" ' + (answered ? "disabled" : 'data-act="' + kind + '" data-ref="' + esc(ref) + '" data-qi="' + qi + '" data-oi="' + oi + '"') + "><span>" + esc(o) + "</span></button>";
+  }).join("") + "</div>" + (answered ? '<p class="small"><b>' + (chosen === ans ? "Certo." : "Não é essa.") + "</b> " + esc(q.explain) + "</p>" : "") + "</div>";
+}
+
+/* ----- Desafios ----- */
+VIEWS.desafios = () => {
+  const d = dailyCase(), qz = S.quiz, pool = questionPool(), hist = S.prog.quick.slice(-6).reverse();
+  let quiz;
+  if (!qz) quiz = '<p class="muted">Cinco questões sorteadas das lições publicadas. Bom para revisar em poucos minutos.</p><div><button class="btn primary" data-act="quizstart"' + (pool.length ? "" : " disabled") + ">Começar treino</button></div>" + (pool.length ? "" : '<p class="small muted">Publique lições com exercícios para liberar o treino.</p>');
+  else if (qz.i < qz.qs.length) { const it = qz.qs[qz.i]; quiz = '<div class="row" style="justify-content:space-between"><span class="eyebrow">Questão ' + (qz.i + 1) + " de " + qz.qs.length + '</span><span class="chip">' + esc((find("lessons", it.lessonId) || {}).title || "") + "</span></div>" + quizQ(it.q, qz.answers[qz.i], "qq", "quick", qz.i, true) + (qz.answers[qz.i] != null ? '<div><button class="btn primary" data-act="quiznext">' + (qz.i + 1 < qz.qs.length ? "Próxima →" : "Ver resultado") + "</button></div>" : ""); }
+  else { const sc = qz.qs.filter((it, i) => qz.answers[i] === Number(it.q.answer) - 1).length; quiz = '<div class="score">' + ring(Math.round(sc / qz.qs.length * 100)) + '<div class="stack"><b>' + sc + " de " + qz.qs.length + ' acertos</b><p class="muted small">Revise as lições das questões que errou.</p><div class="row"><button class="btn primary" data-act="quizstart">Novo treino</button><button class="btn" data-act="quizclose">Fechar</button></div></div></div>'; }
+  return dbNotice() + head("Prática", "Desafios", "A ordem de serviço do dia muda a cada dia entre os casos publicados. O treino rápido revisa as lições.") +
+    '<div class="split"><div class="panel stack"><h3>Treino rápido</h3>' + quiz + "</div>" +
+    '<div class="stack" style="gap:18px">' + (d ? '<div class="panel stack"><span class="eyebrow">Ordem de serviço do dia</span><h3>' + esc(d.title) + '</h3><p class="small muted">' + esc(d.summary) + '</p><div><button class="btn primary" data-act="go" data-r="caso" data-id="' + esc(d.id) + '">Atender a OS</button></div></div>' : "") +
+    '<div class="panel"><h3>Últimos treinos</h3><div class="list">' + (hist.map(h => '<div><span class="small">' + fmtDate(h.at) + '</span><span class="mono">' + h.score + "/" + h.total + "</span></div>").join("") || '<div class="muted small">Nenhum treino ainda.</div>') + "</div></div></div></div>";
+};
+function questionPool() { return trackLessons().flatMap(l => arr(l.questions).map(q => ({ lessonId: l.id, q }))); }
+
+/* ----- Histórias ----- */
+VIEWS.historias = () => {
+  const list = pub("stories").sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
+  return dbNotice() + head("Experiência transformada em conhecimento", "Histórias de Campo", "Relatos de manutenção contados do sintoma à causa raiz, com os erros e as descobertas do caminho. Relatos reais têm o selo “Relato de campo”.") +
+    (list.length ? '<div class="grid">' + list.map(s => '<button class="card" data-act="go" data-r="historia" data-id="' + esc(s.id) + '">' + (s.cover ? '<img class="cover" style="max-height:150px" src="/_blob/' + esc(s.cover) + '" alt="">' : "") + '<span class="eyebrow">' + esc(s.category) + "</span><h3>" + esc(s.title) + '</h3><p class="small muted">' + esc(s.summary) + '</p><div class="foot">' + (s.kind === "campo" ? '<span class="chip acc">Relato de campo</span>' : '<span class="chip demo">Exemplo demonstrativo</span>') + (s.caseId ? '<span class="chip">Tem desafio</span>' : "") + "</div></button>").join("") + "</div>" : emptyBox("Nenhuma história publicada ainda."));
+};
+VIEWS.historia = id => {
+  const s = visible("stories", id); if (!s) return dbNotice() || emptyBox("História não encontrada.", '<button class="btn" data-act="go" data-r="historias">Voltar</button>');
+  const secs = [["Contexto", s.context], ["Sintomas iniciais", s.symptoms], ["Primeiras hipóteses", s.firstHypotheses], ["Testes realizados", s.tests], ["Erros e descobertas", s.difficulties], ["Causa raiz", s.rootCause], ["Solução aplicada", s.solution], ["Lições aprendidas", s.lessons]];
+  const caseOk = s.caseId && visible("cases", s.caseId);
+  return head(esc(s.category), esc(s.title), esc(s.summary), favBtn("stories:" + id), ["historias", "Histórias"]) +
+    (s.kind === "campo" ? '<div class="notice info">Relato de campo: experiência real de manutenção.</div>' : '<div class="notice">Exemplo demonstrativo criado para mostrar o formato da seção. Não descreve um acontecimento real.</div>') +
+    (s.cover ? '<img class="cover" src="/_blob/' + esc(s.cover) + '" alt="Imagem de capa">' : "") +
+    '<div class="split"><div class="panel">' + secs.filter(x => x[1]).map(([h, t]) => '<div class="story-sec"><h4>' + h + '</h4><div class="prose">' + md(t) + "</div></div>").join("") + "</div>" +
+    '<div class="stack" style="gap:18px"><div class="panel"><h3>Checklist para casos parecidos</h3><div class="stack" style="gap:8px">' + arr(s.checklist).map((c, i) => '<label class="chk"><input type="checkbox" id="ck-' + i + '"> ' + esc(c) + "</label>").join("") + '</div></div><div class="panel stack"><h3>Para pensar</h3><p>' + esc(s.question) + "</p></div>" +
+    (caseOk ? '<div class="panel stack"><h3>Resolva como desafio</h3><p class="small muted">Esta história tem um caso interativo na Bancada.</p><div><button class="btn primary" data-act="go" data-r="caso" data-id="' + esc(s.caseId) + '">Abrir na Bancada</button></div></div>' : "") + "</div></div>";
+};
+
+/* ----- Notícias ----- */
+VIEWS.noticias = () => {
+  const u = S.ui, q = u.q.trim().toLowerCase();
+  const items = pub("news").filter(n => (!u.ncat || n.category === u.ncat) && (!q || [n.title, n.summary, n.impact, arr(n.keywords).join(" ")].join(" ").toLowerCase().includes(q)))
+    .sort((a, b) => String(b.publishedAt || b.updatedAt).localeCompare(String(a.publishedAt || a.updatedAt)));
+  const last = pub("news").map(n => n.updatedAt).sort().pop();
+  const cats = [...new Set(pub("news").map(n => n.category))];
+  const recent = n => n.publishedAt && (Date.now() - new Date(n.publishedAt + "T12:00:00")) < 90 * 864e5;
+  return dbNotice() + head("Atualização técnica", "Notícias Técnicas", "Cada notícia traz a fonte original, a data de publicação e o que ela significa para quem trabalha com manutenção.") +
+    '<div class="notice info small">Seção atualizada em ' + (fmtDate(last) || "—") + ". As notícias são cadastradas manualmente pelo administrador; ainda não há importação automática de fontes.</div>" +
+    '<div class="filters"><input type="search" id="news-q" data-act-input="newsq" placeholder="Buscar por assunto…" value="' + esc(u.q) + '" style="max-width:320px" aria-label="Buscar notícias"><div class="seg"><button data-act="ui" data-k="ncat" data-v="" aria-pressed="' + (!u.ncat) + '">Todas</button>' + cats.map(c => '<button data-act="ui" data-k="ncat" data-v="' + esc(c) + '" aria-pressed="' + (u.ncat === c) + '">' + esc(c) + "</button>").join("") + "</div></div>" +
+    (items.length ? '<div class="stack">' + items.map(n => { const open = S.ui.open["n:" + n.id];
+      return '<article class="panel stack"><div class="row" style="justify-content:space-between;align-items:flex-start"><div style="min-width:0"><span class="eyebrow">' + esc(n.category) + "</span><h3>" + esc(n.title) + "</h3></div>" + (n.demo ? '<span class="chip demo">Exemplo — não é notícia real</span>' : recent(n) ? '<span class="chip ok">Recente</span>' : n.publishedAt ? '<span class="chip">Referência</span>' : "") + "</div><p>" + esc(n.summary) + '</p><div class="row small muted" style="gap:6px">' + (n.sourceName ? "<span>Fonte: " + esc(n.sourceName) + "</span>" : "<span>Sem fonte cadastrada</span>") + (n.publishedAt ? "<span>· Publicada em " + fmtDate(n.publishedAt) + "</span>" : "") + (n.sourceUpdatedAt ? "<span>· Atualizada em " + fmtDate(n.sourceUpdatedAt) + "</span>" : "") + "</div>" +
+        (open ? '<div class="stack" style="gap:10px;border-top:1px solid var(--line);padding-top:12px">' + [["O que muda para o técnico", n.impact], ["Aplicação prática", n.practice], ["Leitura complementar", n.further]].filter(x => x[1]).map(([h, t]) => '<div><span class="eyebrow">' + h + "</span><p>" + esc(t) + "</p></div>").join("") + "</div>" : "") +
+        '<div class="row"><button class="btn sm" data-act="toggle" data-k="n:' + esc(n.id) + '">' + (open ? "Recolher" : "Ver análise") + "</button>" + (n.url && /^https?:\/\//.test(n.url) ? '<a class="btn sm" href="' + esc(n.url) + '" target="_blank" rel="noopener">Abrir fonte original ↗</a>' : "") + favBtn("news:" + n.id) + "</div></article>"; }).join("") + "</div>" : emptyBox("Nenhuma notícia encontrada."));
+};
+
+/* ----- Progresso ----- */
+function calcXP() { let x = 0; for (const id in S.prog.attempts) { const a = S.prog.attempts[id]; if (a.length) x += Math.max(...a.map(t => t.score)); } for (const id in S.prog.lessons) if (S.prog.lessons[id].done) x += 20; return x; }
+const LV = [[0, "Aprendiz"], [150, "Auxiliar"], [400, "Técnico"], [800, "Técnico sênior"], [1400, "Especialista"]];
+function levelFor(x) { let r = LV[0]; LV.forEach(l => { if (x >= l[0]) r = l; }); const i = LV.indexOf(r); return { name: r[1], min: r[0], next: LV[i + 1] }; }
+function avgBest() { const b = Object.values(S.prog.attempts).filter(a => a.length).map(a => Math.max(...a.map(t => t.score))); return b.length ? Math.round(b.reduce((s, v) => s + v, 0) / b.length) : "—"; }
+VIEWS.progresso = () => {
+  const xp = calcXP(), lv = levelFor(xp);
+  const atts = Object.entries(S.prog.attempts).flatMap(([id, a]) => a.map(t => Object.assign({ id }, t)));
+  const comp = k => { const v = atts.map(a => a.parts[k] / ({ hyp: 20, inv: 30, diag: 30, sol: 20, seg: 100 })[k]); return v.length ? Math.round(v.reduce((s, x) => s + x, 0) / v.length * 100) : 0; };
+  const ls = trackLessons(); const allDone = ls.length && ls.every(l => S.prog.lessons[l.id] && S.prog.lessons[l.id].done);
+  const last = {}; atts.forEach(a => last[a.id] = a);
+  const badges = [["1º", "Primeiro diagnóstico", "Concluiu um caso na Bancada", atts.length > 0], ["IN", "Investigador eficiente", "Investigação com 90% ou mais", atts.some(a => a.parts.inv >= 27)], ["SG", "Sem atalhos", "3 casos sem procedimento inseguro", Object.values(last).filter(a => !a.unsafe).length >= 3], ["SD", "Sem dicas", "Acertou a causa sem pedir dica", atts.some(a => !a.hints && a.parts.diag)], ["TR", "Trilha concluída", TRACK.title, !!allDone], ["5/5", "Treino perfeito", "5 de 5 no treino rápido", S.prog.quick.some(q => q.score === q.total && q.total >= 5)]];
+  const recCase = pub("cases").find(c => !S.prog.attempts[c.id]); const recLesson = ls.find(l => !(S.prog.lessons[l.id] && S.prog.lessons[l.id].done));
+  const weak = ["hyp", "inv", "diag", "sol"].map(k => [k, comp(k)]).sort((a, b) => a[1] - b[1])[0];
+  const weakTip = { hyp: "Treine a formulação de hipóteses: releia a lição “O método do diagnóstico”.", inv: "Escolha testes que separam hipóteses. Reveja “Tensão, corrente e continuidade”.", diag: "Antes de confirmar a causa, use o comparador de hipóteses na etapa 4.", sol: "Na etapa 6, prefira ações que resolvem a causa, não o sintoma." }[weak[0]];
+  const where = S.mode === "local" ? "Seu progresso fica salvo neste navegador." : S.progWhere === "conta" ? "Seu progresso está salvo na sua conta e acompanha você em outros dispositivos." : S.uid && S.progWhere !== "local-only" ? "Sincronizando com a sua conta…" : "Seu progresso está salvo apenas neste navegador.";
+  return head("Área do aluno", "Meu Progresso", where) +
+    '<section class="stats"><div class="stat"><span class="eyebrow">Nível</span><b>' + lv.name + '</b><span class="small muted">' + (lv.next ? (lv.next[0] - xp) + " XP para " + lv.next[1] : "Nível máximo") + '</span><div class="meter"><i style="width:' + (lv.next ? Math.round((xp - lv.min) / (lv.next[0] - lv.min) * 100) : 100) + '%"></i></div></div><div class="stat"><span class="eyebrow">Experiência</span><b>' + xp + '</b><span class="small muted">XP</span></div><div class="stat"><span class="eyebrow">Tentativas</span><b>' + atts.length + '</b></div><div class="stat"><span class="eyebrow">Lições</span><b>' + Object.values(S.prog.lessons).filter(l => l.done).length + "</b></div></section>" +
+    '<div class="split"><div class="stack" style="gap:18px"><div class="panel"><h3>Competências</h3>' + (atts.length ? '<div class="bars">' + [["Raciocínio", "hyp"], ["Investigação", "inv"], ["Diagnóstico", "diag"], ["Solução", "sol"], ["Segurança", "seg"]].map(([l, k]) => { const v = comp(k); return '<div class="bar"><span>' + l + '</span><span class="tr"><i style="width:' + v + '%"></i></span><span class="v">' + v + "%</span></div>"; }).join("") + "</div>" : '<p class="muted small">Conclua um caso na Bancada para ver suas competências.</p>') + "</div>" +
+    '<div class="panel"><h3>Distintivos</h3><div class="badges">' + badges.map(([ic, t, d, on]) => '<div class="badge' + (on ? " on" : "") + '"><span class="ico">' + ic + '</span><div><b class="small">' + t + '</b><div class="small muted">' + d + "</div></div></div>").join("") + "</div></div>" +
+    '<div class="panel"><h3>Histórico</h3><div class="list">' + (atts.sort((a, b) => b.at.localeCompare(a.at)).slice(0, 12).map(a => { const c = find("cases", a.id); return '<div><div style="min-width:0"><button class="link" data-act="go" data-r="correcao" data-id="' + esc(a.id) + '">' + esc(c ? c.title : a.id) + '</button><div class="small muted">' + fmtDate(a.at) + (a.unsafe ? " · procedimento inseguro" : "") + '</div></div><span class="mono">' + a.score + "/100</span></div>"; }).join("") || '<div class="muted small">Nenhuma tentativa ainda.</div>') + "</div></div></div>" +
+    '<div class="stack" style="gap:18px"><div class="panel stack"><h3>Próximos estudos</h3>' + (recLesson ? '<div class="list"><div><div><span class="eyebrow">Próxima lição</span><br><button class="link" data-act="go" data-r="licao" data-id="' + esc(recLesson.id) + '">' + esc(recLesson.title) + "</button></div></div>" : '<div class="list">') + (recCase ? '<div><div><span class="eyebrow">Caso não resolvido</span><br><button class="link" data-act="go" data-r="caso" data-id="' + esc(recCase.id) + '">' + esc(recCase.title) + "</button></div></div>" : "") + "</div>" + (atts.length ? '<p class="small notice info">' + weakTip + "</p>" : "") + "</div>" +
+    '<div class="panel stack"><h3>Preferências</h3><label class="chk"><input type="checkbox" id="pref-hint" data-act="pref" data-k="hintPenalty"' + (S.prog.settings.hintPenalty ? " checked" : "") + '> Descontar 5 pontos por dica</label><p class="small muted">Desligue para estudar sem pressão. A nota continua mostrando quantas dicas foram usadas.</p></div></div></div>';
+};
+
+/* ----- Favoritos ----- */
+VIEWS.favoritos = () => {
+  const groups = { cases: [], stories: [], news: [], lessons: [] };
+  S.prog.favorites.forEach(k => { const [t, id] = k.split(":"); const x = groups[t] && visible(t, id); if (x) groups[t].push(x); });
+  const any = Object.values(groups).some(g => g.length);
+  return head("Salvos", "Favoritos", "Casos, lições, histórias e notícias que você marcou.") +
+    (any ? '<div class="grid">' + Object.entries(groups).filter(([, g]) => g.length).map(([t, g]) => '<div class="panel"><h3>' + TYPES[t].label + '</h3><div class="list">' + g.map(x => '<div><button class="link" data-act="go" data-r="' + ROUTE_OF[t] + '" data-id="' + esc(t === "news" ? "" : x.id) + '">' + esc(x.title) + '</button><button class="btn ghost sm" data-act="fav" data-k="' + t + ":" + esc(x.id) + '" aria-label="Remover dos favoritos">Remover</button></div>').join("") + "</div></div>").join("") + "</div>" : emptyBox("Você ainda não favoritou nada. Use o botão ☆ Favoritar nos casos, lições, histórias e notícias."));
+};
+
+/* ----- Roteiro ----- */
+VIEWS.roteiro = () => {
+  const P = [["Fase 1 · MVP", "Disponível", "ok", ["Painel, identidade visual e navegação", "Bancada Virtual com 7 etapas, dicas e correção comentada", "Trilha de diagnóstico elétrico com exercícios", "Histórias de Campo e Notícias com cadastro manual", "Progresso, distintivos e favoritos", "Administração com rascunho, revisão, publicação e arquivamento", "Volter Assist (IA) dentro da Bancada, na versão do claude.ai"]],
+    ["Fase 2 · Aprimoramento", "Planejada", "acc", ["Servidor próprio (banco de dados e IA) para a versão do GitHub", "Biblioteca Técnica com documentos e normas por edição", "Mais tipos de desafio: associação, ordenação, interpretação de diagrama", "Estatísticas de aprendizagem para o administrador", "Área Programação & IA: lógica, Python, web, IA na prática e agentes"]],
+    ["Fase 3 · Expansão", "Planejada", "", ["Modo empresa: turmas, atribuição de desafios e relatórios", "Simulador de instrumentos (multímetro e alicate)", "Importação de notícias por RSS ou API autorizada", "Aplicativo instalável e modo offline", "Certificados com critérios de avaliação definidos"]]];
+  const L = S.mode === "local";
+  const I = [["Conteúdo", L ? "Arquivo data/conteudo.js" : S.db ? "Banco de dados do app" : "Indisponível", true], ["Progresso do aluno", L ? "Neste navegador" : S.uid ? "Na conta do aluno" : "Neste navegador", true], ["Edição de conteúdo", L ? "Local, com exportação" : S.admin ? "Compartilhada" : "Somente administradores", true], ["Volter Assist (IA)", S.sample ? "Funcionando" : L ? "Precisa de servidor (fase 2)" : "Indisponível nesta visualização", !!S.sample], ["Envio de imagens", S.assets ? "Funcionando" : "Indisponível neste modo", !!S.assets], ["Notícias automáticas", "Não implementado", false]];
+  return head("Transparência", "Próximas etapas", "O que já funciona no Volter, o que depende de configuração e o que está planejado.") +
+    '<div class="split"><div class="panel">' + P.map(([t, s, cl, items]) => '<div class="phase"><div><b>' + t + '</b><br><span class="chip ' + cl + '">' + s + '</span></div><ul style="margin:0;padding-left:18px">' + items.map(i => "<li>" + i + "</li>").join("") + "</ul></div>").join("") + '</div><div class="panel"><h3>Integrações ' + (L ? "· modo local" : "· claude.ai") + '</h3><div class="list">' + I.map(([n, s, ok]) => "<div><span>" + n + '</span><span class="chip ' + (ok ? "ok" : "") + '">' + s + "</span></div>").join("") + "</div></div></div>";
+};
+
+/* ================= ADMINISTRAÇÃO ================= */
+const sec = (l, h) => ({ sec: l, h });
+const FIELDS = {
+  cases: [
+    sec("Identificação"),
+    { k: "title", l: "Título do problema", t: "text", req: 1, w: 1 },
+    { k: "equipment", l: "Equipamento ou sistema", t: "text", w: 1 },
+    { k: "area", l: "Área", t: "select", o: AREAS.map(a => [a, a]) },
+    { k: "level", l: "Nível", t: "select", o: LEVELS, num: 1 },
+    { k: "source", l: "Origem", t: "select", o: [["didatico", "Caso didático"], ["campo", "Baseado em relato de campo"]] },
+    { k: "demo", l: "Marcar como conteúdo demonstrativo", t: "check" },
+    { k: "summary", l: "Resumo para a lista", t: "textarea", w: 1 },
+    sec("Ficha do caso", "O que o aluno vê desde o início."),
+    { k: "context", l: "Contexto operacional", t: "textarea", w: 1 },
+    { k: "symptoms", l: "Sintomas observados", h: "Um por linha", t: "lines", w: 1 },
+    { k: "history", l: "Histórico do equipamento", t: "textarea" },
+    { k: "conditions", l: "Condições em que a falha acontece", t: "textarea" },
+    { k: "techInfo", l: "Informações técnicas", h: "Uma por linha. Não coloque aqui o que entrega a resposta.", t: "lines", w: 1 },
+    { k: "image", l: "Foto ou diagrama", t: "image" },
+    { k: "diagram", l: "Diagrama pronto", t: "select", o: [["", "Nenhum"], ["partida-direta", "Comando de partida direta"]] },
+    { k: "objective", l: "Objetivo do desafio", t: "textarea", w: 1 },
+    sec("Investigação", "Hipóteses e testes com resultados definidos."),
+    { k: "hypotheses", l: "Hipóteses oferecidas ao aluno", h: "Marque a(s) que correspondem à causa real.", t: "rep", sub: [{ k: "text", l: "Hipótese", t: "text", w: 1 }, { k: "correct", l: "Corresponde à causa real", t: "check" }] },
+    { k: "tests", l: "Testes disponíveis", h: "Testes inseguros não são executados e tiram 10 pontos.", t: "rep", sub: [{ k: "name", l: "Teste", t: "text", w: 1 }, { k: "how", l: "Condição de execução", t: "text", w: 1 }, { k: "result", l: "Resultado mostrado ao aluno", t: "textarea", w: 1 }, { k: "reading", l: "Leitura (opcional)", t: "text" }, { k: "value", l: "Valor diagnóstico", t: "select", o: TESTVAL }, { k: "insight", l: "Comentário na correção", t: "textarea", w: 1 }] },
+    { k: "hints", l: "Dicas progressivas", h: "Uma por linha, da mais leve à mais direta.", t: "lines", w: 1 },
+    sec("Causa e solução"),
+    { k: "causes", l: "Causas para a etapa 5", h: "Marque exatamente uma como correta.", t: "rep", sub: [{ k: "text", l: "Causa", t: "text", w: 1 }, { k: "correct", l: "Causa correta", t: "check" }] },
+    { k: "actions", l: "Ações para a etapa 6", t: "rep", sub: [{ k: "text", l: "Ação", t: "text", w: 1 }, { k: "correct", l: "Ação correta", t: "check" }, { k: "unsafe", l: "Ação insegura (−10)", t: "check" }, { k: "feedback", l: "Comentário na correção", t: "text", w: 1 }] },
+    sec("Correção comentada", "Aparece na etapa 7."),
+    { k: "solution.explanation", l: "Solução comentada", t: "textarea", w: 1 },
+    { k: "solution.logic", l: "Lógica do diagnóstico", h: "Um passo por linha", t: "lines", w: 1 },
+    { k: "solution.mistakes", l: "Erros comuns", h: "Um por linha", t: "lines" },
+    { k: "solution.lessons", l: "Lições do caso", h: "Uma por linha", t: "lines" },
+    { k: "tags", l: "Etiquetas", h: "Separadas por vírgula", t: "tags", w: 1 }
+  ],
+  stories: [
+    sec("Identificação"),
+    { k: "title", l: "Título", t: "text", req: 1, w: 1 },
+    { k: "category", l: "Categoria técnica", t: "select", o: AREAS.map(a => [a, a]) },
+    { k: "kind", l: "Tipo de conteúdo", h: "Use “Relato de campo” só para experiências reais.", t: "select", o: [["campo", "Relato de campo (real)"], ["demonstrativo", "Exemplo demonstrativo"]] },
+    { k: "cover", l: "Imagem de capa", t: "image" },
+    { k: "summary", l: "Resumo", t: "textarea", w: 1 },
+    sec("O relato"),
+    { k: "context", l: "Contexto", t: "textarea", w: 1 },
+    { k: "symptoms", l: "Sintomas iniciais", t: "textarea" },
+    { k: "firstHypotheses", l: "Primeiras hipóteses", t: "textarea" },
+    { k: "tests", l: "Testes realizados", t: "textarea" },
+    { k: "difficulties", l: "Erros, dificuldades ou descobertas", t: "textarea" },
+    { k: "rootCause", l: "Causa raiz", t: "textarea" },
+    { k: "solution", l: "Solução aplicada", t: "textarea" },
+    sec("Para o leitor"),
+    { k: "lessons", l: "Lições aprendidas", t: "textarea", w: 1 },
+    { k: "checklist", l: "Checklist para situações semelhantes", h: "Um item por linha", t: "lines", w: 1 },
+    { k: "question", l: "Pergunta para reflexão", t: "text", w: 1 },
+    { k: "tags", l: "Etiquetas", h: "Separadas por vírgula", t: "tags", w: 1 }
+  ],
+  news: [
+    { k: "title", l: "Título", t: "text", req: 1, w: 1 },
+    { k: "category", l: "Categoria", t: "select", o: NEWS_CATS.map(a => [a, a]), w: 1 },
+    { k: "summary", l: "Resumo objetivo", t: "textarea", w: 1 },
+    sec("Fonte", "Nunca publique sem a fonte original."),
+    { k: "sourceName", l: "Fonte original", t: "text" },
+    { k: "url", l: "Link da fonte", t: "url" },
+    { k: "publishedAt", l: "Data de publicação na fonte", t: "date" },
+    { k: "sourceUpdatedAt", l: "Data de atualização na fonte", t: "date" },
+    sec("Análise para o técnico"),
+    { k: "impact", l: "Impacto para o profissional técnico", t: "textarea", w: 1 },
+    { k: "practice", l: "Sugestão de aplicação prática", t: "textarea" },
+    { k: "further", l: "Leitura complementar", t: "textarea" },
+    { k: "keywords", l: "Palavras-chave", h: "Separadas por vírgula", t: "tags" },
+    { k: "demo", l: "Exemplo (não é notícia real)", t: "check" }
+  ],
+  lessons: [
+    { k: "title", l: "Título", t: "text", req: 1, w: 1 },
+    { k: "order", l: "Ordem na trilha", t: "number" },
+    { k: "minutes", l: "Duração (min)", t: "number" },
+    { k: "summary", l: "Resumo", t: "textarea", w: 1 },
+    sec("Conteúdo"),
+    { k: "body", l: "Texto da lição", h: "Parágrafos separados por linha em branco. “## ” cria um título, “- ” cria item de lista, **texto** fica em negrito.", t: "textarea", rows: 14, w: 1 },
+    { k: "diagram", l: "Diagrama pronto", t: "select", o: [["", "Nenhum"], ["partida-direta", "Comando de partida direta"]] },
+    { k: "keypoints", l: "Pontos-chave", h: "Um por linha", t: "lines" },
+    sec("Exercícios"),
+    { k: "questions", l: "Exercícios", t: "rep", sub: [{ k: "type", l: "Tipo", t: "select", o: [["mc", "Múltipla escolha"], ["vf", "Verdadeiro ou falso"]] }, { k: "answer", l: "Resposta correta", h: "Número da alternativa. No V/F: 1 = Verdadeiro, 2 = Falso.", t: "number" }, { k: "prompt", l: "Enunciado", t: "textarea", w: 1 }, { k: "options", l: "Alternativas (múltipla escolha)", h: "Uma por linha", t: "lines", w: 1 }, { k: "explain", l: "Explicação", t: "textarea", w: 1 }] }
+  ]
+};
+const BLANK = {
+  cases: () => ({ title: "", equipment: "", area: AREAS[0], level: 2, source: "didatico", demo: false, summary: "", context: "", symptoms: [""], history: "", conditions: "", techInfo: [], image: "", diagram: "", objective: "", hypotheses: [{ id: "h" + uid8(), text: "", correct: false }], tests: [{ id: "t" + uid8(), name: "", how: "", result: "", reading: "", value: "util", insight: "" }], causes: [{ id: "c" + uid8(), text: "", correct: true }], actions: [{ id: "a" + uid8(), text: "", correct: true, unsafe: false, feedback: "" }], hints: [], solution: { explanation: "", logic: [], mistakes: [], lessons: [] }, tags: [] }),
+  stories: () => ({ title: "", category: AREAS[0], kind: "campo", cover: "", summary: "", context: "", symptoms: "", firstHypotheses: "", tests: "", difficulties: "", rootCause: "", solution: "", lessons: "", checklist: [], question: "", tags: [] }),
+  news: () => ({ title: "", category: NEWS_CATS[0], summary: "", sourceName: "", url: "", publishedAt: "", sourceUpdatedAt: "", impact: "", practice: "", further: "", keywords: [], demo: false }),
+  lessons: () => ({ title: "", track: TRACK.id, order: pub("lessons").length + 1, minutes: 6, summary: "", body: "", diagram: "", keypoints: [], questions: [{ type: "mc", prompt: "", options: ["", ""], answer: 1, explain: "" }] })
+};
+const SUBBLANK = { hypotheses: () => ({ id: "h" + uid8(), text: "", correct: false }), tests: () => ({ id: "t" + uid8(), name: "", how: "", result: "", reading: "", value: "neutro", insight: "" }), causes: () => ({ id: "c" + uid8(), text: "", correct: false }), actions: () => ({ id: "a" + uid8(), text: "", correct: false, unsafe: false, feedback: "" }), questions: () => ({ type: "mc", prompt: "", options: ["", ""], answer: 1, explain: "" }) };
+
+VIEWS.admin = () => {
+  if (!S.admin) return emptyBox("Área restrita aos administradores do Volter.");
+  const t = S.ui.stab, f = S.ui.sfilter, L = S.mode === "local";
+  const items = all(t).filter(x => !f || x.status === f).sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
+  const cnt = s => all(t).filter(x => x.status === s).length;
+  return dbNotice() + head(L ? "Editor de conteúdo · modo local" : "Administração", "Conteúdo do Volter", "Cadastre e publique casos, histórias, notícias e lições por formulário. Rascunhos e itens em revisão não aparecem para os alunos.", '<button class="btn primary" data-act="new" data-t="' + t + '">' + { cases: "Novo caso", stories: "Nova história", news: "Nova notícia", lessons: "Nova lição" }[t] + "</button>") +
+    (L ? '<div class="notice info"><b>Modo local:</b> as alterações ficam salvas neste navegador. Para publicá-las no site, gere o arquivo <span class="mono">conteudo.js</span> e substitua o arquivo <span class="mono">data/conteudo.js</span> do repositório.<div class="row" style="margin-top:10px"><button class="btn sm primary" data-act="export">Gerar conteudo.js</button><button class="btn sm" data-act="resetlocal">Descartar alterações locais</button></div></div>' : "") +
+    '<div class="tabs" role="tablist">' + Object.entries(TYPES).map(([k, v]) => '<button role="tab" aria-selected="' + (k === t) + '" data-act="ui" data-k="stab" data-v="' + k + '">' + v.label + " (" + all(k).length + ")</button>").join("") + "</div>" +
+    '<div class="filters"><div class="seg"><button data-act="ui" data-k="sfilter" data-v="" aria-pressed="' + (!f) + '">Todos</button>' + Object.entries(STATUS).map(([k, v]) => '<button data-act="ui" data-k="sfilter" data-v="' + k + '" aria-pressed="' + (f === k) + '">' + v + " (" + cnt(k) + ")</button>").join("") + "</div></div>" +
+    '<div class="panel tbl-wrap">' + (items.length ? "<table><thead><tr><th>Título</th><th>Status</th><th>Atualizado</th><th></th></tr></thead><tbody>" + items.map(x => "<tr><td><b>" + esc(x.title || "(sem título)") + "</b>" + (x.demo ? ' <span class="chip demo">Demo</span>' : "") + '</td><td><span class="chip st-' + x.status + '">' + (STATUS[x.status] || x.status) + '</span></td><td class="num small">' + fmtDate(x.updatedAt) + '</td><td><div class="row" style="justify-content:flex-end;flex-wrap:nowrap;gap:6px"><button class="btn sm" data-act="edit" data-t="' + t + '" data-id="' + esc(x.id) + '">Editar</button>' + (x.status === "published" ? '<button class="btn sm ghost" data-act="go" data-r="' + ROUTE_OF[t] + '" data-id="' + esc(t === "news" ? "" : x.id) + '">Ver</button>' : "") + (t === "stories" ? '<button class="btn sm ghost" data-act="tocase" data-id="' + esc(x.id) + '">Criar desafio</button>' : "") + "</div></td></tr>").join("") + "</tbody></table>" : emptyBox("Nenhum item " + (f ? "com status " + STATUS[f].toLowerCase() : "cadastrado") + ".")) + "</div>" +
+    (L ? "" : '<div class="notice info small">Estatísticas de aprendizagem por aluno ainda não estão disponíveis: o progresso de cada aluno é privado e fica na conta dele. Um painel de turma com consentimento está previsto para o modo empresa.</div>');
+};
+
+function startEditor(t, id) {
+  const src = id ? find(t, id) : null;
+  const draft = src ? Object.assign(BLANK[t](), clone(src)) : BLANK[t]();
+  if (t === "cases") draft.solution = Object.assign({ explanation: "", logic: [], mistakes: [], lessons: [] }, draft.solution || {});
+  S.editor = { t, id: id || null, draft, errors: [], tab: "edit", confirmDel: false, saving: false };
+  go("editor");
+}
+function fieldHTML(f, val, path) {
+  if (f.sec) return '<div class="sec"><h3>' + esc(f.sec) + "</h3>" + (f.h ? '<span class="small muted">' + esc(f.h) + "</span>" : "") + "</div>";
+  const id = "f-" + path.replace(/\./g, "-");
+  const help = f.h ? "<small>" + esc(f.h) + "</small>" : "";
+  const wrap = inner => '<label class="f' + (f.w ? " wide" : "") + '" for="' + id + '">' + esc(f.l) + (f.req ? " *" : "") + help + inner + "</label>";
+  if (["text", "url", "date", "number"].includes(f.t)) return wrap('<input id="' + id + '" type="' + f.t + '" data-path="' + path + '" data-kind="' + (f.t === "number" ? "num" : "str") + '" value="' + esc(val) + '">');
+  if (f.t === "textarea") return wrap('<textarea id="' + id + '" rows="' + (f.rows || 3) + '" data-path="' + path + '" data-kind="str">' + esc(val) + "</textarea>");
+  if (f.t === "lines") return wrap('<textarea id="' + id + '" rows="4" data-path="' + path + '" data-kind="lines">' + esc(arr(val).join("\n")) + "</textarea>");
+  if (f.t === "tags") return wrap('<input id="' + id + '" type="text" data-path="' + path + '" data-kind="tags" value="' + esc(Array.isArray(val) ? val.join(", ") : val) + '">');
+  if (f.t === "select") return wrap('<select id="' + id + '" data-path="' + path + '" data-kind="' + (f.num ? "num" : "str") + '">' + f.o.map(([v, l]) => '<option value="' + esc(v) + '"' + (String(val) === String(v) ? " selected" : "") + ">" + esc(l) + "</option>").join("") + "</select>");
+  if (f.t === "check") return '<label class="chk' + (f.w ? " wide" : "") + '"><input type="checkbox" id="' + id + '" data-path="' + path + '" data-kind="bool"' + (val ? " checked" : "") + "> " + esc(f.l) + "</label>";
+  if (f.t === "image") return '<div class="f' + (f.w ? " wide" : "") + '" style="display:flex;flex-direction:column;gap:6px;font-size:.85rem;font-weight:500">' + esc(f.l) + (val ? '<img class="cover" style="max-height:140px" src="/_blob/' + esc(val) + '" alt=""><div><button class="btn sm" type="button" data-act="rmimg" data-path="' + path + '">Remover imagem</button></div>' : (S.assets ? '<input type="file" id="' + id + '" accept="image/*" data-act-file="img" data-path="' + path + '">' : '<small class="muted" style="font-weight:400">' + (S.mode === "local" ? "No modo local, coloque a imagem na pasta do projeto (fase 2 traz upload)." : "Envio de imagens indisponível nesta visualização.") + "</small>")) + "</div>";
+  if (f.t === "rep") {
+    const rows = arr(val);
+    return '<div class="rep wide"><div class="row" style="justify-content:space-between"><div><b>' + esc(f.l) + "</b>" + (f.h ? '<div class="small muted">' + esc(f.h) + "</div>" : "") + '</div><span class="chip">' + rows.length + "</span></div>" + rows.map((r, i) => '<div class="rep-row"><div class="rhead"><span class="eyebrow">#' + (i + 1) + '</span><span class="row" style="gap:4px"><button type="button" class="btn sm ghost" data-act="repmove" data-path="' + path + '" data-i="' + i + '" data-d="-1"' + (i ? "" : " disabled") + ' aria-label="Subir">↑</button><button type="button" class="btn sm ghost" data-act="repmove" data-path="' + path + '" data-i="' + i + '" data-d="1"' + (i < rows.length - 1 ? "" : " disabled") + ' aria-label="Descer">↓</button><button type="button" class="btn sm danger" data-act="repdel" data-path="' + path + '" data-i="' + i + '">Remover</button></span></div>' + f.sub.map(sf => fieldHTML(sf, r[sf.k], path + "." + i + "." + sf.k)).join("") + "</div>").join("") + '<div><button type="button" class="btn sm" data-act="repadd" data-path="' + path + '">+ Adicionar</button></div></div>';
+  }
+  return "";
+}
+VIEWS.editor = () => {
+  const E = S.editor; if (!E || !S.admin) return emptyBox("Nenhum item em edição.", '<button class="btn" data-act="go" data-r="admin">Administração</button>');
+  const d = E.draft, cur = E.id ? find(E.t, E.id) : null;
+  const body = E.tab === "edit" ? '<form class="panel fgrid" data-form="editor" novalidate>' + FIELDS[E.t].map(f => fieldHTML(f, f.k ? getPath(d, f.k) : null, f.k || "")).join("") + "</form>" : '<div class="panel stack"><div class="notice info small">Pré-visualização do que o aluno verá. Nada foi salvo ainda.</div>' + previewHTML(E.t, d) + "</div>";
+  return head((E.id ? "Editar " : (E.t === "cases" ? "Novo " : "Nova ")) + TYPES[E.t].one + (cur ? ' · <span class="chip st-' + cur.status + '">' + STATUS[cur.status] + "</span>" : ""), esc(d.title || "Sem título"), "", "", ["admin", "Administração"]) +
+    '<div class="tabs" role="tablist"><button role="tab" aria-selected="' + (E.tab === "edit") + '" data-act="etab" data-v="edit">Editar</button><button role="tab" aria-selected="' + (E.tab === "preview") + '" data-act="etab" data-v="preview">Pré-visualizar</button></div>' +
+    (E.errors.length ? '<div class="notice bad"><b>Corrija antes de salvar:</b><ul style="margin:4px 0 0;padding-left:18px">' + E.errors.map(e => "<li>" + esc(e) + "</li>").join("") + "</ul></div>" : "") + body +
+    (cur && arr(cur.history).length ? '<div class="panel"><h3>Histórico de publicação</h3><div class="list">' + arr(cur.history).slice().reverse().map(h => '<div><span class="chip st-' + h.status + '">' + STATUS[h.status] + '</span><span class="small muted">' + new Date(h.at).toLocaleString("pt-BR") + "</span></div>").join("") + "</div></div>" : "") +
+    '<div class="sticky-actions"><button class="btn" data-act="save" data-s="draft"' + (E.saving ? " disabled" : "") + '>Salvar rascunho</button><button class="btn" data-act="save" data-s="review"' + (E.saving ? " disabled" : "") + '>Enviar para revisão</button><button class="btn primary" data-act="save" data-s="published"' + (E.saving ? " disabled" : "") + ">Publicar</button>" + (E.id ? '<button class="btn" data-act="save" data-s="archived"' + (E.saving ? " disabled" : "") + ">Arquivar</button>" : "") + '<span style="flex:1"></span>' +
+    (E.id ? (E.confirmDel ? '<span class="small">Excluir definitivamente?</span><button class="btn danger sm" data-act="delitem">Sim, excluir</button><button class="btn sm" data-act="delcancel">Cancelar</button>' : '<button class="btn danger sm" data-act="delask">Excluir</button>') : "") + "</div>";
+};
+function previewHTML(t, d) {
+  const x = Object.assign({ id: "preview" }, d);
+  if (t === "cases") return fichaHTML(x, true) + '<div class="panel"><h3>Testes e resultados</h3><div class="list">' + arr(x.tests).map(s => "<div><span>" + esc(s.name) + '</span><span class="chip">' + esc(s.value) + "</span></div>").join("") + "</div></div>";
+  if (t === "stories") return "<h2>" + esc(x.title) + '</h2><div class="panel">' + [["Contexto", x.context], ["Sintomas iniciais", x.symptoms], ["Primeiras hipóteses", x.firstHypotheses], ["Testes", x.tests], ["Erros e descobertas", x.difficulties], ["Causa raiz", x.rootCause], ["Solução", x.solution], ["Lições", x.lessons]].filter(s => s[1]).map(([h, s]) => '<div class="story-sec"><h4>' + h + '</h4><div class="prose">' + md(s) + "</div></div>").join("") + "</div>";
+  if (t === "news") return '<span class="eyebrow">' + esc(x.category) + "</span><h2>" + esc(x.title) + "</h2><p>" + esc(x.summary) + '</p><p class="small muted">Fonte: ' + esc(x.sourceName || "—") + " · " + (fmtDate(x.publishedAt) || "sem data") + "</p><p>" + esc(x.impact) + "</p>";
+  if (t === "lessons") return "<h2>" + esc(x.title) + '</h2><div class="prose">' + md(x.body) + "</div>" + (x.diagram === "partida-direta" ? diagramPartida() : "") + arr(x.questions).map((q, i) => quizQ(q, null, "noop", "p", i)).join("");
+  return "";
+}
+function validate(t, d) {
+  const e = [];
+  if (!String(d.title || "").trim()) e.push("Informe o título.");
+  if (t === "cases") {
+    if (!arr(d.hypotheses).filter(h => String(h.text).trim()).length) e.push("Cadastre pelo menos uma hipótese.");
+    if (!arr(d.hypotheses).some(h => h.correct)) e.push("Marque a hipótese que corresponde à causa real.");
+    if (!arr(d.tests).filter(x => String(x.name).trim() && String(x.result).trim()).length) e.push("Cadastre pelo menos um teste com resultado.");
+    if (arr(d.causes).filter(c => c.correct).length !== 1) e.push("Marque exatamente uma causa como correta.");
+    if (!arr(d.actions).some(a => a.correct)) e.push("Marque pelo menos uma ação como correta.");
+  }
+  if (t === "lessons") arr(d.questions).forEach((q, i) => { const n = q.type === "vf" ? 2 : clean(q.options).length; if (!String(q.prompt).trim()) e.push("Exercício " + (i + 1) + ": falta o enunciado."); if (!(q.answer >= 1 && q.answer <= n)) e.push("Exercício " + (i + 1) + ": a resposta correta deve ser um número de 1 a " + n + "."); });
+  if (t === "news" && d.url && !/^https?:\/\//.test(d.url)) e.push("O link da fonte deve começar com http:// ou https://.");
+  if (t === "news" && !d.demo && !String(d.sourceName).trim()) e.push("Notícias reais precisam da fonte original. Se for um exemplo, marque “Exemplo”.");
+  return e;
+}
+function normalize(t, d) {
+  const x = clone(d);
+  const linesKeys = { cases: ["symptoms", "techInfo", "hints", "solution.logic", "solution.mistakes", "solution.lessons"], stories: ["checklist"], lessons: ["keypoints"], news: [] }[t];
+  linesKeys.forEach(k => setPath(x, k, clean(getPath(x, k))));
+  ["tags", "keywords"].forEach(k => { if (k in x) x[k] = (Array.isArray(x[k]) ? x[k] : String(x[k]).split(",")).map(s => String(s).trim()).filter(Boolean); });
+  if (t === "cases") { ["hypotheses", "causes", "actions"].forEach(k => x[k] = arr(x[k]).filter(r => String(r.text).trim())); x.tests = arr(x.tests).filter(r => String(r.name).trim()); x.level = Number(x.level) || 1; }
+  if (t === "lessons") { x.questions = arr(x.questions).filter(q => String(q.prompt).trim()).map(q => Object.assign(q, { options: q.type === "vf" ? ["Verdadeiro", "Falso"] : clean(q.options), answer: Number(q.answer) })); x.order = Number(x.order) || 0; x.minutes = Number(x.minutes) || 5; x.track = x.track || TRACK.id; }
+  delete x.id;
+  return x;
+}
+async function saveEditor(status) {
+  const E = S.editor; if (!E || E.saving) return;
+  E.errors = status === "draft" ? (String(E.draft.title || "").trim() ? [] : ["Informe o título."]) : validate(E.t, E.draft);
+  if (E.errors.length) { render(true); return; }
+  if (S.mode !== "local" && !S.db) { E.errors = ["O banco de dados não está disponível nesta visualização."]; render(true); return; }
+  const now = new Date().toISOString(), prev = E.id ? find(E.t, E.id) : null;
+  const doc = normalize(E.t, E.draft);
+  doc.status = status; doc.updatedAt = now; doc.createdAt = prev && prev.createdAt || now; doc.author = prev && prev.author || S.uid || "";
+  doc.history = arr(prev && prev.history).concat(prev && prev.status === status ? [] : [{ status, at: now }]).slice(-12);
+  const id = E.id || (slug(doc.title) + "-" + uid8().slice(0, 4));
+  E.saving = true; render(true);
+  try {
+    if (S.mode === "local") localWrite(E.t, id, doc); else await S.db.doc(E.t + "/" + id).set(doc);
+    if (E.t === "cases" && doc.storyId) { const st = find("stories", doc.storyId); if (st && st.caseId !== id) { if (S.mode === "local") { const s2 = clone(st); delete s2.id; s2.caseId = id; localWrite("stories", st.id, s2); st.caseId = id; } else await S.db.doc("stories/" + doc.storyId).update({ caseId: id }).catch(() => {}); } }
+    E.id = id; E.saving = false; E.errors = [];
+    const ix = S.content[E.t].findIndex(x => x.id === id); const row = Object.assign({ id }, doc); if (ix >= 0) S.content[E.t][ix] = row; else S.content[E.t].push(row);
+    toast({ draft: "Rascunho salvo", review: "Enviado para revisão", published: "Publicado", archived: "Arquivado" }[status] + (S.mode === "local" ? " neste navegador" : "")); render(true);
+  } catch (e) { E.saving = false; E.errors = [e && e.code === "invalid_argument" ? "Sua conta não tem permissão para alterar o conteúdo." : e && e.code === "quota_exceeded" ? "Limite de armazenamento atingido: " + e.message : "Não foi possível salvar agora. Tente de novo."]; render(true); }
+}
+
+/* ================= EVENTOS ================= */
+const ACT = {
+  go: el => go(el.dataset.r, el.dataset.id),
+  more: () => { S.ui.more = !S.ui.more; renderChrome(); },
+  open: el => { const t = el.dataset.t; go(ROUTE_OF[t], t === "news" ? null : el.dataset.id); },
+  ui: el => { const k = el.dataset.k; let v = el.dataset.v; if (k === "level") v = Number(v); S.ui[k] = v; render(true); },
+  toggle: el => { S.ui.open[el.dataset.k] = !S.ui.open[el.dataset.k]; render(true); },
+  fav: el => { const k = el.dataset.k, f = S.prog.favorites, i = f.indexOf(k); if (i >= 0) f.splice(i, 1); else f.push(k); saveProg(); toast(i >= 0 ? "Removido dos favoritos" : "Salvo nos favoritos"); render(true); },
+  start: el => { const id = el.dataset.id; S.prog.runs[id] = { stage: 1, max: 1, hyps: [], tests: [], marks: {}, cause: null, action: null, hints: 0, notes: "", locked: false, started: new Date().toISOString() }; touchRecent("cases", id); saveProg(); go("caso", id); },
+  abandon: el => { delete S.prog.runs[el.dataset.id]; saveProg(); go("caso", el.dataset.id); },
+  stage: el => { const r = curRun(); if (!r) return; const n = Number(el.dataset.n); r.stage = n; r.max = Math.max(r.max, n); saveProg(); window.scrollTo(0, 0); render(true); },
+  hyp: el => { const r = curRun(); if (!r || r.locked) return; const id = el.dataset.id; r.hyps = r.hyps.includes(id) ? r.hyps.filter(x => x !== id) : r.hyps.concat(id); saveProg(); render(true); },
+  runtest: el => { const r = curRun(); if (!r) return; const id = el.dataset.id; if (!r.tests.includes(id)) r.tests.push(id); const c = find("cases", S.route.id); const t = arr(c.tests).find(x => x.id === id); if (t && t.value === "inseguro") toast("Procedimento inseguro registrado: −10 pontos"); saveProg(); render(true); },
+  mark: el => { const r = curRun(); if (!r) return; r.marks[el.dataset.id] = r.marks[el.dataset.id] === el.dataset.v ? "" : el.dataset.v; saveProg(); render(true); },
+  pick: el => { const r = curRun(); if (!r) return; if (el.dataset.f === "cause" && r.locked) return; r[el.dataset.f] = el.dataset.id; saveProg(); render(true); },
+  lockcause: () => { const r = curRun(); if (!r || !r.cause) return; r.locked = true; r.stage = 6; r.max = 6; saveProg(); window.scrollTo(0, 0); render(true); },
+  hint: () => { const r = curRun(); if (!r) return; r.hints++; saveProg(); render(true); },
+  finish: () => { const id = S.route.id, r = curRun(), c = find("cases", id); if (!r || !c || !r.action) return; const sc = scoreRun(c, r); const at = { at: new Date().toISOString(), score: sc.score, parts: sc.parts, unsafe: sc.unsafe, hints: r.hints, hintPen: sc.hintPen, hyps: r.hyps, tests: r.tests, cause: r.cause, action: r.action }; (S.prog.attempts[id] = S.prog.attempts[id] || []).push(at); S.prog.attempts[id] = S.prog.attempts[id].slice(-10); delete S.prog.runs[id]; saveProg(); go("correcao", id); },
+  lq: el => { const id = el.dataset.ref, qi = Number(el.dataset.qi), oi = Number(el.dataset.oi); const l = find("lessons", id); const p = S.prog.lessons[id] || (S.prog.lessons[id] = { answers: {}, done: false, score: 0 }); p.answers[qi] = oi; const qs = arr(l.questions); if (qs.every((q, i) => p.answers[i] != null)) { p.done = true; p.score = qs.filter((q, i) => p.answers[i] === Number(q.answer) - 1).length; toast("Lição concluída"); } touchRecent("lessons", id); saveProg(); render(true); },
+  resetlesson: el => { delete S.prog.lessons[el.dataset.id]; saveProg(); render(true); },
+  quizstart: () => { const pool = questionPool().sort(() => Math.random() - .5).slice(0, 5); S.quiz = { qs: pool, i: 0, answers: {} }; render(true); },
+  qq: el => { S.quiz.answers[Number(el.dataset.qi)] = Number(el.dataset.oi); render(true); },
+  quiznext: () => { const q = S.quiz; q.i++; if (q.i >= q.qs.length) { const sc = q.qs.filter((it, i) => q.answers[i] === Number(it.q.answer) - 1).length; S.prog.quick.push({ at: new Date().toISOString(), score: sc, total: q.qs.length }); S.prog.quick = S.prog.quick.slice(-30); saveProg(); } render(true); },
+  quizclose: () => { S.quiz = null; render(true); },
+  pref: el => { S.prog.settings[el.dataset.k] = el.checked; saveProg(); render(true); },
+  new: el => startEditor(el.dataset.t),
+  edit: el => startEditor(el.dataset.t, el.dataset.id),
+  etab: el => { S.editor.tab = el.dataset.v; render(true); },
+  save: el => saveEditor(el.dataset.s),
+  delask: () => { S.editor.confirmDel = true; render(true); },
+  delcancel: () => { S.editor.confirmDel = false; render(true); },
+  delitem: async () => { const E = S.editor; try { if (S.mode === "local") localWrite(E.t, E.id, null); else await S.db.doc(E.t + "/" + E.id).delete(); S.content[E.t] = S.content[E.t].filter(x => x.id !== E.id); toast("Excluído"); S.editor = null; go("admin"); } catch (e) { E.errors = ["Não foi possível excluir."]; E.confirmDel = false; render(true); } },
+  repadd: el => { const p = el.dataset.path; const a = arr(getPath(S.editor.draft, p)); a.push(SUBBLANK[p.split(".").pop()]()); setPath(S.editor.draft, p, a); render(true); },
+  repdel: el => { const p = el.dataset.path; const a = arr(getPath(S.editor.draft, p)); a.splice(Number(el.dataset.i), 1); setPath(S.editor.draft, p, a); render(true); },
+  repmove: el => { const p = el.dataset.path, i = Number(el.dataset.i), j = i + Number(el.dataset.d); const a = arr(getPath(S.editor.draft, p)); [a[i], a[j]] = [a[j], a[i]]; render(true); },
+  rmimg: el => { setPath(S.editor.draft, el.dataset.path, ""); render(true); },
+  export: () => exportContent(),
+  resetlocal: el => { if (el.dataset.confirm !== "1") { el.dataset.confirm = "1"; el.textContent = "Clique de novo para confirmar"; el.classList.add("danger"); return; } try { localStorage.removeItem("volter.content"); } catch (e) {} localLoad(); toast("Alterações locais descartadas"); render(true); },
+  tocase: el => { const s = find("stories", el.dataset.id); if (!s) return; startEditor("cases"); const d = S.editor.draft; const lines = t => String(t || "").split(/\n|\.\s+/).map(x => x.trim()).filter(Boolean);
+    Object.assign(d, { title: "Desafio: " + s.title, area: AREAS.includes(s.category) ? s.category : AREAS[0], source: s.kind === "campo" ? "campo" : "didatico", demo: s.kind !== "campo", summary: s.summary, context: s.context, symptoms: lines(s.symptoms), hypotheses: lines(s.firstHypotheses).map(t => ({ id: "h" + uid8(), text: t, correct: false })).concat([{ id: "h" + uid8(), text: s.rootCause, correct: true }]), causes: [{ id: "c" + uid8(), text: s.rootCause, correct: true }], actions: [{ id: "a" + uid8(), text: s.solution, correct: true, unsafe: false, feedback: "" }], storyId: s.id, solution: { explanation: [s.rootCause, s.solution].filter(Boolean).join(" "), logic: lines(s.tests), mistakes: lines(s.difficulties), lessons: lines(s.lessons) } });
+    toast("Rascunho criado a partir da história. Complete os testes e as alternativas."); render(true); },
+  noop: () => {}
+};
+function curRun() { return S.route.name === "caso" ? S.prog.runs[S.route.id] : null; }
+
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-act]"); if (!el || el.disabled) return;
+  const a = el.dataset.act; if (!ACT[a]) return;
+  if (el.tagName === "INPUT" && el.type === "checkbox" && a === "pref") return;
+  e.preventDefault(); ACT[a](el);
+});
+document.addEventListener("change", e => {
+  const el = e.target;
+  if (el.dataset.act === "pref") { ACT.pref(el); return; }
+  if (el.dataset.path && S.editor) {
+    const k = el.dataset.kind; let v = el.value;
+    if (k === "bool") v = el.checked; else if (k === "num") v = el.value === "" ? "" : Number(el.value); else if (k === "lines") v = el.value.split("\n");
+    setPath(S.editor.draft, el.dataset.path, v);
+    if (el.tagName === "SELECT" && el.dataset.path.endsWith(".type")) render(true);
+  }
+  if (el.dataset.actFile === "img" && el.files && el.files[0]) uploadImg(el);
+});
+document.addEventListener("input", e => {
+  const el = e.target;
+  if (el.dataset.path && S.editor && el.dataset.kind !== "bool") {
+    const k = el.dataset.kind; let v = el.value;
+    if (k === "num") v = el.value === "" ? "" : Number(el.value); else if (k === "lines") v = el.value.split("\n");
+    setPath(S.editor.draft, el.dataset.path, v);
+    if (el.dataset.path === "title") { const h = $("h1", $("#view")); if (h) h.textContent = el.value || "Sem título"; }
+  }
+  if (el.dataset.actInput === "notes") { const r = curRun(); if (r) { r.notes = el.value; saveProg(); } }
+  if (el.dataset.actInput === "newsq") { S.ui.q = el.value; clearTimeout(ACT._nq); ACT._nq = setTimeout(() => { const pos = el.selectionStart; render(true); const n = $("#news-q"); if (n) { n.focus(); n.setSelectionRange(pos, pos); } }, 250); }
+});
+document.addEventListener("submit", e => {
+  const f = e.target; e.preventDefault();
+  if (f.dataset.form === "assist") { const q = $("#assist-q").value.trim(); if (q) askAssist(f.dataset.id, q); }
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape" && S.ui.more) { S.ui.more = false; renderChrome(); } });
+async function uploadImg(el) {
+  const file = el.files[0]; if (file.size > 20 * 1024 * 1024) { toast("Imagem acima de 20 MB."); return; }
+  toast("Enviando imagem…");
+  try { const r = await S.assets.upload(file); setPath(S.editor.draft, el.dataset.path, r.id); toast("Imagem enviada"); render(true); }
+  catch (e) { toast("Não foi possível enviar a imagem."); }
+}
+
+/* ================= INICIALIZAÇÃO ================= */
+function startLocal() {
+  S.mode = "local"; localLoad();
+  S.dbState = Object.values(S.content).some(a => a.length) ? "ok" : "none";
+  if (/(^|[#&])admin\b/.test(location.hash.slice(1))) lsSet("volter.admin", true);
+  S.admin = !!lsGet("volter.admin", false);
+  render(true);
+}
+async function boot() {
+  const cl = window.claude;
+  if (!cl || typeof cl.use !== "function") { startLocal(); return; }
+  S.mode = "claude"; render(true);
+  const use = n => cl.use(n).catch(() => null);
+  const [db, user] = await Promise.all([use("db"), use("user")]);
+  S.db = db; S.user = user;
+  if (user) { try { S.uid = await user.id(); S.admin = await user.canEdit(); } catch (e) {} }
+  if (!db) { S.dbState = "none"; render(); }
+  else {
+    S.dbState = "ok";
+    ["cases", "stories", "news", "lessons"].forEach(t => db.collection(t).onSnapshot(snap => {
+      S.content[t] = snap.docs.filter(d => d.exists).map(d => Object.assign({ id: d.id }, d.data())); render();
+    }, () => render()));
+    if (S.uid) {
+      try { const snap = await db.doc("data/users/" + S.uid + "/main").get();
+        if (snap.exists) { const remote = Object.assign(defProg(), clone(snap.data())); if (String(remote.updatedAt) >= String(S.prog.updatedAt)) S.prog = remote; else saveProg(); S.progWhere = "conta"; }
+        else if (S.prog.updatedAt) saveProg();
+      } catch (e) {}
+    }
+    render();
+  }
+  const [assets, sample] = await Promise.all([S.admin ? use("assets") : null, use("sample")]);
+  S.assets = assets; S.sample = sample; render();
+}
+boot();
+</script>
+
+</body>
+</html>
