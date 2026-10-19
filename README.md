@@ -13,11 +13,12 @@ O Volter é uma plataforma de treinamento técnico focada em **diagnóstico de f
 | **Aprender** | Trilha "Diagnóstico elétrico básico" com 5 lições e exercícios. |
 | **Desafios** | Ordem de serviço do dia e treino rápido com questões sorteadas das lições. |
 | **Histórias de Campo** | Relatos de manutenção do sintoma à causa raiz, com selo para relatos reais. |
-| **Notícias Técnicas** | Cadastro manual com fonte, data e análise para o técnico. |
+| **Notícias Técnicas** | Notícias de IA, programação, automação e manutenção, com prévia da fonte, data, link e análise para o técnico. |
+| **Livros** | Lançamentos e referências atuais, com editora, ano, link e o motivo de cada leitura. |
 | **Meu Progresso** | Nível, XP, competências, distintivos, histórico e recomendações. |
 | **Editor de conteúdo** | Formulários para criar, revisar, publicar e arquivar casos, histórias, notícias e lições, com pré-visualização. Uma história pode virar rascunho de caso. |
 
-O conteúdo incluído é **demonstrativo**: 4 casos didáticos, 5 lições, 1 história de exemplo e 2 notícias-modelo, todos identificados como tal.
+Os casos, as lições e a história incluídos são **demonstrativos** e estão identificados como tal. As notícias e os livros são reais, com link para a fonte.
 
 ## Instalar no computador (Windows e Mac)
 

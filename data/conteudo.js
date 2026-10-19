@@ -1296,57 +1296,389 @@ window.VOLTER_SEED = {
   }
  },
  "news": {
-  "exemplo-noticia-1": {
+  "python-3-15": {
    "status": "published",
-   "createdAt": "2026-10-18T20:30:00.000Z",
-   "updatedAt": "2026-10-18T20:30:00.000Z",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "updatedAt": "2026-10-19T00:30:00.000Z",
    "history": [
     {
      "status": "published",
-     "at": "2026-10-18T20:30:00.000Z"
+     "at": "2026-10-19T00:30:00.000Z"
     }
    ],
-   "title": "Exemplo: como uma notícia técnica aparece no Volter",
-   "category": "Manutenção preditiva e análise de falhas",
-   "demo": true,
-   "summary": "Este é um modelo de cadastro, não uma notícia real. Cadastre notícias verdadeiras pelo painel administrativo, sempre com fonte e link.",
-   "sourceName": "",
-   "url": "",
-   "publishedAt": "",
+   "demo": false,
+   "title": "Python 3.15 é lançado com compilador JIT mais rápido e UTF-8 como padrão",
+   "category": "Programação e desenvolvimento",
+   "summary": "A versão anual do Python saiu em 9 de outubro. O compilador JIT, ainda experimental, ficou cerca de 7 a 8% mais rápido no Linux x86-64. A versão traz importações preguiçosas (lazy imports), o tipo frozendict embutido e UTF-8 como codificação padrão.",
+   "sourceName": "Phoronix",
+   "url": "https://phoronix.com/news/Python-3.15-Released",
+   "publishedAt": "2026-10-09",
    "sourceUpdatedAt": "",
-   "impact": "Aqui vai a explicação do que a novidade muda para quem trabalha com manutenção.",
-   "practice": "Aqui vai uma sugestão concreta de aplicação no dia a dia.",
-   "further": "Aqui vai uma indicação de leitura complementar.",
+   "impact": "Com UTF-8 como padrão, scripts que leem planilhas e relatórios em português dão menos erro com acentos. As importações preguiçosas deixam mais rápidos os scripts curtos de automação.",
+   "practice": "Teste seus scripts atuais no Python 3.15 em um ambiente separado, conferindo leitura de CSV com acentos. Só atualize computadores de produção depois de confirmar que as bibliotecas usadas já são compatíveis.",
+   "further": "Resumo mensal de outubro de 2026 da Real Python, com o ciclo de lançamento e outras novidades do ecossistema (realpython.com).",
    "keywords": [
-    "exemplo",
-    "modelo"
+    "python",
+    "jit",
+    "lançamento",
+    "programação"
    ]
   },
-  "exemplo-noticia-2": {
+  "tiobe-outubro-2026": {
    "status": "published",
-   "createdAt": "2026-10-18T20:30:00.000Z",
-   "updatedAt": "2026-10-18T20:30:00.000Z",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "updatedAt": "2026-10-19T00:30:00.000Z",
    "history": [
     {
      "status": "published",
-     "at": "2026-10-18T20:30:00.000Z"
+     "at": "2026-10-19T00:30:00.000Z"
     }
    ],
-   "title": "Exemplo: notícia de segurança elétrica e normas",
-   "category": "Segurança elétrica e normas técnicas",
-   "demo": true,
-   "summary": "Modelo para notícias sobre revisões de normas. Ao cadastrar uma real, informe a edição da norma e a data de publicação na fonte.",
-   "sourceName": "",
-   "url": "",
-   "publishedAt": "",
+   "demo": false,
+   "title": "Índice TIOBE de outubro: Python lidera, C cresce e Rust segue no top 10",
+   "category": "Programação e desenvolvimento",
+   "summary": "Python aparece com 19,23%, seguido de C (11,33%), C++ (8,87%) e Java (8,41%). Rust está em 10º lugar pelo quarto mês seguido. O TIOBE passou a contar buscas em mandarim, o que pode explicar parte das variações.",
+   "sourceName": "TechRepublic",
+   "url": "https://www.techrepublic.com/article/news-tiobe-october-2026-java-closes-cpp-gap/",
+   "publishedAt": "2026-10-12",
    "sourceUpdatedAt": "",
-   "impact": "Explique quais requisitos mudaram e para quem.",
-   "practice": "Indique o que revisar em procedimentos, treinamentos ou documentos.",
-   "further": "Aponte o texto oficial da norma ou do órgão responsável.",
+   "impact": "C e C++ continuam fortes por causa de firmware e sistemas embarcados, que estão dentro de boa parte dos equipamentos que o técnico mantém. Python é a porta de entrada para automação de tarefas e análise de dados.",
+   "practice": "Vindo da manutenção, comece por Python para scripts e dados. Para microcontroladores, placas e embarcados, o caminho é C.",
+   "further": "O índice completo é publicado mensalmente no site da TIOBE (tiobe.com).",
    "keywords": [
-    "exemplo",
-    "normas"
+    "tiobe",
+    "linguagens",
+    "python",
+    "c",
+    "rust"
    ]
+  },
+  "coreia-humanoides-fabricas": {
+   "status": "published",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "updatedAt": "2026-10-19T00:30:00.000Z",
+   "history": [
+    {
+     "status": "published",
+     "at": "2026-10-19T00:30:00.000Z"
+    }
+   ],
+   "demo": false,
+   "title": "Coreia do Sul libera 20 robôs humanoides para trabalhar ao lado de pessoas em fábricas",
+   "category": "Robótica industrial",
+   "summary": "Um comitê do Ministério do Comércio e Indústria concedeu à fabricante Robros uma isenção para demonstração, flexibilizando regras feitas para robôs fixos, que exigem cercas de segurança. Os 20 humanoides vão atuar em quatro empresas dos setores de semicondutores, autopeças, construção naval e logística.",
+   "sourceName": "Seoul Economic Daily",
+   "url": "https://en.sedaily.com/finance/2026/10/14/korea-clears-safety-rules-to-put-20-humanoid-robots-on",
+   "publishedAt": "2026-10-14",
+   "sourceUpdatedAt": "",
+   "impact": "A separação física entre pessoa e robô é a base da segurança em robótica industrial. Robôs que circulam entre trabalhadores exigem outra forma de avaliar risco, e os dados desse teste devem orientar futuras normas.",
+   "practice": "Revise como a sua planta protege as zonas de robô: cercas, scanners de área, cortinas de luz e intertravamentos. Acompanhe as normas de robôs colaborativos antes de qualquer projeto parecido.",
+   "further": "Normas internacionais de segurança para robôs industriais e colaborativos (família ISO 10218).",
+   "keywords": [
+    "robôs",
+    "humanoides",
+    "segurança",
+    "coreia"
+   ]
+  },
+  "modelos-ia-outubro-2026": {
+   "status": "published",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "updatedAt": "2026-10-19T00:30:00.000Z",
+   "history": [
+    {
+     "status": "published",
+     "at": "2026-10-19T00:30:00.000Z"
+    }
+   ],
+   "demo": false,
+   "title": "Outubro traz modelos de IA abertos e menores, feitos para rodar no próprio equipamento",
+   "category": "Inteligência artificial e agentes",
+   "summary": "Entre os lançamentos do mês estão os pesos abertos do Muse Spark, da Meta, e o LFM2.5, da Liquid AI, voltado a agentes que rodam no dispositivo. Também apareceram modelos de decisão, da Cloudflare e da Amazon, que devolvem respostas com probabilidade.",
+   "sourceName": "Digital Applied",
+   "url": "https://www.digitalapplied.com/blog/ai-model-releases-october-2026-tracker",
+   "publishedAt": "2026-10-01",
+   "sourceUpdatedAt": "2026-10-16",
+   "impact": "Modelos menores rodando localmente permitem usar IA em computadores da fábrica sem mandar dados de processo ou de clientes para fora da empresa.",
+   "practice": "Ao avaliar um assistente de IA para manutenção, pergunte onde os dados são processados e se existe opção de rodar localmente.",
+   "further": "O rastreador da Digital Applied é atualizado ao longo do mês com a data de cada lançamento.",
+   "keywords": [
+    "ia",
+    "modelos",
+    "código aberto",
+    "local"
+   ]
+  },
+  "n8n-agents": {
+   "status": "published",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "updatedAt": "2026-10-19T00:30:00.000Z",
+   "history": [
+    {
+     "status": "published",
+     "at": "2026-10-19T00:30:00.000Z"
+    }
+   ],
+   "demo": false,
+   "title": "n8n lança Agents: agentes de IA reutilizáveis em fluxos, chat e Slack",
+   "category": "Inteligência artificial e agentes",
+   "summary": "Novo recurso em prévia: o agente é definido uma vez, com instruções, ferramentas e modelo, guarda memória própria e pode ser usado no chat, como etapa de um fluxo, no Slack ou por agendamento. Está em prévia no n8n Cloud a partir da versão 2.32.3 e em beta na versão auto-hospedada.",
+   "sourceName": "Comunidade n8n",
+   "url": "https://community.n8n.io/t/introducing-n8n-agents-a-new-way-to-build-agents-you-set-up-once-and-use-anywhere/306323",
+   "publishedAt": "2026-08-05",
+   "sourceUpdatedAt": "",
+   "impact": "Fica mais simples montar um assistente que recebe a descrição de uma falha, consulta procedimentos e prepara o rascunho da ordem de serviço. A própria n8n recomenda etapas de aprovação humana para ações sensíveis.",
+   "practice": "Comece com um agente que só consulta (manuais e histórico) antes de dar a ele permissão para alterar registros.",
+   "further": "Changelog oficial do n8n (docs.n8n.io/changelog).",
+   "keywords": [
+    "n8n",
+    "agentes",
+    "automação",
+    "ia"
+   ]
+  },
+  "siemens-eigen-tia-portal": {
+   "status": "published",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "updatedAt": "2026-10-19T00:30:00.000Z",
+   "history": [
+    {
+     "status": "published",
+     "at": "2026-10-19T00:30:00.000Z"
+    }
+   ],
+   "demo": false,
+   "title": "Siemens amplia agente de IA que monta projetos no TIA Portal a partir de texto",
+   "category": "Automação industrial e Indústria 4.0",
+   "summary": "O Eigen Engineering Agent, lançado na Hannover Messe 2026, ganhou duas funções: ler projetos elétricos em XML/AML e gerar tags de CLP a partir da topologia de hardware, e criar um projeto completo no padrão Siemens Automation Framework a partir de uma descrição em linguagem natural. A Siemens diz que mais de 100 empresas em 19 países usam o agente.",
+   "sourceName": "Siemens (comunicado à imprensa)",
+   "url": "https://press.siemens.com/global/en/pressrelease/siemens-takes-ai-physical-world-next-level-two-new-eigen-engineering-agent",
+   "publishedAt": "2026-06-17",
+   "sourceUpdatedAt": "",
+   "impact": "Para quem programa CLP Siemens, o trabalho passa de escrever para revisar e validar. O conhecimento de campo continua essencial: o projeto gerado precisa ser testado na máquina.",
+   "practice": "Mantenha organizados os padrões de nomenclatura e a documentação elétrica, porque é deles que esse tipo de agente depende. Nunca coloque em operação código gerado sem teste e comissionamento.",
+   "further": "Página do Eigen Engineering Agent no portfólio Siemens Xcelerator.",
+   "keywords": [
+    "siemens",
+    "tia portal",
+    "clp",
+    "agente",
+    "ia"
+   ]
+  },
+  "abes-ia-prioridade": {
+   "status": "published",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "updatedAt": "2026-10-19T00:30:00.000Z",
+   "history": [
+    {
+     "status": "published",
+     "at": "2026-10-19T00:30:00.000Z"
+    }
+   ],
+   "demo": false,
+   "title": "IA generativa e agentes viram a principal prioridade de investimento das empresas de software no Brasil",
+   "category": "Inteligência artificial e agentes",
+   "summary": "Estudo da ABES mostra que 53% dos executivos colocam IA generativa e agentes como prioridade número um de investimento para 2026. 40% das empresas já investem em agentes e 33% planejam começar em até 12 meses. A falta de profissionais especializados está entre os principais obstáculos.",
+   "sourceName": "Convergência Digital",
+   "url": "https://convergenciadigital.com.br/mercado/inteligencia-artificial-ultrapassa-seguranca-e-nuvem-e-assume-1o-lugar-na-agenda-estrategica-de-empresas-nacionais/",
+   "publishedAt": "2026-06-15",
+   "sourceUpdatedAt": "",
+   "impact": "Faltam profissionais que entendam ao mesmo tempo de processo industrial e de tecnologia. É uma oportunidade para técnicos que migram para software.",
+   "practice": "Monte um portfólio com projetos que unam manutenção e programação, como um painel de falhas ou um assistente que consulta manuais.",
+   "further": "Estudo Mercado Brasileiro de Software, da ABES.",
+   "keywords": [
+    "brasil",
+    "mercado",
+    "agentes",
+    "carreira"
+   ]
+  },
+  "futago-ia-manutencao": {
+   "status": "published",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "updatedAt": "2026-10-19T00:30:00.000Z",
+   "history": [
+    {
+     "status": "published",
+     "at": "2026-10-19T00:30:00.000Z"
+    }
+   ],
+   "demo": false,
+   "title": "Startup brasileira usa IA que responde só com os documentos da empresa para apoiar a manutenção",
+   "category": "Inteligência artificial aplicada à manutenção",
+   "summary": "A Futago, acelerada pelo Habitat Senai, no Paraná, criou um assistente de manutenção que responde apenas com base em manuais, normas e procedimentos internos de cada cliente, integrado a sistemas de gestão de ativos. A empresa relata redução de 80% no tempo de busca de informação e de até 90% no tempo de análise de falhas.",
+   "sourceName": "Senai Paraná",
+   "url": "https://www.senaipr.org.br/tecnologiaeinovacao/blog/futago-aposta-em-ia-para-transformar-a-manutencao-industrial-e-projeta-expansao-com-apoio-do-senai-parana-1-36128-497086.shtml",
+   "publishedAt": "2025-08-21",
+   "sourceUpdatedAt": "",
+   "impact": "Mostra o caminho mais seguro para usar IA na manutenção: respostas presas à documentação da empresa, com a fonte indicada, em vez de conhecimento genérico.",
+   "practice": "Organize manuais e procedimentos em formato digital pesquisável. Essa é a base para qualquer assistente desse tipo.",
+   "further": "Programa Habitat Senai de aceleração de startups industriais.",
+   "keywords": [
+    "manutenção",
+    "ia",
+    "senai",
+    "startup"
+   ]
+  }
+ },
+ "books": {
+  "engenharia-de-ia": {
+   "status": "published",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "updatedAt": "2026-10-19T00:30:00.000Z",
+   "history": [
+    {
+     "status": "published",
+     "at": "2026-10-19T00:30:00.000Z"
+    }
+   ],
+   "demo": false,
+   "title": "Engenharia de IA",
+   "subtitle": "Construindo aplicações com modelos de fundação",
+   "authors": "Chip Huyen",
+   "publisher": "Novatec",
+   "year": 2026,
+   "pages": 488,
+   "isbn": "978-85-7522-996-5",
+   "language": "Português",
+   "area": "Inteligência artificial",
+   "level": "Intermediário",
+   "summary": "Explica como criar aplicações em cima de modelos de IA já prontos: engenharia de prompt, RAG, ajuste fino, agentes, avaliação dos resultados e custo e tempo de resposta. Edição brasileira do livro mais citado sobre o tema.",
+   "why": "Ensina a avaliar se uma resposta de IA é confiável, que é exatamente o cuidado que um assistente de manutenção exige.",
+   "url": "https://novatec.com.br/livros/engenharia-de-ia/",
+   "urlLabel": "Ver na Novatec"
+  },
+  "agentes-de-ia-albada": {
+   "status": "published",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "updatedAt": "2026-10-19T00:30:00.000Z",
+   "history": [
+    {
+     "status": "published",
+     "at": "2026-10-19T00:30:00.000Z"
+    }
+   ],
+   "demo": false,
+   "title": "Construindo Aplicações com Agentes de IA",
+   "subtitle": "Projeto e implementação de sistemas multiagentes",
+   "authors": "Michael Albada",
+   "publisher": "Novatec",
+   "year": 2026,
+   "pages": 360,
+   "isbn": "978-85-7522-990-3",
+   "language": "Português",
+   "area": "Inteligência artificial",
+   "level": "Intermediário",
+   "summary": "Guia prático sobre como projetar agentes de IA: ferramentas, memória, RAG, orquestração, passagem de um agente para vários, avaliação, monitoramento em produção, segurança e colaboração entre pessoas e agentes.",
+   "why": "Base para a trilha de agentes do Volter: mostra como dar ferramentas a um agente sem perder o controle humano sobre ações sensíveis.",
+   "url": "https://novatec.com.br/livros/construindo-aplicacoes-com-agentes-IA/",
+   "urlLabel": "Ver na Novatec"
+  },
+  "industria-40-freitas-santiago": {
+   "status": "published",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "updatedAt": "2026-10-19T00:30:00.000Z",
+   "history": [
+    {
+     "status": "published",
+     "at": "2026-10-19T00:30:00.000Z"
+    }
+   ],
+   "demo": false,
+   "title": "Indústria 4.0",
+   "subtitle": "Fábricas inteligentes, negócios exponenciais",
+   "authors": "Iramylson Machado de Freitas e Sandro Breval Santiago",
+   "publisher": "Pontes Editores",
+   "year": 2026,
+   "pages": "",
+   "isbn": "",
+   "language": "Português",
+   "area": "Indústria e manutenção",
+   "level": "Iniciante",
+   "summary": "Apresenta a Indústria 4.0 para empresas de qualquer porte, com roteiro de maturidade digital e casos de empresas brasileiras. Trata de IoT, dados, IA, gêmeos digitais, manutenção preditiva, robôs autônomos e cibersegurança.",
+   "why": "Conecta a rotina de manutenção com as tecnologias que estão chegando às fábricas brasileiras, com exemplos daqui.",
+   "url": "https://universocooperativo5.wordpress.com/2026/03/17/livro-mostra-que-a-industria-4-0-ja-tem-tecnologia-disponivel-para-todo-tipo-e-tamanho-de-empresas/",
+   "urlLabel": "Ler sobre o lançamento"
+  },
+  "llm-from-scratch-raschka": {
+   "status": "published",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "updatedAt": "2026-10-19T00:30:00.000Z",
+   "history": [
+    {
+     "status": "published",
+     "at": "2026-10-19T00:30:00.000Z"
+    }
+   ],
+   "demo": false,
+   "title": "Build a Large Language Model (From Scratch)",
+   "subtitle": "",
+   "authors": "Sebastian Raschka",
+   "publisher": "Manning",
+   "year": 2024,
+   "pages": 368,
+   "isbn": "",
+   "language": "Inglês",
+   "area": "Programação",
+   "level": "Avançado",
+   "summary": "Constrói passo a passo um modelo de linguagem no estilo GPT em Python: atenção, arquitetura transformer, pré-treino e ajuste fino para classificação e para seguir instruções.",
+   "why": "Para quem quer entender por dentro como a IA funciona, como quem desmonta um equipamento para entender o circuito. Exige Python intermediário.",
+   "url": "https://oreilly.com/library/view/build-a-large/9781633437166",
+   "urlLabel": "Ver na O'Reilly"
+  },
+  "hands-on-llms": {
+   "status": "published",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "updatedAt": "2026-10-19T00:30:00.000Z",
+   "history": [
+    {
+     "status": "published",
+     "at": "2026-10-19T00:30:00.000Z"
+    }
+   ],
+   "demo": false,
+   "title": "Hands-On Large Language Models",
+   "subtitle": "Language understanding and generation",
+   "authors": "Jay Alammar e Maarten Grootendorst",
+   "publisher": "O'Reilly",
+   "year": 2024,
+   "pages": "",
+   "isbn": "",
+   "language": "Inglês",
+   "area": "Inteligência artificial",
+   "level": "Iniciante",
+   "summary": "Introdução muito visual ao funcionamento dos modelos de linguagem: embeddings, busca semântica, classificação e geração de texto, com muitos diagramas.",
+   "why": "Os diagramas ajudam quem aprende melhor vendo o esquema, como em um diagrama elétrico.",
+   "url": "https://www.kdnuggets.com/5-best-books-for-building-agentic-ai-systems-in-2026",
+   "urlLabel": "Ver indicação (KDnuggets)"
+  },
+  "llm-engineers-handbook": {
+   "status": "published",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "updatedAt": "2026-10-19T00:30:00.000Z",
+   "history": [
+    {
+     "status": "published",
+     "at": "2026-10-19T00:30:00.000Z"
+    }
+   ],
+   "demo": false,
+   "title": "LLM Engineer's Handbook",
+   "subtitle": "",
+   "authors": "Paul Iusztin e Maxime Labonne",
+   "publisher": "Packt",
+   "year": 2024,
+   "pages": "",
+   "isbn": "",
+   "language": "Inglês",
+   "area": "Programação",
+   "level": "Avançado",
+   "summary": "Cobre o caminho completo para colocar uma aplicação de IA em produção: ajuste fino, RAG, pipelines, monitoramento e confiabilidade.",
+   "why": "Para o momento em que um projeto de IA sai do protótipo e precisa funcionar todos os dias, com registro e controle.",
+   "url": "https://www.kdnuggets.com/5-best-books-for-building-agentic-ai-systems-in-2026",
+   "urlLabel": "Ver indicação (KDnuggets)"
   }
  }
 };

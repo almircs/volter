@@ -10,6 +10,12 @@ Na primeira vez, clique no Volter com o botão direito → **Abrir** → **Abrir
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Novidades da versão 1.1.0
+- **Nova identidade visual:** amarelo de sinalização de segurança sobre grafite, com ícone novo
+- **Notícias Técnicas reais**, com prévia da fonte, data e link: Python 3.15, índice TIOBE, robôs humanoides em fábricas, novos modelos de IA, n8n Agents, agente de IA da Siemens para o TIA Portal, mercado brasileiro de IA e IA aplicada à manutenção
+- **Nova seção Livros:** lançamentos e referências de IA, programação e Indústria 4.0, com o motivo de cada leitura
+- Livros também podem ser cadastrados pelo editor de conteúdo
+
 ## Versão 1.0.0 — primeira versão
 - **Bancada Virtual** com 7 etapas de diagnóstico, dicas, comparador de hipóteses e correção comentada
 - 4 casos demonstrativos: contator que não aciona, sensor NPN no lugar de PNP, motor de exaustor em sobrecarga e fonte de 24 V subdimensionada
