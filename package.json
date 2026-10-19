@@ -1,8 +1,8 @@
 {
   "name": "volter",
   "productName": "Volter",
-  "version": "1.1.0",
-  "description": "Volter — plataforma de treinamento técnico com Bancada Virtual de diagnóstico de falhas.",
+  "version": "2.0.0",
+  "description": "Volter — aprenda IA, programação, dados e IoT resolvendo problemas reais.",
   "author": "Carlos Almir",
   "license": "UNLICENSED",
   "private": true,

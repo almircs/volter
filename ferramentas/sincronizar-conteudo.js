@@ -2,7 +2,7 @@
 //
 // Uso:  node ferramentas/sincronizar-conteudo.js <pasta-exportada>
 //
-// A pasta exportada tem uma subpasta por coleção (cases, lessons, stories, news, books)
+// A pasta exportada tem uma subpasta por coleção (cases, lessons, projects, news, books)
 // com um arquivo JSON por item, no formato <coleção>/<id>.json — é o que a ferramenta
 // ArtifactData gera com "list" + out_dir. Itens de qualquer status são mantidos: o app
 // mostra aos alunos só os publicados, e rascunhos/revisões ficam visíveis no editor.
@@ -10,7 +10,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const COLLS = ["cases", "lessons", "stories", "news", "books"];
+const COLLS = ["cases", "lessons", "projects", "news", "books"];
 // Ordena os campos sempre do mesmo jeito, para o arquivo só mudar quando o conteúdo mudar.
 const sortKeys = v => Array.isArray(v) ? v.map(sortKeys) : v && typeof v === "object" ? Object.fromEntries(Object.keys(v).sort().map(k => [k, sortKeys(v[k])])) : v;
 const dir = process.argv[2];

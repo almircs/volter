@@ -1,135 +1,97 @@
 # Volter
 
-**Experiência real. Conhecimento aplicado.**
+**Aprenda tecnologia consertando o que quebrou.**
 
-O Volter é uma plataforma de treinamento técnico focada em **diagnóstico de falhas**. Em vez de só apresentar conteúdo, ele coloca o aluno diante de um defeito real e o faz percorrer o caminho de um técnico experiente: observar, levantar hipóteses, escolher testes, interpretar leituras, identificar a causa e decidir a correção com segurança.
+O Volter é uma plataforma para quem está começando em tecnologia. Você aprende os conceitos em trilhas curtas e pratica no **Laboratório**, investigando problemas que acontecem de verdade: um chatbot que inventa respostas, uma página que mostra `undefined`, um painel com números errados, um sensor que para de enviar dados.
 
-## O que já funciona
+## Trilhas
+
+| Trilha | O que você aprende |
+|---|---|
+| **IA, agentes e automação** | Como funcionam os modelos de linguagem, prompts que funcionam, agentes, RAG e automações com n8n |
+| **Programação: Python e web** | Lógica, Python, leitura de erros, HTML, CSS, JavaScript e APIs |
+| **Dados e análise** | Tabelas, SQL, JOIN sem armadilhas, pandas e gráficos |
+| **IoT e robótica** | ESP32, sensores, Wi-Fi, MQTT e dispositivos que se recuperam sozinhos |
+
+## O que tem no app
 
 | Área | O que faz |
 |---|---|
-| **Bancada Virtual** | Casos de diagnóstico em 7 etapas: investigar, hipóteses, testes, resultados, causa, resolver, aprender. Testes têm resultados definidos; procedimentos inseguros são bloqueados e descontam pontos. |
-| **Correção comentada** | Nota de 0 a 100 dividida em raciocínio, investigação, diagnóstico, solução e segurança, com a lógica do diagnóstico e os erros comuns. |
-| **Aprender** | Trilha "Diagnóstico elétrico básico" com 5 lições e exercícios. |
-| **Desafios** | Ordem de serviço do dia e treino rápido com questões sorteadas das lições. |
-| **Histórias de Campo** | Relatos de manutenção do sintoma à causa raiz, com selo para relatos reais. |
-| **Notícias Técnicas** | Notícias de IA, programação, automação e manutenção, com prévia da fonte, data, link e análise para o técnico. |
-| **Livros** | Lançamentos e referências atuais, com editora, ano, link e o motivo de cada leitura. |
-| **Meu Progresso** | Nível, XP, competências, distintivos, histórico e recomendações. |
-| **Editor de conteúdo** | Formulários para criar, revisar, publicar e arquivar casos, histórias, notícias e lições, com pré-visualização. Uma história pode virar rascunho de caso. |
+| **Trilhas** | Lições curtas com blocos de código e exercícios |
+| **Laboratório** | Desafios de investigação em 7 etapas: entender, hipóteses, investigar, evidências, causa, corrigir e aprender, com correção comentada |
+| **Projetos** | Projetos guiados com passo a passo, para montar um portfólio (assistente com RAG, site no GitHub Pages, painel de gastos com pandas, estação IoT com ESP32) |
+| **Treino** | Perguntas sorteadas de todas as trilhas e o desafio do dia |
+| **Notícias** | IA, programação, dados e IoT, com prévia, link da fonte e o que muda para quem está aprendendo |
+| **Livros** | Lançamentos e referências, com o motivo de cada leitura |
+| **Meu progresso** | Nível, XP, progresso por trilha, como você investiga e conquistas |
+| **Editor de conteúdo** | Formulários para criar, revisar e publicar desafios, lições, projetos, notícias e livros |
 
-Os casos, as lições e a história incluídos são **demonstrativos** e estão identificados como tal. As notícias e os livros são reais, com link para a fonte.
+Os desafios do Laboratório são exemplos didáticos, marcados como tal. As notícias e os livros são reais, com link para a fonte.
 
 ## Instalar no computador (Windows e Mac)
 
-Os instaladores ficam na página **Releases** do repositório, gerados automaticamente pelo GitHub Actions, do mesmo jeito que no Finora e no Helyx.
+Os instaladores ficam na página **Releases** deste repositório e são gerados automaticamente pelo GitHub Actions.
 
 - **Windows:** baixe `Instalar-Volter-Windows.exe`, dê dois cliques e siga o instalador. Se aparecer o aviso azul "O Windows protegeu o computador", clique em **Mais informações → Executar assim mesmo**.
 - **Mac com chip Apple (M1 a M4):** baixe `Volter-Mac-chip-Apple-M1-a-M4.zip`, abra e arraste o **Volter** para **Aplicativos**. Na primeira vez, botão direito → **Abrir** → **Abrir**.
 - **Mac Intel:** mesmo procedimento com `Volter-Mac-Intel.zip`.
 
-No programa instalado, o progresso fica num arquivo com cópia automática diária (últimos 30 dias). O menu **Arquivo** abre a pasta dos dados e a das cópias; o menu **Ferramentas → Ativar o editor de conteúdo** libera a edição.
+No programa instalado, o progresso fica num arquivo com cópia automática diária (últimos 30 dias). O menu **Arquivo** abre a pasta dos dados; **Ferramentas → Ativar o editor de conteúdo** libera a edição.
 
-- Windows: `%APPDATA%\Volter\volter.json`
-- Mac: `~/Library/Application Support/Volter/volter.json`
+### Gerar uma nova versão
 
-### Gerar uma nova versão dos instaladores
+1. Altere `"version"` no `package.json`.
+2. Escreva as novidades em `.github/notas-da-versao.md`.
+3. Envie para a branch `main`. O fluxo **Gerar instaladores** cria a release sozinho.
 
-1. Altere o número em `"version"` no `package.json` (ex.: `1.0.0` → `1.1.0`).
-2. Acrescente as novidades em `.github/notas-da-versao.md`.
-3. Envie para a branch `main`. O fluxo **Gerar instaladores** roda sozinho e cria a release `v1.1.0`. Também dá para rodá-lo pela aba **Actions → Gerar instaladores → Run workflow**.
+## Rodar no navegador
 
-Se o número da versão não mudar, os arquivos da release existente são substituídos.
-
-## Rodar no navegador ou em modo de desenvolvimento
-
-Abra o `index.html` no navegador, ou use um servidor local:
+Abra o `index.html` ou use um servidor local:
 
 ```bash
 python3 -m http.server 8000
-# abra http://localhost:8000
 ```
 
-Para abrir como programa (Electron) e gerar instaladores na sua máquina:
+Para abrir como programa e gerar instaladores na sua máquina:
 
 ```bash
 npm install
-npm start          # abre o programa
-npm run dist:win   # instalador Windows (rodar no Windows)
-npm run dist:mac   # app para Mac (rodar no Mac)
+npm start
+npm run dist:win   # no Windows
+npm run dist:mac   # no Mac
 ```
 
-## Publicar no GitHub Pages
-
-1. No repositório, vá em **Settings → Pages**.
-2. Em **Source**, escolha **Deploy from a branch**, branch `main`, pasta `/ (root)`.
-3. Salve. O site fica em `https://almircs.github.io/volter/`.
-
-> Em repositório **privado**, o GitHub Pages exige um plano pago (GitHub Pro ou superior). No plano gratuito, torne o repositório público antes de ativar o Pages.
+Para publicar como site, ative **Settings → Pages** com a branch `main`. Em repositório privado, o GitHub Pages exige plano pago.
 
 ## Editar o conteúdo
 
-Nesta versão o conteúdo fica no arquivo `data/conteudo.js`. Para editar pelo próprio app:
+O conteúdo fica em `data/conteudo.js`. Para editar pelo app, abra com `#admin` no fim do endereço (no programa instalado, use **Ferramentas → Ativar o editor de conteúdo**). As mudanças ficam no seu computador; clique em **Gerar conteudo.js** e substitua o arquivo do repositório para publicar.
 
-1. Abra o site com `#admin` no fim do endereço (ex.: `https://almircs.github.io/volter/#admin`). O menu **Editor de conteúdo** aparece e fica liberado naquele navegador.
-2. Crie ou altere casos, histórias, notícias e lições. As mudanças ficam salvas **somente no seu navegador**.
-3. Clique em **Gerar conteudo.js** e substitua o arquivo `data/conteudo.js` do repositório pelo arquivo baixado.
-4. Faça o commit. Todos os visitantes passam a ver o conteúdo novo.
+## Notícias toda semana
 
-O progresso dos alunos (notas, lições concluídas, favoritos) fica no navegador de cada um (`localStorage`).
+Uma tarefa agendada roda toda segunda-feira de manhã. Ela pesquisa as novidades da semana em IA, programação, dados e IoT e cadastra de 3 a 6 notícias no Volter do claude.ai com status **Em revisão**. Nada aparece para os alunos sem aprovação. Depois, copia todo o conteúdo do claude.ai para `data/conteudo.js` com `ferramentas/sincronizar-conteudo.js` e envia para este repositório, o que gera instaladores atualizados.
 
-## Notícias toda semana e sincronização com o claude.ai
+## Três jeitos de usar
 
-Uma tarefa agendada roda toda segunda-feira de manhã. Ela pesquisa as novidades da semana em IA, programação, automação, robótica e manutenção e cadastra de 3 a 6 notícias no Volter do claude.ai com status **Em revisão**. Nenhuma notícia aparece para os alunos sem a sua aprovação: confira em **Administração → Notícias → Em revisão** e clique em **Publicar**.
-
-Depois, a tarefa copia todo o conteúdo do claude.ai (casos, lições, histórias, notícias e livros) para `data/conteudo.js` e envia para este repositório. Com isso, o site e os instaladores recebem o que você publicou. Itens em rascunho ou revisão vão junto, mas o app só mostra aos alunos os publicados.
-
-O sincronizador também pode ser rodado à mão:
-
-```bash
-node ferramentas/sincronizar-conteudo.js <pasta-exportada>
-```
-
-## Três jeitos de usar o Volter
-
-| | Programa instalado | Navegador (GitHub Pages) | claude.ai |
+| | Programa instalado | Navegador | claude.ai |
 |---|---|---|---|
 | Conteúdo | `data/conteudo.js` | `data/conteudo.js` | Banco de dados compartilhado |
-| Edição | Local, exportada para o repositório | Local, exportada para o repositório | Direta, para administradores |
-| Progresso do aluno | Arquivo no computador, com cópias diárias | No navegador | Na conta do aluno |
-| Volter Assist (IA) | Fase 2 (servidor próprio) | Fase 2 (servidor próprio) | Funciona |
-| Upload de imagens | Fase 2 | Fase 2 | Funciona |
-
-O código é o mesmo: o app detecta onde está rodando e escolhe o modo.
+| Progresso | Arquivo no computador, com cópias diárias | No navegador | Na conta do aluno |
+| Volter Assist (IA) | Próxima versão | Próxima versão | Funciona |
 
 ## Estrutura
 
 ```
 index.html                          aplicação completa (HTML, CSS e JavaScript)
-data/conteudo.js                    conteúdo: casos, lições, histórias e notícias
-ferramentas/sincronizar-conteudo.js copia o conteúdo do claude.ai para data/conteudo.js
-main.js, preload.js                 programa desktop (Electron): janela, dados em arquivo, cópias diárias
-package.json                        versão e configuração dos instaladores (electron-builder)
+data/conteudo.js                    desafios, lições, projetos, notícias e livros
+main.js, preload.js                 programa desktop (Electron)
+package.json                        versão e configuração dos instaladores
 build/                              ícones (volter.ico, volter.icns, icon.png)
+ferramentas/sincronizar-conteudo.js copia o conteúdo do claude.ai para data/conteudo.js
 .github/workflows/instaladores.yml  gera os instaladores e publica em Releases
 .github/notas-da-versao.md          texto da página de cada versão
 docs/                               especificações do projeto
 ```
-
-### Formato de um caso
-
-Cada caso em `data/conteudo.js` tem: `title`, `equipment`, `area`, `level` (1 a 5), `context`, `symptoms[]`, `history`, `conditions`, `techInfo[]`, `objective`, `hypotheses[]` (`text`, `correct`), `tests[]` (`name`, `how`, `result`, `reading`, `value`: `util` | `neutro` | `irrelevante` | `inseguro`, `insight`), `causes[]`, `actions[]` (`correct`, `unsafe`, `feedback`), `hints[]` e `solution` (`explanation`, `logic[]`, `mistakes[]`, `lessons[]`), além de `status` (`draft`, `review`, `published`, `archived`).
-
-## Próximas etapas
-
-- **Fase 2:** servidor próprio (banco de dados e IA sem expor chaves), Biblioteca Técnica, novos tipos de desafio, estatísticas para o administrador e a área **Programação & IA** (ver `docs/modulo-programacao-ia.md`).
-- **Fase 3:** modo empresa com turmas, simulador de instrumentos, importação de notícias por RSS/API, aplicativo instalável e certificados.
-
-A especificação completa está em `docs/especificacao-volter.md`.
-
-## Aviso de segurança
-
-O Volter é uma ferramenta educacional. Os casos simulam investigações e não substituem procedimentos oficiais, a NR-10, análise de risco nem a habilitação e autorização exigidas para intervir em instalações elétricas.
 
 ---
 

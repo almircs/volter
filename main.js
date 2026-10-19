@@ -101,7 +101,7 @@ function createWindow() {
     width: 1320, height: 860, minWidth: 380, minHeight: 500,
     title: 'Volter',
     icon: path.join(__dirname, 'build', 'icon.png'),
-    backgroundColor: '#EDF1F5',
+    backgroundColor: '#0E1220',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
