@@ -78,6 +78,18 @@ Nesta versão o conteúdo fica no arquivo `data/conteudo.js`. Para editar pelo p
 
 O progresso dos alunos (notas, lições concluídas, favoritos) fica no navegador de cada um (`localStorage`).
 
+## Notícias toda semana e sincronização com o claude.ai
+
+Uma tarefa agendada roda toda segunda-feira de manhã. Ela pesquisa as novidades da semana em IA, programação, automação, robótica e manutenção e cadastra de 3 a 6 notícias no Volter do claude.ai com status **Em revisão**. Nenhuma notícia aparece para os alunos sem a sua aprovação: confira em **Administração → Notícias → Em revisão** e clique em **Publicar**.
+
+Depois, a tarefa copia todo o conteúdo do claude.ai (casos, lições, histórias, notícias e livros) para `data/conteudo.js` e envia para este repositório. Com isso, o site e os instaladores recebem o que você publicou. Itens em rascunho ou revisão vão junto, mas o app só mostra aos alunos os publicados.
+
+O sincronizador também pode ser rodado à mão:
+
+```bash
+node ferramentas/sincronizar-conteudo.js <pasta-exportada>
+```
+
 ## Três jeitos de usar o Volter
 
 | | Programa instalado | Navegador (GitHub Pages) | claude.ai |
@@ -95,6 +107,7 @@ O código é o mesmo: o app detecta onde está rodando e escolhe o modo.
 ```
 index.html                          aplicação completa (HTML, CSS e JavaScript)
 data/conteudo.js                    conteúdo: casos, lições, histórias e notícias
+ferramentas/sincronizar-conteudo.js copia o conteúdo do claude.ai para data/conteudo.js
 main.js, preload.js                 programa desktop (Electron): janela, dados em arquivo, cópias diárias
 package.json                        versão e configuração dos instaladores (electron-builder)
 build/                              ícones (volter.ico, volter.icns, icon.png)
