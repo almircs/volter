@@ -1826,6 +1826,35 @@ window.VOLTER_SEED = {
    "updatedAt": "2026-10-19T01:30:00.000Z",
    "url": "https://en.sedaily.com/finance/2026/10/14/korea-clears-safety-rules-to-put-20-humanoid-robots-on"
   },
+  "gemini-4-argon-app": {
+   "author": "",
+   "category": "IA e agentes",
+   "createdAt": "2026-10-19T10:06:01.000Z",
+   "demo": false,
+   "further": "Notas de versão oficiais do app Gemini (gemini.google/release-notes).",
+   "history": [
+    {
+     "at": "2026-10-19T10:06:01.000Z",
+     "status": "review"
+    }
+   ],
+   "impact": "Mostra para onde os assistentes estão indo: menos conversa e mais agentes que executam tarefas longas sozinhos. Entender esse modelo de trabalho ajuda a planejar automações e projetos com IA.",
+   "keywords": [
+    "gemini",
+    "google",
+    "agentes",
+    "assistente de ia"
+   ],
+   "practice": "Mesmo na versão gratuita do Gemini, peça uma tarefa em etapas (por exemplo, montar um plano de estudos de 4 semanas) e observe como o assistente divide e acompanha o trabalho; compare com outro assistente que você já usa.",
+   "publishedAt": "2026-10-13",
+   "sourceName": "Google (blog oficial)",
+   "sourceUpdatedAt": "",
+   "status": "review",
+   "summary": "Em 13 de outubro, o Google liberou o modelo Gemini 4 Argon no app Gemini para quem assina os planos Google AI Pro e Ultra. Segundo a empresa, as respostas ficaram mais diretas, o assistente informa melhor o andamento de tarefas longas e ganhou um modo de tarefas que continua trabalhando quando você se afasta do computador. O app também passou a se conectar a mais de 40 serviços e recebeu a interface de programação com agentes Antigravity na versão para macOS.",
+   "title": "Gemini 4 Argon chega ao app Gemini para assinantes AI Pro e Ultra",
+   "updatedAt": "2026-10-19T10:06:01.000Z",
+   "url": "https://blog.google/innovation-and-ai/products/gemini-app/gemini-4-argon-availability/"
+  },
   "modelos-ia-outubro-2026": {
    "category": "IA e agentes",
    "createdAt": "2026-10-19T00:30:00.000Z",
@@ -1853,6 +1882,36 @@ window.VOLTER_SEED = {
    "title": "Outubro traz modelos de IA abertos e menores, feitos para rodar no próprio equipamento",
    "updatedAt": "2026-10-19T01:30:00.000Z",
    "url": "https://www.digitalapplied.com/blog/ai-model-releases-october-2026-tracker"
+  },
+  "muse-gadgets-sdk-esp32": {
+   "author": "",
+   "category": "IoT e robótica",
+   "createdAt": "2026-10-19T10:06:01.000Z",
+   "demo": false,
+   "further": "Site oficial do projeto, gadgets.muse.ai, e o repositório muse-gadget-sdk da organização facebookincubator no GitHub.",
+   "history": [
+    {
+     "at": "2026-10-19T10:06:01.000Z",
+     "status": "review"
+    }
+   ],
+   "impact": "Une duas trilhas que costumam ser estudadas separadas, IoT e agentes de IA: uma placa barata passa a funcionar como olhos, ouvidos e mãos de um assistente.",
+   "keywords": [
+    "esp32",
+    "raspberry pi",
+    "meta",
+    "agentes de ia",
+    "open source"
+   ],
+   "practice": "Abra o repositório do SDK e leia os exemplos para ESP32; mesmo sem a conta Muse, dá para estudar como o código lê sensores e envia dados, e reproduzir a ideia com uma ESP32 e outra IA.",
+   "publishedAt": "2026-10-12",
+   "sourceName": "CNX Software",
+   "sourceUpdatedAt": "",
+   "status": "review",
+   "summary": "A Meta publicou no GitHub o Muse Gadgets SDK, de código aberto (em sua maior parte sob licença Apache 2.0), para conectar placas ESP32 e computadores Linux como o Raspberry Pi ao agente de IA Muse. O kit para ESP32 cuida de tela, áudio, sensores, atuadores e botões, e o de Linux pode ser usado em tarefas como administração do sistema ou integração com o Home Assistant. Para usar é preciso um token do SDK e o app Muse em modo de desenvolvedor.",
+   "title": "Meta libera SDK aberto para ligar ESP32 e Raspberry Pi ao seu agente de IA Muse",
+   "updatedAt": "2026-10-19T10:06:01.000Z",
+   "url": "https://www.cnx-software.com/2026/10/12/facebook-releases-muse-gadgets-sdk-for-esp32-and-raspberry-pi-linux-based-devices/"
   },
   "n8n-agents": {
    "category": "IA e agentes",
@@ -1882,6 +1941,36 @@ window.VOLTER_SEED = {
    "updatedAt": "2026-10-19T01:30:00.000Z",
    "url": "https://community.n8n.io/t/introducing-n8n-agents-a-new-way-to-build-agents-you-set-up-once-and-use-anywhere/306323"
   },
+  "nvidia-nemotron-3-5": {
+   "author": "",
+   "category": "Ferramentas e lançamentos",
+   "createdAt": "2026-10-19T10:06:01.000Z",
+   "demo": false,
+   "further": "Página da NVIDIA no Hugging Face, onde ficam os modelos Nemotron e suas fichas técnicas.",
+   "history": [
+    {
+     "at": "2026-10-19T10:06:01.000Z",
+     "status": "review"
+    }
+   ],
+   "impact": "Modelos com pesos abertos e versões menores permitem testar IA sem pagar por API e sem enviar dados para fora da máquina, algo útil para estudar e prototipar agentes.",
+   "keywords": [
+    "nvidia",
+    "nemotron",
+    "modelos abertos",
+    "ia local",
+    "hugging face"
+   ],
+   "practice": "Instale o Ollama ou o LM Studio e experimente um modelo aberto pequeno no seu computador; quando o Bolt E4B sair, compare as respostas com as de um assistente online.",
+   "publishedAt": "2026-10-15",
+   "sourceName": "Interesting Engineering",
+   "sourceUpdatedAt": "",
+   "status": "review",
+   "summary": "Em 15 de outubro, a NVIDIA apresentou novos modelos abertos da família Nemotron 3.5. O Super VL tem 120 bilhões de parâmetros (12 bilhões ativos) e entende texto, documentos, imagens e vídeo. O Bolt 74B-A9B foi comprimido para caber em 24 GB de memória e já está no Hugging Face, e o Bolt E4B, de 4 GB e pensado para agentes de conversa, tem chegada prevista para 23 de outubro.",
+   "title": "NVIDIA lança modelos abertos Nemotron 3.5, incluindo versões que rodam no próprio computador",
+   "updatedAt": "2026-10-19T10:06:01.000Z",
+   "url": "https://interestingengineering.com/ai-robotics/nvidia-nemotron-35-super-vl-5x-faster"
+  },
   "python-3-15": {
    "category": "Programação e web",
    "createdAt": "2026-10-19T00:30:00.000Z",
@@ -1909,6 +1998,36 @@ window.VOLTER_SEED = {
    "title": "Python 3.15 é lançado com compilador JIT mais rápido e UTF-8 como padrão",
    "updatedAt": "2026-10-19T01:30:00.000Z",
    "url": "https://phoronix.com/news/Python-3.15-Released"
+  },
+  "samsung-ocean-outubro-2026": {
+   "author": "",
+   "category": "Carreira e mercado",
+   "createdAt": "2026-10-19T10:06:01.000Z",
+   "demo": false,
+   "further": "Agenda completa no portal oficial do Samsung Ocean (oceanbrasil.com).",
+   "history": [
+    {
+     "at": "2026-10-19T10:06:01.000Z",
+     "status": "review"
+    }
+   ],
+   "impact": "São aulas curtas, gratuitas e com certificado, nos mesmos temas das trilhas do Volter, o que ajuda a praticar com instrutores e a montar currículo.",
+   "keywords": [
+    "cursos gratuitos",
+    "samsung ocean",
+    "python",
+    "iot",
+    "certificado"
+   ],
+   "practice": "Acesse oceanbrasil.com ou o app do Samsung Ocean, escolha uma aula online desta semana (como o chatbot em Python) e inscreva-se enquanto houver vagas.",
+   "publishedAt": "2026-10-14",
+   "sourceName": "Samsung Newsroom Brasil",
+   "sourceUpdatedAt": "",
+   "status": "review",
+   "summary": "O Samsung Ocean divulgou em 14 de outubro a agenda gratuita da segunda metade do mês, com aulas online e presenciais em Brasília e Manaus. Entre os destaques estão um chatbot em Python (20 e 21/10), introdução à IoT (16/10), consultas SQL com Python (29 e 30/10 em Manaus) e IA para saúde digital (30/10). É preciso ter 18 anos ou mais, e quem conclui recebe certificado.",
+   "title": "Samsung Ocean abre cursos gratuitos de IA, Python, IoT e Android na segunda quinzena de outubro",
+   "updatedAt": "2026-10-19T10:06:01.000Z",
+   "url": "https://news.samsung.com/br/samsung-ocean-oferece-cursos-gratuitos-de-tecnologia-na-segunda-quinzena-de-outubro"
   },
   "siemens-eigen-tia-portal": {
    "category": "IA e agentes",
