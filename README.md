@@ -17,6 +17,7 @@ O Volter é uma plataforma para quem está começando em tecnologia. Você apren
 
 | Área | O que faz |
 |---|---|
+| **Início** | Banner com o desafio do dia e fileiras de capas, no estilo das plataformas de streaming; cada capa abre uma janela com detalhes e, nas trilhas, a lista de lições como episódios |
 | **Trilhas** | Lições curtas com blocos de código e exercícios |
 | **Laboratório** | Desafios de investigação em 7 etapas: entender, hipóteses, investigar, evidências, causa, corrigir e aprender, com correção comentada |
 | **Projetos** | Projetos guiados com passo a passo, para montar um portfólio (assistente com RAG, site no GitHub Pages, painel de gastos com pandas, estação IoT com ESP32) |

@@ -10,6 +10,13 @@ Na primeira vez, clique no Volter com o botão direito → **Abrir** → **Abrir
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.1.0: visual de streaming
+- **Início novo:** um banner grande com o desafio do dia e fileiras de capas que deslizam para o lado: Continue de onde parou, trilhas, desafios do Laboratório, lições de cada trilha, projetos, notícias e livros
+- **Janela de detalhes:** ao clicar numa capa, abre um resumo com o botão para começar e o de salvar; nas trilhas e lições, as lições aparecem como uma lista de episódios, com barra de progresso
+- **Cabeçalho no topo**, transparente sobre o banner, com seu nível e XP
+- Fundo preto, destaques em vermelho e uma cor por trilha nas capas; ícone novo
+- A página Trilhas também ganhou fileiras de capas
+
 ## Versão 2.0.0 — um Volter novo
 O Volter agora é uma plataforma de tecnologia para quem está começando.
 - **Quatro trilhas:** IA, agentes e automação; Programação (Python e web); Dados e análise; IoT e robótica, com 12 lições e exercícios
