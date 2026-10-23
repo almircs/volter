@@ -1,8 +1,9 @@
 name: Gerar instaladores
 
 # Roda sozinho a cada envio para a branch main (quando o programa muda)
-# ou manualmente pela aba Actions. No fim, publica os instaladores na
-# página "Releases" do repositório.
+# ou manualmente pela aba Actions. Os instaladores vão direto para a
+# página "Releases" do repositório, sem passar pelo armazenamento de
+# artefatos do GitHub Actions (que tem limite de espaço por conta).
 on:
   workflow_dispatch:
   push:
@@ -19,7 +20,34 @@ permissions:
   contents: write
 
 jobs:
+  preparar:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.versao.outputs.tag }}
+      nova: ${{ steps.pagina.outputs.nova }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: versao
+        run: echo "tag=v$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+      - id: pagina
+        name: Preparar a página da versão
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.versao.outputs.tag }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            # Versão já existe: atualiza o texto e substitui os arquivos depois.
+            gh release edit "$TAG" --notes-file .github/notas-da-versao.md
+            echo "nova=nao" >> "$GITHUB_OUTPUT"
+          else
+            # Versão nova: cria como rascunho e só publica quando os instaladores estiverem prontos.
+            gh release create "$TAG" --draft --target "$GITHUB_SHA" \
+              --title "Volter ${TAG#v}" --notes-file .github/notas-da-versao.md
+            echo "nova=sim" >> "$GITHUB_OUTPUT"
+          fi
+
   windows:
+    needs: preparar
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,20 +59,17 @@ jobs:
         run: npx electron-builder --win --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
-      - name: Dar nome amigável
+      - name: Enviar para a página da versão
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.preparar.outputs.tag }}
         run: |
-          mkdir saida
-          cp dist/*.exe "saida/Instalar-Volter-Windows.exe"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: windows
-          path: saida/*
-          if-no-files-found: error
-          # Só serve para passar os arquivos à etapa 'publicar'; o que fica é o Release
-          retention-days: 1
+          cp dist/*.exe "Instalar-Volter-Windows.exe"
+          gh release upload "$TAG" "Instalar-Volter-Windows.exe" --clobber
 
   mac:
+    needs: preparar
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -58,41 +83,26 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: false
       - name: Assinar (ad-hoc) e compactar
         run: |
-          mkdir saida
           for d in dist/mac dist/mac-arm64; do
             app="$d/Volter.app"
             codesign --force --deep --sign - "$app"
             codesign --verify --deep "$app"
           done
-          ditto -c -k --keepParent dist/mac-arm64/Volter.app "saida/Volter-Mac-chip-Apple-M1-a-M4.zip"
-          ditto -c -k --keepParent dist/mac/Volter.app "saida/Volter-Mac-Intel.zip"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: mac
-          path: saida/*
-          if-no-files-found: error
-          # Só serve para passar os arquivos à etapa 'publicar'; o que fica é o Release
-          retention-days: 1
-
-  publicar:
-    needs: [windows, mac]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          path: arquivos
-          merge-multiple: true
-      - name: Publicar na página Releases
+          ditto -c -k --keepParent dist/mac-arm64/Volter.app "Volter-Mac-chip-Apple-M1-a-M4.zip"
+          ditto -c -k --keepParent dist/mac/Volter.app "Volter-Mac-Intel.zip"
+      - name: Enviar para a página da versão
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          VER=$(node -p "require('./package.json').version")
-          TAG="v$VER"
-          ls -la arquivos
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" arquivos/* --clobber
-          else
-            gh release create "$TAG" arquivos/* --target "$GITHUB_SHA" \
-              --title "Volter $VER" --notes-file .github/notas-da-versao.md
-          fi
+          TAG: ${{ needs.preparar.outputs.tag }}
+        run: gh release upload "$TAG" "Volter-Mac-chip-Apple-M1-a-M4.zip" "Volter-Mac-Intel.zip" --clobber
+
+  publicar:
+    needs: [preparar, windows, mac]
+    if: needs.preparar.outputs.nova == 'sim'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publicar a versão
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.preparar.outputs.tag }}
+        run: gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --draft=false --latest
