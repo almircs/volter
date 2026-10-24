@@ -10,6 +10,13 @@ Na primeira vez, clique no Volter com o botão direito → **Abrir** → **Abrir
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.4.0: lições de Elétrica e Hardware com simuladores
+- **18 lições novas** na aba Elétrica, Eletrônica e Hardware: fundamentos de eletricidade completos (Lei de Ohm, multímetro, segurança e NR-10, série e paralelo, consumo e conta de luz, paquímetro), instalações residenciais (diagramas, tomadas e interruptores, disjuntor, DR e DPS), eletrônica básica (componentes, protoboard e 555, transistor, fontes, lógica digital) e comandos elétricos (motor trifásico, contatores, partida direta e reversão, sensores PNP e NPN)
+- **Nove simuladores interativos** dentro das lições: lei de Ohm, divisor de tensão com LDR e NTC, carga e descarga do capacitor, pisca-pisca com 555, portas lógicas, retificador com filtro, as três fases, partida direta com selo e leitura do paquímetro
+- **Novo desafio no Laboratório:** a esteira que desliga quando o operador solta o botão
+- **Novo projeto guiado:** pisca-pisca e sensor de luz na protoboard
+- No editor de conteúdo, cada lição pode receber um simulador
+
 ## Versão 2.3.0: abas 40+ e Elétrica e Hardware
 - **Comece aos 40+:** quatro etapas em sequência para quem começa em tecnologia depois dos 40: primeiros passos no digital, IA sem jargão, ferramentas do trabalho e recomeço de carreira
 - **Elétrica, Eletrônica e Hardware:** seis etapas, de fundamentos de eletricidade e instalações residenciais até eletrônica, hardware, IoT e comandos elétricos com CLP

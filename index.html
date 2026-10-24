@@ -502,6 +502,32 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
   .ep-n{display:none}
 }
 
+/* simuladores das lições */
+.sim .s-fig{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;background:#0b0b0c;border:1px solid var(--line);border-radius:6px;padding:10px}
+.sim .s-fig svg{flex:1 1 240px;min-width:0;max-width:520px;max-height:330px;height:auto}
+.split > *{min-width:0}
+@media (max-width:560px){.sim .s-fig svg[viewBox="0 0 140 200"],.sim .s-fig svg[viewBox="0 0 160 170"]{max-width:190px}}
+.split .row > .btn{white-space:normal;text-align:left;max-width:100%}
+.sim svg text{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.sim .w{stroke:#3d3d3d;stroke-width:3;fill:none;stroke-linejoin:round;transition:stroke .15s}
+.sim .w.on{stroke:var(--t)}
+.sim .s-ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 22px;margin-top:16px;align-items:end}
+.sim .s-ctl [hidden]{display:none}
+.s-in{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:4px 10px;font-size:.88rem;color:var(--muted)}
+.s-in input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--t);margin:2px 0 0;min-height:24px}
+.s-in output{color:var(--ink);font-family:var(--f-mono);font-size:.86rem}
+.s-seg{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.s-meters{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:16px}
+.s-meters div{background:var(--surface-2);border-radius:6px;padding:9px 12px;border-left:3px solid var(--t)}
+.s-meters span{display:block;font-size:.76rem;color:var(--muted)}
+.s-meters b{font-family:var(--f-mono);font-size:1.08rem;font-weight:500}
+.s-cap{margin-top:8px}
+.s-read{margin-top:14px;font-size:.93rem;line-height:1.55;color:var(--ink)}
+.s-tt{border-collapse:collapse;margin-top:16px;font-family:var(--f-mono);font-size:.9rem}
+.s-tt th,.s-tt td{border:1px solid var(--line-2);padding:5px 16px;text-align:center}
+.s-tt th{color:var(--muted);font-weight:500}
+.s-tt tr.cur td{background:color-mix(in srgb,var(--t) 22%,transparent);color:var(--ink)}
+.sim .btn.sm{min-height:34px;padding:6px 12px;font-size:.86rem}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -588,18 +614,18 @@ const TRACKS = [
   { id: "carreira", area: "40", name: "Recomeço em tecnologia", short: "Recomeço", ico: "carreira", desc: "Transformar a sua experiência em uma nova carreira, com currículo, LinkedIn, portfólio e um plano de 90 dias.",
     plan: [["Sua experiência vale: traduzindo anos de trabalho para a tecnologia", "Lista das habilidades que você já tem"], ["Mapa de carreiras em tecnologia para quem começa depois dos 40", "Duas carreiras escolhidas para explorar"], ["LinkedIn e currículo para a transição", "Perfil do LinkedIn atualizado"], ["Primeiro portfólio: três projetos simples para mostrar", "Portfólio publicado"], ["Plano de estudo de 90 dias que cabe na rotina", "Plano de 90 dias no calendário"]] },
   /* Aba "Elétrica, Eletrônica e Hardware" */
-  { id: "eletricidade", area: "hw", color: "#ffd23f", name: "Fundamentos de eletricidade", short: "Eletricidade", ico: "raio", desc: "Tensão, corrente, resistência, multímetro e segurança antes de tudo.",
-    plan: [["Tensão, corrente e resistência: a Lei de Ohm na prática", "Tabela de medições de um circuito simples"], ["Multímetro: medir tensão, corrente e continuidade com segurança", "Roteiro de medição com o seu multímetro"], ["Segurança em eletricidade: choque, EPI e noções de NR-10", "Checklist de segurança antes de qualquer serviço"], ["Circuitos em série e em paralelo", "Circuito montado e medido na protoboard"], ["Potência, consumo e conta de luz", "Cálculo do consumo dos aparelhos da casa"]] },
+  { id: "eletricidade", area: "hw", color: "#ffd23f", name: "Fundamentos de eletricidade", short: "Eletricidade", ico: "raio", desc: "Tensão, corrente, resistência, multímetro e segurança antes de tudo, mais consumo de energia e o paquímetro da bancada.",
+    plan: [] },
   { id: "instalacoes", area: "hw", color: "#ff9f43", name: "Instalações elétricas residenciais", short: "Instalações", ico: "casa", desc: "Diagramas, tomadas, iluminação e proteção, com noções da NBR 5410.",
-    plan: [["Leitura de diagramas e simbologia", "Diagrama unifilar de um cômodo"], ["Tomadas, interruptores e iluminação", "Esquema de ligação de um interruptor paralelo"], ["Disjuntores, DR e DPS: protegendo o circuito", "Quadro de distribuição explicado"], ["Dimensionamento de cabos e circuitos (noções da NBR 5410)", "Tabela de circuitos de uma casa"], ["Diagnóstico de falhas em instalações", "Roteiro para um disjuntor que desarma"]] },
+    plan: [["Dimensionamento de cabos e circuitos (noções da NBR 5410)", "Tabela de circuitos de uma casa"], ["Diagnóstico de falhas em instalações", "Roteiro para um disjuntor que desarma"]] },
   { id: "eletronica", area: "hw", color: "#4fe3a6", name: "Eletrônica básica", short: "Eletrônica", ico: "onda", desc: "Componentes, protoboard, transistores, fontes e solda.",
-    plan: [["Componentes: resistor, capacitor, diodo e LED", "Kit de componentes identificado e testado"], ["Protoboard e primeiros circuitos", "Pisca-pisca com LED montado na protoboard"], ["Transistor como chave", "Circuito que liga uma carga com transistor"], ["Fontes de alimentação: da tomada aos 5 V", "Fonte regulada de 5 V montada"], ["Solda e montagem de placas", "Placa soldada e testada"]] },
+    plan: [["Solda e montagem de placas", "Placa soldada e testada"]] },
   { id: "hardware", area: "hw", color: "#5cc8ff", name: "Hardware de computadores", short: "Hardware", ico: "pc", desc: "Peças, montagem, diagnóstico, redes e manutenção preventiva.",
     plan: [["Peças do computador e como elas conversam", "Ficha técnica do seu computador"], ["Montagem e upgrade: memória, SSD e fonte", "Upgrade feito e testado"], ["Diagnóstico: o PC não liga, trava ou esquenta", "Roteiro de diagnóstico de defeitos"], ["Redes domésticas: cabos, roteador e Wi-Fi", "Rede de casa configurada e protegida"], ["Manutenção preventiva e backup", "Plano de manutenção e backup"]] },
   { id: "iot", area: "hw", name: "Microcontroladores e IoT", short: "IoT", ico: "chip", desc: "ESP32, sensores, Wi-Fi, MQTT e dispositivos conectados.",
     plan: [["Atuadores: relés, motores e servos", "Ventilador ligado pela temperatura"], ["Painel na nuvem com os dados do sensor", "Painel com leituras em tempo real"]] },
   { id: "comandos", area: "hw", color: "#ff6b6b", name: "Comandos elétricos e automação", short: "Automação", ico: "motor", desc: "Contatores, motores, sensores, CLP e inversores de frequência.",
-    plan: [["Contatores, relés e botoeiras", "Diagrama de comando liga-desliga"], ["Partida direta e reversão de motores", "Esquema de reversão com intertravamento"], ["Sensores indutivos, capacitivos e fotoelétricos (PNP e NPN)", "Ligação correta de um sensor ao CLP"], ["Introdução ao CLP: entradas, saídas e linguagem ladder", "Primeiro programa ladder simulado"], ["Inversor de frequência: parametrização básica", "Roteiro de parametrização de um inversor"]] }
+    plan: [["Introdução ao CLP: entradas, saídas e linguagem ladder", "Primeiro programa ladder simulado"], ["Inversor de frequência: parametrização básica", "Roteiro de parametrização de um inversor"]] }
 ];
 const TRACK_IDS = new Set(TRACKS.map(t => t.id));
 /* Abas com trilhas em sequência. As trilhas sem "area" são as da aba Trilhas. */
@@ -694,13 +720,14 @@ function navGroup() { const r = S.route; if (r.name === "trilha" || r.name === "
 /* ---------- render ---------- */
 function render(force) {
   const ae = document.activeElement;
-  if (!force && ae && $("#view").contains(ae) && /INPUT|TEXTAREA|SELECT/.test(ae.tagName) && ae.type !== "checkbox") { S.pending = true; return; }
+  if (!force && ae && $("#view").contains(ae) && /INPUT|TEXTAREA|SELECT/.test(ae.tagName) && ae.type !== "checkbox" && ae.type !== "range" && !ae.dataset.simIn) { S.pending = true; return; }
   S.pending = false;
   renderChrome();
   let html;
   try { html = (VIEWS[S.route.name] || VIEWS.inicio)(S.route.id); }
   catch (e) { console.error(e); html = '<div class="notice bad">Não foi possível abrir esta tela: ' + esc(e.message) + '</div><div><button class="btn" data-act="go" data-r="inicio">Voltar ao início</button></div>'; }
   const v = $("#view"); v.className = FULL.includes(S.route.name) ? "full" : ""; v.innerHTML = html + footHTML();
+  simMount(v);
   if (S.ui.modal) renderModal();
 }
 document.addEventListener("focusout", () => setTimeout(() => { if (S.pending) render(); }, 50));
@@ -771,6 +798,359 @@ const IC = {
   escudo: svg('<path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M9 12l2 2 4-4"/>'),
   carreira: svg('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2M3 13h18"/>')
 };
+
+/* ---------- simuladores: a parte interativa das lições de Elétrica e hardware ---------- */
+const SIMST = {};
+const RMOT = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtN = (v, d) => Number(v).toLocaleString("pt-BR", { maximumFractionDigits: d == null ? 2 : d });
+function fmtU(v, unit) {
+  const a = Math.abs(v);
+  const p = a === 0 ? ["", 1] : a >= 1e6 ? ["M", 1e6] : a >= 1e3 ? ["k", 1e3] : a >= 1 ? ["", 1] : a >= 1e-3 ? ["m", 1e-3] : a >= 1e-6 ? ["µ", 1e-6] : ["n", 1e-9];
+  const x = v / p[1]; return fmtN(x, Math.abs(x) >= 100 ? 0 : Math.abs(x) >= 10 ? 1 : 2) + " " + p[0] + unit;
+}
+const E6R = [1000, 2200, 4700, 10000, 22000, 47000, 100000];
+const E6C = [1, 2.2, 4.7, 10, 22, 47, 100];
+const logR = p => 1000 * Math.pow(10, p / 50);                       // 0..100 → 1 kΩ..100 kΩ
+const so = (r, f, t) => { const e = r.querySelector('[data-o="' + f + '"]'); if (e) e.textContent = t; };
+const sg = (r, g) => r.querySelector('[data-g="' + g + '"]');
+const sgs = (r, g) => r.querySelectorAll('[data-g="' + g + '"]');
+const sread = (r, t) => { const e = r.querySelector(".s-read"); if (e) e.innerHTML = t; };
+const nowS = () => (typeof performance !== "undefined" ? performance.now() : Date.now()) / 1000;
+function simSt(k) { if (!SIMST[k]) SIMST[k] = JSON.parse(JSON.stringify(SIMS[k].init)); return SIMST[k]; }
+function sRange(k, f, label, min, max, step) {
+  return '<label class="s-in"><span>' + label + '</span><output data-o="' + f + '"></output><input type="range" min="' + min + '" max="' + max + '" step="' + step + '" value="' + simSt(k)[f] + '" data-sim-in="' + k + '" data-f="' + f + '" aria-label="' + label + '"></label>';
+}
+function sSeg(k, f, opts) {
+  return '<div class="s-seg" role="group">' + opts.map(o => '<button class="pill" data-act="sim" data-k="' + k + '" data-f="' + f + '" data-v="' + o[0] + '" aria-pressed="false">' + o[1] + "</button>").join("") + "</div>";
+}
+const sBtn = (k, a, label, cls) => '<button class="btn sm' + (cls ? " " + cls : "") + '" data-act="sim" data-k="' + k + '" data-a="' + a + '" data-g="b-' + a + '">' + label + "</button>";
+const sMeters = list => '<div class="s-meters">' + list.map(m => "<div><span>" + m[1] + '</span><b data-o="' + m[0] + '">–</b></div>').join("") + "</div>";
+const SVG = (vb, body, label) => '<svg viewBox="' + vb + '" role="img" aria-label="' + label + '">' + body + "</svg>";
+// resistor em zigue-zague entre (x1,y) e (x2,y), ou vertical quando v = true
+function zig(a, b, c, v) {
+  const n = 6, pts = []; const L = b - a;
+  pts.push(v ? [c, a] : [a, c]);
+  for (let i = 0; i < n; i++) { const p = a + L * (i + .5) / n, o = (i % 2 ? -8 : 8); pts.push(v ? [c + o, p] : [p, c + o]); }
+  pts.push(v ? [c, b] : [b, c]);
+  return '<polyline class="w on" points="' + pts.map(p => p.join(",")).join(" ") + '"/>';
+}
+
+const SIMS = {
+  /* ---- 1. Lei de Ohm ---- */
+  ohm: {
+    title: "Simulador: lei de Ohm", hint: "Mude a tensão da fonte e a resistência. Veja a corrente, a potência e o brilho da lâmpada.",
+    init: { V: 12, R: 220, ph: 0 },
+    html: () => '<div class="s-fig">' + SVG("0 0 360 190",
+      '<path class="w" d="M40 40H320V150H40Z"/>' +
+      '<rect x="20" y="78" width="40" height="34" fill="#0b0b0c"/><path d="M26 88H54" stroke="var(--ink)" stroke-width="3"/><path d="M33 102H47" stroke="var(--ink)" stroke-width="6"/><text x="64" y="92">+</text><text x="6" y="125" data-g="vb">12 V</text>' +
+      '<rect x="146" y="28" width="68" height="24" fill="#0b0b0c"/>' + zig(146, 214, 40) + '<text x="160" y="22" data-g="rl">R</text>' +
+      '<circle data-g="glow" cx="320" cy="95" r="34" fill="#ffd166" opacity="0"/><circle cx="320" cy="95" r="14" fill="#0b0b0c" stroke="var(--ink)" stroke-width="2"/><path d="M310 85l20 20M330 85l-20 20" stroke="var(--ink)" stroke-width="1.6"/>' +
+      '<g data-g="dots">' + Array.from({ length: 16 }, () => '<circle r="3" fill="var(--t)"/>').join("") + "</g>", "Circuito com fonte, resistor e lâmpada") + "</div>" +
+      '<div class="s-ctl">' + sRange("ohm", "V", "Tensão da fonte (V)", 0, 24, .5) + sRange("ohm", "R", "Resistência (Ω)", 10, 1000, 10) + "</div>" +
+      sMeters([["I", "Corrente (I = V ÷ R)"], ["P", "Potência (P = V × I)"]]),
+    draw(r, st) {
+      const I = st.R ? st.V / st.R : 0, P = st.V * I;
+      so(r, "V", fmtN(st.V, 1) + " V"); so(r, "R", fmtU(st.R, "Ω")); so(r, "I", fmtU(I, "A")); so(r, "P", fmtU(P, "W"));
+      sg(r, "vb").textContent = fmtN(st.V, 1) + " V"; sg(r, "rl").textContent = fmtU(st.R, "Ω");
+      sg(r, "glow").setAttribute("opacity", Math.min(.85, P / 2.5).toFixed(2));
+      sread(r, "Com <b>" + fmtN(st.V, 1) + " V</b> sobre <b>" + fmtU(st.R, "Ω") + "</b>, passam <b>" + fmtU(I, "A") + "</b>. Dobre a tensão e a corrente dobra; dobre a resistência e ela cai pela metade." + (P > .25 ? " <b>Atenção:</b> " + fmtU(P, "W") + " é mais do que um resistor comum de 1/4 W aguenta; ele esquentaria até queimar." : ""));
+      this.dots(r, st);
+    },
+    dots(r, st) {
+      const P = 780; sgs(r, "dots")[0].querySelectorAll("circle").forEach((c, k) => {
+        let s = (st.ph + k * P / 16) % P, x, y;
+        if (s < 280) { x = 40 + s; y = 40; } else if (s < 390) { x = 320; y = 40 + s - 280; } else if (s < 670) { x = 320 - (s - 390); y = 150; } else { x = 40; y = 150 - (s - 670); }
+        c.setAttribute("cx", x.toFixed(1)); c.setAttribute("cy", y.toFixed(1)); c.setAttribute("opacity", st.V > 0 ? 1 : .2);
+      });
+    },
+    tick(r, st, dt) { if (RMOT) return; const I = st.V / st.R; st.ph = (st.ph + dt * (I > 0 ? Math.min(240, 12 + I * 500) : 0)) % 780; this.dots(r, st); }
+  },
+
+  /* ---- 2. Sistema trifásico ---- */
+  tri: {
+    title: "Simulador: as três fases", hint: "Três tensões iguais, defasadas 120° entre si. Pause e arraste o ângulo para ver os valores em cada instante.",
+    init: { ang: 30, run: 1 },
+    html() {
+      const C = ["#ff7a59", "#ffd166", "#5cc8ff"]; let waves = "";
+      for (let i = 0; i < 3; i++) { const pts = []; for (let a = 0; a <= 360; a += 6) pts.push((20 + a / 360 * 320).toFixed(1) + "," + (100 - 70 * Math.sin((a - 120 * i) * Math.PI / 180)).toFixed(1)); waves += '<polyline points="' + pts.join(" ") + '" fill="none" stroke="' + C[i] + '" stroke-width="2" opacity=".85"/>'; }
+      return '<div class="s-fig">' + SVG("0 0 200 200", '<circle cx="100" cy="100" r="70" fill="none" stroke="#333"/><path d="M20 100H180M100 20V180" stroke="#262626"/>' + C.map((c, i) => '<line data-g="ph' + i + '" x1="100" y1="100" x2="170" y2="100" stroke="' + c + '" stroke-width="3" stroke-linecap="round"/><text data-g="pl' + i + '" fill="' + c + '">L' + (i + 1) + "</text>").join(""), "Fasores girando") +
+        SVG("0 0 360 200", '<path d="M20 100H340" stroke="#333"/><text x="22" y="24">+180 V</text><text x="22" y="190">−180 V</text>' + waves + '<line data-g="cur" y1="20" y2="180" stroke="var(--ink)" stroke-dasharray="3 3"/>' + C.map((c, i) => '<circle data-g="d' + i + '" r="4.5" fill="' + c + '"/>').join(""), "Ondas das três fases") + "</div>" +
+        '<div class="s-ctl">' + sRange("tri", "ang", "Ângulo (graus)", 0, 359, 1) + '<div class="s-seg">' + sBtn("tri", "run", "Pausar") + "</div></div>" +
+        sMeters([["v0", "L1 agora"], ["v1", "L2 agora"], ["v2", "L3 agora"], ["sum", "Soma das três"]]);
+    },
+    draw(r, st) {
+      let sum = 0; const x = 20 + st.ang / 360 * 320;
+      for (let i = 0; i < 3; i++) {
+        const th = (st.ang - 120 * i) * Math.PI / 180, v = 180 * Math.sin(th); sum += v;
+        const l = sg(r, "ph" + i); l.setAttribute("x2", (100 + 70 * Math.cos(th)).toFixed(1)); l.setAttribute("y2", (100 - 70 * Math.sin(th)).toFixed(1));
+        const t = sg(r, "pl" + i); t.setAttribute("x", (96 + 86 * Math.cos(th)).toFixed(1)); t.setAttribute("y", (104 - 86 * Math.sin(th)).toFixed(1));
+        const d = sg(r, "d" + i); d.setAttribute("cx", x.toFixed(1)); d.setAttribute("cy", (100 - 70 * Math.sin(th)).toFixed(1));
+        so(r, "v" + i, (v >= 0 ? "+" : "−") + fmtN(Math.abs(v), 0) + " V");
+      }
+      const c = sg(r, "cur"); c.setAttribute("x1", x.toFixed(1)); c.setAttribute("x2", x.toFixed(1));
+      so(r, "sum", fmtN(Math.abs(sum) < .5 ? 0 : sum, 0) + " V"); so(r, "ang", st.ang.toFixed(0) + "°");
+      sg(r, "b-run").textContent = st.run ? "Pausar" : "Continuar";
+      const inp = r.querySelector('[data-f="ang"]'); if (inp && document.activeElement !== inp) inp.value = st.ang;
+      sread(r, "Valores de pico numa rede de 127 V por fase. Em qualquer instante, a soma das três tensões dá zero: é por isso que um motor trifásico equilibrado dispensa o neutro, e por isso o campo dentro dele gira sozinho.");
+    },
+    input(st) { st.run = 0; },
+    act(st, a) { if (a === "run") st.run = !st.run; },
+    tick(r, st, dt) { if (!st.run || RMOT) return; st.ang = (st.ang + dt * 50) % 360; this.draw(r, st); }
+  },
+
+  /* ---- 3. Divisor de tensão e sensores resistivos ---- */
+  div: {
+    title: "Simulador: divisor de tensão", hint: "Troque o resistor de baixo por um LDR (luz) ou um NTC (temperatura) e veja a tensão do meio mudar.",
+    init: { Vin: 5, r1p: 50, modo: "fixo", r2p: 50, luz: 50, temp: 25 },
+    html: () => '<div class="s-fig">' + SVG("0 0 300 230",
+      '<path class="w on" d="M80 20V40M80 100V130M80 190V212"/><path class="w" d="M80 130H190"/><circle cx="80" cy="130" r="4" fill="var(--t)"/>' +
+      '<text x="96" y="24" data-g="vin">Entrada 5 V</text>' + zig(40, 100, 80, true) + '<text x="100" y="74" data-g="r1">R1</text>' +
+      '<g data-g="r2z">' + zig(130, 190, 80, true) + '</g><rect data-g="r2box" x="68" y="140" width="24" height="40" rx="2" fill="none" stroke="var(--t)" stroke-width="2.5"/><g data-g="ldr"><path d="M30 138l18 10M30 150l18 10" stroke="#ffd166" stroke-width="2"/><path d="M44 144l5 4-6 1M44 156l5 4-6 1" fill="none" stroke="#ffd166" stroke-width="2"/></g><path data-g="ntc" d="M56 190L104 132M98 132h6" stroke="#ff7a59" stroke-width="2" fill="none"/><text x="100" y="166" data-g="r2">R2</text>' +
+      '<path d="M66 214H94M71 220H89M76 226H84" stroke="var(--ink)" stroke-width="2"/>' +
+      '<rect x="190" y="104" width="90" height="52" rx="6" fill="#141414" stroke="#444"/><text x="200" y="122">saída</text><text x="200" y="146" data-g="vo" style="font-size:16px;fill:var(--ink)">0 V</text>', "Divisor de tensão com dois resistores") + "</div>" +
+      '<div class="s-ctl">' + sRange("div", "Vin", "Tensão de entrada (V)", 0, 12, .1) + sRange("div", "r1p", "R1, resistor de cima", 0, 100, 1) + "</div>" +
+      '<div class="s-ctl"><div><span class="label">O que vai embaixo (R2)</span>' + sSeg("div", "modo", [["fixo", "Resistor"], ["ldr", "LDR (luz)"], ["ntc", "NTC (calor)"]]) + "</div>" +
+      '<div data-g="c-fixo">' + sRange("div", "r2p", "R2, resistor de baixo", 0, 100, 1) + '</div><div data-g="c-ldr">' + sRange("div", "luz", "Luz sobre o LDR (%)", 0, 100, 1) + '</div><div data-g="c-ntc">' + sRange("div", "temp", "Temperatura do NTC (°C)", 0, 100, 1) + "</div></div>" +
+      sMeters([["R2v", "R2 agora"], ["Vout", "Saída (Vout)"], ["pct", "Fração da entrada"]]),
+    r2(st) {
+      if (st.modo === "ldr") return 200000 * Math.pow(1 / 200, st.luz / 100);
+      if (st.modo === "ntc") return 10000 * Math.exp(3950 * (1 / (st.temp + 273.15) - 1 / 298.15));
+      return logR(st.r2p);
+    },
+    draw(r, st) {
+      const R1 = logR(st.r1p), R2 = this.r2(st), Vo = st.Vin * R2 / (R1 + R2);
+      so(r, "Vin", fmtN(st.Vin, 1) + " V"); so(r, "r1p", fmtU(R1, "Ω")); so(r, "r2p", fmtU(logR(st.r2p), "Ω")); so(r, "luz", st.luz + "%"); so(r, "temp", st.temp + " °C");
+      so(r, "R2v", fmtU(R2, "Ω")); so(r, "Vout", fmtN(Vo, 2) + " V"); so(r, "pct", fmtN(st.Vin ? Vo / st.Vin * 100 : 0, 0) + "%");
+      sg(r, "vin").textContent = "Entrada " + fmtN(st.Vin, 1) + " V"; sg(r, "r1").textContent = "R1 " + fmtU(R1, "Ω"); sg(r, "vo").textContent = fmtN(Vo, 2) + " V";
+      sg(r, "r2").textContent = (st.modo === "ldr" ? "LDR " : st.modo === "ntc" ? "NTC " : "R2 ") + fmtU(R2, "Ω");
+      ["fixo", "ldr", "ntc"].forEach(m => { sg(r, "c-" + m).hidden = st.modo !== m; });
+      sg(r, "r2z").style.display = st.modo === "fixo" ? "" : "none"; sg(r, "r2box").style.display = st.modo === "fixo" ? "none" : "";
+      sg(r, "ldr").style.display = st.modo === "ldr" ? "" : "none"; sg(r, "ntc").style.display = st.modo === "ntc" ? "" : "none";
+      let t = "Vout = Vin × R2 ÷ (R1 + R2). Quanto maior R2 em relação a R1, mais perto da entrada fica a saída.";
+      if (st.modo === "ldr") t = "O LDR baixa a resistência quando recebe luz. Montado embaixo, a saída <b>sobe no escuro</b> e cai no claro: dá para acender uma lâmpada quando anoitece.";
+      if (st.modo === "ntc") t = "O NTC baixa a resistência quando esquenta (coeficiente negativo). Aqui, a saída <b>cai quando a temperatura sobe</b>. O microcontrolador lê essa tensão e converte em graus.";
+      if (Vo > 3.3) t += " <b>Cuidado:</b> acima de 3,3 V, essa saída não pode ir direto na entrada analógica de um ESP32.";
+      sread(r, t);
+    }
+  },
+
+  /* ---- 4. Retificadores ---- */
+  ret: {
+    title: "Simulador: do alternado ao contínuo", hint: "Transformador de 12 V eficazes, carga de 100 Ω. Escolha o retificador e acrescente um capacitor de filtro.",
+    init: { modo: "ponte", C: 0 },
+    html: () => '<div class="s-fig">' + SVG("0 0 360 200", '<path d="M20 110H340" stroke="#333"/><text x="300" y="104">0 V</text><polyline data-g="in" fill="none" stroke="#666" stroke-dasharray="4 3" stroke-width="1.5"/><polyline data-g="out" fill="none" stroke="var(--t)" stroke-width="2.5"/><line data-g="avg" x1="20" x2="340" stroke="var(--ok)" stroke-dasharray="6 4"/>', "Formas de onda do retificador") + '</div><p class="small muted s-cap">Tracejado cinza: tensão do transformador. Linha cheia: tensão na carga. Tracejado verde: a média, que é o que o multímetro em DC mostra.</p>' +
+      '<div class="s-ctl"><div><span class="label">Retificador</span>' + sSeg("ret", "modo", [["meia", "Meia onda (1 diodo)"], ["ponte", "Onda completa (ponte)"]]) + "</div>" + sRange("ret", "C", "Capacitor de filtro (µF)", 0, 2200, 100) + "</div>" +
+      sMeters([["pk", "Pico na saída"], ["dc", "Média (multímetro em DC)"], ["rip", "Ondulação (ripple)"]]),
+    draw(r, st) {
+      const Vp = 12 * Math.SQRT2, f = 60, T = 3 / f, N = 600, dt = T / N, RC = 100 * st.C * 1e-6, drop = st.modo === "ponte" ? 1.4 : .7;
+      const sx = t => 20 + t / T * 320, sy = v => 110 - v * 4.4; let vc = 0; const pin = [], pout = []; let mx = -1, mn = 99, sum = 0, n = 0;
+      for (let i = 0; i <= N; i++) {
+        const t = i * dt, vi = Vp * Math.sin(2 * Math.PI * f * t);
+        const vr = Math.max(0, (st.modo === "ponte" ? Math.abs(vi) : vi) - drop);
+        if (RC > 0) { vc = vr > vc ? vr : vc * Math.exp(-dt / RC); } else vc = vr;
+        pin.push(sx(t).toFixed(1) + "," + sy(vi).toFixed(1)); pout.push(sx(t).toFixed(1) + "," + sy(vc).toFixed(1));
+        if (i >= N * 2 / 3) { mx = Math.max(mx, vc); mn = Math.min(mn, vc); sum += vc; n++; }
+      }
+      const avg = sum / n;
+      sg(r, "in").setAttribute("points", pin.join(" ")); sg(r, "out").setAttribute("points", pout.join(" "));
+      const a = sg(r, "avg"); a.setAttribute("y1", sy(avg).toFixed(1)); a.setAttribute("y2", sy(avg).toFixed(1));
+      so(r, "C", st.C ? st.C + " µF" : "sem capacitor"); so(r, "pk", fmtN(mx, 1) + " V"); so(r, "dc", fmtN(avg, 1) + " V"); so(r, "rip", fmtN(mx - mn, 1) + " V");
+      let t = st.modo === "meia" ? "Com um diodo só, o semiciclo negativo é cortado: metade do tempo a carga fica sem nada." : "A ponte de quatro diodos inverte o semiciclo negativo: a carga recebe energia nos dois semiciclos.";
+      t += st.C ? " O capacitor carrega nos picos e alimenta a carga nos vales. Quanto maior, menor a ondulação." : " Sem capacitor, a saída pulsa entre zero e o pico: serve para carregar bateria, não para alimentar um circuito eletrônico.";
+      t += " Repare que o pico perde de 0,7 V a 1,4 V nos diodos.";
+      sread(r, t);
+    }
+  },
+
+  /* ---- 5. Carga e descarga do capacitor ---- */
+  rc: {
+    title: "Simulador: carga e descarga do capacitor", hint: "Fonte de 9 V. Escolha R e C, clique em Carregar e acompanhe a curva. O tempo é real.",
+    init: { ri: 3, ci: 3, mode: "", t: 0, v0: 0, vc: 0, vel: 1 },
+    html: () => '<div class="s-fig">' + SVG("0 0 360 200", '<path d="M30 20V170H340" stroke="#444" fill="none"/>' + [1, 2, 3, 4, 5].map(k => '<line x1="' + (30 + k * 60) + '" x2="' + (30 + k * 60) + '" y1="20" y2="170" stroke="#262626"/><text x="' + (22 + k * 60) + '" y="186">' + k + "τ</text>").join("") +
+      '<line x1="30" x2="340" y1="' + (170 - .632 * 140).toFixed(1) + '" y2="' + (170 - .632 * 140).toFixed(1) + '" stroke="#444" stroke-dasharray="3 3"/><text x="34" y="' + (166 - .632 * 140).toFixed(1) + '">63%</text><text x="34" y="16">9 V</text><polyline data-g="curve" fill="none" stroke="var(--t)" stroke-width="2.5"/><circle data-g="pt" r="5" fill="var(--ink)"/>', "Curva de tensão do capacitor") + "</div>" +
+      '<div class="s-ctl">' + sRange("rc", "ri", "Resistor", 0, 6, 1) + sRange("rc", "ci", "Capacitor", 0, 6, 1) + "</div>" +
+      '<div class="row" style="gap:8px;flex-wrap:wrap">' + sBtn("rc", "carga", "Carregar", "primary") + sBtn("rc", "descarga", "Descarregar") + sSeg("rc", "vel", [["1", "Tempo real"], ["10", "10× mais rápido"]]) + "</div>" +
+      sMeters([["tau", "τ = R × C"], ["vc", "Tensão no capacitor"], ["tt", "Tempo"]]),
+    tau: st => E6R[st.ri] * E6C[st.ci] * 1e-6,
+    val(st) { const tau = this.tau(st); if (st.mode === "carga") return 9 - (9 - st.v0) * Math.exp(-st.t / tau); if (st.mode === "descarga") return st.v0 * Math.exp(-st.t / tau); return st.vc; },
+    draw(r, st) {
+      const tau = this.tau(st); st.vc = this.val(st);
+      so(r, "ri", fmtU(E6R[st.ri], "Ω")); so(r, "ci", fmtU(E6C[st.ci] * 1e-6, "F")); so(r, "tau", fmtN(tau, tau < 1 ? 3 : 1) + " s"); so(r, "vc", fmtN(st.vc, 2) + " V (" + fmtN(st.vc / 9 * 100, 0) + "%)"); so(r, "tt", fmtN(st.t, 1) + " s");
+      const pts = []; if (st.mode) for (let i = 0; i <= 60; i++) { const tt = i / 60 * 5 * tau; const v = st.mode === "carga" ? 9 - (9 - st.v0) * Math.exp(-tt / tau) : st.v0 * Math.exp(-tt / tau); pts.push((30 + i * 5).toFixed(1) + "," + (170 - v / 9 * 140).toFixed(1)); }
+      sg(r, "curve").setAttribute("points", pts.join(" "));
+      const p = sg(r, "pt"); p.setAttribute("cx", (30 + Math.min(st.t / tau, 5.16) * 60).toFixed(1)); p.setAttribute("cy", (170 - st.vc / 9 * 140).toFixed(1));
+      sread(r, "A constante de tempo τ é R × C: aqui, <b>" + fmtN(tau, tau < 1 ? 3 : 1) + " s</b>. Em 1τ o capacitor chega a 63% da fonte; depois de 5τ (" + fmtN(5 * tau, 1) + " s) está praticamente cheio. Na descarga é o espelho: em 1τ sobram 37%.");
+    },
+    input(st) { st.v0 = st.vc; st.t = 0; },
+    act(st, a) { st.v0 = this.val(st); st.vc = st.v0; st.t = 0; st.mode = a; },
+    tick(r, st, dt) { if (!st.mode || st.t > 5.2 * this.tau(st)) return; st.t += dt * Number(st.vel); this.draw(r, st); }
+  },
+
+  /* ---- 6. CI 555 astável ---- */
+  ne555: {
+    title: "Simulador: pisca-pisca com 555", hint: "No modo astável, R1, R2 e C definem quanto tempo o LED fica aceso e apagado.",
+    init: { r1: 3, r2: 5, c: 3, ph: 0 },
+    html: () => '<div class="s-fig">' + SVG("0 0 160 170", '<rect x="40" y="30" width="80" height="110" rx="6" fill="#1d1d1d" stroke="#555"/>' + [0, 1, 2, 3].map(i => '<path d="M28 ' + (48 + i * 25) + 'H40M120 ' + (48 + i * 25) + 'H132" stroke="#999" stroke-width="4"/>').join("") + '<text x="62" y="90" style="font-size:16px;fill:var(--ink)">555</text><circle cx="48" cy="40" r="3" fill="#555"/><circle data-g="led" cx="80" cy="158" r="9" fill="#ff3b3b" opacity=".15"/><path d="M132 98H146V158H89" stroke="#666" fill="none"/>', "Circuito integrado 555 com LED") +
+      SVG("0 0 300 170", '<text x="6" y="26">saída</text><text x="6" y="100">capacitor</text><polyline data-g="sq" fill="none" stroke="var(--t)" stroke-width="2.5"/><polyline data-g="saw" fill="none" stroke="#ffd166" stroke-width="2"/><line data-g="cur" y1="30" y2="160" stroke="var(--ink)" stroke-dasharray="3 3"/><text x="22" y="114">2/3</text><text x="22" y="154">1/3</text>', "Forma de onda da saída e do capacitor") + "</div>" +
+      '<div class="s-ctl">' + sRange("ne555", "r1", "R1", 0, 6, 1) + sRange("ne555", "r2", "R2", 0, 6, 1) + sRange("ne555", "c", "C", 0, 6, 1) + "</div>" +
+      sMeters([["f", "Frequência"], ["on", "Aceso"], ["off", "Apagado"], ["duty", "Ciclo ativo"]]),
+    calc(st) { const R1 = E6R[st.r1], R2 = E6R[st.r2], C = E6C[st.c] * 1e-6; const th = .693 * (R1 + R2) * C, tl = .693 * R2 * C; return { R1, R2, C, th, tl, f: 1 / (th + tl), d: th / (th + tl) }; },
+    draw(r, st) {
+      const k = this.calc(st);
+      so(r, "r1", fmtU(k.R1, "Ω")); so(r, "r2", fmtU(k.R2, "Ω")); so(r, "c", fmtU(k.C, "F")); so(r, "f", fmtN(k.f, k.f < 10 ? 2 : 0) + " Hz"); so(r, "on", fmtN(k.th * 1000, 0) + " ms"); so(r, "off", fmtN(k.tl * 1000, 0) + " ms"); so(r, "duty", fmtN(k.d * 100, 0) + "%");
+      const sq = [], saw = [], X = p => 50 + p * 120; // 2 períodos em 240 px
+      for (let n = 0; n < 2; n++) { const a = n, b = n + k.d, c = n + 1; sq.push(X(a) + ",40", X(b) + ",40", X(b) + ",80", X(c) + ",80"); for (let i = 0; i <= 10; i++) { const u = i / 10; saw.push(X(a + u * k.d).toFixed(1) + "," + (150 - 40 * (1 - Math.exp(-u * .693 * 1)) * 2).toFixed(1)); } for (let i = 0; i <= 10; i++) { const u = i / 10; saw.push(X(b + u * (1 - k.d)).toFixed(1) + "," + (110 + 40 * (1 - Math.pow(.5, u)) * 2).toFixed(1)); } }
+      sg(r, "sq").setAttribute("points", sq.join(" ")); sg(r, "saw").setAttribute("points", saw.join(" "));
+      sread(r, "Tempo aceso ≈ 0,693 × (R1 + R2) × C; apagado ≈ 0,693 × R2 × C. O capacitor sobe até 2/3 da alimentação carregando por R1 e R2 e desce até 1/3 descarregando só por R2: por isso o tempo aceso é sempre maior." + (k.f > 25 ? " <b>Acima de uns 25 Hz o olho não vê mais a piscada</b>: o LED parece aceso direto, com brilho menor." : ""));
+      this.frame(r, st, k);
+    },
+    frame(r, st, k) {
+      const fast = k.f > 25, p = st.ph % 1, on = fast ? true : p < k.d;
+      sg(r, "led").setAttribute("opacity", fast ? (.25 + .7 * k.d).toFixed(2) : on ? "1" : ".15");
+      const c = sg(r, "cur"), x = 50 + (st.ph % 2) * 120; c.setAttribute("x1", x.toFixed(1)); c.setAttribute("x2", x.toFixed(1)); c.style.display = fast || RMOT ? "none" : "";
+    },
+    tick(r, st, dt) { if (RMOT) return; const k = this.calc(st); st.ph = (st.ph + dt * Math.min(k.f, 40)) % 2; this.frame(r, st, k); }
+  },
+
+  /* ---- 7. Portas lógicas ---- */
+  log: {
+    title: "Simulador: portas lógicas", hint: "Escolha a porta e clique nas entradas A e B para ligar e desligar.",
+    init: { g: "AND", A: 0, B: 0 },
+    fn: { NOT: (a) => !a, AND: (a, b) => a && b, OR: (a, b) => a || b, NAND: (a, b) => !(a && b), NOR: (a, b) => !(a || b), XOR: (a, b) => a !== b },
+    html: () => '<div class="s-fig">' + SVG("0 0 300 140", '<path data-g="wa" class="w" d="M40 50H92"/><path data-g="wb" class="w" d="M40 90H92"/><path data-g="wo" class="w" d="M172 70H236"/><path data-g="body" fill="#161616" stroke="var(--ink)" stroke-width="2.5"/><path data-g="xor" d="M76 30Q96 70 76 110" fill="none" stroke="var(--ink)" stroke-width="2.5"/><circle data-g="bub" cx="178" cy="70" r="6" fill="#161616" stroke="var(--ink)" stroke-width="2.5"/><text x="18" y="54" data-g="la">A</text><text x="18" y="94" data-g="lb">B</text><circle data-g="led" cx="254" cy="70" r="14" stroke="#555" stroke-width="2"/><text x="244" y="104" data-g="lo">0</text>', "Símbolo da porta lógica") + "</div>" +
+      '<div class="s-ctl"><div><span class="label">Porta</span>' + sSeg("log", "g", [["NOT", "NOT"], ["AND", "AND"], ["OR", "OR"], ["NAND", "NAND"], ["NOR", "NOR"], ["XOR", "XOR"]]) + '</div><div><span class="label">Entradas</span><div class="s-seg">' + sBtn("log", "A", "A = 0") + sBtn("log", "B", "B = 0") + "</div></div></div>" +
+      '<table class="s-tt"><thead><tr><th>A</th><th data-g="thb">B</th><th>Saída</th></tr></thead><tbody data-g="tt"></tbody></table>',
+    draw(r, st) {
+      const not = st.g === "NOT", f = this.fn[st.g], A = !!st.A, B = !!st.B, out = not ? f(A) : f(A, B);
+      const body = { NOT: "M92 36L164 70L92 104Z", AND: "M92 30H132A40 40 0 0 1 132 110H92Z", NAND: "M92 30H132A40 40 0 0 1 132 110H92Z", OR: "M86 30Q130 30 172 70Q130 110 86 110Q106 70 86 30Z", NOR: "M86 30Q130 30 172 70Q130 110 86 110Q106 70 86 30Z", XOR: "M86 30Q130 30 172 70Q130 110 86 110Q106 70 86 30Z" }[st.g];
+      sg(r, "body").setAttribute("d", body); sg(r, "xor").style.display = st.g === "XOR" ? "" : "none";
+      sg(r, "bub").style.display = /^N/.test(st.g) ? "" : "none";
+      sg(r, "wa").setAttribute("d", not ? "M40 70H92" : "M40 50H92"); sg(r, "wb").style.display = not ? "none" : "";
+      sg(r, "la").setAttribute("y", not ? 74 : 54); sg(r, "lb").style.display = not ? "none" : "";
+      sg(r, "wa").classList.toggle("on", A); sg(r, "wb").classList.toggle("on", B); sg(r, "wo").classList.toggle("on", out);
+      sg(r, "wo").setAttribute("d", /^N/.test(st.g) ? "M184 70H240" : "M172 70H240");
+      sg(r, "led").setAttribute("fill", out ? "var(--t)" : "#1a1a1a"); sg(r, "lo").textContent = out ? "1" : "0";
+      sg(r, "la").textContent = "A=" + (A ? 1 : 0); sg(r, "lb").textContent = "B=" + (B ? 1 : 0);
+      sg(r, "b-A").textContent = "A = " + (A ? 1 : 0); sg(r, "b-B").textContent = "B = " + (B ? 1 : 0); sg(r, "b-B").disabled = not;
+      sg(r, "thb").style.display = not ? "none" : "";
+      const rows = not ? [[0], [1]] : [[0, 0], [0, 1], [1, 0], [1, 1]];
+      sg(r, "tt").innerHTML = rows.map(rw => { const o = not ? f(!!rw[0]) : f(!!rw[0], !!rw[1]); const cur = rw[0] === (A ? 1 : 0) && (not || rw[1] === (B ? 1 : 0)); return "<tr" + (cur ? ' class="cur"' : "") + "><td>" + rw[0] + "</td>" + (not ? "" : "<td>" + rw[1] + "</td>") + "<td>" + (o ? 1 : 0) + "</td></tr>"; }).join("");
+      const txt = { NOT: "NOT inverte: entra 1, sai 0.", AND: "AND só dá 1 quando A <b>e</b> B estão em 1, como duas chaves em série.", OR: "OR dá 1 quando A <b>ou</b> B (ou as duas) estão em 1, como duas chaves em paralelo.", NAND: "NAND é um AND com a saída invertida. Com portas NAND dá para montar qualquer outra porta.", NOR: "NOR é um OR invertido: só dá 1 quando as duas entradas estão em 0.", XOR: "XOR (ou exclusivo) dá 1 quando as entradas são <b>diferentes</b>. É o circuito do interruptor paralelo (three-way) da escada." }[st.g];
+      sread(r, txt);
+    },
+    act(st, a) { st[a] = st[a] ? 0 : 1; }
+  },
+
+  /* ---- 8. Partida direta com selo ---- */
+  partida: {
+    title: "Simulador: partida direta de motor", hint: "Diagrama de comando. O trecho colorido está energizado. Experimente tirar o contato de selo e provocar uma sobrecarga.",
+    init: { k1: 0, selo: 1, f7: 1, s1u: 0, s0u: 0, rot: 0 },
+    html() {
+      const ct = (g, x, y, lab, nf) => '<g data-g="' + g + '"><path d="M' + x + " " + (y - 10) + "V" + (y + 10) + "M" + (x + 30) + " " + (y - 10) + "V" + (y + 10) + '" stroke="var(--ink)" stroke-width="2.5"/><path data-g="' + g + 'br" d="M' + (x - 2) + " " + y + "H" + (x + 32) + '" stroke="var(--t)" stroke-width="3"/>' + (nf ? '<path d="M' + (x + 2) + " " + (y + 12) + "L" + (x + 28) + " " + (y - 12) + '" stroke="#888" stroke-width="1.5"/>' : "") + '<text x="' + (x - 4) + '" y="' + (y - 16) + '">' + lab + "</text></g>";
+      return '<div class="s-fig">' + SVG("0 0 380 200",
+        '<path d="M24 30V180M356 30V180" stroke="#555" stroke-width="3"/><text x="8" y="22">L1</text><text x="344" y="22">N</text>' +
+        '<path data-g="s1" class="w on" d="M24 70H60"/><path data-g="s2" class="w" d="M90 70H130"/><path data-g="s3" class="w" d="M160 70H190V140H210M190 70H210"/><path data-g="s4" class="w" d="M240 70H270"/><path data-g="s5" class="w" d="M240 140H256V70"/><path data-g="s6" class="w" d="M310 70H356"/>' +
+        ct("f7", 60, 70, "F7 95-96", 1) + ct("s0", 130, 70, "S0", 1) + ct("sl", 210, 70, "S1", 0) + ct("se", 210, 140, "K1 13-14", 0) +
+        '<rect data-g="coil" x="270" y="56" width="40" height="28" rx="3" fill="#161616" stroke="var(--ink)" stroke-width="2.5"/><text x="279" y="74" style="fill:var(--ink)">K1</text><text x="196" y="178" data-g="seloTxt">selo</text>', "Diagrama de comando da partida direta") +
+        SVG("0 0 140 200", '<circle cx="70" cy="90" r="46" fill="#161616" stroke="#666" stroke-width="3"/><g data-g="rotor"><path d="M70 90L70 52M70 90L103 109M70 90L37 109" stroke="var(--t)" stroke-width="7" stroke-linecap="round"/></g><circle cx="70" cy="90" r="7" fill="#666"/><text x="46" y="160" style="font-size:14px">M 3~</text><text x="30" y="184" data-g="mt">parado</text>', "Motor trifásico") + "</div>" +
+        '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:14px">' + sBtn("partida", "s1", "Apertar S1 (liga)", "primary") + sBtn("partida", "s0", "Apertar S0 (desliga)") + sBtn("partida", "f7", "Provocar sobrecarga") + sBtn("partida", "selo", "Tirar o contato de selo") + "</div>";
+    },
+    logic(st) {
+      const n = nowS(), s1 = n < st.s1u, s0 = n < st.s0u;
+      const a = !!st.f7, b = a && !s0;
+      st.k1 = b && (s1 || (st.selo && st.k1)) ? 1 : 0;
+      return { s1, s0, a, b, k: !!st.k1 };
+    },
+    draw(r, st) {
+      const L = this.logic(st), on = (g, v) => sg(r, g).classList.toggle("on", !!v), vis = (g, v) => { sg(r, g).style.visibility = v ? "visible" : "hidden"; };
+      on("s2", L.a); on("s3", L.b); on("s4", L.k || (L.b && L.s1)); on("s5", L.b && st.selo && L.k); on("s6", L.k);
+      vis("f7br", L.a); vis("s0br", !L.s0); vis("slbr", L.s1); vis("sebr", st.selo && L.k);
+      sg(r, "se").style.opacity = st.selo ? 1 : .25; sg(r, "seloTxt").textContent = st.selo ? "selo" : "selo desligado";
+      sg(r, "coil").style.fill = L.k ? "color-mix(in srgb, var(--t) 35%, #161616)" : "#161616";
+      sg(r, "mt").textContent = L.k ? "girando" : "parado";
+      sg(r, "b-f7").textContent = st.f7 ? "Provocar sobrecarga" : "Rearmar o relé térmico"; sg(r, "b-selo").textContent = st.selo ? "Tirar o contato de selo" : "Recolocar o contato de selo";
+      let t;
+      if (!st.f7) t = "O relé térmico F7 abriu o contato 95-96: a bobina de K1 perdeu energia e o motor parou. Antes de rearmar, descubra por que houve sobrecarga (eixo travado, falta de fase, regulagem errada).";
+      else if (L.k && L.s1) t = "S1 apertado: a corrente chega à bobina de K1, que fecha os contatos de força e o motor gira. Ao mesmo tempo, o contato auxiliar K1 13-14 fecha." + (st.selo ? "" : " Sem selo, o motor só gira enquanto S1 estiver apertado.");
+      else if (L.k) t = "Você soltou S1, mas o motor continua: a corrente agora passa pelo <b>contato de selo</b> K1 13-14, em paralelo com S1. A bobina se mantém sozinha até S0 abrir o circuito.";
+      else if (L.s0) t = "S0 é normalmente fechado: ao apertar, ele abre o circuito, a bobina desenergiza e o selo se desfaz. O motor para e só volta com um novo toque em S1.";
+      else t = st.selo ? "Motor parado. Dê um toque em S1." : "Sem o contato de selo, o motor para assim que você solta S1. É um defeito comum quando o fio do 13-14 se solta.";
+      sread(r, t);
+    },
+    act(st, a) { const n = nowS(); if (a === "s1") st.s1u = n + .9; if (a === "s0") st.s0u = n + .9; if (a === "f7") st.f7 = !st.f7; if (a === "selo") st.selo = !st.selo; },
+    tick(r, st, dt) { this.draw(r, st); if (st.k1 && !RMOT) st.rot = (st.rot + dt * 540) % 360; sg(r, "rotor").setAttribute("transform", "rotate(" + st.rot.toFixed(1) + " 70 90)"); }
+  },
+
+  /* ---- 9. Paquímetro ---- */
+  paq: {
+    title: "Simulador: leitura do paquímetro", hint: "Paquímetro com nônio de 0,05 mm. Mova o cursor e treine; depois sorteie uma medida e leia sozinho.",
+    init: { m: 1235, show: 1, ans: "", res: "" },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 150", '<g data-g="scale"></g>', "Escalas do paquímetro") + "</div>" +
+      '<div class="s-ctl">' + sRange("paq", "m", "Abertura (arraste para treinar)", 0, 4000, 5) + '<div><span class="label">Desafio</span><div class="row" style="gap:6px;flex-wrap:wrap">' + sBtn("paq", "sortear", "Sortear medida", "primary") + '<input type="text" style="width:110px" inputmode="decimal" placeholder="ex.: 12,35" data-sim-in="paq" data-f="ans" aria-label="Sua leitura em milímetros">' + sBtn("paq", "conf", "Conferir") + sBtn("paq", "rev", "Mostrar") + "</div></div></div>" + '<p class="small muted s-cap">Em cima, a escala fixa: números em centímetros e traços de 1 mm. Embaixo, o nônio, que desliza com o cursor.</p>' +
+      sMeters([["lei", "Leitura"]]),
+    draw(r, st) {
+      const m = st.m / 100, a = Math.floor(st.m / 100), n = (st.m % 100) / 5, s0 = Math.max(0, a - 6), k = 14, X = mm => 16 + (mm - s0) * k;
+      let g = '<rect x="0" y="22" width="460" height="48" fill="#c9cdd2"/><rect x="' + (X(m) - 34) + '" y="70" width="' + (19 * k + 64) + '" height="52" rx="3" fill="#9aa1a9"/>';
+      for (let i = s0; i <= s0 + 32; i++) { const x = X(i), L = i % 10 === 0 ? 22 : i % 5 === 0 ? 15 : 9; g += '<line x1="' + x + '" x2="' + x + '" y1="70" y2="' + (70 - L) + '" stroke="#111" stroke-width="1.3"/>'; if (i % 10 === 0) g += '<text x="' + (x - 4) + '" y="40" style="fill:#111;font-size:13px">' + i / 10 + "</text>"; }
+      for (let i = 0; i <= 20; i++) { const x = X(m + i * .95), hit = st.show && i === n; g += '<line x1="' + x.toFixed(1) + '" x2="' + x.toFixed(1) + '" y1="70" y2="' + (i % 2 ? 79 : 85) + '" stroke="' + (hit ? "#d0101a" : "#111") + '" stroke-width="' + (hit ? 2.4 : 1.3) + '"/>'; if (i % 2 === 0) g += '<text x="' + (x - 3).toFixed(1) + '" y="100" style="fill:#111;font-size:11px">' + i / 2 + "</text>"; }
+      g += '<line x1="' + X(m) + '" x2="' + X(m) + '" y1="70" y2="118" stroke="#d0101a" stroke-width="' + (st.show ? 2 : 0) + '"/><text x="' + (X(m) + 120) + '" y="114" style="fill:#111;font-size:10px">1/20 mm</text>';
+      sg(r, "scale").innerHTML = g;
+      const val = m.toFixed(2).replace(".", ",") + " mm";
+      so(r, "m", st.show ? val : "escondida"); so(r, "lei", st.show ? val : "?");
+      const inp = r.querySelector('[data-f="m"]'); if (inp && document.activeElement !== inp) inp.value = st.m;
+      if (st.res) sread(r, st.res);
+      else if (st.show) sread(r, "O zero do nônio passou do traço de <b>" + a + " mm</b> na escala fixa. O traço <b>" + n + "</b> do nônio é o que se alinha com um traço da escala (em vermelho): " + n + " × 0,05 = " + fmtN(n * .05, 2) + " mm. Leitura: " + a + " + " + fmtN(n * .05, 2) + " = <b>" + val + "</b>.");
+      else sread(r, "Leia a medida: primeiro os milímetros inteiros antes do zero do nônio, depois procure o traço do nônio que coincide com a escala fixa.");
+    },
+    input(st, f) { if (f === "m") { st.show = 1; st.res = ""; } },
+    act(st, a) {
+      const m = st.m / 100;
+      if (a === "sortear") { st.m = 200 + 5 * Math.floor(Math.random() * 560); st.show = 0; st.res = ""; }
+      if (a === "rev") { st.show = 1; st.res = ""; }
+      if (a === "conf") {
+        const x = parseFloat(String(st.ans).replace(",", "."));
+        if (isNaN(x)) st.res = "Digite a leitura em milímetros, por exemplo 12,35.";
+        else if (Math.abs(x - m) < .001) { st.res = "<b>Certo!</b> " + fmtN(m, 2) + " mm. Sorteie outra para treinar."; st.show = 1; }
+        else if (Math.floor(x) !== Math.floor(st.m / 100)) st.res = "Ainda não. Confira os milímetros inteiros: olhe qual traço da escala fixa fica logo antes do zero do nônio.";
+        else st.res = "Os milímetros estão certos. Falta a fração: procure o traço do nônio que fica exatamente alinhado com um traço de cima e multiplique o número dele por 0,05.";
+      }
+    }
+  }
+};
+const SIM_OPTS = [["", "Nenhum"]].concat(Object.keys(SIMS).map(k => [k, SIMS[k].title.replace("Simulador: ", "")]));
+function simHTML(k) {
+  const s = SIMS[k]; if (!s) return "";
+  return '<div class="panel sim" data-sim="' + k + '"><div class="ph"><h3>' + esc(s.title) + '</h3><span class="chip">Interativo</span></div><p class="small muted" style="margin-bottom:12px">' + esc(s.hint) + "</p>" + s.html(simSt(k)) + '<p class="s-read" aria-live="polite"></p></div>';
+}
+function simDraw(root) {
+  if (!root) return; const k = root.dataset.sim, s = SIMS[k]; if (!s) return; const st = simSt(k);
+  try { s.draw(root, st); } catch (e) { console.error(e); }
+  root.querySelectorAll('input[type=range][data-sim-in]').forEach(i => { if (document.activeElement !== i && String(st[i.dataset.f]) !== i.value) i.value = st[i.dataset.f]; });
+  root.querySelectorAll('[data-act="sim"][data-f]').forEach(b => b.setAttribute("aria-pressed", String(String(st[b.dataset.f]) === b.dataset.v)));
+}
+let simRAF = 0, simLast = 0;
+function simFrame(now) {
+  simRAF = 0; const dt = Math.min(.1, Math.max(0, (now - simLast) / 1000)); simLast = now; let any = false;
+  document.querySelectorAll("[data-sim]").forEach(r => { const s = SIMS[r.dataset.sim]; if (s && s.tick) { any = true; try { s.tick(r, simSt(r.dataset.sim), dt); } catch (e) { console.error(e); } } });
+  if (any) simRAF = requestAnimationFrame(simFrame);
+}
+function simMount(scope) {
+  const roots = (scope || document).querySelectorAll("[data-sim]"); if (!roots.length) return;
+  roots.forEach(simDraw);
+  if (!simRAF && typeof requestAnimationFrame === "function") { simLast = typeof performance !== "undefined" ? performance.now() : 0; simRAF = requestAnimationFrame(simFrame); }
+}
+function simInput(el) {
+  const k = el.dataset.simIn, s = SIMS[k], st = simSt(k), f = el.dataset.f;
+  st[f] = el.type === "range" ? Number(el.value) : el.value;
+  if (s.input) s.input(st, f);
+  if (f !== "ans") simDraw(el.closest("[data-sim]"));
+}
+function simAct(el) {
+  const k = el.dataset.k, s = SIMS[k], st = simSt(k);
+  if (el.dataset.f) { const v = el.dataset.v; st[el.dataset.f] = /^\d+(\.\d+)?$/.test(v) ? Number(v) : v; if (s.input) s.input(st, el.dataset.f); }
+  if (el.dataset.a && s.act) s.act(st, el.dataset.a);
+  simDraw(el.closest("[data-sim]")); simMount();
+}
 
 /* ================= TELAS ================= */
 const VIEWS = {};
@@ -1063,7 +1443,7 @@ VIEWS.licao = id => {
   const t = trackOf(l.track); const ls = tracksLessons(t.id), idx = ls.findIndex(x => x.id === id), next = ls[idx + 1], prev = ls[idx - 1];
   const p = S.prog.lessons[id] || { answers: {} }; const qs = arr(l.questions);
   return '<div data-t="' + t.id + '" class="stack" style="gap:26px">' + head(esc(l.title), esc(l.summary), favBtn("lessons:" + id), ["trilha", t.short, t.id], tchip(t.id) + ' <span class="small dim" style="margin-left:8px">Lição ' + (idx + 1) + " de " + ls.length + ", " + (l.minutes || 5) + " min</span>") +
-    '<div class="split"><div class="stack" style="gap:20px"><div class="panel"><div class="prose">' + md(l.body) + "</div></div>" +
+    '<div class="split"><div class="stack" style="gap:20px"><div class="panel"><div class="prose">' + md(l.body) + "</div></div>" + (l.sim ? simHTML(l.sim) : "") +
     '<div class="panel stack"><div class="ph" style="margin:0"><h3>Pratique</h3>' + (p.done ? '<span class="chip ok">' + p.score + " de " + qs.length + "</span>" : "") + "</div>" + qs.map((q, qi) => quizQ(q, p.answers[qi], "lq", id, qi)).join('<hr style="border:0;border-top:1px solid var(--line);margin:6px 0">') + (p.done ? '<div class="row"><span class="notice ok" style="flex:1">Lição concluída.</span><button class="btn sm" data-act="resetlesson" data-id="' + esc(id) + '">Refazer exercícios</button></div>' : "") + "</div>" +
     '<div class="row" style="justify-content:space-between">' + (prev ? '<button class="btn" data-act="go" data-r="licao" data-id="' + esc(prev.id) + '">← Anterior</button>' : "<span></span>") + (next ? '<button class="btn primary" data-act="go" data-r="licao" data-id="' + esc(next.id) + '">Próxima: ' + esc(next.title) + "</button>" : '<button class="btn primary" data-act="go" data-r="trilha" data-id="' + t.id + '">Ver projeto e desafios da trilha</button>') + "</div></div>" +
     '<div class="stack" style="gap:18px"><div class="panel"><h3>Para lembrar</h3><ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">' + arr(l.keypoints).map(k => "<li>" + inl(k) + "</li>").join("") + '</ul></div><div class="panel"><h3>Nesta trilha</h3><div class="lnav">' + ls.map((x, i) => '<button data-act="go" data-r="licao" data-id="' + esc(x.id) + '"' + (x.id === id ? ' aria-current="page"' : "") + '><span class="d' + (lessonDone(x.id) ? " ok" : "") + '">' + (lessonDone(x.id) ? "✓" : i + 1) + "</span>" + esc(x.title) + "</button>").join("") + "</div></div></div></div></div>";
@@ -1175,7 +1555,7 @@ VIEWS.favoritos = () => {
 
 /* ----- Próximas etapas ----- */
 VIEWS.roteiro = () => {
-  const P = [["Versão 2.3", "Disponível", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
+  const P = [["Versão 2.4", "Disponível", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
     ["Próxima", "Planejada", "go", ["Cursos completos da trilha IA no Trabalho", "Trilha Agentes e Automação: n8n, WhatsApp e primeiro agente", "Volter Assist também no programa instalado", "Certificado por curso concluído"]],
     ["Depois", "Planejada", "", ["Turmas fechadas e licenças para empresas", "Um curso de IA por profissão a cada etapa", "Aplicativo para celular com modo offline"]]];
   const L = S.mode === "local";
@@ -1227,6 +1607,7 @@ const FIELDS = {
     sec("Conteúdo"),
     { k: "body", l: "Texto da lição", h: "Parágrafos separados por linha em branco. \"## \" cria título, \"- \" cria item de lista, **texto** fica em negrito, `código` fica em fonte de código e blocos entre ``` viram caixas de código.", t: "textarea", rows: 16, w: 1 },
     { k: "keypoints", l: "Para lembrar", h: "Um por linha", t: "lines", w: 1 },
+    { k: "sim", l: "Simulador interativo", h: "Aparece logo abaixo do texto da lição.", t: "select", o: SIM_OPTS },
     sec("Exercícios"),
     { k: "questions", l: "Exercícios", t: "rep", sub: [{ k: "type", l: "Tipo", t: "select", o: [["mc", "Múltipla escolha"], ["vf", "Verdadeiro ou falso"]] }, { k: "answer", l: "Resposta correta", h: "Número da alternativa. No V/F: 1 = Verdadeiro, 2 = Falso.", t: "number" }, { k: "prompt", l: "Enunciado", t: "textarea", w: 1 }, { k: "options", l: "Alternativas (múltipla escolha)", h: "Uma por linha", t: "lines", w: 1 }, { k: "explain", l: "Explicação", t: "textarea", w: 1 }] }
   ],
@@ -1280,7 +1661,7 @@ const FIELDS = {
 };
 const BLANK = {
   cases: () => ({ title: "", equipment: "", track: TRACKS[0].id, level: 2, demo: false, summary: "", context: "", symptoms: [""], history: "", conditions: "", techInfo: [], image: "", objective: "", hypotheses: [{ id: "h" + uid8(), text: "", correct: false }], tests: [{ id: "t" + uid8(), name: "", how: "", result: "", reading: "", value: "util", insight: "" }], causes: [{ id: "c" + uid8(), text: "", correct: true }], actions: [{ id: "a" + uid8(), text: "", correct: true, unsafe: false, feedback: "" }], hints: [], solution: { explanation: "", logic: [], mistakes: [], lessons: [] }, tags: [] }),
-  lessons: () => ({ title: "", track: TRACKS[0].id, order: pub("lessons").length + 1, minutes: 8, summary: "", body: "", keypoints: [], questions: [{ type: "mc", prompt: "", options: ["", ""], answer: 1, explain: "" }] }),
+  lessons: () => ({ title: "", track: TRACKS[0].id, order: pub("lessons").length + 1, minutes: 8, summary: "", body: "", keypoints: [], sim: "", questions: [{ type: "mc", prompt: "", options: ["", ""], answer: 1, explain: "" }] }),
   projects: () => ({ title: "", track: TRACKS[0].id, level: "Iniciante", duration: "", summary: "", goal: "", tools: [], skills: [], steps: [], result: "", challenge: "" }),
   news: () => ({ title: "", category: NEWS_CATS[0], summary: "", sourceName: "", url: "", publishedAt: "", sourceUpdatedAt: "", impact: "", practice: "", further: "", keywords: [], demo: false }),
   books: () => ({ title: "", subtitle: "", authors: "", publisher: "", year: new Date().getFullYear(), pages: "", isbn: "", language: "Português", area: BOOK_AREAS[0], level: "", summary: "", why: "", url: "", urlLabel: "Ver na editora" })
@@ -1392,6 +1773,7 @@ async function saveEditor(status) {
 /* ================= EVENTOS ================= */
 const ACT = {
   go: el => go(el.dataset.r, el.dataset.id),
+  sim: el => simAct(el),
   open: el => { renderModal.back = el; S.ui.modal = { type: el.dataset.type, id: el.dataset.id }; renderModal(); },
   mclose: () => { S.ui.modal = null; renderModal(); },
   rail: el => { const r = el.parentElement.querySelector(".rail"); if (r) r.scrollBy({ left: Number(el.dataset.d) * r.clientWidth * 0.9, behavior: "smooth" }); },
@@ -1455,6 +1837,7 @@ document.addEventListener("change", e => {
 });
 document.addEventListener("input", e => {
   const el = e.target;
+  if (el.dataset.simIn) { simInput(el); return; }
   if (el.dataset.path && S.editor && el.dataset.kind !== "bool") {
     const k = el.dataset.kind; let v = el.value;
     if (k === "num") v = el.value === "" ? "" : Number(el.value); else if (k === "lines") v = el.value.split("\n");

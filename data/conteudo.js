@@ -429,6 +429,195 @@ window.VOLTER_SEED = {
    "track": "iot",
    "updatedAt": "2026-10-19T01:30:00.000Z"
   },
+  "esteira-sem-selo": {
+   "actions": [
+    {
+     "correct": true,
+     "feedback": "Correto: restaura o selo e confirma que os dispositivos de parada continuam atuando.",
+     "id": "a1",
+     "text": "Com o painel bloqueado, ligar o fio do borne 14 de K1 no mesmo borne de saída do S1 (lado da bobina), conferir o borne 13 na entrada do S1, e testar liga, desliga e a atuação do térmico",
+     "unsafe": false
+    },
+    {
+     "correct": false,
+     "feedback": "Inseguro: depois de uma falta de energia, o motor religaria sozinho quando a energia voltasse.",
+     "id": "a2",
+     "text": "Trocar o botão de liga por um interruptor com trava, que fica ligado sozinho",
+     "unsafe": true
+    },
+    {
+     "correct": false,
+     "feedback": "Gasta peça e tempo: o contator e o contato auxiliar estão bons.",
+     "id": "a3",
+     "text": "Trocar o contator por um novo",
+     "unsafe": false
+    },
+    {
+     "correct": false,
+     "feedback": "Não resolve o defeito e tira a proteção do motor.",
+     "id": "a4",
+     "text": "Aumentar o ajuste do relé térmico para 4,5 A",
+     "unsafe": true
+    }
+   ],
+   "author": "",
+   "causes": [
+    {
+     "correct": true,
+     "id": "c1",
+     "text": "O fio do contato de selo (K1 14) ficou desligado na troca da botoeira, então nada mantém a bobina energizada depois que S1 é solto"
+    },
+    {
+     "correct": false,
+     "id": "c2",
+     "text": "Sobrecarga no motor fazendo o relé térmico abrir"
+    },
+    {
+     "correct": false,
+     "id": "c3",
+     "text": "Bobina do contator com espiras em curto"
+    }
+   ],
+   "conditions": "Painel 380 V, comando em 220 V. A esteira está parada aguardando o diagnóstico; o supervisor pede para não demorar.",
+   "context": "A esteira leva caixas do setor de embalagem até a expedição. Na sexta-feira, um eletricista trocou a botoeira, que estava com o botão de liga emperrando. Na segunda de manhã, o operador abriu um chamado.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": true,
+   "equipment": "Esteira transportadora com motor trifásico de 2 cv, partida direta com contator, relé térmico e botoeira liga/desliga",
+   "hints": [
+    "Pense no que mudou: só a botoeira foi trocada.",
+    "O que mantém a bobina energizada depois que você solta o botão de liga?",
+    "O térmico atuando pararia o motor mesmo com o botão apertado."
+   ],
+   "history": "A esteira funcionava sem problemas até a troca da botoeira na sexta-feira. Nenhuma outra peça do painel foi mexida, segundo a ordem de serviço.",
+   "hypotheses": [
+    {
+     "correct": true,
+     "id": "h1",
+     "text": "O contato de selo K1 13-14 não está ligado em paralelo com o botão de liga (fio solto ou ligado no borne errado na troca da botoeira)"
+    },
+    {
+     "correct": false,
+     "id": "h2",
+     "text": "O relé térmico está desarmando por sobrecarga"
+    },
+    {
+     "correct": false,
+     "id": "h3",
+     "text": "A bobina do contator está com defeito"
+    },
+    {
+     "correct": false,
+     "id": "h4",
+     "text": "O botão de desliga foi ligado como NA em vez de NF"
+    },
+    {
+     "correct": false,
+     "id": "h5",
+     "text": "Falta de fase na alimentação do motor"
+    }
+   ],
+   "level": 2,
+   "objective": "Descobrir por que o motor não se mantém ligado e corrigir de forma que o comando volte a funcionar como antes.",
+   "solution": {
+    "explanation": "Na partida direta, quem mantém o contator ligado depois que o botão é solto é o contato de selo K1 13-14, em paralelo com S1. Na troca da botoeira, o fio do borne 14 não foi religado e ficou isolado com fita. O contator fechava enquanto S1 estava apertado e abria ao soltar. As correntes normais e o térmico sem atuação descartavam sobrecarga e falta de fase.",
+    "lessons": [
+     "Depois de qualquer troca de peça no painel, teste liga, desliga, selo e proteções.",
+     "Desenhe ou fotografe a ligação antes de desmontar.",
+     "Botão de liga é pulsador; o selo é o que mantém o motor ligado."
+    ],
+    "logic": [
+     "O defeito apareceu logo depois da troca da botoeira, então a fiação dela é a primeira suspeita.",
+     "O motor gira normal com S1 apertado: força, bobina e térmico funcionam.",
+     "Parar ao soltar S1 é o sintoma exato de falta do selo.",
+     "A inspeção com o painel bloqueado mostrou o fio do 14 solto."
+    ],
+    "mistakes": [
+     "Trocar o contator sem medir.",
+     "Mexer no ajuste do relé térmico.",
+     "Fazer jumper com o painel energizado.",
+     "Usar botão com trava no lugar do pulsador."
+    ]
+   },
+   "status": "published",
+   "summary": "Depois de uma manutenção no painel, o motor da esteira só funciona com o dedo no botão de liga.",
+   "symptoms": [
+    "Ao apertar o botão verde, o contator fecha e o motor gira normalmente",
+    "Ao soltar o botão, o contator abre na hora e o motor para",
+    "O botão vermelho de desliga funciona",
+    "Nenhum disjuntor desarmou e o relé térmico não está atuado"
+   ],
+   "tags": [
+    "comandos elétricos",
+    "contator",
+    "selo",
+    "partida direta"
+   ],
+   "techInfo": [
+    "Comando: fusível → relé térmico 95-96 → botão S0 (NF) → botão S1 (NA) → bobina K1 → neutro",
+    "Contato auxiliar K1 13-14 em paralelo com S1",
+    "Corrente nominal do motor: 3,0 A em 380 V; relé térmico ajustado em 3,0 A",
+    "Botoeira nova: modelo com dois botões e um bloco de contato NA e outro NF"
+   ],
+   "tests": [
+    {
+     "how": "Olhar o indicador de atuação e o botão de rearme do relé térmico",
+     "id": "t1",
+     "insight": "Se o térmico abrisse, o motor pararia mesmo com S1 apertado, e o indicador mostraria a atuação. Hipótese de sobrecarga enfraquece.",
+     "name": "Ver o estado do relé térmico",
+     "reading": "",
+     "result": "Relé não atuado, indicador na posição normal",
+     "value": "util"
+    },
+    {
+     "how": "Com S1 apertado, abraçar uma fase de cada vez na saída do relé térmico",
+     "id": "t2",
+     "insight": "Não há sobrecarga nem falta de fase: as três fases conduzem e estão equilibradas.",
+     "name": "Medir a corrente do motor com alicate amperímetro",
+     "reading": "Correntes equilibradas e abaixo do ajuste de 3,0 A",
+     "result": "2,6 A, 2,7 A e 2,6 A",
+     "value": "util"
+    },
+    {
+     "how": "Com o painel desenergizado e bloqueado, conferir para onde vão os fios dos bornes 13 e 14 do contator",
+     "id": "t3",
+     "insight": "A botoeira antiga tinha um borne onde o fio do selo era ligado junto com o S1. Na nova, ele ficou sobrando.",
+     "name": "Seguir a fiação do contato 13-14 de K1",
+     "reading": "",
+     "result": "Um fio sai do borne 14 e termina solto, com a ponta isolada com fita, dentro da botoeira nova; o borne 13 está ligado corretamente",
+     "value": "util"
+    },
+    {
+     "how": "Painel desenergizado; pressionar o contator pela tampa de teste e medir continuidade entre 13 e 14",
+     "id": "t4",
+     "insight": "O contato auxiliar está bom: o problema não é o contato, é a ligação.",
+     "name": "Testar continuidade do contato 13-14 com o contator acionado manualmente",
+     "reading": "0,2 Ω com o contator pressionado; aberto sem pressionar",
+     "result": "Contato fecha normalmente",
+     "value": "neutro"
+    },
+    {
+     "how": "Com o painel energizado, medir entre A1 e A2",
+     "id": "t5",
+     "insight": "A bobina recebe tensão e o contator fecha; ela está boa. Isso não explica por que ela perde a alimentação.",
+     "name": "Medir a tensão na bobina do contator com S1 apertado",
+     "reading": "",
+     "result": "220 V",
+     "value": "neutro"
+    },
+    {
+     "how": "Encostar um fio entre os bornes do S1 com tudo ligado",
+     "id": "t6",
+     "insight": "Trabalhar com jumper em painel energizado expõe a choque e a partida inesperada da esteira. Use as medições com o painel bloqueado.",
+     "name": "Fazer um jumper no botão de liga com o painel energizado para ver se o motor segura",
+     "reading": "",
+     "result": "Teste não executado",
+     "value": "inseguro"
+    }
+   ],
+   "title": "A esteira que desliga quando o operador solta o botão",
+   "track": "comandos",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
   "faturamento-duplicado": {
    "actions": [
     {
@@ -859,6 +1048,302 @@ window.VOLTER_SEED = {
   }
  },
  "lessons": {
+  "cmd-contatores": {
+   "author": "",
+   "body": "Um painel de comando separa dois circuitos: o de **força**, que leva a corrente grande até o motor, e o de **comando**, que decide quando o motor liga. O comando usa correntes pequenas e botões leves; a força passa pelos contatos robustos do contator.\n\n## Contator\nÉ uma chave operada por uma **bobina**. Quando a bobina recebe tensão (terminais **A1 e A2**), o eletroímã puxa os contatos.\n- **Contatos principais** (1-2, 3-4, 5-6): ligam as três fases do motor.\n- **Contatos auxiliares** para o comando:\n  - **NA** (normalmente aberto), numerados com final 3-4, como **13-14**: fecham quando a bobina é energizada.\n  - **NF** (normalmente fechado), com final 1-2, como **21-22**: abrem quando a bobina é energizada.\n\nUm detalhe que confunde: \"normalmente\" quer dizer **com a bobina desligada**.\n\n## Relé auxiliar e temporizador\nO **relé auxiliar** é um contator pequeno, só com contatos de comando, usado para multiplicar contatos ou fazer lógica. O **relé temporizador** muda os contatos depois de um tempo ajustado, por exemplo para a troca de estrela para triângulo.\n\n## Relé térmico (de sobrecarga)\nFica no circuito de força, depois do contator. Se o motor puxa corrente acima do valor ajustado por tempo demais, ele **abre o contato 95-96**, que está em série com a bobina do contator, e o motor desliga. O contato **97-98** pode acender uma lâmpada de defeito. Ajuste-o pela **corrente nominal da placa do motor**.\n\n## Botoeiras e sinalização\n- **Botão de liga:** contato **NA**, normalmente verde ou preto.\n- **Botão de desliga:** contato **NF**, vermelho. Fica em série com tudo, para que, se o fio dele romper, o motor desligue em vez de ficar sem como parar.\n- **Botão de emergência:** cogumelo vermelho com trava, contato NF.\n- **Sinaleiros:** lâmpadas que indicam ligado, desligado e defeito.\n\n## Proteção do circuito\nAntes de tudo isso vêm os **fusíveis ou disjuntores motor** da força e um disjuntor ou fusível próprio do comando.\n\n## Projeto final\n**Diagrama de comando liga-desliga.** Desenhe o diagrama de comando de uma partida direta com botão de liga, desliga, relé térmico e sinaleiro de motor ligado.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Força leva a corrente do motor; comando decide quando ligar.",
+    "Bobina A1-A2; NA final 3-4; NF final 1-2.",
+    "Relé térmico abre o 95-96 na sobrecarga.",
+    "Desliga e emergência sempre NF."
+   ],
+   "minutes": 9,
+   "order": 2,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Final 3-4 indica NA.",
+     "options": [
+      "Principais",
+      "Auxiliares normalmente abertos",
+      "Auxiliares normalmente fechados",
+      "Da bobina"
+     ],
+     "prompt": "Os contatos 13-14 de um contator são:",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "É uma escolha de segurança: a falha leva ao estado seguro.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "O botão de desliga usa contato NF para que um fio rompido desligue o motor.",
+     "type": "vf"
+    },
+    {
+     "answer": 3,
+     "explain": "O 95-96 é NF e fica em série com a bobina.",
+     "options": [
+      "A1-A2",
+      "13-14",
+      "95-96",
+      "1-2"
+     ],
+     "prompt": "O relé térmico desligou o motor. O contato que abriu foi o:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Acima disso ele não protege; muito abaixo, desarma à toa.",
+     "options": [
+      "No máximo da escala",
+      "Pela corrente nominal da placa do motor",
+      "Pela corrente de partida",
+      "Pela potência do transformador"
+     ],
+     "prompt": "O relé térmico deve ser ajustado:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "As peças do painel de comando: quem manda, quem obedece e quem protege.",
+   "title": "Contatores, relés e botoeiras",
+   "track": "comandos",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "cmd-motor-trifasico": {
+   "author": "",
+   "body": "## Três fases defasadas\nA rede trifásica tem três tensões alternadas iguais, **defasadas 120°** uma da outra: quando uma está no pico, as outras duas estão a caminho. Em qualquer instante, a soma das três é zero.\n\nEntre uma fase e o neutro mede-se a **tensão de fase**; entre duas fases, a **tensão de linha**, que é √3 (cerca de 1,73) vezes maior. Por isso existem redes 127/220 V e 220/380 V.\n\n## O campo girante\nO estator do motor tem três grupos de bobinas, distribuídos em volta do eixo. Alimentados pelas três fases defasadas, eles criam um **campo magnético que gira** sozinho. O rotor é arrastado por esse campo. Não há escovas nem partida auxiliar: é por isso que o motor de indução trifásico é tão robusto e comum na indústria.\n\nA velocidade do campo é **120 × f ÷ número de polos**. Em 60 Hz, um motor de 4 polos tem campo a 1.800 rpm; o rotor gira um pouco menos, cerca de 1.750 rpm. Essa diferença é o **escorregamento**.\n\n**Para inverter o sentido de giro**, basta trocar **duas fases** quaisquer entre si.\n\n## Seis pontas, duas ligações\nO motor comum tem as seis pontas das bobinas na caixa de ligação, numeradas de 1 a 6. A placa informa as duas tensões, por exemplo **220/380 V**.\n- **Triângulo (Δ):** cada bobina recebe a tensão de linha. Usa-se na **menor** tensão da placa (220 V no exemplo).\n- **Estrela (Y):** as bobinas ficam ligadas num ponto comum, e cada uma recebe a tensão de linha dividida por √3. Usa-se na **maior** tensão (380 V).\n\nLigar em triângulo numa rede de 380 V um motor 220/380 V queima o motor em pouco tempo. **Leia a placa antes.**\n\n## Partida estrela-triângulo\nNa partida, o motor puxa várias vezes a corrente nominal. Uma forma de suavizar é partir em **estrela** e, depois de alguns segundos, passar para **triângulo**. Em estrela, a corrente de partida cai a cerca de um terço. Para isso, o motor precisa ter as seis pontas e a tensão de triângulo igual à da rede.\n\n## Outras ligações\nMotores **Dahlander** têm duas velocidades com um só enrolamento, trocando a ligação das bobinas. Existem também partidas com chave compensadora (autotransformador), soft-starter e, cada vez mais, **inversor de frequência**, que você vai ver adiante nesta etapa.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Três fases defasadas 120° criam um campo que gira.",
+    "Trocar duas fases inverte o giro.",
+    "Triângulo na menor tensão da placa; estrela na maior.",
+    "Estrela-triângulo reduz a corrente de partida a cerca de um terço."
+   ],
+   "minutes": 10,
+   "order": 1,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Estrela para a maior tensão da placa.",
+     "options": [
+      "Triângulo",
+      "Estrela",
+      "Tanto faz",
+      "Série-paralelo"
+     ],
+     "prompt": "Um motor 220/380 V vai ser ligado numa rede de 380 V entre fases. A ligação correta é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Trocar duas fases inverte o sentido do campo girante.",
+     "options": [
+      "Inverter fase e neutro",
+      "Trocar duas fases entre si",
+      "Trocar as três fases",
+      "Desligar uma fase"
+     ],
+     "prompt": "Para inverter o sentido de giro de um motor trifásico:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "120 × 60 ÷ 4 = 1.800 rpm.",
+     "options": [
+      "900 rpm",
+      "1.800 rpm",
+      "3.600 rpm",
+      "1.200 rpm"
+     ],
+     "prompt": "A velocidade do campo de um motor de 4 polos em 60 Hz é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Falta de fase sobrecarrega as bobinas e queima o motor; para variar a velocidade usa-se inversor.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Desligar uma das fases é um jeito seguro de reduzir a velocidade do motor.",
+     "type": "vf"
+    }
+   ],
+   "sim": "tri",
+   "status": "published",
+   "summary": "Por que três fases fazem o motor girar sozinho e como fechar as bobinas para a tensão da rede.",
+   "title": "Motor trifásico: fases, estrela e triângulo",
+   "track": "comandos",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "cmd-partida-direta": {
+   "author": "",
+   "body": "## Partida direta\nÉ a partida mais simples: o contator liga o motor direto na rede. Serve para motores pequenos, porque na partida a corrente chega a várias vezes a nominal.\n\nO comando, seguindo o caminho da corrente:\n- Fase do comando → fusível → **relé térmico 95-96** (NF) → **botão S0** (desliga, NF) → **botão S1** (liga, NA) → **bobina de K1** → neutro.\n- Em paralelo com S1, o contato auxiliar **K1 13-14**: o **contato de selo**.\n\n## O que o selo faz\nAo apertar S1, a bobina energiza e K1 fecha os contatos de força **e também o 13-14**. Quando você solta S1, a corrente continua chegando à bobina pelo 13-14. O contator \"segura a si mesmo\". Para desligar, S0 abre o circuito: a bobina perde energia, o 13-14 abre e o selo se desfaz.\n\nSe o fio do selo se soltar, o motor **só funciona enquanto S1 estiver apertado**. Esse é um defeito clássico de painel.\n\nOutra vantagem: se faltar energia, o selo se desfaz. Quando a energia volta, o motor **não liga sozinho**, o que evita acidentes.\n\n## Reversão\nPara o motor girar nos dois sentidos, usam-se **dois contatores**: K1 liga as fases na ordem normal e K2 liga com **duas fases trocadas**.\n\nO perigo: se K1 e K2 fecharem juntos, as fases trocadas se encontram e há um **curto-circuito entre fases**. Para impedir:\n- **Intertravamento elétrico:** um contato **NF de K1** em série com a bobina de K2, e um NF de K2 em série com a bobina de K1. Enquanto um está ligado, o outro não consegue energizar.\n- **Intertravamento por botões:** botões com contato duplo, em que apertar um sentido abre o circuito do outro.\n- **Intertravamento mecânico:** uma peça física entre os contatores que impede os dois de fecharem.\n\nEm reversões de cargas pesadas, o certo é **parar antes de inverter**: inverter com o motor girando a toda velocidade provoca um tranco e uma corrente muito alta.\n\n## Projeto final\n**Esquema de reversão com intertravamento.** Desenhe a força e o comando de uma reversão com dois contatores, intertravamento elétrico e por botões.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Selo: K1 13-14 em paralelo com o botão de liga.",
+    "Sem selo, o motor só gira com o botão apertado.",
+    "Reversão: dois contatores, duas fases trocadas.",
+    "Intertravamento impede os dois contatores ligados juntos."
+   ],
+   "minutes": 11,
+   "order": 3,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Sem o selo, nada mantém a bobina energizada.",
+     "options": [
+      "O relé térmico",
+      "O contato de selo K1 13-14",
+      "O botão S0",
+      "A bobina queimada"
+     ],
+     "prompt": "O motor liga ao apertar S1, mas para assim que o botão é solto. O suspeito é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "É o intertravamento elétrico.",
+     "options": [
+      "Dar partida mais rápida",
+      "Impedir que K2 ligue enquanto K1 estiver ligado",
+      "Medir a corrente",
+      "Inverter as fases"
+     ],
+     "prompt": "Na reversão, o contato NF de K1 em série com a bobina de K2 serve para:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "O selo se desfaz na falta de energia; é preciso apertar S1 de novo.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Com a partida direta com selo, se a energia cai e volta, o motor volta a girar sozinho.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Por isso o intertravamento é obrigatório.",
+     "options": [
+      "O motor para suavemente",
+      "Curto-circuito entre fases",
+      "O motor gira mais rápido",
+      "Nada"
+     ],
+     "prompt": "O que acontece se K1 e K2 da reversão fecharem ao mesmo tempo?",
+     "type": "mc"
+    }
+   ],
+   "sim": "partida",
+   "status": "published",
+   "summary": "O selo que mantém o motor ligado e o intertravamento que impede um curto entre fases.",
+   "title": "Partida direta e reversão de motores",
+   "track": "comandos",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "cmd-sensores": {
+   "author": "",
+   "body": "Na automação, os sensores de proximidade substituem as chaves de fim de curso mecânicas: detectam a peça **sem encostar**, não gastam e respondem rápido.\n\n## Que sensor usar\n- **Indutivo:** detecta **metal**. Cria um campo magnético de alta frequência na face; um metal perto altera esse campo. Alcance curto, de poucos milímetros. Ótimo para detectar a posição de peças metálicas, engrenagens e cames.\n- **Capacitivo:** detecta **quase qualquer material**: plástico, madeira, papel, líquidos e grãos, inclusive através da parede de um silo ou de um tanque plástico. Tem ajuste de sensibilidade.\n- **Magnético:** detecta um **ímã**. É o sensor preso no corpo do cilindro pneumático, que percebe o ímã no êmbolo e indica se o cilindro está avançado ou recuado.\n- **Fotoelétrico (óptico):** usa luz. Pode ser de **barreira** (emissor e receptor separados), **reflexivo** (com um espelho refletor) ou **difuso** (a própria peça reflete a luz). Alcança distâncias maiores, mas sofre com poeira e objetos transparentes.\n\n## Os três fios\nA maioria dos sensores industriais de 24 V tem três fios, num código de cores bem difundido:\n- **Marrom:** +24 V\n- **Azul:** 0 V\n- **Preto:** sinal\n\n## PNP ou NPN\nOs dois funcionam como uma chave eletrônica no fio de sinal. A diferença está no que essa chave fecha:\n- **PNP:** quando detecta, liga o fio preto ao **+24 V**. A carga (entrada do CLP, relé) fica entre o preto e o 0 V. É o padrão na maioria das máquinas no Brasil e na Europa.\n- **NPN:** quando detecta, liga o fio preto ao **0 V**. A carga fica entre o +24 V e o preto.\n\nInstalar um sensor NPN numa entrada de CLP feita para PNP é um defeito comum: o LED do sensor acende, mas o CLP não enxerga nada. Confira na etiqueta do sensor e no manual do cartão de entradas.\n\n## NA ou NF\nAlém disso, a saída pode ser **NA** (ativa quando detecta) ou **NF** (ativa quando não detecta). Sensores de segurança e de \"falta de peça\" costumam usar NF, para que um fio rompido seja percebido como falha.\n\n## Projeto final\n**Ligação correta de um sensor ao CLP.** Desenhe a ligação de um sensor indutivo PNP e de um NPN a uma entrada de CLP, com as cores dos fios e a fonte de 24 V.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Indutivo: metal. Capacitivo: quase tudo. Magnético: ímã. Óptico: luz.",
+    "Marrom +24 V, azul 0 V, preto sinal.",
+    "PNP entrega +24 V no sinal; NPN entrega 0 V.",
+    "Sensor e entrada do CLP precisam ser do mesmo tipo."
+   ],
+   "minutes": 10,
+   "order": 4,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "O capacitivo detecta materiais não metálicos, inclusive através de plástico.",
+     "options": [
+      "Indutivo",
+      "Capacitivo",
+      "Magnético",
+      "Fim de curso mecânico"
+     ],
+     "prompt": "Para detectar o nível de grãos através da parede plástica de um silo, o sensor indicado é o:",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "O sensor funciona, mas fecha para o polo errado.",
+     "options": [
+      "Sensor NPN numa entrada PNP",
+      "Peça grande demais",
+      "Sensor indutivo detectando metal",
+      "Fio marrom no +24 V"
+     ],
+     "prompt": "O LED do sensor acende quando a peça passa, mas a entrada do CLP não muda. Uma causa provável é:",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "No NPN, vai a 0 V.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Num sensor PNP, o fio preto vai a +24 V quando ele detecta.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Ele detecta o ímã montado no êmbolo.",
+     "options": [
+      "Capacitivo",
+      "Magnético",
+      "Indutivo de longo alcance",
+      "Fotoelétrico de barreira"
+     ],
+     "prompt": "O sensor preso no corpo do cilindro pneumático, que indica avanço e recuo, normalmente é:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Qual sensor detecta o quê, e como ligar os três fios sem errar.",
+   "title": "Sensores indutivos, capacitivos e fotoelétricos (PNP e NPN)",
+   "track": "comandos",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
   "dados-1-tabelas": {
    "author": "",
    "body": "Quase toda análise começa com uma **tabela**: cada **linha** é um registro (um pedido, uma pessoa) e cada **coluna** é um atributo (data, valor, cidade).\n\n## Tipos importam\n- **Texto:** nomes, categorias.\n- **Número:** valores, quantidades.\n- **Data:** quando algo aconteceu.\nSe um número vier como texto, a soma não funciona ou dá resultado errado.\n\n## Cuidado com o formato brasileiro\nNo Brasil usamos vírgula decimal (1.234,50). Muitos programas esperam ponto (1234.50). Ao importar CSV, confira o separador de colunas e o decimal.\n\n## Uma pergunta antes de tudo\nO que é **uma linha** nesta tabela? Um pedido? Um item do pedido? Um pagamento? Responder isso evita a maioria dos erros de soma.",
@@ -1042,6 +1527,820 @@ window.VOLTER_SEED = {
    "track": "dados",
    "updatedAt": "2026-10-19T01:30:00.000Z"
   },
+  "ele-lei-de-ohm": {
+   "author": "",
+   "body": "Tudo é feito de átomos. No centro fica o núcleo, com prótons (carga positiva) e nêutrons; em volta circulam os **elétrons** (carga negativa). Nos metais, alguns elétrons das camadas mais externas ficam fracamente presos e passam de um átomo para outro com facilidade. São os **elétrons livres**, e é por isso que o cobre conduz bem e a borracha não.\n\n## As três grandezas\n- **Tensão (V, em volts):** a diferença de \"pressão\" elétrica entre dois pontos. É o que empurra os elétrons. Uma pilha tem 1,5 V; a tomada, 127 V ou 220 V.\n- **Corrente (I, em ampères):** quantos elétrons passam por segundo num ponto do fio. Só existe corrente quando o caminho está fechado.\n- **Resistência (R, em ohms, Ω):** o quanto o material dificulta a passagem. Fio de cobre tem resistência baixa; um resistor é feito para ter um valor certo.\n\nUma comparação que ajuda: a tensão é a pressão da caixa-d'água, a corrente é a vazão no cano e a resistência é um registro meio fechado.\n\n## A Lei de Ohm\nAs três se relacionam por uma conta simples: **V = R × I**. Dá para escrever de três jeitos:\n- I = V ÷ R (qual corrente vai passar)\n- R = V ÷ I (qual resistor eu preciso)\n- V = R × I (quanta tensão cai sobre o componente)\n\nExemplo: um resistor de 220 Ω ligado em 12 V deixa passar 12 ÷ 220 ≈ 0,055 A, ou 55 mA.\n\n## Potência: o que vira calor ou trabalho\nA **potência** (P, em watts) mostra quanta energia o componente consome por segundo: **P = V × I**. No exemplo acima, 12 × 0,055 ≈ 0,65 W. Um resistor comum de 1/4 W esquentaria até queimar; ali seria preciso um de 1 W.\n\n## Contínua e alternada\nNa **corrente contínua** (pilha, bateria, fonte de celular) os elétrons andam sempre no mesmo sentido. Na **corrente alternada** (tomada) o sentido se inverte 60 vezes por segundo no Brasil. A Lei de Ohm vale para as duas quando a carga é uma resistência, como chuveiro e lâmpada incandescente.\n\n## Do que depende a resistência de um fio\nUm fio resiste mais quando é **mais comprido**, **mais fino** ou feito de um material de **maior resistividade**. É por isso que extensões longas e finas esquentam e que o chuveiro pede fio grosso.\n\n## Projeto final\n**Tabela de medições de um circuito simples.** Monte uma pilha ou fonte com um resistor (ou use o simulador acima), meça tensão e corrente para três resistores diferentes e compare com o que a Lei de Ohm prevê.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "V = R × I: com duas grandezas você descobre a terceira.",
+    "P = V × I mostra quanto o componente aquece ou trabalha.",
+    "Corrente só existe com o circuito fechado.",
+    "Fio comprido e fino tem mais resistência e esquenta mais."
+   ],
+   "minutes": 10,
+   "order": 1,
+   "questions": [
+    {
+     "answer": 1,
+     "explain": "I = V ÷ R = 12 ÷ 24 = 0,5 A.",
+     "options": [
+      "0,5 A",
+      "2 A",
+      "288 A",
+      "12 A"
+     ],
+     "prompt": "Uma lâmpada de 12 V tem resistência de 24 Ω quando acesa. Qual é a corrente?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Pela Lei de Ohm, corrente e tensão são proporcionais quando R é fixo.",
+     "options": [
+      "Cai pela metade",
+      "Dobra",
+      "Fica igual",
+      "Quadruplica"
+     ],
+     "prompt": "Se a tensão sobre um resistor dobrar e a resistência continuar a mesma, a corrente:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "I = 10 ÷ 100 = 0,1 A; P = 10 × 0,1 = 1 W. Um de 1/4 W queimaria.",
+     "options": [
+      "0,1 W",
+      "1 W",
+      "10 W",
+      "100 W"
+     ],
+     "prompt": "Um resistor de 100 Ω em 10 V dissipa:",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "Comprimento maior e seção menor aumentam a resistência, e a energia perdida no fio vira calor.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Uma extensão comprida e de fio fino pode esquentar mais que uma curta e grossa com a mesma carga.",
+     "type": "vf"
+    }
+   ],
+   "sim": "ohm",
+   "status": "published",
+   "summary": "De onde vem a corrente elétrica e a conta que explica quase todo circuito.",
+   "title": "Tensão, corrente e resistência: a Lei de Ohm na prática",
+   "track": "eletricidade",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "ele-multimetro": {
+   "author": "",
+   "body": "O multímetro junta vários instrumentos num só: **voltímetro**, **amperímetro**, **ohmímetro** e teste de **continuidade**. O segredo é saber como cada medida se liga ao circuito.\n\n## Tensão: em paralelo, com o circuito ligado\nPara medir tensão, as pontas tocam **os dois pontos** entre os quais se quer saber a diferença: os dois terminais da tomada, os dois lados de um componente. O voltímetro tem resistência interna altíssima, então quase não interfere.\n- Escolha **V~** (alternada) para tomada e **V⎓** (contínua) para pilha, bateria e fonte.\n- Ponta preta no **COM**, vermelha no **VΩ**.\n- Se não souber a ordem de grandeza, comece pela escala mais alta (ou use o modo automático).\n\n## Corrente: em série, abrindo o circuito\nPara medir corrente, o circuito precisa passar **por dentro** do aparelho: você abre o caminho e coloca o multímetro no meio, em série. A ponta vermelha muda para o borne **A** ou **mA**.\n\n**O erro clássico:** deixar a ponta no borne de corrente e depois encostar na tomada para medir tensão. Isso é um curto-circuito através do aparelho: no melhor caso queima o fusível interno; no pior, o multímetro estoura na sua mão.\n\n## Alicate amperímetro: corrente sem abrir nada\nO alicate abraça **um único condutor** e mede a corrente pelo campo magnético em volta dele. Se abraçar o cabo inteiro (fase e neutro juntos), os campos se cancelam e a leitura dá perto de zero.\n\n## Resistência e continuidade: sempre desligado\nOhmímetro e teste de continuidade injetam uma pequena corrente própria. Por isso, **o circuito tem que estar desenergizado**. A continuidade apita quando há caminho de baixa resistência: serve para achar fio rompido, fusível queimado e contato que não fecha.\n\n## Categoria e estado do aparelho\nMultímetros trazem a marcação **CAT II, CAT III ou CAT IV**, que indica em que tipo de instalação podem ser usados com segurança. Para quadro de distribuição, use CAT III ou superior. Antes de medir, confira pontas sem rachaduras e isolação inteira.\n\n## Projeto final\n**Roteiro de medição com o seu multímetro.** Escreva, para o seu aparelho, onde ficam as pontas e qual a escala em cada medida: tensão de tomada, tensão de pilha, corrente de um circuito pequeno e continuidade de um fio.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Tensão: em paralelo, circuito ligado.",
+    "Corrente: em série, circuito aberto, ponta no borne A.",
+    "Resistência e continuidade: só com o circuito desligado.",
+    "Alicate amperímetro abraça um condutor só."
+   ],
+   "minutes": 9,
+   "order": 2,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "O amperímetro precisa que toda a corrente passe por ele, por isso vai em série.",
+     "options": [
+      "Encostar as pontas nos dois terminais da lâmpada",
+      "Abrir o circuito e ligar o multímetro em série",
+      "Medir com o circuito desligado",
+      "Usar a escala de continuidade"
+     ],
+     "prompt": "Para medir a corrente que passa por uma lâmpada com o multímetro comum, você deve:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Continuidade e resistência só com o circuito desligado; a tensão externa falseia a leitura e pode danificar o aparelho.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Dá para testar a continuidade de um fio com o circuito energizado.",
+     "type": "vf"
+    },
+    {
+     "answer": 1,
+     "explain": "Com ida e volta dentro do alicate, os campos magnéticos se anulam.",
+     "options": [
+      "A máquina está desligada ou o alicate abraçou fase e neutro juntos",
+      "O alicate só mede tensão",
+      "A corrente é contínua",
+      "A máquina está em curto"
+     ],
+     "prompt": "O alicate amperímetro mostrou quase zero ao abraçar o cabo de uma máquina. O mais provável é que:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "No borne de corrente o multímetro tem resistência quase zero: na tomada vira um curto.",
+     "options": [
+      "Ponta no borne VΩ medindo tensão",
+      "Ponta no borne A encostada na tomada",
+      "Escala de 750 V medindo 220 V",
+      "Continuidade num fio desligado"
+     ],
+     "prompt": "Qual é a combinação mais perigosa?",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Como ligar o multímetro em cada tipo de medida sem queimar o aparelho nem tomar choque.",
+   "title": "Multímetro: medir tensão, corrente e continuidade com segurança",
+   "track": "eletricidade",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "ele-paquimetro": {
+   "author": "",
+   "body": "Na bancada aparecem medidas que o multímetro não faz: o diâmetro de um eixo de motor, a espessura de uma chapa, o furo de um rolamento. Para isso existe o **paquímetro**.\n\n## As partes\n- **Escala fixa:** a régua principal, graduada em milímetros.\n- **Cursor com nônio:** a parte que desliza. O nônio é uma pequena escala extra que permite ler frações do milímetro.\n- **Bicos de medição externa:** para eixos e espessuras.\n- **Orelhas de medição interna:** para furos.\n- **Haste de profundidade:** sai pela ponta da régua e mede rebaixos e furos cegos.\n\n## Como funciona o nônio\nNo paquímetro de **0,05 mm**, o nônio tem 20 divisões que ocupam 19 mm. Cada divisão do nônio é 0,05 mm menor que um milímetro da escala fixa. Ao abrir o paquímetro, só um traço do nônio fica exatamente alinhado com um traço da escala, e o número desse traço indica os centésimos.\n\n## Leitura em dois passos\n- **Milímetros inteiros:** veja qual traço da escala fixa está logo antes do **zero do nônio**.\n- **Fração:** procure o traço do nônio que **coincide** com algum traço da escala fixa e multiplique pela resolução.\n\nExemplo: o zero passou do traço 12 e o 7º traço do nônio coincide. Leitura: 12 + 7 × 0,05 = **12,35 mm**.\n\nExistem paquímetros com resolução de 0,1 mm, 0,05 mm e 0,02 mm; os digitais mostram o valor direto, mas o princípio de uso é o mesmo. Para precisão de 0,01 mm usa-se o **micrômetro**.\n\n## Cuidados que mudam a medida\n- **Confira o zero** com os bicos fechados e limpos.\n- Meça com a peça **bem encostada na parte interna dos bicos** e o instrumento perpendicular à peça.\n- **Não force** o cursor: pressão demais deforma a medida e o instrumento.\n- Leia de frente para a escala, evitando o **erro de paralaxe**.\n- Peça quente mede maior: espere esfriar.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Milímetros antes do zero do nônio + traço coincidente × resolução.",
+    "Bicos para medidas externas, orelhas para internas, haste para profundidade.",
+    "Confira o zero antes de medir.",
+    "Sem forçar e sem paralaxe."
+   ],
+   "minutes": 9,
+   "order": 6,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "8 + 4 × 0,05 = 8,20 mm.",
+     "options": [
+      "8,04 mm",
+      "8,20 mm",
+      "8,40 mm",
+      "12 mm"
+     ],
+     "prompt": "Num paquímetro de 0,05 mm, o zero do nônio passou do traço 8 e o traço 4 do nônio coincide. A leitura é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "As orelhas ficam na parte de cima e abrem para dentro do furo.",
+     "options": [
+      "Os bicos externos",
+      "As orelhas de medição interna",
+      "A haste de profundidade",
+      "A escala do nônio"
+     ],
+     "prompt": "Para medir o diâmetro de um furo, use:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Força demais deforma a medida e o instrumento. O contato deve ser leve e firme.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Apertar bem o cursor contra a peça deixa a medida mais precisa.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Se o zero não bate, todas as medidas saem erradas.",
+     "options": [
+      "Esquentar a peça",
+      "Conferir o zero com os bicos fechados e limpos",
+      "Lubrificar a escala",
+      "Medir com a peça inclinada"
+     ],
+     "prompt": "Antes de começar a medir, o primeiro cuidado é:",
+     "type": "mc"
+    }
+   ],
+   "sim": "paq",
+   "status": "published",
+   "summary": "Nem toda medida da manutenção é elétrica: como ler o nônio e medir eixos, furos e profundidades.",
+   "title": "Paquímetro: medidas de precisão na bancada",
+   "track": "eletricidade",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "ele-potencia-consumo": {
+   "author": "",
+   "body": "## Potência não é consumo\nA **potência** (watts) diz o quanto o aparelho puxa **enquanto está ligado**. O **consumo** (energia) depende também de **por quanto tempo** ele fica ligado. A distribuidora cobra a energia, medida em **quilowatt-hora (kWh)**.\n\n**Energia (kWh) = potência (W) × horas de uso ÷ 1000**\n\n## Exemplo: o chuveiro\nUm chuveiro de 5.500 W usado 15 minutos por dia:\n- 5.500 × 0,25 h ÷ 1000 = 1,375 kWh por dia\n- × 30 dias = **41,25 kWh por mês**\n\nCom uma tarifa de, por exemplo, R$ 0,90 por kWh (confira o valor na sua conta, com impostos e bandeira), isso dá cerca de R$ 37 por mês.\n\n## Exemplo: a geladeira\nA geladeira não fica ligada o tempo todo: o compressor liga e desliga. Por isso o melhor dado é a **etiqueta do Procel/Inmetro**, que já informa o consumo em kWh por mês.\n\n## Onde achar a potência\nNa etiqueta do aparelho, no manual ou no carregador. Se a etiqueta só trouxer tensão e corrente, multiplique: 127 V × 2 A ≈ 254 W. Em motores e aparelhos com fonte eletrônica essa conta é aproximada, porque entra o fator de potência.\n\n## Lendo a conta\n- **Consumo do mês** em kWh, a diferença entre duas leituras do medidor.\n- **Tarifa** por kWh, mais tributos.\n- **Bandeira tarifária** (verde, amarela, vermelha), que acrescenta um valor por kWh quando gerar energia está mais caro.\n\n## Onde economizar de verdade\nAparelhos que **esquentam** (chuveiro, forno elétrico, aquecedor, ferro) e os que ficam **ligados muitas horas** (geladeira velha, ar-condicionado) dominam a conta. Trocar lâmpadas por LED ajuda, mas o chuveiro costuma pesar mais que todas as lâmpadas da casa juntas.\n\n## Projeto final\n**Cálculo do consumo dos aparelhos da casa.** Liste os aparelhos da sua casa com potência e horas de uso, calcule os kWh do mês e compare com a sua conta.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Conta de luz cobra energia em kWh, não potência.",
+    "kWh = W × horas ÷ 1000.",
+    "Aparelhos que esquentam e os que ficam muito tempo ligados pesam mais.",
+    "Para geladeira, use o consumo mensal da etiqueta."
+   ],
+   "minutes": 8,
+   "order": 5,
+   "questions": [
+    {
+     "answer": 1,
+     "explain": "10 × 6 × 30 = 1.800 Wh = 1,8 kWh.",
+     "options": [
+      "1,8 kWh",
+      "18 kWh",
+      "180 kWh",
+      "0,18 kWh"
+     ],
+     "prompt": "Uma lâmpada LED de 10 W acesa 6 horas por dia durante 30 dias consome:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "O medidor registra energia ao longo do tempo.",
+     "options": [
+      "A potência dos aparelhos",
+      "A energia consumida em kWh",
+      "A corrente do disjuntor geral",
+      "A tensão da rede"
+     ],
+     "prompt": "O que a distribuidora cobra na conta?",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "Os dois consomem 1 kWh.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Um aparelho de 2.000 W ligado 30 minutos consome o mesmo que um de 1.000 W ligado 1 hora.",
+     "type": "vf"
+    },
+    {
+     "answer": 3,
+     "explain": "P = V × I = 220 × 10 = 2.200 W.",
+     "options": [
+      "22 W",
+      "230 W",
+      "2.200 W",
+      "22.000 W"
+     ],
+     "prompt": "A etiqueta diz 220 V e 10 A. A potência aproximada é:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Watts, quilowatts-hora e como calcular quanto cada aparelho pesa na conta.",
+   "title": "Potência, consumo e conta de luz",
+   "track": "eletricidade",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "ele-seguranca": {
+   "author": "",
+   "body": "Choque elétrico é a corrente passando **pelo corpo**. O que machuca é a corrente, e ela depende da tensão e da resistência do caminho: pele molhada, suor e pés descalços derrubam essa resistência.\n\n## O que a corrente faz no corpo\n- Poucos miliampères já são sentidos como formigamento.\n- Acima de uns 10 mA, os músculos podem travar e a pessoa não consegue soltar o fio.\n- Na faixa de dezenas de miliampères atravessando o peito, há risco de **fibrilação**: o coração perde o ritmo.\n- Correntes maiores causam queimaduras internas, que nem sempre aparecem na pele.\n\nO caminho importa: de uma mão para a outra ou da mão para o pé, a corrente passa pelo coração.\n\n## NR-10 em poucas palavras\nA **NR-10** é a norma regulamentadora do Ministério do Trabalho para serviços em eletricidade. Entre outras coisas, ela exige que quem trabalha em instalações elétricas seja **qualificado, treinado e autorizado**, com o curso básico de segurança, e que o serviço siga procedimentos escritos. Esta lição é uma introdução; ela não substitui o treinamento.\n\n## Desenergizar não é só desligar o disjuntor\nA NR-10 descreve uma sequência para considerar um circuito desenergizado:\n- **Seccionamento:** abrir o disjuntor ou a chave do circuito.\n- **Impedimento de reenergização:** travar e etiquetar (cadeado e etiqueta), para ninguém religar.\n- **Constatação da ausência de tensão:** medir com instrumento adequado, testado antes e depois.\n- **Aterramento temporário** dos condutores, quando aplicável.\n- **Proteção** dos elementos energizados que ficarem por perto.\n- **Sinalização** de impedimento de reenergização.\n\n## EPI e EPC\n- **EPI** (individual): luvas isolantes da classe certa, calçado sem partes metálicas, óculos, vestimenta antichama quando há risco de arco.\n- **EPC** (coletivo): tapetes isolantes, barreiras, sinalização, bloqueios.\n\n## Hábitos que salvam\nNunca confie em \"acho que é esse disjuntor\": meça. Trabalhe com uma mão só sempre que possível. Tire anéis, relógios e correntes. E se alguém estiver preso a um fio, **não toque na pessoa**: desligue a energia primeiro ou afaste o fio com um material isolante e seco.\n\n## Projeto final\n**Checklist de segurança antes de qualquer serviço.** Monte uma lista de verificação de uma página, na ordem em que você vai seguir, para usar antes de qualquer serviço elétrico.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "O que machuca é a corrente que atravessa o corpo.",
+    "Desenergizar: seccionar, travar, medir, aterrar, proteger e sinalizar.",
+    "Trabalho em eletricidade exige pessoa qualificada e treinada conforme a NR-10.",
+    "Vítima presa ao fio: corte a energia antes de tocar nela."
+   ],
+   "minutes": 9,
+   "order": 3,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "O impedimento de reenergização (bloqueio com cadeado e etiqueta) é o passo que evita o religamento.",
+     "options": [
+      "Medir a tensão",
+      "Travar e etiquetar o disjuntor",
+      "Usar luvas",
+      "Avisar por telefone"
+     ],
+     "prompt": "Depois de abrir o disjuntor, qual passo garante que ninguém religue o circuito enquanto você trabalha?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "O disjuntor pode ser o errado, estar com defeito ou existir outra fonte. A medição é obrigatória.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Se o disjuntor está desligado, não é preciso medir a ausência de tensão.",
+     "type": "vf"
+    },
+    {
+     "answer": 3,
+     "explain": "Tocar na pessoa faz a corrente passar por você também.",
+     "options": [
+      "Puxá-la pelo braço",
+      "Jogar água",
+      "Desligar a energia ou afastar o fio com material isolante seco",
+      "Esperar ela se soltar"
+     ],
+     "prompt": "Uma pessoa está presa a um fio energizado. O que fazer primeiro?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Com a mesma tensão e menos resistência, a corrente aumenta (Lei de Ohm).",
+     "options": [
+      "Aumenta a tensão da rede",
+      "Diminui a resistência do corpo e a corrente sobe",
+      "Atrai o campo magnético",
+      "Muda a frequência"
+     ],
+     "prompt": "Pele molhada aumenta o risco de choque porque:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Por que a corrente machuca, o que a NR-10 pede e a sequência para desligar um circuito de verdade.",
+   "title": "Segurança em eletricidade: choque, EPI e noções de NR-10",
+   "track": "eletricidade",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "ele-serie-paralelo": {
+   "author": "",
+   "body": "## Em série: um caminho só\nOs componentes ficam um atrás do outro.\n- A **corrente é a mesma** em todos.\n- As **tensões se somam**: a da fonte se reparte entre os componentes.\n- A resistência total é a soma: **R = R1 + R2 + ...**\n- Se um componente abre, todos param. Era o defeito clássico do pisca-pisca de Natal antigo.\n\n## Em paralelo: vários caminhos\nOs componentes ficam lado a lado, ligados aos mesmos dois pontos.\n- A **tensão é a mesma** em todos. É assim que as tomadas e lâmpadas de casa são ligadas.\n- As **correntes se somam**: cada aparelho ligado acrescenta corrente no disjuntor.\n- A resistência total fica **menor que a menor delas**. Para dois resistores: R = (R1 × R2) ÷ (R1 + R2).\n- Se um componente abre, os outros continuam funcionando.\n\n## O divisor de tensão\nDois resistores em série formam um **divisor de tensão**: no ponto do meio aparece uma fração da entrada.\n\n**Vout = Vin × R2 ÷ (R1 + R2)**\n\nCom R1 = R2, a saída é metade da entrada. É o circuito mais usado para adaptar sinais: por exemplo, baixar 5 V para algo seguro na entrada de 3,3 V de um ESP32.\n\n## Sensores que são resistores\nVários sensores simplesmente mudam de resistência. Colocados num divisor, transformam uma grandeza física em tensão, que o microcontrolador consegue ler:\n- **Potenciômetro:** resistência ajustável girando um eixo. É um divisor pronto.\n- **LDR:** a resistência cai quando recebe luz.\n- **Termistor NTC:** a resistência cai quando esquenta. O **PTC** faz o contrário e é usado como proteção.\n- **VDR (varistor):** quase não conduz em tensão normal e passa a conduzir muito acima dela; protege contra surtos.\n\n## Ponte de Wheatstone\nSão dois divisores lado a lado. Quando as proporções são iguais, a tensão entre os dois pontos do meio é zero. Uma variação mínima num dos resistores desequilibra a ponte, e isso é usado em balanças e sensores de força.\n\n## Projeto final\n**Circuito montado e medido na protoboard.** Monte dois resistores em série e depois em paralelo, meça tensões e correntes e confira as regras desta lição.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Série: mesma corrente, tensões se somam.",
+    "Paralelo: mesma tensão, correntes se somam.",
+    "Divisor: Vout = Vin × R2 ÷ (R1 + R2).",
+    "LDR, NTC e potenciômetro viram sinal de tensão dentro de um divisor."
+   ],
+   "minutes": 10,
+   "order": 4,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "A corrente é a mesma e os resistores são iguais, então a tensão se divide ao meio.",
+     "options": [
+      "10 V",
+      "5 V",
+      "20 V",
+      "2,5 V"
+     ],
+     "prompt": "Dois resistores de 1 kΩ em série ligados em 10 V. Qual a tensão em cada um?",
+     "type": "mc"
+    },
+    {
+     "answer": 3,
+     "explain": "9 × 20 ÷ 30 = 6 V.",
+     "options": [
+      "3 V",
+      "4,5 V",
+      "6 V",
+      "9 V"
+     ],
+     "prompt": "Num divisor com R1 = 10 kΩ em cima e R2 = 20 kΩ embaixo, ligado em 9 V, a saída vale:",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "Assim todas recebem a mesma tensão e uma não depende da outra.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Em casa, as tomadas são ligadas em paralelo.",
+     "type": "vf"
+    },
+    {
+     "answer": 1,
+     "explain": "No escuro a resistência do LDR aumenta, e a fração da tensão sobre ele também.",
+     "options": [
+      "Sobe",
+      "Desce",
+      "Não muda",
+      "Fica negativa"
+     ],
+     "prompt": "Com um LDR na parte de baixo do divisor, quando escurece a tensão de saída:",
+     "type": "mc"
+    }
+   ],
+   "sim": "div",
+   "status": "published",
+   "summary": "Como a corrente e a tensão se dividem, o divisor de tensão e os sensores que mudam de resistência.",
+   "title": "Circuitos em série e em paralelo",
+   "track": "eletricidade",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "eln-componentes": {
+   "author": "",
+   "body": "## Resistor\nLimita a corrente e divide tensões. O valor vem em **faixas coloridas**: as duas ou três primeiras são os dígitos, a seguinte é o multiplicador e a última é a tolerância. Exemplo: marrom (1), preto (0), vermelho (×100) = 1.000 Ω, ou 1 kΩ. Na dúvida, meça com o ohmímetro fora do circuito.\n\n## Capacitor\nGuarda energia num campo elétrico entre duas placas. Carrega quando recebe tensão e devolve depois. A capacidade é medida em **farads** (na prática, µF, nF e pF).\n- **Eletrolíticos** têm polaridade: a faixa na lateral marca o negativo. Ligados ao contrário, estufam ou estouram.\n- A **tensão máxima** vem escrita no corpo; use um com folga.\n\nLigado a um resistor, o capacitor não enche de uma vez: segue uma curva. A **constante de tempo** τ = R × C diz o ritmo. Em 1τ ele chega a 63% da tensão da fonte; depois de 5τ está praticamente cheio. É assim que se fazem temporizadores e filtros.\n\nCuidado: capacitores grandes de fontes e inversores podem **guardar carga perigosa** mesmo com o aparelho desligado.\n\n## Diodo\nDeixa a corrente passar num sentido só, do **ânodo** para o **cátodo** (a faixa no corpo marca o cátodo). Quando conduz, \"come\" cerca de **0,7 V** (diodos de silício). Ao contrário, bloqueia até um limite de tensão. Serve para retificar, proteger contra ligação invertida e absorver o pico da bobina de um relé.\n\n## LED\nÉ um diodo que emite luz. A perna mais comprida é o **ânodo** (positivo). Precisa **sempre de um resistor em série** para limitar a corrente; ligado direto numa bateria, queima. A conta: R = (V da fonte − V do LED) ÷ corrente. Para um LED vermelho (cerca de 2 V) em 5 V com 15 mA: (5 − 2) ÷ 0,015 = 200 Ω; use 220 Ω.\n\n## Projeto final\n**Kit de componentes identificado e testado.** Separe resistores, capacitores, diodos e LEDs, identifique os valores pelas marcações e confira com o multímetro.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Faixas de cor: dígitos, multiplicador e tolerância.",
+    "Capacitor eletrolítico tem polaridade; τ = R × C.",
+    "Diodo conduz num sentido e perde cerca de 0,7 V.",
+    "LED sempre com resistor em série."
+   ],
+   "minutes": 10,
+   "order": 1,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "47 × 10 = 470 Ω.",
+     "options": [
+      "47 Ω",
+      "470 Ω",
+      "4,7 kΩ",
+      "47 kΩ"
+     ],
+     "prompt": "Um resistor tem as faixas amarelo (4), violeta (7), marrom (×10). Qual é o valor?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "τ = 10.000 × 0,0001 = 1 s.",
+     "options": [
+      "0,1 s",
+      "1 s",
+      "10 s",
+      "100 s"
+     ],
+     "prompt": "Com R = 10 kΩ e C = 100 µF, a constante de tempo é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Sem resistor a corrente não tem limite e o LED queima.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Um LED pode ser ligado direto numa fonte de 5 V, sem resistor.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "A faixa marca o cátodo, o lado para onde a corrente sai.",
+     "options": [
+      "O ânodo",
+      "O cátodo",
+      "A tensão máxima",
+      "A potência"
+     ],
+     "prompt": "Num diodo, a faixa pintada no corpo indica:",
+     "type": "mc"
+    }
+   ],
+   "sim": "rc",
+   "status": "published",
+   "summary": "Os quatro componentes que aparecem em quase toda placa, como identificar e para que servem.",
+   "title": "Componentes: resistor, capacitor, diodo e LED",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "eln-fontes": {
+   "author": "",
+   "body": "Quase todo eletrônico funciona com tensão contínua baixa: 3,3 V, 5 V, 12 V. A tomada entrega 127 V ou 220 V alternados. A fonte faz essa conversão em etapas.\n\n## 1. Transformador: baixar a tensão\nDuas bobinas enroladas num núcleo de ferro. A tensão de saída depende da proporção de espiras. Um transformador de 127 V para 12 V entrega 12 V **alternados**, isolados da rede.\n\n## 2. Retificador: deixar a corrente num sentido só\n- **Meia onda:** um diodo só. Passa o semiciclo positivo e corta o negativo. Metade do tempo a carga fica sem nada.\n- **Onda completa em ponte:** quatro diodos. O semiciclo negativo é invertido e aproveitado. A saída pulsa duas vezes por ciclo.\n\nA saída já é contínua, mas **pulsante**: sobe e desce o tempo todo. Repare também que os diodos \"comem\" um pouco da tensão: cerca de 0,7 V cada um que estiver conduzindo.\n\n## 3. Filtro: alisar a tensão\nUm **capacitor eletrolítico** grande em paralelo com a saída carrega nos picos e alimenta a carga nos vales. O que sobra de variação se chama **ondulação** (ripple). Capacitor maior, ou carga menor, dá ondulação menor.\n\nUm detalhe: com capacitor, a saída fica perto do **pico** da tensão, não do valor eficaz. 12 V eficazes têm pico de cerca de 17 V; descontados os diodos, sobram uns 15,6 V.\n\n## 4. Regulador: tensão fixa\nUm regulador como o **7805** recebe a tensão filtrada (que ainda varia) e entrega 5 V estáveis. Ele precisa de alguns volts a mais na entrada e transforma a diferença em calor: com 12 V na entrada e 1 A de saída, ele aquece com 7 W e precisa de dissipador.\n\n## Fontes chaveadas\nO carregador de celular não tem um transformador pesado. Ele retifica a rede direto, liga e desliga essa tensão dezenas de milhares de vezes por segundo com um transistor e usa um **transformador pequenino** de alta frequência. Resultado: fonte leve, que aceita de 100 V a 240 V e esquenta pouco. Por dentro, porém, há tensões altas e capacitores carregados: **não abra uma fonte chaveada ligada**.\n\n## Projeto final\n**Fonte regulada de 5 V montada.** Monte retificador, filtro e regulador 7805 a partir de um transformador de baixa tensão já isolado, e meça a saída com e sem carga.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Transformador baixa, retificador direciona, capacitor alisa, regulador fixa.",
+    "Ponte de diodos aproveita os dois semiciclos.",
+    "Com filtro, a saída fica perto do pico, menos a queda dos diodos.",
+    "Fonte chaveada: leve e eficiente, mas perigosa por dentro."
+   ],
+   "minutes": 10,
+   "order": 4,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "A ponte inverte o semiciclo negativo.",
+     "options": [
+      "Meia onda com um diodo",
+      "Ponte de quatro diodos",
+      "Um capacitor sozinho",
+      "Um regulador 7805"
+     ],
+     "prompt": "Qual retificador aproveita os dois semiciclos da corrente alternada?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Mais capacitância segura melhor a tensão nos vales.",
+     "options": [
+      "Tirar o capacitor",
+      "Aumentar o capacitor de filtro",
+      "Trocar a ponte por um diodo só",
+      "Diminuir o transformador"
+     ],
+     "prompt": "A saída retificada está com muita ondulação. Uma solução é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "(12 − 5) × 1 = 7 W viram calor no regulador.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Um regulador 7805 com 12 V na entrada e 1 A na saída não precisa de dissipador.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Em alta frequência, o transformador pode ser muito menor.",
+     "options": [
+      "Não tem transformador nenhum",
+      "É uma fonte chaveada com transformador pequeno de alta frequência",
+      "Usa pilhas internas",
+      "Funciona só em 5 V"
+     ],
+     "prompt": "Por que o carregador de celular é tão leve?",
+     "type": "mc"
+    }
+   ],
+   "sim": "ret",
+   "status": "published",
+   "summary": "Transformador, retificador, filtro e regulador, e por que as fontes de hoje são chaveadas.",
+   "title": "Fontes de alimentação: da tomada aos 5 V",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "eln-logica-digital": {
+   "author": "",
+   "body": "Em eletrônica digital, a tensão só interessa em dois estados: **nível alto (1)** e **nível baixo (0)**. Num circuito de 5 V, algo perto de 5 V é 1 e perto de 0 V é 0. Com esses dois valores se constroem calculadoras, CLPs e processadores.\n\n## As portas lógicas\n- **NOT (inversor):** a saída é o contrário da entrada.\n- **AND (E):** a saída é 1 só se **todas** as entradas forem 1. Como duas chaves em série.\n- **OR (OU):** a saída é 1 se **pelo menos uma** entrada for 1. Como duas chaves em paralelo.\n- **NAND e NOR:** um AND e um OR com a saída invertida. Só com portas NAND dá para montar qualquer outra porta.\n- **XOR (OU exclusivo):** a saída é 1 quando as entradas são **diferentes**. É o comportamento do interruptor paralelo da escada.\n\nCada porta é descrita por uma **tabela-verdade**: todas as combinações de entrada e a saída de cada uma.\n\n## Lógica no dia a dia\nUma prensa que só desce quando o operador aperta **os dois botões ao mesmo tempo** é um AND: as duas mãos ficam longe da ferramenta. Um alarme que dispara se **qualquer** porta abrir é um OR. Essa é a mesma lógica que você vai encontrar na programação de CLP em ladder.\n\n## Flip-flop: o circuito que lembra\nCom duas portas NAND ou NOR, uma realimentando a outra, se monta um **latch SR**: um pulso em **S** (set) põe a saída em 1, e ela **fica em 1** mesmo depois que o pulso acaba. Um pulso em **R** (reset) volta para 0. É uma memória de 1 bit.\n\nJuntando milhões de flip-flops e circuitos semelhantes, temos registradores, contadores e memória. O selo de um contator, que você vai ver em comandos elétricos, faz a mesma coisa com relés: lembra que o botão de liga foi apertado.\n\n## Contadores e o 555 de novo\nUm flip-flop que muda de estado a cada pulso de clock divide a frequência por dois. Vários em cadeia formam um **contador**. Ligue o 555 astável a um contador e você tem um relógio, um sequenciador de luzes ou um temporizador digital.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Digital: só 0 e 1.",
+    "AND = série; OR = paralelo; XOR = entradas diferentes.",
+    "Tabela-verdade descreve a porta por completo.",
+    "Flip-flop guarda 1 bit, como o selo de um contator."
+   ],
+   "minutes": 10,
+   "order": 5,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "AND só dá 1 com todas as entradas em 1.",
+     "options": [
+      "OR",
+      "AND",
+      "NOT",
+      "XOR"
+     ],
+     "prompt": "Uma prensa só desce quando os dois botões estão apertados. Que porta descreve isso?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "NOR é o OR invertido: OR daria 0, invertido vira 1.",
+     "options": [
+      "0",
+      "1",
+      "Indefinida",
+      "Depende da tensão"
+     ],
+     "prompt": "Numa porta NOR com A = 0 e B = 0, a saída é:",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "É isso que faz dele uma memória.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Um flip-flop continua com a saída em 1 depois que o pulso de set termina.",
+     "type": "vf"
+    },
+    {
+     "answer": 3,
+     "explain": "A saída muda sempre que uma das entradas muda.",
+     "options": [
+      "AND",
+      "OR",
+      "XOR invertido (XNOR)",
+      "NOT"
+     ],
+     "prompt": "O interruptor paralelo da escada se comporta como qual porta (considerando a luz acesa quando os interruptores estão iguais)?",
+     "type": "mc"
+    }
+   ],
+   "sim": "log",
+   "status": "published",
+   "summary": "Como zeros e uns viram decisões, e como um circuito consegue lembrar.",
+   "title": "Lógica digital: portas, flip-flops e memória",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "eln-protoboard-555": {
+   "author": "",
+   "body": "## Como a protoboard é ligada por dentro\nA protoboard permite montar circuitos sem solda. Por dentro, há tiras de metal:\n- No meio, cada **coluna de 5 furos** é ligada entre si (no sentido curto). As duas metades são separadas pelo canal central, onde se encaixam os circuitos integrados.\n- Nas bordas, as **linhas de alimentação** (marcadas com + e −) correm no sentido comprido. Em algumas placas, elas são cortadas no meio: confira com o teste de continuidade.\n\nErros comuns: colocar as duas pernas de um componente na mesma coluna (ele fica em curto consigo mesmo) e esquecer de ligar as linhas de alimentação de um lado ao outro.\n\n## O CI 555\nÉ um dos circuitos integrados mais usados da história, ótimo para começar. Tem 8 pinos; a contagem começa no pino marcado com um ponto ou chanfro e segue no sentido anti-horário. Funciona de 4,5 V a 15 V.\n\n## Modo astável: o oscilador\nNo modo **astável**, o 555 liga e desliga a saída sozinho, sem parar. Por dentro, ele compara a tensão de um capacitor externo com 1/3 e 2/3 da alimentação:\n- O capacitor carrega por **R1 e R2** até 2/3 da tensão. Enquanto isso, a saída fica **ligada**.\n- Ao chegar em 2/3, o 555 descarrega o capacitor só por **R2** até 1/3. Nesse tempo, a saída fica **desligada**.\n- E recomeça.\n\nAs contas:\n- Tempo ligado ≈ 0,693 × (R1 + R2) × C\n- Tempo desligado ≈ 0,693 × R2 × C\n- Frequência ≈ 1,44 ÷ ((R1 + 2 × R2) × C)\n\nCom R1 = 10 kΩ, R2 = 47 kΩ e C = 10 µF, o LED pisca pouco mais de uma vez por segundo.\n\n## Monoestável: o temporizador\nNo modo **monoestável**, um pulso no pino de disparo liga a saída por um tempo fixo (≈ 1,1 × R × C) e depois ela desliga sozinha. É o temporizador de minuteria, de campainha e de alarme.\n\n## Montagem do pisca-pisca\nPinos 4 e 8 no positivo, pino 1 no negativo, R1 entre o 8 e o 7, R2 entre o 7 e o 6, pinos 6 e 2 unidos, capacitor do 2 para o negativo, e o LED com resistor de 330 Ω na saída (pino 3). Um capacitor de 10 nF do pino 5 para o negativo deixa o circuito mais estável.\n\n## Projeto final\n**Pisca-pisca com LED montado na protoboard.** Siga o projeto guiado desta etapa: o pisca-pisca com 555, e depois a versão que só funciona no escuro.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Na protoboard, cada coluna de 5 furos é um nó.",
+    "555 astável: liga por R1 + R2, desliga só por R2.",
+    "Frequência ≈ 1,44 ÷ ((R1 + 2R2) × C).",
+    "Monoestável: um pulso, um tempo fixo."
+   ],
+   "minutes": 11,
+   "order": 2,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Os dois terminais ficam no mesmo nó elétrico.",
+     "options": [
+      "Nada, funciona normal",
+      "O resistor fica em curto e não faz efeito",
+      "O resistor queima na hora",
+      "A protoboard derrete"
+     ],
+     "prompt": "Duas pernas de um resistor foram colocadas na mesma coluna de 5 furos. O que acontece?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Os tempos são proporcionais a C (e aos resistores).",
+     "options": [
+      "Diminuir o capacitor",
+      "Aumentar o capacitor",
+      "Tirar o R2",
+      "Aumentar a tensão"
+     ],
+     "prompt": "No 555 astável, para o LED piscar mais devagar, você pode:",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "Ele carrega por R1 + R2 e descarrega só por R2.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "No modo astável comum, o tempo aceso é sempre maior que o apagado.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Um disparo, um intervalo fixo.",
+     "options": [
+      "Astável",
+      "Monoestável",
+      "Biestável invertido",
+      "Retificador"
+     ],
+     "prompt": "Para fazer uma minuteria de escada, que acende e apaga sozinha depois de um tempo, o 555 vai em modo:",
+     "type": "mc"
+    }
+   ],
+   "sim": "ne555",
+   "status": "published",
+   "summary": "Como a protoboard é ligada por dentro e como o CI 555 faz um LED piscar no ritmo que você escolher.",
+   "title": "Protoboard e primeiros circuitos: o pisca-pisca com 555",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "eln-transistor": {
+   "author": "",
+   "body": "Um pino de Arduino ou ESP32 fornece poucos miliampères. Um relé, um motorzinho ou uma fita de LED pedem bem mais. O **transistor** resolve: uma corrente pequena controla uma corrente grande.\n\n## O transistor bipolar NPN\nTem três terminais: **base**, **coletor** e **emissor**. Quando entra corrente na base, o caminho entre coletor e emissor se abre para uma corrente muito maior (dezenas a centenas de vezes maior).\n\nUsado como chave, ele trabalha em dois estados:\n- **Corte:** base sem corrente, transistor desligado, carga desligada.\n- **Saturação:** base com corrente suficiente, transistor totalmente ligado, carga ligada.\n\n## A montagem básica\n- Emissor no negativo (GND).\n- Carga entre o positivo da fonte e o coletor.\n- Um **resistor na base**, entre o pino do microcontrolador e a base. Sem ele, a corrente da base não tem limite e queima o transistor ou o pino.\n\nPara um transistor pequeno como o BC547 (até cerca de 100 mA no coletor), um resistor de base entre 1 kΩ e 4,7 kΩ costuma funcionar com sinais de 3,3 V ou 5 V. Para correntes maiores, usa-se um transistor de potência ou um **MOSFET**.\n\n## O diodo do relé\nA bobina do relé guarda energia no campo magnético. Quando o transistor desliga, essa energia aparece como um **pico de tensão** que pode passar de cem volts e destruir o transistor. A solução é um **diodo em paralelo com a bobina**, ao contrário (cátodo no positivo). Ele dá um caminho para essa energia se dissipar. Esquecer esse diodo é uma das causas mais comuns de transistor queimado.\n\n## Terra comum\nSe a carga usa uma fonte diferente da do microcontrolador, os **negativos das duas fontes precisam estar ligados**. Sem terra comum, a corrente da base não tem por onde voltar e o transistor não liga.\n\n## O mesmo princípio em outros lugares\nFontes chaveadas, inversores de frequência e controladores de motor são, no fundo, transistores ligando e desligando muito rápido.\n\n## Projeto final\n**Circuito que liga uma carga com transistor.** Use um BC547 para acender um LED ou ligar um relé a partir de um botão ou de um pino do ESP32, com o diodo de proteção no relé.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Corrente pequena na base controla corrente grande no coletor.",
+    "Resistor na base sempre.",
+    "Bobina de relé pede diodo em paralelo, invertido.",
+    "Fontes diferentes: negativos ligados."
+   ],
+   "minutes": 9,
+   "order": 3,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Sem ele, a corrente da base seria limitada só pelo pino, que queima.",
+     "options": [
+      "Aumentar a tensão",
+      "Limitar a corrente da base",
+      "Proteger contra raios",
+      "Inverter o sinal"
+     ],
+     "prompt": "Para que serve o resistor entre o pino do microcontrolador e a base?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "O pico de tensão da bobina destrói o transistor.",
+     "options": [
+      "Um capacitor de 1 F",
+      "O diodo em paralelo com a bobina do relé",
+      "Um LED",
+      "Um fusível de 20 A"
+     ],
+     "prompt": "O transistor que liga um relé queimou de novo. O que provavelmente falta?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Sem terra comum, a corrente de base não fecha o circuito.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Se a carga usa outra fonte, não é preciso ligar o negativo dela ao negativo do microcontrolador.",
+     "type": "vf"
+    },
+    {
+     "answer": 1,
+     "explain": "Totalmente desligado ou totalmente ligado.",
+     "options": [
+      "Corte e saturação",
+      "Ligado e meio ligado",
+      "Série e paralelo",
+      "AC e DC"
+     ],
+     "prompt": "Usado como chave, o transistor trabalha entre:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Como uma corrente pequena liga uma carga maior, e por que o relé precisa de um diodo.",
+   "title": "Transistor como chave",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
   "ia-1-modelos": {
    "author": "",
    "body": "Um modelo de linguagem (LLM) foi treinado com uma quantidade enorme de texto para fazer uma coisa: prever qual pedaço de texto vem a seguir. Repetindo isso muito rápido, ele escreve respostas inteiras.\n\n## O que isso significa na prática\n- **Ele não consulta um banco de dados** por padrão. Responde com base no que aprendeu no treino e no que você coloca na conversa.\n- **Ele pode inventar com confiança.** Quando falta informação, o modelo completa com algo plausível. Isso se chama **alucinação**.\n- **O contexto é a memória de trabalho.** Tudo o que está na conversa (sua pergunta, documentos colados, instruções) influencia a resposta.\n\n## Tokens\nO modelo lê e escreve em **tokens**, pedaços de palavras. Os limites de tamanho e o custo das APIs são medidos em tokens.\n\n## Como usar bem\nDê contexto, peça fontes quando possível e confira fatos importantes. Para responder sobre os documentos da sua empresa, use RAG: o sistema busca os trechos certos e entrega ao modelo junto com a pergunta.",
@@ -1224,6 +2523,228 @@ window.VOLTER_SEED = {
    "title": "Agentes e automação: do chat à ação",
    "track": "agentes",
    "updatedAt": "2026-10-24T00:30:00.000Z"
+  },
+  "ins-diagramas": {
+   "author": "",
+   "body": "Antes de mexer numa instalação, é preciso saber **ler o desenho** dela. O mesmo circuito pode aparecer de três formas, cada uma boa para uma finalidade.\n\n## Diagrama funcional\nMostra **como o circuito funciona**, sem se preocupar com onde as coisas ficam. A fonte fica em cima, a carga embaixo, e você segue o caminho da corrente. É o melhor para entender e para procurar defeito.\n\n## Diagrama multifilar\nDesenha **cada fio** separadamente: fase, neutro, retorno e terra. Mostra exatamente quantos condutores passam em cada trecho. É o que se usa na hora de montar.\n\n## Diagrama unifilar\nDesenha a instalação sobre a **planta da casa**, com um traço só por eletroduto. Os condutores que passam por ele aparecem como pequenos traços cortando a linha. É o desenho do projeto elétrico: mostra onde ficam tomadas, pontos de luz, interruptores e o quadro.\n\n## Símbolos que aparecem em quase todo projeto\n- **Ponto de luz no teto:** um círculo, com a potência e o circuito anotados.\n- **Interruptor:** um pequeno círculo com a letra que indica qual lâmpada ele comanda.\n- **Tomada:** triângulo; a altura (baixa, média, alta) e a potência vêm indicadas.\n- **Quadro de distribuição:** retângulo com o número de cada circuito.\n- **Condutores no eletroduto:** traços que indicam fase, neutro, retorno e terra.\n\nOs símbolos variam um pouco entre projetistas. Todo projeto bem-feito traz uma **legenda**: leia primeiro.\n\n## Cores dos fios\nPela norma de instalações de baixa tensão, o **neutro é azul-claro** e o **terra é verde ou verde e amarelo**. Fase e retorno costumam usar outras cores (preto, vermelho, branco, cinza), conforme o padrão do projeto. Nunca confie só na cor: em instalação antiga pode estar tudo trocado. **Meça.**\n\n## Projeto final\n**Diagrama unifilar de um cômodo.** Desenhe a planta de um cômodo da sua casa com tomadas, pontos de luz, interruptores e o circuito de cada um.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Funcional explica, multifilar monta, unifilar localiza na planta.",
+    "Leia a legenda do projeto antes dos símbolos.",
+    "Neutro azul-claro, terra verde ou verde-amarelo.",
+    "Cor não substitui medição."
+   ],
+   "minutes": 8,
+   "order": 1,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "O multifilar desenha fio por fio.",
+     "options": [
+      "Unifilar",
+      "Multifilar",
+      "Funcional",
+      "Planta baixa"
+     ],
+     "prompt": "Qual diagrama mostra cada condutor separado, ideal para montar o circuito?",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "O unifilar representa um eletroduto por traço sobre a planta.",
+     "options": [
+      "Unifilar",
+      "Multifilar",
+      "Funcional",
+      "Ladder"
+     ],
+     "prompt": "O projeto elétrico da casa desenhado sobre a planta usa normalmente o diagrama:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Essa é a regra da norma, mas instalações antigas ou mal-feitas podem ter cores trocadas. Meça antes.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Em qualquer casa, o fio azul-claro é sempre o neutro.",
+     "type": "vf"
+    },
+    {
+     "answer": 1,
+     "explain": "O funcional mostra o caminho da corrente, que é o que se investiga num defeito.",
+     "options": [
+      "Funcional",
+      "Unifilar",
+      "Arquitetônico",
+      "Nenhum"
+     ],
+     "prompt": "Para entender por que uma lâmpada não acende, o desenho mais útil é o:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Unifilar, multifilar e funcional: três jeitos de desenhar o mesmo circuito.",
+   "title": "Leitura de diagramas e simbologia",
+   "track": "instalacoes",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "ins-protecao": {
+   "author": "",
+   "body": "Cada dispositivo do quadro protege contra um problema diferente. Confundir os papéis é a origem de muita gambiarra perigosa.\n\n## Fusível\nO jeito mais antigo: um fio calibrado que **derrete** quando a corrente passa do limite. Protege, mas depois de atuar precisa ser trocado. Hoje aparece mais dentro de aparelhos e em painéis industriais.\n\n## Disjuntor termomagnético: protege o fio\nDesarma em duas situações:\n- **Sobrecarga** (parte térmica): corrente um pouco acima do normal por muito tempo, como muitos aparelhos na mesma tomada. Uma lâmina bimetálica esquenta, entorta e desarma.\n- **Curto-circuito** (parte magnética): corrente enorme e repentina. Uma bobina puxa o mecanismo em milissegundos.\n\nO disjuntor é escolhido pela **bitola do fio**, não pelo aparelho. Trocar um disjuntor que \"vive desarmando\" por um maior, sem trocar o fio, tira a proteção: o fio passa a esquentar sem que nada desarme.\n\n## DR (dispositivo diferencial residual): protege as pessoas\nO DR compara a corrente que **vai pela fase** com a que **volta pelo neutro**. Se uma parte está escapando por outro caminho (pela carcaça, pela água, por uma pessoa), a diferença aparece e ele desliga. Os de **30 mA** são os usados para proteção de pessoas. A norma de instalações exige DR em áreas molhadas, como banheiros, cozinhas, lavanderias e áreas externas.\n\nSe o DR desarma, **há fuga de corrente**. Desligar o DR para \"resolver\" é deixar a armadilha armada.\n\n## Aterramento\nO fio terra liga a carcaça metálica dos aparelhos a uma **haste cravada no solo**. Se um fio encostar na carcaça, a corrente tem um caminho fácil para a terra, o DR percebe a fuga e desarma. Sem terra, a carcaça fica energizada esperando alguém encostar.\n\n## DPS: protege contra surtos\nO **dispositivo de proteção contra surtos** desvia para a terra os picos de tensão causados por raios e manobras da rede. Ele não substitui disjuntor nem DR: cuida só dos picos rápidos que queimam eletrônicos.\n\n## Resumo\n- Disjuntor: o **fio** não pode esquentar demais.\n- DR: a **pessoa** não pode virar caminho da corrente.\n- DPS: o **aparelho** não pode receber um pico de tensão.\n\n## Projeto final\n**Quadro de distribuição explicado.** Fotografe o quadro da sua casa (sem abrir a tampa interna) e identifique cada disjuntor, o DR e o DPS, se existirem, e o que cada circuito alimenta.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Disjuntor protege o fio e é escolhido pela bitola.",
+    "DR de 30 mA protege pessoas contra fuga de corrente.",
+    "Sem aterramento, o DR não tem como perceber uma carcaça energizada antes de alguém tocar.",
+    "DPS cuida de surtos, não de sobrecarga."
+   ],
+   "minutes": 10,
+   "order": 3,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "O disjuntor maior sem fio adequado deixa o fio superaquecer.",
+     "options": [
+      "Trocar por um disjuntor maior",
+      "Verificar se a bitola do fio e o disjuntor estão certos para a potência do chuveiro",
+      "Ligar o chuveiro direto, sem disjuntor",
+      "Desligar o DR"
+     ],
+     "prompt": "O disjuntor do chuveiro desarma toda hora. A atitude correta é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Ele mede a diferença entre ida e volta.",
+     "options": [
+      "A corrente total passa de 30 A",
+      "Parte da corrente escapa por outro caminho e não volta pelo neutro",
+      "Cai um raio longe",
+      "A tensão está baixa"
+     ],
+     "prompt": "O DR desliga quando:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Cada um tem sua função: o DPS só desvia surtos de tensão.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "O DPS substitui o disjuntor no quadro.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Com terra, a fuga vai para a haste e o DR desarma.",
+     "options": [
+      "Aumentar a potência",
+      "Dar um caminho para a corrente de fuga e permitir que a proteção atue",
+      "Diminuir a conta de luz",
+      "Substituir o neutro"
+     ],
+     "prompt": "Para que serve o fio terra ligado à carcaça da máquina de lavar?",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Fusível, disjuntor, dispositivo diferencial residual, aterramento e protetor contra surtos: quem protege o quê.",
+   "title": "Disjuntores, DR e DPS: protegendo o circuito",
+   "track": "instalacoes",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "ins-tomadas-interruptores": {
+   "author": "",
+   "body": "## O interruptor sempre interrompe a fase\nA regra de ouro: o interruptor fica no caminho da **fase**. O neutro vai direto para a lâmpada. Assim, com o interruptor desligado, o soquete fica sem tensão perigosa e a troca de lâmpada é mais segura. O fio que sai do interruptor e vai até a lâmpada se chama **retorno**.\n\n## Interruptor paralelo (three-way)\nComanda a mesma lâmpada de **dois lugares**, como no pé e no alto da escada. Cada interruptor tem três terminais: um comum e dois de saída. Entre os dois interruptores passam **dois retornos**. A lâmpada acende quando os dois estão \"do mesmo lado\" e apaga quando estão em lados diferentes. Em lógica digital, esse comportamento é uma porta **XOR** invertida.\n\n## Interruptor intermediário (four-way)\nPara comandar de **três ou mais lugares**, coloca-se um ou mais intermediários entre os dois paralelos. O intermediário cruza ou descruza os dois retornos a cada toque.\n\n## Tomadas no padrão brasileiro\nO padrão atual tem **três pinos redondos**: fase, neutro e **terra** no meio. Há dois tamanhos:\n- **10 A**, pinos mais finos, para a maioria dos aparelhos.\n- **20 A**, pinos mais grossos, para aparelhos de maior potência, como micro-ondas e air fryer grandes.\n\nUma tomada de 20 A aceita plugue de 10 A, mas o contrário não. Trocar o plugue de 20 A por um de 10 A para \"caber\" é perigoso: o circuito e a tomada não foram feitos para aquela corrente.\n\n## Iluminação: da fluorescente ao LED\n- A **lâmpada fluorescente tubular** precisa de um **reator** para dar a partida e limitar a corrente; nas antigas havia também o **starter**. Quando pisca e não acende, o problema costuma estar no starter, no reator ou no próprio tubo gasto.\n- A **lâmpada LED** tem um **driver** eletrônico que converte a tensão da rede em corrente contínua controlada. Consome bem menos para a mesma luz.\n- Ao trocar uma luminária fluorescente por tubo LED, muitos modelos exigem **retirar ou desviar o reator**. Siga o esquema do fabricante.\n\n## Projeto final\n**Esquema de ligação de um interruptor paralelo.** Desenhe o diagrama multifilar de uma lâmpada comandada por dois interruptores paralelos, indicando fase, neutro e os dois retornos.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Interruptor sempre na fase; o fio até a lâmpada é o retorno.",
+    "Paralelo: dois pontos de comando; intermediário: três ou mais.",
+    "Tomada de 20 A só para circuito e aparelho de 20 A.",
+    "Fluorescente usa reator; LED usa driver."
+   ],
+   "minutes": 10,
+   "order": 2,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Dois paralelos (three-way) ligados por dois retornos.",
+     "options": [
+      "Dois interruptores simples",
+      "Dois interruptores paralelos",
+      "Um interruptor intermediário",
+      "Um disjuntor"
+     ],
+     "prompt": "Para comandar a luz da escada de dois lugares, usam-se:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "É o contrário: o interruptor interrompe a fase.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "O interruptor deve ser ligado no neutro, para a lâmpada ficar sem fase quando desligada.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "O intermediário fica entre os dois paralelos e cruza os retornos.",
+     "options": [
+      "Três interruptores simples em série",
+      "Dois paralelos com um intermediário no meio",
+      "Três paralelos",
+      "Dois simples e um paralelo"
+     ],
+     "prompt": "Para comandar a mesma lâmpada de três pontos, a ligação é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "São os componentes de partida da fluorescente.",
+     "options": [
+      "O neutro do quadro",
+      "O starter ou o reator",
+      "O interruptor paralelo",
+      "A tomada de 20 A"
+     ],
+     "prompt": "Uma luminária fluorescente pisca e não acende, com tubo novo. O suspeito mais provável é:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Interruptor simples, paralelo e intermediário, o padrão de tomadas e o que mudou da fluorescente para o LED.",
+   "title": "Tomadas, interruptores e iluminação",
+   "track": "instalacoes",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
   },
   "iot-1-intro": {
    "author": "",
@@ -1722,6 +3243,59 @@ window.VOLTER_SEED = {
    ],
    "track": "dados",
    "updatedAt": "2026-10-19T01:30:00.000Z"
+  },
+  "pisca-pisca-protoboard": {
+   "author": "",
+   "challenge": "Troque o LED por um relé (com o transistor e o diodo de proteção da lição) para acender uma lâmpada de 12 V. Não ligue nada na tomada nesta fase.",
+   "createdAt": "2026-10-24T12:00:00.000Z",
+   "demo": false,
+   "duration": "2 a 3 horas",
+   "goal": "Montar e medir seu primeiro circuito eletrônico de verdade, entendendo cada componente, e terminar com um pisca-pisca que liga sozinho quando escurece.",
+   "history": [
+    {
+     "at": "2026-10-24T12:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "level": "Iniciante",
+   "result": "Um pisca-pisca que funciona sozinho no escuro, com o esquema desenhado e uma tabela de medições.",
+   "skills": [
+    "Leitura de esquema",
+    "Montagem em protoboard",
+    "Medição com multímetro",
+    "CI 555",
+    "Divisor de tensão com LDR",
+    "Transistor como chave"
+   ],
+   "status": "published",
+   "steps": [
+    "Antes de montar, use o teste de continuidade do multímetro para descobrir como as tiras da sua protoboard são ligadas, inclusive se as linhas de alimentação são cortadas no meio.",
+    "Ligue as linhas + e − da protoboard à bateria de 9 V e meça a tensão nelas.",
+    "Encaixe o 555 sobre o canal central. Ligue os pinos 4 e 8 ao +, o pino 1 ao −, e o capacitor de 10 nF do pino 5 ao −.",
+    "Coloque R1 (10 kΩ) entre os pinos 8 e 7, R2 (47 kΩ) entre os pinos 7 e 6, una os pinos 6 e 2 e ligue o capacitor de 10 µF do pino 2 ao − (faixa do negativo para o −).",
+    "Ligue o LED com o resistor de 330 Ω em série entre o pino 3 e o −. Energize: o LED deve piscar pouco mais de uma vez por segundo.",
+    "Calcule os tempos aceso e apagado com as fórmulas da lição e compare cronometrando 10 piscadas.",
+    "Troque o capacitor ou o R2 e veja a frequência mudar. Anote os valores numa tabela.",
+    "Agora o sensor: monte um divisor com o LDR e o resistor de 10 kΩ e meça a tensão no meio com luz e no escuro.",
+    "Use essa tensão, através do resistor de 1 kΩ, na base do BC547, com o coletor no pino 4 do 555 (com um resistor de 10 kΩ do pino 4 ao +) e o emissor no −. Ajuste a posição do LDR e do resistor até o pisca-pisca parar no claro e funcionar no escuro.",
+    "Fotografe o circuito, desenhe o esquema e escreva o que cada componente faz."
+   ],
+   "summary": "Monte um pisca-pisca com o CI 555 e depois faça ele funcionar só no escuro, com um LDR.",
+   "title": "Pisca-pisca e sensor de luz na protoboard",
+   "tools": [
+    "Protoboard e fios de ligação",
+    "CI 555",
+    "Resistores de 10 kΩ, 47 kΩ, 330 Ω e 1 kΩ",
+    "Capacitores de 10 µF e 10 nF",
+    "LED de 5 mm",
+    "LDR",
+    "Transistor BC547",
+    "Fonte ou bateria de 9 V com conector",
+    "Multímetro",
+    "Alternativa sem peças: simulador de circuitos online, como o Tinkercad Circuits"
+   ],
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T12:00:00.000Z"
   },
   "primeiro-site": {
    "author": "",
