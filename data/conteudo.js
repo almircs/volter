@@ -827,6 +827,185 @@ window.VOLTER_SEED = {
    "track": "dados",
    "updatedAt": "2026-10-19T01:30:00.000Z"
   },
+  "luz-noturna-sem-base": {
+   "actions": [
+    {
+     "correct": true,
+     "feedback": "Correto: corrige a causa e confirma pela medição.",
+     "id": "a1",
+     "text": "Reaquecer a emenda com um pouco de solda nova até ficar lisa e brilhante, conferir as outras soldas e medir de novo a base no escuro",
+     "unsafe": false
+    },
+    {
+     "correct": false,
+     "feedback": "Não resolve: a falha está na emenda, e trocar tudo ainda expõe a placa a mais calor.",
+     "id": "a2",
+     "text": "Trocar o LDR, o transistor e o LED de uma vez",
+     "unsafe": false
+    },
+    {
+     "correct": false,
+     "feedback": "Inseguro para o circuito: tensão acima do projeto pode queimar o LED e o transistor, e não corrige o mau contato.",
+     "id": "a3",
+     "text": "Ligar o circuito numa fonte de 24 V para 'forçar' a corrente",
+     "unsafe": true
+    }
+   ],
+   "author": "",
+   "causes": [
+    {
+     "correct": true,
+     "id": "c1",
+     "text": "Solda fria em um terminal do resistor de base: a tensão do divisor não chega à base, e o transistor fica cortado"
+    },
+    {
+     "correct": false,
+     "id": "c2",
+     "text": "LDR danificado pelo calor do ferro"
+    },
+    {
+     "correct": false,
+     "id": "c3",
+     "text": "Bateria sem carga"
+    }
+   ],
+   "conditions": "Bancada, bateria de 9 V. Multímetro disponível.",
+   "context": "O circuito foi testado na protoboard e funcionou: no escuro, o LED acendia. Depois, foi transferido para uma placa padrão soldada, para ficar definitivo. Na placa, o LED não acende em nenhuma situação.",
+   "createdAt": "2026-10-24T16:30:00.000Z",
+   "demo": true,
+   "equipment": "Luz noturna com LDR, transistor BC547 e LED, montada em placa padrão e alimentada por bateria de 9 V",
+   "hints": [
+    "A tensão chega ao divisor? E à base?",
+    "Se existe tensão num ponto e não existe no ponto seguinte, o defeito está entre eles.",
+    "Olhe as emendas de perto: a primeira placa soldada costuma ter alguma."
+   ],
+   "history": "Mesmo esquema e mesmos componentes da protoboard, agora soldados. Foi a primeira placa soldada pelo aluno.",
+   "hypotheses": [
+    {
+     "correct": true,
+     "id": "h1",
+     "text": "Uma emenda de solda com mau contato (solda fria) interrompe o caminho até a base"
+    },
+    {
+     "correct": false,
+     "id": "h2",
+     "text": "O LDR queimou com o calor"
+    },
+    {
+     "correct": false,
+     "id": "h3",
+     "text": "O LED foi soldado invertido"
+    },
+    {
+     "correct": false,
+     "id": "h4",
+     "text": "A bateria está fraca"
+    },
+    {
+     "correct": false,
+     "id": "h5",
+     "text": "Uma ponte de solda liga a base ao 0 V"
+    }
+   ],
+   "level": 2,
+   "objective": "Encontrar por que o LED não acende na placa e corrigir sem danificar os componentes.",
+   "solution": {
+    "explanation": "O divisor de tensão funcionava (6,8 V no escuro), mas a base ficava em 0 V. A interrupção estava no resistor de 1 kΩ: uma emenda com solda fria, opaca e rachada, não fazia contato com o terminal. Sem corrente na base, o transistor ficava cortado e o LED apagado.",
+    "lessons": [
+     "Siga a tensão ponto a ponto: onde ela some, está o defeito.",
+     "Emenda boa é lisa e brilhante.",
+     "Meça antes de trocar."
+    ],
+    "logic": [
+     "A alimentação chegava à placa.",
+     "O divisor respondia ao escuro, então LDR e resistor de cima estavam bons.",
+     "A base em 0 V mostrou que a tensão se perdia entre o divisor e a base.",
+     "A lupa revelou a solda fria no resistor de base."
+    ],
+    "mistakes": [
+     "Trocar componentes sem medir.",
+     "Aumentar a tensão para 'compensar'.",
+     "Confiar que uma emenda está boa só porque o componente não cai."
+    ]
+   },
+   "status": "published",
+   "summary": "A luz noturna com LDR e transistor funcionou na protoboard, mas na placa soldada o LED fica apagado mesmo no escuro.",
+   "symptoms": [
+    "LED apagado no claro e no escuro",
+    "Nada esquenta",
+    "A bateria é nova"
+   ],
+   "tags": [
+    "solda",
+    "transistor",
+    "LDR",
+    "diagnóstico"
+   ],
+   "techInfo": [
+    "Divisor: resistor de 10 kΩ em cima, LDR embaixo; o meio vai à base por 1 kΩ",
+    "Coletor: LED e resistor de 470 Ω até +9 V; emissor no 0 V",
+    "Na protoboard, a base ficava em torno de 0,7 V no escuro"
+   ],
+   "tests": [
+    {
+     "how": "Multímetro em V⎓, pontas no +9 V e no 0 V da placa",
+     "id": "t1",
+     "insight": "A alimentação chega à placa: a bateria e os fios dela estão bons.",
+     "name": "Medir a tensão da bateria nos pinos de alimentação da placa",
+     "reading": "9,2 V",
+     "result": "9,2 V nos pinos da placa",
+     "value": "util"
+    },
+    {
+     "how": "Tampar o LDR e medir entre o ponto do meio do divisor e o 0 V",
+     "id": "t2",
+     "insight": "O divisor e o LDR funcionam: no escuro, a tensão sobe como deveria.",
+     "name": "Medir a tensão no meio do divisor, no escuro",
+     "reading": "6,8 V",
+     "result": "6,8 V no meio do divisor",
+     "value": "util"
+    },
+    {
+     "how": "Ponta vermelha no terminal da base, preta no 0 V",
+     "id": "t3",
+     "insight": "A tensão existe no divisor mas não chega à base: a interrupção está no caminho entre os dois, isto é, no resistor de 1 kΩ ou nas soldas dele.",
+     "name": "Medir a tensão na base do transistor, no escuro",
+     "reading": "0,00 V",
+     "result": "0 V na base",
+     "value": "util"
+    },
+    {
+     "how": "Olhar as soldas dos dois terminais do resistor de 1 kΩ",
+     "id": "t4",
+     "insight": "Aspecto típico de solda fria: a solda não molhou o terminal.",
+     "name": "Inspecionar as emendas do resistor de base com lupa",
+     "reading": "",
+     "result": "Uma das emendas está opaca, granulada e com uma fenda em volta do terminal",
+     "value": "util"
+    },
+    {
+     "how": "Placa desligada, multímetro no teste de diodo sobre o LED",
+     "id": "t5",
+     "insight": "O LED está bom e na posição certa.",
+     "name": "Testar o LED com o teste de diodo",
+     "reading": "1,8 V",
+     "result": "Conduz no sentido certo e acende fraquinho; no outro sentido, não conduz",
+     "value": "neutro"
+    },
+    {
+     "how": "Dessoldar e soldar outro BC547",
+     "id": "t6",
+     "insight": "Trocar peças antes de medir gasta tempo e ainda arrisca danificar a placa com calor.",
+     "name": "Trocar o transistor por um novo",
+     "reading": "",
+     "result": "LED continua apagado",
+     "value": "irrelevante"
+    }
+   ],
+   "title": "O sensor de luz montado na placa não acende o LED",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T16:30:00.000Z"
+  },
   "rag-preco-inventado": {
    "actions": [
     {
@@ -1971,6 +2150,154 @@ window.VOLTER_SEED = {
    "track": "eletricidade",
    "updatedAt": "2026-10-24T12:00:00.000Z"
   },
+  "eln-amplificadores": {
+   "author": "",
+   "body": "Um **amplificador** recebe um sinal pequeno e entrega uma cópia maior. Tudo que produz som tem um: rádio, celular, caixa de som, microfone de lapela.\n\n## Sinal analógico\nO microfone tem um diafragma preso a uma bobina perto de um ímã (ou, nos de eletreto, um capacitor). Quando a voz faz o diafragma vibrar, sai uma **tensão que sobe e desce** no mesmo ritmo do som. Esse é um **sinal analógico**: varia de forma contínua. Ele é fraquinho, de alguns milivolts, e precisa ser ampliado.\n\n## O caminho dentro de um amplificador simples\n- **Capacitor de entrada:** deixa passar o sinal que varia, mas bloqueia a tensão contínua. Assim, o microfone não atrapalha a polarização do transistor, e a polarização não atrapalha o microfone.\n- **Resistores de polarização:** colocam a base do transistor num ponto de trabalho fixo, já conduzindo um pouco.\n- **Transistor:** amplifica as variações em volta desse ponto.\n- **Capacitor de saída:** passa o sinal amplificado para o alto-falante e bloqueia a corrente contínua da bateria.\n- **Alto-falante:** faz o caminho inverso do microfone. A corrente variável na bobina, perto do ímã, faz o cone vibrar e empurrar o ar.\n\nMicrofone e alto-falante são **transdutores**: convertem um tipo de energia em outro (som em eletricidade e vice-versa).\n\n## Polarização: trabalhar no meio\nUm transistor só amplifica na região ativa. Se ficar cortado, a parte negativa do sinal some; se ficar saturado, some a parte positiva. Por isso ajustamos a saída para ficar em repouso perto do **meio da alimentação**. Assim sobra espaço para o sinal subir e descer. Esse ajuste se chama **polarizar** o transistor.\n\n## Corte e distorção\nSe o sinal de entrada for grande demais, ou o ganho alto demais, a saída tenta ir acima da alimentação ou abaixo de zero. Como não consegue, **os picos ficam achatados**. No som, isso aparece como **distorção**: o áudio fica \"rasgado\". Um efeito parecido acontece com a **realimentação** entre microfone e alto-falante: o som da saída volta para a entrada, é amplificado de novo e vira aquele apito agudo.\n\n## Mais de um estágio\nUm transistor sozinho dá ganho de algumas dezenas. Para mover um alto-falante com o sinal de um microfone, ligamos **estágios em série**: a saída de um alimenta a entrada do outro, e os ganhos se **multiplicam**. Dois estágios de ganho 30 dão 900 vezes. Hoje, amplificadores completos vêm prontos em pequenos chips.",
+   "createdAt": "2026-10-24T16:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T16:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Amplificador entrega uma cópia maior do sinal.",
+    "Capacitores deixam passar o sinal e bloqueiam a tensão contínua.",
+    "Polarizar é pôr o transistor em repouso perto do meio da alimentação.",
+    "Sinal grande demais corta os picos e distorce o som."
+   ],
+   "minutes": 11,
+   "order": 9,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Ele separa o sinal variável da polarização do transistor.",
+     "options": [
+      "Aumentar o ganho",
+      "Passar o sinal e bloquear a tensão contínua",
+      "Guardar a energia da bateria",
+      "Retificar o sinal"
+     ],
+     "prompt": "Para que serve o capacitor entre o microfone e a base do transistor?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "A saída não cabe entre 0 V e a alimentação e corta.",
+     "options": [
+      "Sinal de entrada pequeno demais",
+      "Sinal de entrada ou ganho grande demais",
+      "Polarização no meio da alimentação",
+      "Alto-falante desligado"
+     ],
+     "prompt": "A saída de um amplificador está com os picos achatados. Uma causa provável é:",
+     "type": "mc"
+    },
+    {
+     "answer": 3,
+     "explain": "Os ganhos se multiplicam: 20 × 20 = 400.",
+     "options": [
+      "20",
+      "40",
+      "400",
+      "2.000"
+     ],
+     "prompt": "Dois estágios com ganho 20 cada, em série, dão ganho total de:",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "Os dois convertem som em eletricidade ou eletricidade em som.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Microfone e alto-falante são transdutores.",
+     "type": "vf"
+    }
+   ],
+   "sim": "amp",
+   "status": "published",
+   "summary": "Como um sinal fraco vira um som forte, por que o transistor precisa ser polarizado e de onde vem a distorção.",
+   "title": "Amplificadores: do microfone ao alto-falante",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T16:30:00.000Z"
+  },
+  "eln-chips": {
+   "author": "",
+   "body": "Um **chip** ou **circuito integrado** é um circuito eletrônico inteiro construído sobre uma lasquinha de **silício**. Transistores, resistores e as ligações entre eles são fabricados todos juntos, em camadas microscópicas. Depois, o silício vai para um encapsulamento de plástico ou cerâmica com terminais, e é isso que você vê na placa.\n\n## Por que silício\nO silício é um **semicondutor**: puro, conduz mal; com pequenas quantidades de outras substâncias adicionadas de propósito (a **dopagem**), passa a conduzir de forma controlada. Combinando regiões de dois tipos, chamadas **tipo N** e **tipo P**, fazem-se diodos e transistores. A areia comum é rica em silício, mas o usado em chips é purificado a um nível altíssimo.\n\n## Como se fabrica, em linhas gerais\n- O desenho do circuito é projetado no computador.\n- Ele é transferido para o silício por um processo parecido com fotografia, a **fotolitografia**, camada por camada.\n- Substâncias químicas criam as regiões N e P, e trilhas metálicas finíssimas ligam tudo.\n- Num mesmo disco de silício (o **wafer**) saem centenas de chips iguais, que depois são cortados e testados.\n\nComo os caminhos são curtíssimos, os chips são **rápidos**, gastam **pouca energia** e cabem em qualquer lugar. Sem eles, um celular precisaria de um prédio inteiro de componentes soltos.\n\n## Analógicos e digitais\n- **Chips analógicos** trabalham com sinais que variam continuamente: amplificadores de áudio, reguladores de tensão como o 7805, sensores. Têm de dezenas a milhares de transistores.\n- **Chips digitais** trabalham com zeros e uns: portas lógicas, contadores, memórias, processadores. Os maiores têm **bilhões** de transistores.\n- Alguns misturam os dois, como o 555 e os conversores analógico-digital.\n\n## O time dentro de um computador\n- **Microprocessador (CPU):** faz os cálculos e toma as decisões, seguindo as instruções do programa.\n- **Memória:** guarda o programa e os dados. A RAM é rápida e se apaga ao desligar; a memória flash (SSD, pendrive) guarda mesmo sem energia.\n- **Chips de interface:** convertem os sinais do processador para teclado, tela, rede, USB.\n- **Relógio (clock):** um oscilador a cristal que dá o ritmo, bilhões de pulsos por segundo, para tudo andar sincronizado.\n\n## E o microcontrolador?\nNum **microcontrolador**, como o do Arduino ou o ESP32, processador, memória e interfaces vêm **num único chip**. É um computador pequeno inteiro, feito para controlar aparelhos: máquina de lavar, micro-ondas, controle remoto, sensores conectados. Você usa um deles na etapa de Microcontroladores e IoT.",
+   "createdAt": "2026-10-24T16:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T16:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Chip: circuito inteiro fabricado sobre silício.",
+    "Silício é semicondutor; regiões N e P formam diodos e transistores.",
+    "CPU calcula, memória guarda, interface conversa, clock dá o ritmo.",
+    "Microcontrolador: um computador pequeno num só chip."
+   ],
+   "minutes": 9,
+   "order": 12,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Com regiões N e P controladas se constroem diodos e transistores.",
+     "options": [
+      "É um ótimo isolante",
+      "É um semicondutor cuja condução pode ser controlada pela dopagem",
+      "É mais barato que o plástico",
+      "Conduz melhor que o cobre"
+     ],
+     "prompt": "Por que o silício é usado nos chips?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "É o 'cérebro' do computador.",
+     "options": [
+      "Memória RAM",
+      "Microprocessador",
+      "Chip de interface",
+      "Regulador de tensão"
+     ],
+     "prompt": "Qual chip faz os cálculos e segue as instruções do programa?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "A RAM é volátil; quem guarda sem energia é a memória flash ou o disco.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "A memória RAM mantém os dados depois que o computador é desligado.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Microcontroladores são feitos para controlar aparelhos.",
+     "options": [
+      "Amplificador",
+      "Microcontrolador",
+      "Relé",
+      "Regulador"
+     ],
+     "prompt": "O ESP32 junta processador, memória e interfaces num só chip. Ele é um:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "O que é um circuito integrado, por que o silício e quais chips trabalham juntos dentro de um computador.",
+   "title": "Chips: do transistor ao microprocessador",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T16:30:00.000Z"
+  },
   "eln-componentes": {
    "author": "",
    "body": "## Resistor\nLimita a corrente e divide tensões. O valor vem em **faixas coloridas**: as duas ou três primeiras são os dígitos, a seguinte é o multiplicador e a última é a tolerância. Exemplo: marrom (1), preto (0), vermelho (×100) = 1.000 Ω, ou 1 kΩ. Na dúvida, meça com o ohmímetro fora do circuito.\n\n## Capacitor\nGuarda energia num campo elétrico entre duas placas. Carrega quando recebe tensão e devolve depois. A capacidade é medida em **farads** (na prática, µF, nF e pF).\n- **Eletrolíticos** têm polaridade: a faixa na lateral marca o negativo. Ligados ao contrário, estufam ou estouram.\n- A **tensão máxima** vem escrita no corpo; use um com folga.\n\nLigado a um resistor, o capacitor não enche de uma vez: segue uma curva. A **constante de tempo** τ = R × C diz o ritmo. Em 1τ ele chega a 63% da tensão da fonte; depois de 5τ está praticamente cheio. É assim que se fazem temporizadores e filtros.\n\nCuidado: capacitores grandes de fontes e inversores podem **guardar carga perigosa** mesmo com o aparelho desligado.\n\n## Diodo\nDeixa a corrente passar num sentido só, do **ânodo** para o **cátodo** (a faixa no corpo marca o cátodo). Quando conduz, \"come\" cerca de **0,7 V** (diodos de silício). Ao contrário, bloqueia até um limite de tensão. Serve para retificar, proteger contra ligação invertida e absorver o pico da bobina de um relé.\n\n## LED\nÉ um diodo que emite luz. A perna mais comprida é o **ânodo** (positivo). Precisa **sempre de um resistor em série** para limitar a corrente; ligado direto numa bateria, queima. A conta: R = (V da fonte − V do LED) ÷ corrente. Para um LED vermelho (cerca de 2 V) em 5 V com 15 mA: (5 − 2) ÷ 0,015 = 200 Ω; use 220 Ω.\n\n## Projeto final\n**Kit de componentes identificado e testado.** Separe resistores, capacitores, diodos e LEDs, identifique os valores pelas marcações e confira com o multímetro.",
@@ -1989,7 +2316,7 @@ window.VOLTER_SEED = {
     "LED sempre com resistor em série."
    ],
    "minutes": 10,
-   "order": 1,
+   "order": 2,
    "questions": [
     {
      "answer": 2,
@@ -2045,6 +2372,154 @@ window.VOLTER_SEED = {
    "track": "eletronica",
    "updatedAt": "2026-10-24T12:00:00.000Z"
   },
+  "eln-comutacao": {
+   "author": "",
+   "body": "Na eletrônica digital, os transistores trabalham como chaves: ou estão ligados, ou desligados. Dois transistores ligados um ao outro, cada um comandando a base do outro, formam os **circuitos de comutação** (ou **multivibradores**). Existem três tipos.\n\n## Biestável: lembra o último comando\nTem **dois estados estáveis**. Um pulso o coloca \"ligado\"; ele fica assim até receber outro pulso que o coloca \"desligado\". É como um interruptor de parede: você aperta e ele fica.\n\nO biestável é o **flip-flop**, a memória de 1 bit. Ligado vale 1, desligado vale 0. É assim que nasce a memória de um computador.\n\n## Monoestável: um tempo e volta\nTem **um estado estável**. Quando recebe um disparo, muda de estado por **um tempo fixo** e depois volta sozinho, como a campainha temporizada da escada ou o botão do semáforo de pedestre. O tempo depende de um capacitor carregando por um resistor:\n\n**Tempo (segundos) ≈ resistência (ohms) × capacitância (farads)**, multiplicado por um fator que depende do circuito.\n\nExemplo: 100 kΩ e 100 µF dão R × C = 100.000 × 0,0001 = 10 segundos de ordem de grandeza. Com um resistor variável, o tempo fica ajustável.\n\nNa prática, o tempo real difere um pouco da conta porque os componentes têm **tolerância**: um resistor com faixa dourada pode variar 5% para mais ou para menos, e capacitores eletrolíticos variam ainda mais. Por isso temporizadores precisos são ajustados medindo com um relógio.\n\n## Astável: liga e desliga sem parar\n**Nenhum estado é estável**: o circuito fica alternando, sozinho, como um pêndulo. Gera uma sequência de pulsos, usada para piscar LEDs, gerar sons e dar o ritmo (o **clock**) de circuitos digitais. O CI 555 que você já usou no pisca-pisca é um astável pronto.\n\n## Frequência\nO número de vezes que o astável liga e desliga por segundo é a **frequência**, medida em **hertz (Hz)**. Um pisca-pisca tem cerca de 1 Hz; um tom de áudio, centenas ou milhares de hertz; o clock de um processador, bilhões de hertz (gigahertz). O tempo ligado e o tempo desligado podem ser diferentes, conforme os componentes.\n\n## De onde vem o digital\nPulsos para transmitir informação são mais antigos que a eletrônica: o **código Morse**, do século 19, já mandava pontos e traços por um fio. Hoje, os pulsos representam **bits**; grupos de 8 bits formam um **byte**, que pode guardar uma letra ou um número de 0 a 255.",
+   "createdAt": "2026-10-24T16:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T16:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Biestável: dois estados estáveis, é o flip-flop, memória de 1 bit.",
+    "Monoestável: dispara, fica um tempo e volta; tempo depende de R × C.",
+    "Astável: oscila sozinho e gera pulsos.",
+    "Frequência em hertz; 8 bits formam 1 byte."
+   ],
+   "minutes": 9,
+   "order": 11,
+   "questions": [
+    {
+     "answer": 3,
+     "explain": "O biestável tem dois estados estáveis: é um flip-flop.",
+     "options": [
+      "Astável",
+      "Monoestável",
+      "Biestável",
+      "Amplificador"
+     ],
+     "prompt": "Qual circuito fica ligado depois do pulso até receber outro pulso para desligar?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Um disparo, um intervalo fixo, e volta ao repouso.",
+     "options": [
+      "Biestável",
+      "Monoestável",
+      "Astável",
+      "Retificador"
+     ],
+     "prompt": "A minuteria da escada, que acende e apaga sozinha depois de um tempo, é um:",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "Ele não tem estado estável e oscila sozinho.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Um circuito astável gera pulsos sem precisar de disparo.",
+     "type": "vf"
+    },
+    {
+     "answer": 3,
+     "explain": "8 bits: 2⁸ = 256 combinações (0 a 255).",
+     "options": [
+      "8",
+      "16",
+      "256",
+      "1.024"
+     ],
+     "prompt": "Quantos valores diferentes um byte pode representar?",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Os três jeitos de um circuito ligar e desligar sozinho, e como eles viram memória, temporizador e relógio.",
+   "title": "Circuitos de comutação: biestável, monoestável e astável",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T16:30:00.000Z"
+  },
+  "eln-falhas": {
+   "author": "",
+   "body": "Quase todo circuito montado pela primeira vez tem algum errinho, e quase sempre é um detalhe pequeno. O segredo é **procurar com método**, do mais simples para o mais complicado, e **medir antes de trocar**.\n\n## 1. Antes de energizar\n- **Compare a montagem com o esquema**, componente por componente, marcando cada um que conferiu.\n- **Conte as peças:** sobrou alguma na bancada? Faltou alguma na placa?\n- **Polaridade:** LEDs, diodos, capacitores eletrolíticos, transistores e chips têm lado certo. Um transistor com terminais trocados pode até queimar.\n- **Valores:** confira as faixas dos resistores. Um 10 kΩ no lugar de um 100 Ω faz o LED nem acender.\n\n## 2. Inspeção da placa\n- **Solda fria:** emendas opacas, granuladas ou rachadas. Reaqueça.\n- **Pontes de solda:** gotas ligando duas trilhas ou dois terminais. Remova.\n- **Trilhas que deveriam estar cortadas** e não foram, ou cortadas no furo errado.\n- **Terminais encostando** uns nos outros por baixo da placa.\n- **Componente frouxo:** puxe de leve cada um.\n\n## 3. Medindo com o circuito ligado\n- **Alimentação primeiro:** a bateria ou fonte está com a tensão certa? E ela chega aos pontos onde deveria chegar? Muitas vezes o problema é um fio da bateria.\n- **Siga o caminho da corrente** com o voltímetro, do positivo para o negativo, medindo a tensão em cada ponto. Onde a tensão \"some\" de repente, ali está a interrupção.\n- **Transistor:** com o circuito ligado, a base deveria estar uns 0,6 V acima do emissor quando ele conduz. Se a base está a 0 V, o problema está antes dela; se está certa e o coletor não muda, desconfie do transistor ou da carga.\n\n## 4. Medindo com o circuito desligado\n- **Continuidade** em fios e trilhas suspeitos.\n- **Resistência** de resistores (com pelo menos um terminal solto da placa, para o resto do circuito não interferir).\n- **Teste de diodo** do multímetro em LEDs e diodos: num sentido conduz, no outro não.\n\n## 5. Calor também é suspeito\nComponentes podem ser danificados pelo calor do ferro durante a montagem, especialmente transistores e LEDs. Se tudo está certo e mesmo assim não funciona, troque o componente suspeito **um por vez**.\n\n## Hábitos que evitam falhas\n- Use fio próprio para eletrônica, fino e flexível. Fio grosso de instalação elétrica não prende bem na placa e pode encostar em outras partes.\n- Anote o que mediu. Depois de uma pausa, os números ajudam a retomar.\n- Peça para outra pessoa conferir. Olhos novos acham erros que os seus já se acostumaram a não ver.\n\n## E uma regra\nEste roteiro é para circuitos de **baixa tensão**, com pilhas, baterias e fontes de bancada. Nunca faça esses testes em circuitos ligados na tomada sem formação e equipamentos adequados.",
+   "createdAt": "2026-10-24T16:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T16:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Do mais simples ao mais complicado: esquema, peças, polaridade, valores.",
+    "Inspecione soldas frias, pontes e trilhas.",
+    "Siga a tensão do positivo ao negativo; onde ela some está o defeito.",
+    "Meça antes de trocar e troque um componente por vez."
+   ],
+   "minutes": 9,
+   "order": 14,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Medir mostra onde está a interrupção antes de gastar peças.",
+     "options": [
+      "Trocar o LED de imediato",
+      "Seguir a tensão pelos pontos do circuito até ver onde ela some",
+      "Trocar todos os resistores",
+      "Aumentar a bateria para 12 V"
+     ],
+     "prompt": "O LED não acende e a bateria marca 9 V. Qual é o próximo passo mais útil?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Reaqueça até ficar lisa e brilhante.",
+     "options": [
+      "Normal",
+      "Solda fria, suspeita de mau contato",
+      "Sinal de excesso de corrente",
+      "Um curto-circuito"
+     ],
+     "prompt": "Uma emenda opaca e rachada é:",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "Assim os outros componentes ligados a ele não alteram a leitura.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Para medir a resistência de um resistor na placa com precisão, convém soltar pelo menos um terminal.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "A base não está recebendo tensão; procure no caminho até ela.",
+     "options": [
+      "No coletor",
+      "Antes da base: resistor, divisor ou ligação",
+      "No alto-falante",
+      "Na tolerância do capacitor"
+     ],
+     "prompt": "Num transistor que deveria conduzir, a base está em 0 V. O problema provavelmente está:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Uma sequência para achar o defeito de uma montagem sem trocar peças no escuro.",
+   "title": "Quando o circuito não funciona: roteiro de falhas",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T16:30:00.000Z"
+  },
   "eln-fontes": {
    "author": "",
    "body": "Quase todo eletrônico funciona com tensão contínua baixa: 3,3 V, 5 V, 12 V. A tomada entrega 127 V ou 220 V alternados. A fonte faz essa conversão em etapas.\n\n## 1. Transformador: baixar a tensão\nDuas bobinas enroladas num núcleo de ferro. A tensão de saída depende da proporção de espiras. Um transformador de 127 V para 12 V entrega 12 V **alternados**, isolados da rede.\n\n## 2. Retificador: deixar a corrente num sentido só\n- **Meia onda:** um diodo só. Passa o semiciclo positivo e corta o negativo. Metade do tempo a carga fica sem nada.\n- **Onda completa em ponte:** quatro diodos. O semiciclo negativo é invertido e aproveitado. A saída pulsa duas vezes por ciclo.\n\nA saída já é contínua, mas **pulsante**: sobe e desce o tempo todo. Repare também que os diodos \"comem\" um pouco da tensão: cerca de 0,7 V cada um que estiver conduzindo.\n\n## 3. Filtro: alisar a tensão\nUm **capacitor eletrolítico** grande em paralelo com a saída carrega nos picos e alimenta a carga nos vales. O que sobra de variação se chama **ondulação** (ripple). Capacitor maior, ou carga menor, dá ondulação menor.\n\nUm detalhe: com capacitor, a saída fica perto do **pico** da tensão, não do valor eficaz. 12 V eficazes têm pico de cerca de 17 V; descontados os diodos, sobram uns 15,6 V.\n\n## 4. Regulador: tensão fixa\nUm regulador como o **7805** recebe a tensão filtrada (que ainda varia) e entrega 5 V estáveis. Ele precisa de alguns volts a mais na entrada e transforma a diferença em calor: com 12 V na entrada e 1 A de saída, ele aquece com 7 W e precisa de dissipador.\n\n## Fontes chaveadas\nO carregador de celular não tem um transformador pesado. Ele retifica a rede direto, liga e desliga essa tensão dezenas de milhares de vezes por segundo com um transistor e usa um **transformador pequenino** de alta frequência. Resultado: fonte leve, que aceita de 100 V a 240 V e esquenta pouco. Por dentro, porém, há tensões altas e capacitores carregados: **não abra uma fonte chaveada ligada**.\n\n## Projeto final\n**Fonte regulada de 5 V montada.** Monte retificador, filtro e regulador 7805 a partir de um transformador de baixa tensão já isolado, e meça a saída com e sem carga.",
@@ -2063,7 +2538,7 @@ window.VOLTER_SEED = {
     "Fonte chaveada: leve e eficiente, mas perigosa por dentro."
    ],
    "minutes": 10,
-   "order": 4,
+   "order": 8,
    "questions": [
     {
      "answer": 2,
@@ -2119,6 +2594,80 @@ window.VOLTER_SEED = {
    "track": "eletronica",
    "updatedAt": "2026-10-24T12:00:00.000Z"
   },
+  "eln-historia": {
+   "author": "",
+   "body": "A eletrônica é uma ciência jovem, com pouco mais de cem anos. Mas ela se apoia em descobertas mais antigas sobre a eletricidade.\n\n## Antes da eletrônica\n- **1800:** Alessandro Volta empilha discos de dois metais diferentes separados por papelão com solução ácida e cria a **pilha**, a primeira fonte de corrente contínua. A unidade **volt** homenageia seu nome.\n- **Década de 1820 em diante:** Charles Babbage projeta máquinas de calcular **mecânicas**, cheias de engrenagens. Eram tão complexas que não foram concluídas na época, mas trazem ideias que os computadores usariam um século depois.\n- **Década de 1830 e 1840:** o **telégrafo** e o **código Morse** mandam mensagens por fio em pulsos curtos e longos, uma forma antiga de comunicação codificada.\n\n## A era das válvulas\n- **1904:** John Ambrose Fleming cria a **válvula diodo**: um tubo de vidro com vácuo, um filamento aquecido que solta elétrons e uma placa de metal. A corrente só passa num sentido, como num diodo de hoje.\n- **1906:** Lee de Forest acrescenta uma **grade** entre o filamento e a placa: nasce o **tríodo**, que consegue **amplificar** sinais e funcionar como chave.\n- **Anos 1920 e 1930:** as válvulas tornam possíveis o **rádio** e, depois, a **televisão**.\n- **Anos 1940:** os primeiros computadores eletrônicos usam válvulas como chaves. O ENIAC, nos Estados Unidos, tinha cerca de 18 mil válvulas, ocupava uma sala inteira e esquentava muito, porque cada válvula precisava de um filamento aquecido.\n\n## O transistor\n- **1947:** nos Laboratórios Bell, John Bardeen, Walter Brattain e William Shockley demonstram o **transistor**. Ele faz o que a válvula faz, mas é pequeno, frio, resistente e gasta muito menos energia.\n- **Anos 1950 e 1960:** surgem os **rádios portáteis** a pilha, conhecidos no Brasil simplesmente como \"transistor\", e os computadores ficam menores.\n\n## O circuito integrado\n- **1958 e 1959:** Jack Kilby, na Texas Instruments, e Robert Noyce, na Fairchild, criam os primeiros **circuitos integrados**: vários componentes num único pedaço de semicondutor.\n- **1971:** a Intel lança o **4004**, um dos primeiros microprocessadores, com cerca de 2.300 transistores.\n- **Hoje:** chips de celular e computador têm **bilhões** de transistores, com detalhes medidos em nanômetros.\n\n## O que isso ensina\nCada salto veio de fazer a mesma função, **controlar a corrente**, com algo menor, mais barato e mais confiável. A ideia do transistor como chave e amplificador, que você está aprendendo nesta etapa, é a mesma que roda dentro do seu celular, só que repetida bilhões de vezes.",
+   "createdAt": "2026-10-24T16:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T16:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "1800: pilha de Volta. 1904: válvula diodo. 1906: tríodo.",
+    "1947: transistor, nos Laboratórios Bell.",
+    "1958 e 1959: primeiros circuitos integrados.",
+    "Cada salto fez a mesma função com algo menor e mais confiável."
+   ],
+   "minutes": 8,
+   "order": 13,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "O transistor faz o mesmo trabalho, menor e sem aquecimento.",
+     "options": [
+      "O relé",
+      "O transistor",
+      "O capacitor",
+      "O resistor"
+     ],
+     "prompt": "Qual componente substituiu as válvulas a partir dos anos 1950?",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "A grade controla o fluxo de elétrons entre filamento e placa.",
+     "options": [
+      "Capacidade de amplificar e funcionar como chave",
+      "Luz",
+      "Proteção contra choque",
+      "Corrente alternada"
+     ],
+     "prompt": "O que a grade do tríodo acrescentou à válvula diodo?",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "O ENIAC tinha cerca de 18 mil.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Os primeiros computadores eletrônicos usavam milhares de válvulas.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Volta criou a primeira pilha em 1800.",
+     "options": [
+      "Thomas Edison",
+      "Alessandro Volta",
+      "Jack Kilby",
+      "Samuel Morse"
+     ],
+     "prompt": "A unidade volt homenageia:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Da pilha de Volta ao chip com bilhões de transistores: as invenções que trouxeram a eletrônica até aqui.",
+   "title": "Uma breve história da eletrônica",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T16:30:00.000Z"
+  },
   "eln-logica-digital": {
    "author": "",
    "body": "Em eletrônica digital, a tensão só interessa em dois estados: **nível alto (1)** e **nível baixo (0)**. Num circuito de 5 V, algo perto de 5 V é 1 e perto de 0 V é 0. Com esses dois valores se constroem calculadoras, CLPs e processadores.\n\n## As portas lógicas\n- **NOT (inversor):** a saída é o contrário da entrada.\n- **AND (E):** a saída é 1 só se **todas** as entradas forem 1. Como duas chaves em série.\n- **OR (OU):** a saída é 1 se **pelo menos uma** entrada for 1. Como duas chaves em paralelo.\n- **NAND e NOR:** um AND e um OR com a saída invertida. Só com portas NAND dá para montar qualquer outra porta.\n- **XOR (OU exclusivo):** a saída é 1 quando as entradas são **diferentes**. É o comportamento do interruptor paralelo da escada.\n\nCada porta é descrita por uma **tabela-verdade**: todas as combinações de entrada e a saída de cada uma.\n\n## Lógica no dia a dia\nUma prensa que só desce quando o operador aperta **os dois botões ao mesmo tempo** é um AND: as duas mãos ficam longe da ferramenta. Um alarme que dispara se **qualquer** porta abrir é um OR. Essa é a mesma lógica que você vai encontrar na programação de CLP em ladder.\n\n## Flip-flop: o circuito que lembra\nCom duas portas NAND ou NOR, uma realimentando a outra, se monta um **latch SR**: um pulso em **S** (set) põe a saída em 1, e ela **fica em 1** mesmo depois que o pulso acaba. Um pulso em **R** (reset) volta para 0. É uma memória de 1 bit.\n\nJuntando milhões de flip-flops e circuitos semelhantes, temos registradores, contadores e memória. O selo de um contator, que você vai ver em comandos elétricos, faz a mesma coisa com relés: lembra que o botão de liga foi apertado.\n\n## Contadores e o 555 de novo\nUm flip-flop que muda de estado a cada pulso de clock divide a frequência por dois. Vários em cadeia formam um **contador**. Ligue o 555 astável a um contador e você tem um relógio, um sequenciador de luzes ou um temporizador digital.",
@@ -2137,7 +2686,7 @@ window.VOLTER_SEED = {
     "Flip-flop guarda 1 bit, como o selo de um contator."
    ],
    "minutes": 10,
-   "order": 5,
+   "order": 10,
    "questions": [
     {
      "answer": 2,
@@ -2193,6 +2742,80 @@ window.VOLTER_SEED = {
    "track": "eletronica",
    "updatedAt": "2026-10-24T12:00:00.000Z"
   },
+  "eln-primeiros-circuitos": {
+   "author": "",
+   "body": "Eletrônica é a arte de **controlar pequenas correntes elétricas** para que façam algo útil: acender um LED, tocar um som, guardar um número, mover um robô. As peças que fazem esse controle se chamam **componentes**: resistores, capacitores, diodos, LEDs, transistores, chips.\n\n## Circuito é um caminho fechado\nA bateria tem dois polos, positivo e negativo. A corrente só aparece quando existe um **caminho completo** de um polo ao outro, passando pelos componentes. Uma lâmpada ligada só a um polo não acende; ligada aos dois, acende. Se um fio solta em qualquer ponto, o circuito **abre** e tudo para.\n\nIsso explica dois termos que você vai ouvir sempre:\n- **Circuito aberto:** o caminho está interrompido. Não passa corrente.\n- **Curto-circuito:** a corrente achou um atalho sem resistência, pulando a carga. A corrente sobe muito, o fio esquenta e a bateria se descarrega ou algo queima.\n\nE uma regra de ouro: a carga (lâmpada, LED com resistor, motor) sempre deve estar no caminho. Ligar os dois polos da bateria direto com um fio é um curto.\n\n## Condutores e isolantes\nMonte uma pilha, uma lâmpada pequena e dois fios com as pontas soltas. Encoste as duas pontas em objetos diferentes: moeda, chave, borracha, lápis, papel. Onde a lâmpada acende, o material é **condutor**; onde não acende, é **isolante**.\n- Metais (cobre, alumínio, ferro) conduzem bem.\n- Plástico, borracha, vidro, madeira seca e papel isolam.\n- O grafite da ponta do lápis conduz um pouco: é carbono, o mesmo material de muitos resistores.\n\nO fio elétrico junta os dois: um núcleo de cobre (condutor) coberto por plástico (isolante).\n\n## Onde os componentes moram\n- **Placa de circuito impresso:** uma placa de fibra de vidro, que é isolante, com **trilhas de cobre** desenhadas. Cada trilha liga um terminal de componente a outro. É o que você encontra dentro de qualquer aparelho.\n- **Placa perfurada com trilhas (veroboard ou placa padrão):** furos em fileiras e trilhas de cobre contínuas por baixo. Boa para protótipos soldados.\n- **Protoboard:** encaixa os componentes sem solda, ótima para testar ideias.\n\n## E o chip?\nUm **chip** (circuito integrado) é um pedaço minúsculo de silício com milhares a bilhões de componentes microscópicos já ligados entre si. Por fora você vê só uma caixinha preta com pernas; por dentro está um circuito inteiro. Você vai conhecer melhor os chips mais adiante nesta etapa.",
+   "createdAt": "2026-10-24T16:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T16:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Corrente só existe com caminho fechado.",
+    "Circuito aberto: nada passa. Curto: a corrente pula a carga.",
+    "Metais conduzem; plástico, borracha e vidro isolam.",
+    "Placa de circuito: base isolante com trilhas de cobre."
+   ],
+   "minutes": 8,
+   "order": 1,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Sem caminho até o polo negativo não há corrente.",
+     "options": [
+      "A lâmpada está queimada",
+      "O circuito está aberto",
+      "Há um curto-circuito",
+      "A bateria é de corrente alternada"
+     ],
+     "prompt": "A lâmpada não acende com um fio ligado ao positivo e o outro solto. O motivo é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Metais são bons condutores.",
+     "options": [
+      "Borracha",
+      "Chave de metal",
+      "Papel",
+      "Régua de plástico"
+     ],
+     "prompt": "Qual destes materiais acende a lâmpada no teste de condutores?",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "A corrente não passa por nenhuma carga e fica limitada só pela resistência do fio e da bateria.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Ligar os dois polos de uma bateria diretamente com um fio é um curto-circuito.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "A base é isolante; o caminho são as trilhas.",
+     "options": [
+      "A fibra de vidro",
+      "As trilhas de cobre",
+      "O verniz verde",
+      "Os furos"
+     ],
+     "prompt": "Numa placa de circuito impresso, o que conduz a corrente entre os componentes?",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "O que é um circuito, por que a corrente precisa de um caminho fechado e como os componentes se ligam numa placa.",
+   "title": "Primeiros circuitos: condutores, isolantes e placas",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T16:30:00.000Z"
+  },
   "eln-protoboard-555": {
    "author": "",
    "body": "## Como a protoboard é ligada por dentro\nA protoboard permite montar circuitos sem solda. Por dentro, há tiras de metal:\n- No meio, cada **coluna de 5 furos** é ligada entre si (no sentido curto). As duas metades são separadas pelo canal central, onde se encaixam os circuitos integrados.\n- Nas bordas, as **linhas de alimentação** (marcadas com + e −) correm no sentido comprido. Em algumas placas, elas são cortadas no meio: confira com o teste de continuidade.\n\nErros comuns: colocar as duas pernas de um componente na mesma coluna (ele fica em curto consigo mesmo) e esquecer de ligar as linhas de alimentação de um lado ao outro.\n\n## O CI 555\nÉ um dos circuitos integrados mais usados da história, ótimo para começar. Tem 8 pinos; a contagem começa no pino marcado com um ponto ou chanfro e segue no sentido anti-horário. Funciona de 4,5 V a 15 V.\n\n## Modo astável: o oscilador\nNo modo **astável**, o 555 liga e desliga a saída sozinho, sem parar. Por dentro, ele compara a tensão de um capacitor externo com 1/3 e 2/3 da alimentação:\n- O capacitor carrega por **R1 e R2** até 2/3 da tensão. Enquanto isso, a saída fica **ligada**.\n- Ao chegar em 2/3, o 555 descarrega o capacitor só por **R2** até 1/3. Nesse tempo, a saída fica **desligada**.\n- E recomeça.\n\nAs contas:\n- Tempo ligado ≈ 0,693 × (R1 + R2) × C\n- Tempo desligado ≈ 0,693 × R2 × C\n- Frequência ≈ 1,44 ÷ ((R1 + 2 × R2) × C)\n\nCom R1 = 10 kΩ, R2 = 47 kΩ e C = 10 µF, o LED pisca pouco mais de uma vez por segundo.\n\n## Monoestável: o temporizador\nNo modo **monoestável**, um pulso no pino de disparo liga a saída por um tempo fixo (≈ 1,1 × R × C) e depois ela desliga sozinha. É o temporizador de minuteria, de campainha e de alarme.\n\n## Montagem do pisca-pisca\nPinos 4 e 8 no positivo, pino 1 no negativo, R1 entre o 8 e o 7, R2 entre o 7 e o 6, pinos 6 e 2 unidos, capacitor do 2 para o negativo, e o LED com resistor de 330 Ω na saída (pino 3). Um capacitor de 10 nF do pino 5 para o negativo deixa o circuito mais estável.\n\n## Projeto final\n**Pisca-pisca com LED montado na protoboard.** Siga o projeto guiado desta etapa: o pisca-pisca com 555, e depois a versão que só funciona no escuro.",
@@ -2211,7 +2834,7 @@ window.VOLTER_SEED = {
     "Monoestável: um pulso, um tempo fixo."
    ],
    "minutes": 11,
-   "order": 2,
+   "order": 3,
    "questions": [
     {
      "answer": 2,
@@ -2267,6 +2890,154 @@ window.VOLTER_SEED = {
    "track": "eletronica",
    "updatedAt": "2026-10-24T12:00:00.000Z"
   },
+  "eln-reles-alarme": {
+   "author": "",
+   "body": "Um transistor pequeno liga LEDs, buzzers e pequenos motores. Para cargas maiores, ou para ligar algo que nem tem a mesma tensão do circuito, usamos o **relé**.\n\n## Como é um relé por dentro\n- Uma **bobina** de fio enrolada num núcleo de ferro: quando recebe corrente, vira um ímã (eletroímã).\n- Uma lâmina móvel, a **armadura**, que é puxada pelo ímã e volta com uma mola quando a bobina desliga.\n- **Contatos** presos à armadura: o **comum**, o **normalmente aberto (NA)** e o **normalmente fechado (NF)**. \"Normalmente\" quer dizer: com a bobina desligada.\n\nCom a bobina desligada, o comum toca o NF. Energizada, o comum passa para o NA. Você ouve um \"clique\".\n\nA grande vantagem é o **isolamento**: o lado da bobina (o circuito eletrônico) e o lado dos contatos (a carga) não se tocam eletricamente. Um sinal de 5 V pode comandar uma bomba, um motor ou uma lâmpada grande, **desde que** os contatos sejam especificados para aquela tensão e corrente.\n\n## Transistor + relé\nO transistor liga a bobina do relé, e o relé liga a carga. Duas regras:\n- A corrente da bobina precisa caber no transistor. Uma bobina de 9 V costuma puxar dezenas de miliampères.\n- **Diodo em paralelo com a bobina**, invertido. Quando a bobina desliga, ela gera um pico de tensão alto que queimaria o transistor; o diodo absorve esse pico.\n\n## Dois transistores, mais controle\nUm transistor pode comandar outro. No primeiro estágio, um sensor e um divisor ligam ou desligam T1. O coletor de T1 alimenta a base de T2, que liga o relé. Assim:\n- Quando T1 conduz, ele \"rouba\" a corrente que iria para a base de T2, e T2 desliga.\n- Quando T1 desliga, a corrente vai para a base de T2, que liga o relé.\n\nCom isso o circuito **inverte** a lógica do sensor e ganha mais amplificação: um sinal bem fraco no sensor consegue mover um relé.\n\n## O alarme que fica disparado\nNum alarme, não basta tocar enquanto a porta está aberta: ele deve **continuar tocando** depois. O truque é usar um **contato extra do próprio relé** para mantê-lo ligado, ligado em paralelo com o transistor que o acionou. Quando o relé fecha uma vez, esse contato passa a alimentar a bobina sozinho. Para desligar, um botão **NF** em série corta a alimentação da bobina e o circuito volta a vigiar.\n\nÉ exatamente a ideia do **selo** dos contatores, que você vai ver em Comandos elétricos: um contato que lembra que algo aconteceu. Em eletrônica digital, a mesma função se chama **memória de 1 bit**.\n\n## Relés hoje\nAs centrais telefônicas antigas tinham salas cheias de relés. Hoje boa parte desse trabalho é feita por transistores e chips, mas o relé continua muito usado onde é preciso isolar o comando da carga, como em módulos de relé para Arduino e ESP32.",
+   "createdAt": "2026-10-24T16:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T16:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Relé: bobina vira ímã e move os contatos comum, NA e NF.",
+    "Isola o circuito de comando da carga.",
+    "Bobina pede diodo em paralelo, invertido.",
+    "Um contato do próprio relé pode mantê-lo ligado: o alarme 'lembra'."
+   ],
+   "minutes": 10,
+   "order": 7,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "NF quer dizer normalmente fechado, isto é, fechado com a bobina sem energia.",
+     "options": [
+      "NA",
+      "NF",
+      "Nenhum",
+      "Terminal da bobina"
+     ],
+     "prompt": "Com a bobina do relé desligada, o contato comum está ligado ao:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "É a autorretenção, o mesmo princípio do selo de um contator.",
+     "options": [
+      "Um resistor maior na base",
+      "Um contato do relé que mantém a própria bobina ligada",
+      "Um LED em série",
+      "Uma bateria maior"
+     ],
+     "prompt": "Para que o alarme continue tocando depois que a porta fecha, usa-se:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "A tensão e a corrente dos contatos vêm especificadas no relé e precisam ser respeitadas.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Os contatos de um relé de 5 V sempre aguentam ligar qualquer aparelho de tomada.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "O coletor de T1 puxa para 0 V o ponto que alimentaria a base de T2.",
+     "options": [
+      "Também conduz",
+      "Desliga, porque T1 desvia a corrente da base dele",
+      "Queima",
+      "Fica em curto"
+     ],
+     "prompt": "No circuito com dois transistores, quando T1 conduz, T2:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Quando o transistor não aguenta a carga, o relé assume; e um contato extra faz o circuito lembrar que foi disparado.",
+   "title": "Relés e o alarme que dispara e fica disparado",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T16:30:00.000Z"
+  },
+  "eln-solda": {
+   "author": "",
+   "body": "Soldar é unir dois metais com um terceiro metal que derrete a uma temperatura mais baixa: a **solda**. Ela escorre entre o terminal do componente e a trilha de cobre e, ao endurecer, prende e conduz ao mesmo tempo.\n\n## O que você precisa\n- **Ferro de solda** de 25 a 40 W, com ponta fina. Estações com controle de temperatura facilitam muito; algo em torno de 330 a 360 °C serve para a maioria dos trabalhos.\n- **Solda para eletrônica** em fio fino, com **fluxo** no miolo. O fluxo limpa o metal na hora e ajuda a solda a escorrer. Existe a solda com chumbo (estanho-chumbo), mais fácil de usar, e a **sem chumbo**, que pede um pouco mais de temperatura.\n- **Esponja úmida** ou palha de latão para limpar a ponta.\n- **Alicate de corte**, **alicate de bico**, **desencapador** e um **sugador de solda** ou malha dessoldadora para corrigir erros.\n- **Placa padrão** (perfurada, com trilhas) ou placa ilhada para montar o circuito.\n\n## Segurança\nA ponta passa de 300 °C: use sempre o suporte e nunca segure perto da ponta. Trabalhe com ventilação, porque a fumaça do fluxo irrita. Use óculos ao cortar terminais, que podem voar. Se a solda tiver chumbo, lave as mãos depois e não coma na bancada.\n\n## A técnica, passo a passo\n- **Estanhe a ponta:** com o ferro quente, encoste um pouco de solda na ponta e limpe na esponja. Ponta brilhante transfere calor; ponta escura e oxidada não.\n- **Encaixe o componente** pela frente da placa e dobre levemente os terminais por trás para ele não cair.\n- **Aqueça os dois ao mesmo tempo:** encoste a ponta no terminal **e** na trilha juntos, por um ou dois segundos.\n- **Leve a solda à junção, não à ponta:** encoste o fio de solda do outro lado do terminal. Ela derrete e escorre em volta. Use pouca.\n- **Retire a solda, depois o ferro**, e não mexa no componente enquanto esfria.\n- **Corte o excesso** do terminal rente à solda.\n\n## Como reconhecer uma boa emenda\nUma emenda boa é **lisa, brilhante e em forma de cone**, abraçando o terminal. Uma emenda **opaca, granulada ou em forma de bolinha** é **solda fria**: parece presa, mas o contato é ruim e o circuito falha de vez em quando. A correção é reaquecer, com um pouco de fluxo ou solda nova.\n\n## Placa padrão: interromper e unir trilhas\nNa placa com trilhas contínuas, às vezes o circuito pede que uma trilha seja **cortada**: gire uma broca de 4 a 6 mm com a mão sobre o furo, pelo lado do cobre, até o cobre sair em volta. Quando duas trilhas precisam ser ligadas, use um pedaço de fio (um **jumper**). Antes de energizar, confira com o teste de continuidade que nenhuma gota de solda ligou duas trilhas vizinhas.\n\n## Componentes sensíveis ao calor\nTransistores, LEDs e chips não gostam de calor demorado. Solde rápido, deixe esfriar entre um terminal e outro e, para chips, prefira usar um **soquete** e encaixar o chip no final.",
+   "createdAt": "2026-10-24T16:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T16:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Aqueça terminal e trilha juntos; a solda vai na junção.",
+    "Emenda boa é lisa, brilhante e em cone; opaca é solda fria.",
+    "Corte trilhas da placa padrão com uma broca girada à mão.",
+    "Ferro sempre no suporte, ventilação e óculos."
+   ],
+   "minutes": 10,
+   "order": 4,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "A solda tem que derreter pelo calor das peças, para molhar o terminal e a trilha.",
+     "options": [
+      "Na ponta do ferro, longe da placa",
+      "Na junção entre o terminal e a trilha já aquecidos",
+      "Só no terminal frio",
+      "Na esponja"
+     ],
+     "prompt": "Onde você deve encostar o fio de solda?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Reaqueça a emenda até ela ficar lisa e brilhante.",
+     "options": [
+      "Solda perfeita",
+      "Solda fria, com contato ruim",
+      "Excesso de fluxo, que é bom",
+      "Componente invertido"
+     ],
+     "prompt": "Uma emenda opaca e granulada indica:",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "Assim o chip não recebe calor e pode ser trocado.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Para soldar um chip, o ideal é soldar um soquete e encaixar o chip depois.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Remova o excesso com o sugador ou com a ponta limpa passando pelo vão.",
+     "options": [
+      "Um circuito aberto",
+      "Um curto entre dois pontos do circuito",
+      "Mais brilho no LED",
+      "Nada"
+     ],
+     "prompt": "Duas trilhas vizinhas ficaram ligadas por uma gota de solda. Isso causa:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Ferro, solda, placa padrão e a técnica para uma emenda firme e brilhante, sem solda fria.",
+   "title": "Solda e montagem de placas",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T16:30:00.000Z"
+  },
   "eln-transistor": {
    "author": "",
    "body": "Um pino de Arduino ou ESP32 fornece poucos miliampères. Um relé, um motorzinho ou uma fita de LED pedem bem mais. O **transistor** resolve: uma corrente pequena controla uma corrente grande.\n\n## O transistor bipolar NPN\nTem três terminais: **base**, **coletor** e **emissor**. Quando entra corrente na base, o caminho entre coletor e emissor se abre para uma corrente muito maior (dezenas a centenas de vezes maior).\n\nUsado como chave, ele trabalha em dois estados:\n- **Corte:** base sem corrente, transistor desligado, carga desligada.\n- **Saturação:** base com corrente suficiente, transistor totalmente ligado, carga ligada.\n\n## A montagem básica\n- Emissor no negativo (GND).\n- Carga entre o positivo da fonte e o coletor.\n- Um **resistor na base**, entre o pino do microcontrolador e a base. Sem ele, a corrente da base não tem limite e queima o transistor ou o pino.\n\nPara um transistor pequeno como o BC547 (até cerca de 100 mA no coletor), um resistor de base entre 1 kΩ e 4,7 kΩ costuma funcionar com sinais de 3,3 V ou 5 V. Para correntes maiores, usa-se um transistor de potência ou um **MOSFET**.\n\n## O diodo do relé\nA bobina do relé guarda energia no campo magnético. Quando o transistor desliga, essa energia aparece como um **pico de tensão** que pode passar de cem volts e destruir o transistor. A solução é um **diodo em paralelo com a bobina**, ao contrário (cátodo no positivo). Ele dá um caminho para essa energia se dissipar. Esquecer esse diodo é uma das causas mais comuns de transistor queimado.\n\n## Terra comum\nSe a carga usa uma fonte diferente da do microcontrolador, os **negativos das duas fontes precisam estar ligados**. Sem terra comum, a corrente da base não tem por onde voltar e o transistor não liga.\n\n## O mesmo princípio em outros lugares\nFontes chaveadas, inversores de frequência e controladores de motor são, no fundo, transistores ligando e desligando muito rápido.\n\n## Projeto final\n**Circuito que liga uma carga com transistor.** Use um BC547 para acender um LED ou ligar um relé a partir de um botão ou de um pino do ESP32, com o diodo de proteção no relé.",
@@ -2285,7 +3056,7 @@ window.VOLTER_SEED = {
     "Fontes diferentes: negativos ligados."
    ],
    "minutes": 9,
-   "order": 3,
+   "order": 5,
    "questions": [
     {
      "answer": 2,
@@ -2340,6 +3111,80 @@ window.VOLTER_SEED = {
    "title": "Transistor como chave",
    "track": "eletronica",
    "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "eln-transistor-sensores": {
+   "author": "",
+   "body": "Na lição anterior você viu o transistor como chave. Agora vamos ver o que acontece **entre** desligado e totalmente ligado, e como fazer um sensor comandar a chave.\n\n## Ganho: a corrente da base vezes um número\nEnquanto o transistor não está totalmente ligado, a corrente do coletor é a corrente da base multiplicada por um número fixo, o **ganho** (chamado de **hFE** ou β).\n\n**Ganho = corrente do coletor ÷ corrente da base**\n\nExemplo: com 0,1 mA na base e ganho 200, passam 20 mA no coletor. Transistores pequenos têm ganhos de algumas dezenas a algumas centenas, e o valor varia bastante até entre peças do mesmo modelo. Por isso os projetos não dependem de um ganho exato: eles dão corrente de base com folga.\n\n## Os três estados\n- **Corte:** a tensão entre base e emissor está abaixo de uns **0,6 V** (transistor de silício). Não passa corrente na base nem no coletor.\n- **Região ativa:** a base conduz e o coletor segue o ganho. O brilho de um LED muda aos poucos conforme a base.\n- **Saturação:** a corrente da base é tanta que o transistor já está \"todo aberto\", como uma torneira escancarada. Daqui para cima, quem limita a corrente é a carga e o resistor do coletor, não o transistor.\n\nPara usar como chave, queremos corte ou saturação. Para amplificar som, queremos a região ativa.\n\n## O divisor de tensão comanda a base\nLigue um resistor fixo e um **resistor variável** em série entre +9 V e 0 V. O ponto do meio alimenta a base através de um resistor. Girando o potenciômetro, a tensão do meio muda; quando passa de uns 0,6 V, o transistor começa a conduzir e o LED acende.\n\nAgora troque o potenciômetro por um sensor:\n- **LDR (resistor dependente de luz):** no escuro tem resistência alta; no claro, baixa. Embaixo do divisor, ele faz o LED **acender no escuro**. É a luz de jardim que liga sozinha ao anoitecer.\n- **Termistor NTC:** a resistência cai quando esquenta. Dependendo da posição no divisor, o circuito liga com o frio ou com o calor: dá um alarme de temperatura ou um aviso de geladeira aberta.\n\nTrocar o sensor de posição com o resistor fixo **inverte** o comportamento. Esse é o truque mais útil da eletrônica de sensores.\n\n## No lugar do LED\nO coletor pode ligar um **buzzer piezoelétrico** (que apita), um relé ou um motor pequeno. Para cargas maiores que a corrente máxima do transistor, use um relé, assunto da próxima lição.",
+   "createdAt": "2026-10-24T16:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T16:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Ganho = corrente do coletor ÷ corrente da base.",
+    "Corte abaixo de ~0,6 V na base; saturação é a chave totalmente fechada.",
+    "Divisor com sensor na base transforma luz ou calor em liga/desliga.",
+    "Trocar o sensor de posição inverte o comportamento."
+   ],
+   "minutes": 10,
+   "order": 6,
+   "questions": [
+    {
+     "answer": 3,
+     "explain": "0,2 mA × 150 = 30 mA.",
+     "options": [
+      "0,2 mA",
+      "3 mA",
+      "30 mA",
+      "150 mA"
+     ],
+     "prompt": "Um transistor com ganho 150 recebe 0,2 mA na base, sem saturar. A corrente no coletor é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "No escuro a resistência do LDR sobe e a tensão na base também.",
+     "options": [
+      "Está claro",
+      "Está escuro",
+      "A bateria descarrega",
+      "Nunca"
+     ],
+     "prompt": "Com o LDR na parte de baixo do divisor que alimenta a base, o LED acende quando:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Saturado, ele já está totalmente ligado; quem limita é a carga.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Quando o transistor está saturado, aumentar a corrente da base aumenta muito a corrente no LED.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "É a tensão de condução da junção base-emissor.",
+     "options": [
+      "0,06 V",
+      "Cerca de 0,6 V",
+      "6 V",
+      "60 V"
+     ],
+     "prompt": "Abaixo de que tensão entre base e emissor um transistor de silício fica cortado?",
+     "type": "mc"
+    }
+   ],
+   "sim": "trans",
+   "status": "published",
+   "summary": "Como uma corrente minúscula na base controla uma maior, e como um LDR ou termistor faz o transistor ligar sozinho.",
+   "title": "Ganho do transistor e sensores que ligam cargas",
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T16:30:00.000Z"
   },
   "ia-1-modelos": {
    "author": "",
@@ -3114,6 +3959,59 @@ window.VOLTER_SEED = {
   }
  },
  "projects": {
+  "alarme-laco-rele": {
+   "author": "",
+   "challenge": "Troque o laço de fio por um LDR para o alarme disparar quando alguém acender a luz de um cômodo escuro. Pense em qual posição do divisor o LDR precisa ficar.",
+   "createdAt": "2026-10-24T16:30:00.000Z",
+   "demo": false,
+   "duration": "3 a 4 horas",
+   "goal": "Montar e soldar um alarme simples que usa transistor, relé com autorretenção e buzzer, entendendo cada parte e testando com o multímetro.",
+   "history": [
+    {
+     "at": "2026-10-24T16:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "level": "Intermediário",
+   "result": "Um alarme funcionando, soldado em placa, com o esquema desenhado e as medições anotadas.",
+   "skills": [
+    "Leitura e desenho de esquema",
+    "Transistor como chave",
+    "Relé e autorretenção",
+    "Solda em placa padrão",
+    "Diagnóstico com multímetro"
+   ],
+   "status": "published",
+   "steps": [
+    "Desenhe o esquema antes: um resistor de 10 kΩ do +9 V à base passando pelo de 1 kΩ, e o laço de fio ligando a base ao 0 V. Enquanto o laço está inteiro, a base fica em 0 V e o transistor, cortado.",
+    "Coloque a bobina do relé entre o +9 V e o coletor, com o diodo em paralelo e o cátodo (faixa) voltado para o +9 V. O emissor vai ao 0 V.",
+    "Use o primeiro contato NA do relé em paralelo com o transistor (do coletor ao 0 V). Esse é o contato de autorretenção: depois que o relé fecha, ele mantém a bobina ligada sozinho.",
+    "Coloque o botão NF em série com a alimentação da bobina, entre o +9 V e o relé. Apertar o botão corta a bobina e rearma o alarme.",
+    "Use o segundo contato NA do relé para ligar o buzzer ao +9 V.",
+    "Monte primeiro na protoboard e teste: com o laço ligado, nada toca; ao desligar uma ponta do laço, o relé estala e o buzzer toca; ao religar o laço, o buzzer continua; ao apertar o botão, ele para.",
+    "Meça a tensão na base com o laço inteiro e com o laço aberto, e anote. Confira que fica perto de 0 V e perto de 0,7 V.",
+    "Transfira para a placa padrão, cortando as trilhas onde o desenho pedir, e solde o transistor por último.",
+    "Inspecione todas as emendas, teste a continuidade das trilhas cortadas e só então ligue a fonte.",
+    "Passe o laço de fio fino pelo batente de uma porta ou pela tampa de uma caixa e teste o alarme de verdade."
+   ],
+   "summary": "Um alarme que dispara quando um fio fino é rompido e continua tocando até alguém apertar o botão de rearme.",
+   "title": "Alarme de porta com laço de fio e relé",
+   "tools": [
+    "Placa padrão e ferro de solda",
+    "Transistor BC547",
+    "Relé com bobina de 9 V e dois contatos reversíveis",
+    "Diodo 1N4148 ou 1N4007",
+    "Resistores de 10 kΩ e 1 kΩ",
+    "Buzzer ativo de 9 V",
+    "Botão pulsador normalmente fechado (NF)",
+    "Fio fino esmaltado ou de telefone para o laço",
+    "Fonte de 9 V (uma bateria de 9 V dura pouco com o relé ligado)",
+    "Multímetro",
+    "Alternativa sem peças: simulador de circuitos online, como o Tinkercad Circuits"
+   ],
+   "track": "eletronica",
+   "updatedAt": "2026-10-24T16:30:00.000Z"
+  },
   "assistente-documentos": {
    "author": "",
    "challenge": "Mostre, junto da resposta, o nome do documento de onde o trecho veio.",

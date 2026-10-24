@@ -35,9 +35,9 @@ A grade de temas em [`docs/grade-de-temas.md`](docs/grade-de-temas.md) define o 
 | **Início** | Banner com o desafio do dia e fileiras de capas, no estilo das plataformas de streaming; cada capa abre uma janela com detalhes e, nas trilhas, a lista de lições como episódios |
 | **Trilhas** | Lições curtas com blocos de código e exercícios |
 | **Comece aos 40+** | Trilhas em etapas para quem começa em tecnologia depois dos 40 |
-| **Elétrica e Hardware** | Trilhas em etapas de eletricidade, instalações, eletrônica, hardware, IoT e automação, com 18 lições de elétrica e eletrônica e simuladores interativos (lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, sistema trifásico, partida de motor e paquímetro) |
+| **Elétrica e Hardware** | Trilhas em etapas de eletricidade, instalações, eletrônica, hardware, IoT e automação, com 27 lições de elétrica e eletrônica e simuladores interativos (lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, transistor com sensor, amplificador, sistema trifásico, partida de motor e paquímetro) |
 | **Laboratório** | Desafios de investigação em 7 etapas: entender, hipóteses, investigar, evidências, causa, corrigir e aprender, com correção comentada |
-| **Projetos** | Projetos guiados com passo a passo, para montar um portfólio (assistente com RAG, site no GitHub Pages, painel de gastos com pandas, estação IoT com ESP32, pisca-pisca com 555 na protoboard) |
+| **Projetos** | Projetos guiados com passo a passo, para montar um portfólio (assistente com RAG, site no GitHub Pages, painel de gastos com pandas, estação IoT com ESP32, pisca-pisca com 555 na protoboard, alarme de porta com relé) |
 | **Treino** | Perguntas sorteadas de todas as trilhas e o desafio do dia |
 | **Livros** | Lançamentos e referências, com o motivo de cada leitura |
 | **Meu progresso** | Nível, XP, progresso por trilha, como você investiga e conquistas |

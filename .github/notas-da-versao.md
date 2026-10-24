@@ -10,6 +10,12 @@ Na primeira vez, clique no Volter com o botão direito → **Abrir** → **Abrir
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.5.0: Eletrônica básica completa
+- **9 lições novas** na etapa Eletrônica básica, que agora tem 14: primeiros circuitos (condutores, isolantes e placas), solda e montagem de placas, ganho do transistor e sensores, relés e alarme com autorretenção, amplificadores, circuitos biestável, monoestável e astável, chips e microprocessadores, a história da eletrônica e um roteiro de falhas
+- **Dois simuladores novos:** transistor ligado por potenciômetro, LDR ou termistor, e amplificador com ganho, polarização e corte
+- **Novo desafio no Laboratório:** o sensor de luz montado na placa não acende o LED
+- **Novo projeto guiado:** alarme de porta com laço de fio e relé
+
 ## Versão 2.4.0: lições de Elétrica e Hardware com simuladores
 - **18 lições novas** na aba Elétrica, Eletrônica e Hardware: fundamentos de eletricidade completos (Lei de Ohm, multímetro, segurança e NR-10, série e paralelo, consumo e conta de luz, paquímetro), instalações residenciais (diagramas, tomadas e interruptores, disjuntor, DR e DPS), eletrônica básica (componentes, protoboard e 555, transistor, fontes, lógica digital) e comandos elétricos (motor trifásico, contatores, partida direta e reversão, sensores PNP e NPN)
 - **Nove simuladores interativos** dentro das lições: lei de Ohm, divisor de tensão com LDR e NTC, carga e descarga do capacitor, pisca-pisca com 555, portas lógicas, retificador com filtro, as três fases, partida direta com selo e leitura do paquímetro

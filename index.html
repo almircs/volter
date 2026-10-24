@@ -506,6 +506,7 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .sim .s-fig{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;background:#0b0b0c;border:1px solid var(--line);border-radius:6px;padding:10px}
 .sim .s-fig svg{flex:1 1 240px;min-width:0;max-width:520px;max-height:330px;height:auto}
 .split > *{min-width:0}
+.toolset .chip{white-space:normal;line-height:1.35;padding-top:3px;padding-bottom:3px}
 @media (max-width:560px){.sim .s-fig svg[viewBox="0 0 140 200"],.sim .s-fig svg[viewBox="0 0 160 170"]{max-width:190px}}
 .split .row > .btn{white-space:normal;text-align:left;max-width:100%}
 .sim svg text{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
@@ -618,8 +619,8 @@ const TRACKS = [
     plan: [] },
   { id: "instalacoes", area: "hw", color: "#ff9f43", name: "Instalações elétricas residenciais", short: "Instalações", ico: "casa", desc: "Diagramas, tomadas, iluminação e proteção, com noções da NBR 5410.",
     plan: [["Dimensionamento de cabos e circuitos (noções da NBR 5410)", "Tabela de circuitos de uma casa"], ["Diagnóstico de falhas em instalações", "Roteiro para um disjuntor que desarma"]] },
-  { id: "eletronica", area: "hw", color: "#4fe3a6", name: "Eletrônica básica", short: "Eletrônica", ico: "onda", desc: "Componentes, protoboard, transistores, fontes e solda.",
-    plan: [["Solda e montagem de placas", "Placa soldada e testada"]] },
+  { id: "eletronica", area: "hw", color: "#4fe3a6", name: "Eletrônica básica", short: "Eletrônica", ico: "onda", desc: "Componentes, protoboard, solda, transistores, relés, fontes, amplificadores, lógica digital e chips.",
+    plan: [] },
   { id: "hardware", area: "hw", color: "#5cc8ff", name: "Hardware de computadores", short: "Hardware", ico: "pc", desc: "Peças, montagem, diagnóstico, redes e manutenção preventiva.",
     plan: [["Peças do computador e como elas conversam", "Ficha técnica do seu computador"], ["Montagem e upgrade: memória, SSD e fonte", "Upgrade feito e testado"], ["Diagnóstico: o PC não liga, trava ou esquenta", "Roteiro de diagnóstico de defeitos"], ["Redes domésticas: cabos, roteador e Wi-Fi", "Rede de casa configurada e protegida"], ["Manutenção preventiva e backup", "Plano de manutenção e backup"]] },
   { id: "iot", area: "hw", name: "Microcontroladores e IoT", short: "IoT", ico: "chip", desc: "ESP32, sensores, Wi-Fi, MQTT e dispositivos conectados.",
@@ -1115,7 +1116,65 @@ const SIMS = {
         else st.res = "Os milímetros estão certos. Falta a fração: procure o traço do nônio que fica exatamente alinhado com um traço de cima e multiplique o número dele por 0,05.";
       }
     }
+  }  ,
+  /* ---- 10. Transistor como chave com sensor ---- */
+  trans: {
+    title: "Simulador: transistor ligado por um sensor", hint: "Fonte de 9 V. O divisor de tensão escolhe quanto chega à base; o transistor liga o LED quando a base passa de uns 0,6 V.",
+    init: { modo: "pot", pot: 30, luz: 70, temp: 25, hfe: 200 },
+    html: () => '<div class="s-fig">' + SVG("0 0 340 230",
+      '<path class="w on" d="M20 20H300"/><text x="22" y="14">+9 V</text><path class="w" d="M20 214H300"/><text x="22" y="228">0 V</text>' +
+      '<path class="w on" d="M70 20V40M70 100V115M70 175V214"/>' + zig(40, 100, 70, true) + '<text x="82" y="74">R1 10 kΩ</text>' +
+      '<g data-g="sz">' + zig(115, 175, 70, true) + '</g><rect data-g="sbox" x="58" y="122" width="24" height="46" rx="2" fill="none" stroke="var(--t)" stroke-width="2.5"/><text x="82" y="150" data-g="sl">sensor</text>' +
+      '<path data-g="wb" class="w" d="M70 108H120"/><rect x="120" y="98" width="40" height="20" fill="#0b0b0c" stroke="var(--ink)" stroke-width="2"/><text x="124" y="94">1 kΩ</text><path data-g="wb2" class="w" d="M160 108H204"/>' +
+      '<circle cx="222" cy="108" r="26" fill="none" stroke="#666" stroke-width="2"/><path d="M204 92V124" stroke="var(--ink)" stroke-width="4"/><path data-g="wc" class="w" d="M206 100L236 82V20"/><path data-g="we" class="w" d="M206 116L236 134V214"/><path d="M228 124l8 10-12 1z" fill="var(--ink)"/>' +
+      '<text x="250" y="112">NPN</text><circle data-g="led" cx="236" cy="52" r="11" fill="#1a1a1a" stroke="#555" stroke-width="2"/><text x="252" y="56">LED + 470 Ω</text>', "Transistor NPN ligando um LED a partir de um divisor de tensão") + "</div>" +
+      '<div class="s-ctl"><div><span class="label">Embaixo do divisor</span>' + sSeg("trans", "modo", [["pot", "Potenciômetro"], ["ldr", "LDR (luz)"], ["ntc", "Termistor NTC"]]) + "</div>" +
+      '<div data-g="c-pot">' + sRange("trans", "pot", "Potenciômetro (kΩ)", 0, 100, 1) + '</div><div data-g="c-ldr">' + sRange("trans", "luz", "Luz sobre o LDR (%)", 0, 100, 1) + '</div><div data-g="c-ntc">' + sRange("trans", "temp", "Temperatura (°C)", 0, 100, 1) + "</div>" + sRange("trans", "hfe", "Ganho do transistor (hFE)", 50, 400, 10) + "</div>" +
+      sMeters([["vb", "Tensão na base"], ["ib", "Corrente de base"], ["ic", "Corrente no LED"], ["est", "Estado"]]),
+    rs(st) { if (st.modo === "ldr") return 200000 * Math.pow(1 / 200, st.luz / 100); if (st.modo === "ntc") return 10000 * Math.exp(3950 * (1 / (st.temp + 273.15) - 1 / 298.15)); return Math.max(1, st.pot * 1000); },
+    draw(r, st) {
+      const Rs = this.rs(st), R1 = 10000, Rb = 1000, Vth = 9 * Rs / (R1 + Rs), Rth = R1 * Rs / (R1 + Rs);
+      const ib = Math.max(0, (Vth - .6) / (Rth + Rb)), icMax = (9 - 2 - .2) / 470, ic = Math.min(st.hfe * ib, icMax);
+      const vb = ib > 0 ? .6 + Math.min(.15, ib * 300) : Vth;
+      const estado = ib <= 0 ? "Corte" : st.hfe * ib >= icMax ? "Saturado" : "Conduzindo";
+      so(r, "pot", st.pot + " kΩ"); so(r, "luz", st.luz + "%"); so(r, "temp", st.temp + " °C"); so(r, "hfe", String(st.hfe));
+      so(r, "vb", fmtN(vb, 2) + " V"); so(r, "ib", fmtU(ib, "A")); so(r, "ic", fmtU(ic, "A")); so(r, "est", estado);
+      sg(r, "sl").textContent = (st.modo === "ldr" ? "LDR " : st.modo === "ntc" ? "NTC " : "pot. ") + fmtU(Rs, "Ω");
+      ["pot", "ldr", "ntc"].forEach(m => { sg(r, "c-" + m).hidden = st.modo !== m; });
+      sg(r, "sz").style.display = st.modo === "pot" ? "" : "none"; sg(r, "sbox").style.display = st.modo === "pot" ? "none" : "";
+      const on = ib > 0; ["wb", "wb2", "wc", "we"].forEach(g => sg(r, g).classList.toggle("on", on));
+      const led = sg(r, "led"); led.setAttribute("fill", ic > 0 ? "#ff3b3b" : "#1a1a1a"); led.setAttribute("fill-opacity", ic > 0 ? (.25 + .75 * ic / icMax).toFixed(2) : "1");
+      let t = estado === "Corte" ? "A base está abaixo de uns 0,6 V: o transistor fica cortado e o LED, apagado." : estado === "Saturado" ? "Corrente de base suficiente: o transistor está saturado, totalmente ligado. Aumentar o ganho ou a base não acende mais o LED, porque quem limita agora é o resistor de 470 Ω." : "O transistor está conduzindo, mas não totalmente: a corrente no LED é o ganho (" + st.hfe + ") vezes a corrente de base. Por isso o brilho muda aos poucos.";
+      if (st.modo === "ldr") t += " Com o LDR embaixo, o LED <b>acende no escuro</b>: é o princípio da luz de jardim que liga sozinha.";
+      if (st.modo === "ntc") t += " Com o NTC embaixo, o LED acende quando está <b>frio</b>; trocando o NTC de lugar com R1, ele passa a acender no calor, como num alarme de temperatura.";
+      sread(r, t);
+    }
+  },
+
+  /* ---- 11. Amplificador de um estágio ---- */
+  amp: {
+    title: "Simulador: amplificador e polarização", hint: "Alimentação de 9 V. Mude o tamanho do sinal de entrada, o ganho e o ponto de polarização e veja quando a saída corta.",
+    init: { vin: 40, ganho: 40, pol: 50 },
+    html: () => '<div class="s-fig">' + SVG("0 0 360 200", '<path d="M20 20H340M20 180H340" stroke="#333" stroke-dasharray="3 4"/><text x="300" y="16">9 V</text><text x="300" y="194">0 V</text><line data-g="bias" x1="20" x2="340" stroke="#555" stroke-dasharray="6 4"/><polyline data-g="in" fill="none" stroke="#888" stroke-width="1.6"/><polyline data-g="out" fill="none" stroke="var(--t)" stroke-width="2.6"/>', "Sinal de entrada e de saída do amplificador") + "</div>" +
+      '<p class="small muted s-cap">Linha cinza fina: o sinal de entrada (desenhado 10× maior para aparecer). Linha colorida: a saída. Tracejado: o ponto de polarização.</p>' +
+      '<div class="s-ctl">' + sRange("amp", "vin", "Sinal de entrada (mV de pico)", 0, 200, 5) + sRange("amp", "ganho", "Ganho de tensão", 1, 100, 1) + sRange("amp", "pol", "Polarização (% da alimentação)", 10, 90, 1) + "</div>" +
+      sMeters([["pk", "Saída de pico a pico"], ["corte", "Distorção"]]),
+    draw(r, st) {
+      const V = 9, b = V * st.pol / 100, a = st.vin / 1000 * st.ganho, lo = .2, hi = V - .2, sy = v => 180 - v / V * 160;
+      const pin = [], pout = []; let mx = -1, mn = 99, clip = false;
+      for (let i = 0; i <= 240; i++) { const x = 20 + i / 240 * 320, s = Math.sin(i / 240 * 4 * Math.PI); let o = b - a * s; if (o > hi) { o = hi; clip = true; } if (o < lo) { o = lo; clip = true; } mx = Math.max(mx, o); mn = Math.min(mn, o);
+        pin.push(x.toFixed(1) + "," + sy(b + 10 * st.vin / 1000 * s).toFixed(1)); pout.push(x.toFixed(1) + "," + sy(o).toFixed(1)); }
+      sg(r, "in").setAttribute("points", pin.join(" ")); sg(r, "out").setAttribute("points", pout.join(" "));
+      const bl = sg(r, "bias"); bl.setAttribute("y1", sy(b).toFixed(1)); bl.setAttribute("y2", sy(b).toFixed(1));
+      so(r, "vin", st.vin + " mV"); so(r, "ganho", st.ganho + "×"); so(r, "pol", st.pol + "% (" + fmtN(b, 1) + " V)");
+      so(r, "pk", fmtN(mx - mn, 2) + " V"); so(r, "corte", clip ? "Sim, a saída corta" : "Não");
+      let t = "A saída é o sinal de entrada multiplicado pelo ganho, em volta do ponto de polarização. Repare que ela sai invertida: quando a entrada sobe, a saída desce, como num transistor em emissor comum.";
+      if (clip) t += " <b>A saída está cortando</b>: o sinal amplificado não cabe entre 0 V e 9 V e os picos ficam achatados. No som, isso aparece como distorção. Diminua a entrada ou o ganho" + (Math.abs(st.pol - 50) > 10 ? ", ou leve a polarização para perto do meio" : "") + ".";
+      else if (Math.abs(st.pol - 50) > 20) t += " A polarização está longe do meio: ainda não cortou, mas sobra pouco espaço de um dos lados. Com um sinal um pouco maior, só um dos lados vai cortar.";
+      sread(r, t);
+    }
   }
+
 };
 const SIM_OPTS = [["", "Nenhum"]].concat(Object.keys(SIMS).map(k => [k, SIMS[k].title.replace("Simulador: ", "")]));
 function simHTML(k) {
@@ -1555,7 +1614,7 @@ VIEWS.favoritos = () => {
 
 /* ----- Próximas etapas ----- */
 VIEWS.roteiro = () => {
-  const P = [["Versão 2.4", "Disponível", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
+  const P = [["Versão 2.5", "Disponível", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
     ["Próxima", "Planejada", "go", ["Cursos completos da trilha IA no Trabalho", "Trilha Agentes e Automação: n8n, WhatsApp e primeiro agente", "Volter Assist também no programa instalado", "Certificado por curso concluído"]],
     ["Depois", "Planejada", "", ["Turmas fechadas e licenças para empresas", "Um curso de IA por profissão a cada etapa", "Aplicativo para celular com modo offline"]]];
   const L = S.mode === "local";
