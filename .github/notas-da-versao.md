@@ -4,7 +4,12 @@
 Se aparecer o aviso azul "O Windows protegeu o computador", clique em **Mais informações → Executar assim mesmo**.
 
 **Mac com chip Apple (M1 a M4)** — baixe `Volter-Mac-chip-Apple-M1-a-M4.zip`, abra o arquivo e arraste o **Volter** para a pasta **Aplicativos**.
-Na primeira vez, clique no Volter com o botão direito → **Abrir** → **Abrir**.
+Na primeira vez, o Mac avisa que não consegue verificar o Volter, porque ele não tem assinatura paga da Apple. Para liberar:
+- **macOS 15 Sequoia ou mais novo:** tente abrir o Volter uma vez e feche o aviso. Depois vá em **Ajustes do Sistema → Privacidade e Segurança**, role até o fim e clique em **Abrir Mesmo Assim** ao lado do aviso do Volter. Confirme com a senha do Mac.
+- **macOS 14 Sonoma ou mais antigo:** clique no Volter com o botão direito → **Abrir** → **Abrir**.
+- **Se nada disso aparecer** (ou o Mac disser que o app está danificado): abra o **Terminal** e rode `xattr -dr com.apple.quarantine /Applications/Volter.app`, depois abra o Volter de novo.
+
+Isso só é preciso na primeira vez.
 
 **Mac com processador Intel** — mesmo procedimento com `Volter-Mac-Intel.zip`.
 

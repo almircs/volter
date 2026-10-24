@@ -50,8 +50,9 @@ Os desafios do Laboratório são exemplos didáticos, marcados como tal. Os livr
 Os instaladores ficam na página **Releases** deste repositório e são gerados automaticamente pelo GitHub Actions.
 
 - **Windows:** baixe `Instalar-Volter-Windows.exe`, dê dois cliques e siga o instalador. Se aparecer o aviso azul "O Windows protegeu o computador", clique em **Mais informações → Executar assim mesmo**.
-- **Mac com chip Apple (M1 a M4):** baixe `Volter-Mac-chip-Apple-M1-a-M4.zip`, abra e arraste o **Volter** para **Aplicativos**. Na primeira vez, botão direito → **Abrir** → **Abrir**.
+- **Mac com chip Apple (M1 a M4):** baixe `Volter-Mac-chip-Apple-M1-a-M4.zip`, abra e arraste o **Volter** para **Aplicativos**.
 - **Mac Intel:** mesmo procedimento com `Volter-Mac-Intel.zip`.
+- **Primeira abertura no Mac:** no macOS 15 Sequoia ou mais novo, tente abrir uma vez e depois vá em **Ajustes do Sistema → Privacidade e Segurança → Abrir Mesmo Assim**. No macOS 14 Sonoma ou mais antigo, botão direito → **Abrir** → **Abrir**. Se o Mac disser que o app está danificado, rode no Terminal `xattr -dr com.apple.quarantine /Applications/Volter.app`.
 
 No programa instalado, o progresso fica num arquivo com cópia automática diária (últimos 30 dias). O menu **Arquivo** abre a pasta dos dados; **Ferramentas → Ativar o editor de conteúdo** libera a edição.
 
