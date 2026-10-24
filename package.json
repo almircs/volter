@@ -1,8 +1,8 @@
 {
   "name": "volter",
   "productName": "Volter",
-  "version": "2.1.0",
-  "description": "Volter — aprenda IA, programação, dados e IoT resolvendo problemas reais.",
+  "version": "2.2.0",
+  "description": "Volter — IA prática para quem trabalha: IA no dia a dia, automação, programação e dados.",
   "author": "Carlos Almir",
   "license": "UNLICENSED",
   "private": true,

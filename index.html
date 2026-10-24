@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'none'">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%221%22 y=%221%22 width=%2230%22 height=%2230%22 rx=%228%22 fill=%22%23181818%22/%3E%3Cpath d=%22M8.5 9 L16 24 L23.5 9%22 fill=%22none%22 stroke=%22%23e8202a%22 stroke-width=%223.2%22 stroke-linejoin=%22round%22 stroke-linecap=%22round%22/%3E%3Ccircle cx=%228.5%22 cy=%229%22 r=%222.4%22 fill=%22%23b69cff%22/%3E%3Ccircle cx=%2223.5%22 cy=%229%22 r=%222.4%22 fill=%22%235cc8ff%22/%3E%3Ccircle cx=%2216%22 cy=%2224%22 r=%222.4%22 fill=%22%234fe3a6%22/%3E%3Ccircle cx=%2216%22 cy=%229%22 r=%222.4%22 fill=%22%23ffcb5c%22/%3E%3C/svg%3E">
 <title>Volter</title>
-<meta name="description" content="Volter — aprenda IA, programação, dados e IoT resolvendo problemas reais.">
+<meta name="description" content="Volter — IA prática para quem trabalha: IA no dia a dia, automação, programação e dados.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
 <style>
@@ -17,7 +17,7 @@
   --ink:#f5f5f1; --muted:#b3b3b3; --dim:#808080;
   --primary:#ffffff; --primary-ink:#0f0f10; --focus:#ffffff;
   --red:#e8202a; --red-2:#b3141c;
-  --ia:#b69cff; --prog:#5cc8ff; --dados:#ffcb5c; --iot:#4fe3a6;
+  --ia:#b69cff; --prog:#5cc8ff; --dados:#ffcb5c; --iot:#4fe3a6; --agentes:#ff8f5c; --profissao:#ff7eb6; --seguranca:#4fe3a6; --carreira:#d4e157;
   --ok:#46d369; --warn:#ffb35c; --bad:#ff6b6b;
   --code-bg:#0a0a0a;
   --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
@@ -43,7 +43,7 @@ code,.mono{font-family:var(--f-mono);font-size:.9em}
 :not(pre) > code{background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
 
 /* trilhas */
-[data-t="ia"]{--t:var(--ia)} [data-t="prog"]{--t:var(--prog)} [data-t="dados"]{--t:var(--dados)} [data-t="iot"]{--t:var(--iot)} [data-t="red"]{--t:var(--red)}
+[data-t="ia"]{--t:var(--ia)} [data-t="prog"]{--t:var(--prog)} [data-t="dados"]{--t:var(--dados)} [data-t="iot"]{--t:var(--iot)} [data-t="agentes"]{--t:var(--agentes)} [data-t="profissao"]{--t:var(--profissao)} [data-t="seguranca"]{--t:var(--seguranca)} [data-t="carreira"]{--t:var(--carreira)} [data-t="red"]{--t:var(--red)}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--t,var(--muted));flex-shrink:0;display:inline-block}
 .tchip{display:inline-flex;align-items:center;gap:6px;font-size:.84rem;color:var(--t,var(--muted));font-weight:500;white-space:nowrap}
 .vmark{display:inline-block;width:11px;height:14px;background:var(--red);clip-path:polygon(0 0,30% 0,50% 60%,70% 0,100% 0,63% 100%,37% 100%);flex-shrink:0}
@@ -557,12 +557,27 @@ function md(t) {
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, 3200); }
 
 /* ---------- vocabulário ---------- */
+/* Trilhas da grade de temas (docs/grade-de-temas.md). "plan" lista os cursos planejados que ainda não têm lições:
+   aparecem para o aluno como "Em breve". A trilha de IoT saiu da grade: os itens com track "iot" ficam guardados, mas ocultos. */
 const TRACKS = [
-  { id: "ia", name: "IA, agentes e automação", short: "IA e agentes", ico: "ia", desc: "Modelos de linguagem, prompts, agentes, RAG e automações com n8n." },
-  { id: "prog", name: "Programação: Python e web", short: "Programação", ico: "codigo", desc: "Lógica, Python, HTML, CSS, JavaScript e APIs." },
-  { id: "dados", name: "Dados e análise", short: "Dados", ico: "dados", desc: "Tabelas, SQL, pandas e gráficos que respondem perguntas." },
-  { id: "iot", name: "IoT e robótica", short: "IoT e robótica", ico: "chip", desc: "ESP32, sensores, Wi-Fi, MQTT e dispositivos conectados." }
+  { id: "ia", name: "IA no Trabalho", short: "IA no trabalho", ico: "ia", desc: "ChatGPT, Claude e Gemini no dia a dia: prompts, documentos, planilhas e pesquisa com fontes conferidas.",
+    plan: [["E-mails, atas e relatórios com IA", "Kit de modelos de documentos"], ["Planilhas e Excel com IA", "Planilha automatizada do próprio trabalho"], ["Apresentações e imagens com IA", "Apresentação completa gerada e revisada"], ["Pesquisa e estudo com IA: checar fontes e evitar erros", "Dossiê de pesquisa com fontes verificadas"]] },
+  { id: "agentes", name: "Agentes e Automação", short: "Agentes", ico: "agente", desc: "n8n, WhatsApp, APIs de IA e agentes que executam tarefas sozinhos.",
+    plan: [["Automação sem código com n8n", "Fluxo que economiza 1 hora por semana"], ["WhatsApp + IA: atendimento automático", "Atendente virtual para pequeno negócio"], ["APIs de IA para não programadores", "Integração entre IA e Google Planilhas"], ["Agentes para pequenas empresas", "Agente de vendas ou de agenda"]] },
+  { id: "prog", name: "Programação com IA", short: "Programação", ico: "codigo", desc: "Lógica, Python e web aprendendo com a IA como tutora, até um app instalável.",
+    plan: [["Sites e apps web com IA", "Site pessoal publicado"], ["Do projeto ao app instalável", "App desktop com instalador Windows e Mac"]] },
+  { id: "dados", name: "Dados e Decisão", short: "Dados", ico: "dados", desc: "Planilhas, SQL e dashboards para decidir com números.",
+    plan: [["Dados para quem não é de dados", "Painel com dados do próprio trabalho"], ["Dashboards com Power BI ou Looker Studio", "Dashboard publicado"]] },
+  { id: "profissao", name: "IA por Profissão", short: "Profissões", ico: "pessoas", desc: "IA aplicada a pequenos negócios, RH, educação, saúde e profissões técnicas.",
+    plan: [["IA para pequenos negócios e autônomos", "Plano de marketing e atendimento com IA"], ["IA para RH e recrutamento", "Processo seletivo assistido por IA"], ["IA para professores", "Plano de aula e materiais gerados"], ["IA para profissionais de saúde (administrativo)", "Rotina de documentos e agenda com IA"], ["IA para técnicos e profissões práticas", "Relatórios técnicos e orçamentos com IA"]] },
+  { id: "seguranca", name: "Segurança e Uso Responsável", short: "Segurança", ico: "escudo", desc: "Golpes, deepfakes, LGPD e regras para usar IA com os dados da empresa.",
+    plan: [["Golpes, deepfakes e phishing na era da IA", "Checklist de proteção pessoal e da família"], ["LGPD e dados da empresa ao usar IA", "Política de uso de IA para a equipe"]] },
+  { id: "carreira", name: "Carreira em Tecnologia", short: "Carreira", ico: "carreira", desc: "Bônus: recomeço em tecnologia depois dos 40, com plano de transição e portfólio.",
+    plan: [["Recomeço em tecnologia depois dos 40", "Plano de transição de carreira com portfólio"]] }
 ];
+const TRACK_IDS = new Set(TRACKS.map(t => t.id));
+/* Notícias suspensas: a seção some do app e nada novo é publicado. Para reativar, troque para true. */
+const NEWS_ON = false;
 const trackOf = id => TRACKS.find(t => t.id === id) || TRACKS[0];
 const LEVELS = [[1, "1 · Primeiros passos"], [2, "2 · Básico"], [3, "3 · Intermediário"], [4, "4 · Avançado"], [5, "5 · Profissional"]];
 const LEVEL_NAME = { 1: "Primeiros passos", 2: "Básico", 3: "Intermediário", 4: "Avançado", 5: "Profissional" };
@@ -603,9 +618,10 @@ async function pushProg() {
 
 /* ---------- conteúdo ---------- */
 const all = t => S.content[t];
-const pub = t => S.content[t].filter(x => x.status === "published");
+const shown = (t, x) => (t !== "news" || NEWS_ON) && (!x.track || TRACK_IDS.has(x.track));
+const pub = t => S.content[t].filter(x => x.status === "published" && shown(t, x));
 const find = (t, id) => S.content[t].find(x => x.id === id);
-const visible = (t, id) => { const x = find(t, id); return x && (x.status === "published" || S.admin) ? x : null; };
+const visible = (t, id) => { const x = find(t, id); return x && ((x.status === "published" && shown(t, x)) || S.admin) ? x : null; };
 const isFav = k => S.prog.favorites.includes(k);
 function favBtn(k) { const on = isFav(k); return '<button class="fav" data-act="fav" data-k="' + esc(k) + '" aria-pressed="' + on + '">' + (on ? "★ Salvo" : "☆ Salvar") + "</button>"; }
 function localLoad() {
@@ -631,11 +647,11 @@ const trackPct = id => { const ls = tracksLessons(id); return ls.length ? Math.r
 const NAVDEF = [
   ["", [["inicio", "Início"]]],
   ["Aprender", [["trilhas", "Trilhas"], ["lab", "Laboratório"], ["projetos", "Projetos"], ["desafios", "Treino"]]],
-  ["Ficar em dia", [["noticias", "Notícias"], ["livros", "Livros"]]],
+  ["Ficar em dia", [["noticias", "Notícias"], ["livros", "Livros"]].filter(([r]) => r !== "noticias" || NEWS_ON)],
   ["Você", [["progresso", "Meu progresso"], ["favoritos", "Salvos"]]]
 ];
 const TABS = [["inicio", "Início"], ["trilhas", "Trilhas"], ["lab", "Lab"], ["progresso", "Progresso"]];
-function go(name, id) { S.route = { name, id: id || null }; S.ui.more = false; S.ui.modal = null; window.scrollTo(0, 0); render(true); renderModal(); }
+function go(name, id) { if (name === "noticias" && !NEWS_ON) name = "inicio"; S.route = { name, id: id || null }; S.ui.more = false; S.ui.modal = null; window.scrollTo(0, 0); render(true); renderModal(); }
 const FULL = ["inicio", "trilhas"];
 function navGroup() { return { caso: "lab", correcao: "lab", licao: "trilhas", trilha: "trilhas", projeto: "projetos", editor: "admin" }[S.route.name] || S.route.name; }
 
@@ -653,7 +669,7 @@ function render(force) {
 }
 document.addEventListener("focusout", () => setTimeout(() => { if (S.pending) render(); }, 50));
 function navItems() { const g = NAVDEF.slice(); if (S.admin) g.push(["Gestão", [["admin", S.mode === "local" ? "Editor de conteúdo" : "Conteúdo"]]]); return g; }
-const HNAV = [["inicio", "Início"], ["trilhas", "Trilhas"], ["lab", "Laboratório"], ["projetos", "Projetos"], ["desafios", "Treino"], ["noticias", "Notícias"], ["livros", "Livros"]];
+const HNAV = [["inicio", "Início"], ["trilhas", "Trilhas"], ["lab", "Laboratório"], ["projetos", "Projetos"], ["desafios", "Treino"], ["noticias", "Notícias"], ["livros", "Livros"]].filter(([r]) => r !== "noticias" || NEWS_ON);
 function modeText() { return S.mode === "local" ? (DESK ? "Programa instalado" : "Versão web") : S.mode === "claude" ? (S.admin ? "Administrador" : S.uid ? "Aluno" : "Visitante") : "Carregando"; }
 function renderChrome() {
   const grp = navGroup(); const xp = calcXP(), lv = levelFor(xp);
@@ -705,6 +721,9 @@ const IC = {
   codigo: svg('<path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/>'),
   dados: svg('<ellipse cx="12" cy="5.5" rx="7.5" ry="2.8"/><path d="M4.5 5.5v6c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8v-6M4.5 11.5v6c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8v-6"/>'),
   chip: svg('<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/><rect x="10" y="10" width="4" height="4"/>'),
+  agente: svg('<rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 16.5h5M2 13h3M19 13h3"/>'),
+  pessoas: svg('<circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0112 0M16 4.5a3.2 3.2 0 010 6.3M18 14.2A6 6 0 0121 20"/>'),
+  escudo: svg('<path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M9 12l2 2 4-4"/>'),
   carreira: svg('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2M3 13h18"/>')
 };
 
@@ -744,7 +763,8 @@ const tLesson = l => tile("lessons", l, { pct: lessonPct(l.id), meta: "<span>" +
 const tProj = p => tile("projects", p, { pct: projPct(p), badge: S.prog.projects[p.id] && S.prog.projects[p.id].done ? '<span class="art-badge ok">Entregue</span>' : "", meta: "<span>" + esc(p.duration) + "</span><span>" + esc(p.level) + "</span>" });
 const tNews = n => tile("news", n, { badge: isNew(n) ? '<span class="art-badge">Nova</span>' : "", meta: "<span>" + esc(fmtDate(n.publishedAt)) + "</span>" });
 const tBook = b => tile("books", b, { cls: "poster book", meta: "<span>" + esc(b.authors) + "</span>" });
-const tTrack = t => tile("track", t, { cls: "poster", pct: trackPct(t.id), meta: "<span>" + tracksLessons(t.id).length + " lições</span>" + (trackPct(t.id) ? "<span>" + trackPct(t.id) + "%</span>" : "") });
+const lessonsTxt = n => n + (n === 1 ? " lição" : " lições");
+const tTrack = t => tile("track", t, { cls: "poster", pct: trackPct(t.id), meta: "<span>" + (tracksLessons(t.id).length ? lessonsTxt(tracksLessons(t.id).length) : "Em breve") + "</span>" + (trackPct(t.id) ? "<span>" + trackPct(t.id) + "%</span>" : "") });
 
 VIEWS.inicio = () => {
   const f = dailyCase();
@@ -784,8 +804,13 @@ function renderModal() {
   if (first) { const x = root.querySelector(".x"); if (x) x.focus(); }
 }
 function circ(k) { const on = isFav(k); return '<button class="circ" data-act="fav" data-k="' + esc(k) + '" aria-pressed="' + on + '" aria-label="' + (on ? "Remover dos salvos" : "Salvar") + '" title="' + (on ? "Remover dos salvos" : "Salvar") + '">' + (on ? IC.check : IC.plus) + "</button>"; }
+function planList(t) {
+  const p = arr(t.plan); if (!p.length) return "";
+  return '<div class="list">' + p.map(([c, r]) => '<div><div style="min-width:0"><b>' + esc(c) + '</b><p class="small muted" style="margin-top:2px">Projeto final: ' + esc(r) + '</p></div><span class="chip">Em breve</span></div>').join("") + "</div>";
+}
 function eps(trackId, curId) {
   const ls = tracksLessons(trackId);
+  if (!ls.length) return "";
   return '<div class="eps"><div class="eps-h"><h3>Lições</h3><span class="small muted">' + esc(trackOf(trackId).name) + "</span></div>" + ls.map((l, i) => { const pc = lessonPct(l.id); return '<button class="ep' + (l.id === curId ? " cur" : "") + '" data-act="go" data-r="licao" data-id="' + esc(l.id) + '"><span class="ep-n">' + (i + 1) + '</span><span class="ep-art">' + art("lessons", l) + (pc ? '<span class="pbar"><i style="width:' + pc + '%"></i></span>' : "") + '</span><span class="ep-txt"><span class="ep-top"><b>' + esc(l.title) + "</b><span>" + (lessonDone(l.id) ? '<span class="ok-t">Concluída</span> ' : "") + (l.minutes || 5) + " min</span></span><p>" + esc(l.summary) + "</p></span></button>"; }).join("") + "</div>";
 }
 function modalHTML(type, id) {
@@ -807,7 +832,8 @@ function modalHTML(type, id) {
     const ls = tracksLessons(x.id), nx = ls.find(l => !lessonDone(l.id)) || ls[0], pc = trackPct(x.id);
     const more = pub("projects").filter(p => p.track === x.id).map(tProj).concat(pub("cases").filter(c => c.track === x.id).map(tCase));
     return hero(x.name, (nx ? '<button class="btn play" data-act="go" data-r="licao" data-id="' + esc(nx.id) + '">' + IC.play + (pc ? "Continuar" : "Começar") + "</button>" : "") + '<button class="btn info" data-act="go" data-r="trilha" data-id="' + esc(x.id) + '">' + IC.info + "Ver a trilha</button>") +
-      '<div class="m-body"><div><div class="meta-row"><span>' + ls.length + " lições</span>" + (pc ? '<span class="ok-t">' + pc + "% concluído</span>" : "") + "</div><p>" + esc(x.desc) + "</p></div>" + side([["Projetos", String(pub("projects").filter(p => p.track === x.id).length)], ["Desafios no Laboratório", String(pub("cases").filter(c => c.track === x.id).length)]]) + "</div>" + eps(x.id, nx && nx.id) +
+      '<div class="m-body"><div><div class="meta-row"><span>' + (ls.length ? lessonsTxt(ls.length) : "Em breve") + "</span>" + (pc ? '<span class="ok-t">' + pc + "% concluído</span>" : "") + "</div><p>" + esc(x.desc) + "</p></div>" + side([["Projetos", String(pub("projects").filter(p => p.track === x.id).length)], ["Desafios no Laboratório", String(pub("cases").filter(c => c.track === x.id).length)]]) + "</div>" + eps(x.id, nx && nx.id) +
+      (arr(x.plan).length ? '<div class="eps"><div class="eps-h"><h3>Em breve</h3><span class="small muted">Próximos cursos da trilha</span></div>' + planList(x) + "</div>" : "") +
       (more.length ? '<div class="eps" style="padding-bottom:12px"><div class="eps-h"><h3>Para praticar</h3></div></div><div class="m-more">' + more.join("") + "</div>" : "");
   }
   if (type === "projects") {
@@ -955,14 +981,14 @@ VIEWS.correcao = id => {
 };
 
 /* ----- Trilhas e lições ----- */
-VIEWS.trilhas = () => '<div class="gut page-top">' + dbNotice() + head("Trilhas", "Quatro caminhos para entrar em tecnologia. Cada trilha tem lições curtas com exercícios, um projeto guiado e desafios no Laboratório.") + '</div><div class="rows plain">' + rail("Escolha por onde começar", TRACKS.map(tTrack), { tall: true }) + TRACKS.map(t => rail(t.name, tracksLessons(t.id).map(tLesson), { more: ["trilha", t.id] })).join("") + "</div>";
+VIEWS.trilhas = () => '<div class="gut page-top">' + dbNotice() + head("Trilhas", "Seis trilhas e um bônus de carreira para usar IA no trabalho. Cada curso termina com algo pronto para usar; os que ainda estão sendo produzidos aparecem como Em breve.") + '</div><div class="rows plain">' + rail("Escolha por onde começar", TRACKS.map(tTrack), { tall: true }) + TRACKS.map(t => rail(t.name, tracksLessons(t.id).map(tLesson), { more: ["trilha", t.id] })).join("") + "</div>";
 VIEWS.trilha = id => {
   const t = trackOf(id); const ls = tracksLessons(t.id); const firstOpen = ls.find(l => !lessonDone(l.id));
   const projs = pub("projects").filter(p => p.track === t.id), cs = pub("cases").filter(c => c.track === t.id);
   return '<div data-t="' + t.id + '" class="stack" style="gap:26px"><div><button class="back" data-act="go" data-r="trilhas">← Trilhas</button><div class="thead"><span class="ico">' + IC[t.ico] + '</span><div><h1>' + esc(t.name) + '</h1><p class="lead muted" style="margin-top:6px">' + esc(t.desc) + "</p></div></div></div>" +
-    '<div class="split"><div class="panel"><div class="ph"><h3>Lições</h3><span class="chip">' + ls.filter(l => lessonDone(l.id)).length + " de " + ls.length + '</span></div><div class="timeline">' +
+    '<div class="split"><div class="stack" style="gap:18px">' + (ls.length ? "" : '<div class="panel"><h3>Lições</h3><p class="muted">As primeiras lições desta trilha estão em produção.</p></div>') + (ls.length ? '<div class="panel"><div class="ph"><h3>Lições</h3><span class="chip">' + ls.filter(l => lessonDone(l.id)).length + " de " + ls.length + '</span></div><div class="timeline">' +
     (ls.map((l, i) => { const p = S.prog.lessons[l.id]; const cls = p && p.done ? "done" : l === firstOpen ? "next" : ""; return '<div class="tl-item ' + cls + '"><span class="tl-dot">' + (p && p.done ? "✓" : i + 1) + '</span><div style="min-width:0"><h3><button class="link" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">' + esc(l.title) + '</button></h3><p class="small muted" style="margin-top:3px">' + esc(l.summary) + ' <span class="dim">' + (l.minutes || 5) + " min</span></p></div>" + (p && p.done ? '<span class="chip ok">' + p.score + "/" + arr(l.questions).length + "</span>" : l === firstOpen ? '<button class="btn sm primary" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">Estudar</button>' : "<span></span>") + "</div>"; }).join("") || '<p class="muted">Nenhuma lição publicada nesta trilha.</p>') +
-    '</div></div><div class="stack" style="gap:18px">' + (projs.length ? '<div class="panel"><h3>Projeto guiado</h3><div class="list">' + projs.map(p => '<div><button class="link" data-act="go" data-r="projeto" data-id="' + esc(p.id) + '">' + esc(p.title) + '</button><span class="small dim">' + esc(p.duration) + "</span></div>").join("") + "</div></div>" : "") +
+    '</div></div>' : "") + (arr(t.plan).length ? '<div class="panel"><div class="ph"><h3>Em breve</h3><span class="chip">' + arr(t.plan).length + (arr(t.plan).length === 1 ? " curso" : " cursos") + "</span></div>" + planList(t) + "</div>" : "") + '</div><div class="stack" style="gap:18px">' + (projs.length ? '<div class="panel"><h3>Projeto guiado</h3><div class="list">' + projs.map(p => '<div><button class="link" data-act="go" data-r="projeto" data-id="' + esc(p.id) + '">' + esc(p.title) + '</button><span class="small dim">' + esc(p.duration) + "</span></div>").join("") + "</div></div>" : "") +
     (cs.length ? '<div class="panel"><h3>No Laboratório</h3><div class="list">' + cs.map(c => '<div><button class="link" data-act="go" data-r="caso" data-id="' + esc(c.id) + '">' + esc(c.title) + "</button>" + (S.prog.attempts[c.id] ? '<span class="chip ok">feito</span>' : "") + "</div>").join("") + "</div></div>" : "") + "</div></div></div>";
 };
 VIEWS.licao = id => {
@@ -1076,24 +1102,24 @@ VIEWS.favoritos = () => {
   const groups = { cases: [], lessons: [], projects: [], news: [], books: [] };
   S.prog.favorites.forEach(k => { const [t, id] = k.split(":"); const x = groups[t] && visible(t, id); if (x) groups[t].push(x); });
   const any = Object.values(groups).some(g => g.length);
-  return head("Salvos", "Desafios, lições, projetos, notícias e livros que você marcou.") +
+  return head("Salvos", "Desafios, lições, projetos e livros que você marcou.") +
     (any ? '<div class="projects">' + Object.entries(groups).filter(([, g]) => g.length).map(([t, g]) => '<div class="panel"><h3>' + TYPES[t].label + '</h3><div class="list">' + g.map(x => '<div><button class="link" data-act="go" data-r="' + ROUTE_OF[t] + '" data-id="' + esc(t === "news" || t === "books" ? "" : x.id) + '">' + esc(x.title) + '</button><button class="btn ghost sm" data-act="fav" data-k="' + t + ":" + esc(x.id) + '">Remover</button></div>').join("") + "</div></div>").join("") + "</div>" : emptyBox("Nada salvo ainda. Use o botão ☆ Salvar nas lições, desafios, projetos, notícias e livros."));
 };
 
 /* ----- Próximas etapas ----- */
 VIEWS.roteiro = () => {
-  const P = [["Versão 2.0", "Disponível", "ok", ["Quatro trilhas: IA e agentes, Programação, Dados e IoT", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Notícias com fonte e livros atuais", "Progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
-    ["Próxima", "Planejada", "go", ["Rodar código Python e JavaScript direto na lição", "Mais lições por trilha e desafios de nível avançado", "Volter Assist também no programa instalado", "Certificado por trilha concluída"]],
-    ["Depois", "Planejada", "", ["Turmas para escolas e empresas", "Comunidade para compartilhar projetos", "Aplicativo para celular com modo offline"]]];
+  const P = [["Versão 2.2", "Disponível", "ok", ["Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
+    ["Próxima", "Planejada", "go", ["Cursos completos da trilha IA no Trabalho", "Trilha Agentes e Automação: n8n, WhatsApp e primeiro agente", "Volter Assist também no programa instalado", "Certificado por curso concluído"]],
+    ["Depois", "Planejada", "", ["Turmas fechadas e licenças para empresas", "Um curso de IA por profissão a cada etapa", "Aplicativo para celular com modo offline"]]];
   const L = S.mode === "local";
-  const I = [["Conteúdo", L ? "Arquivo data/conteudo.js" : S.db ? "Banco de dados do app" : "Indisponível", true], ["Progresso", L ? (DESK ? "Neste computador" : "Neste navegador") : S.uid ? "Na conta do aluno" : "Neste navegador", true], ["Volter Assist (IA)", S.sample ? "Funcionando" : L ? "Precisa de servidor" : "Indisponível aqui", !!S.sample], ["Notícias", "Revisadas toda semana", true]];
+  const I = [["Conteúdo", L ? "Arquivo data/conteudo.js" : S.db ? "Banco de dados do app" : "Indisponível", true], ["Progresso", L ? (DESK ? "Neste computador" : "Neste navegador") : S.uid ? "Na conta do aluno" : "Neste navegador", true], ["Volter Assist (IA)", S.sample ? "Funcionando" : L ? "Precisa de servidor" : "Indisponível aqui", !!S.sample]];
   return head("Próximas etapas", "O que já funciona e o que vem por aí.") +
     '<div class="split"><div class="panel">' + P.map(([t, s, cl, items]) => '<div class="phase"><div><b>' + t + '</b><br><span class="chip ' + cl + '">' + s + '</span></div><ul style="margin:0;padding-left:18px">' + items.map(i => "<li>" + i + "</li>").join("") + "</ul></div>").join("") + '</div><div class="panel"><h3>Como está funcionando</h3><div class="list">' + I.map(([n, s, ok]) => "<div><span>" + n + '</span><span class="chip ' + (ok ? "ok" : "") + '">' + s + "</span></div>").join("") + "</div></div></div>";
 };
 
 /* ================= ADMINISTRAÇÃO ================= */
 const sec = (l, h) => ({ sec: l, h });
-const TRACK_OPTS = TRACKS.map(t => [t.id, t.name]);
+const TRACK_OPTS = TRACKS.map(t => [t.id, t.name]).concat([["iot", "IoT e robótica (oculta)"]]);
 const FIELDS = {
   cases: [
     sec("Identificação"),
@@ -1200,9 +1226,9 @@ VIEWS.admin = () => {
   const t = S.ui.stab, f = S.ui.sfilter, L = S.mode === "local";
   const items = all(t).filter(x => !f || x.status === f).sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
   const cnt = s => all(t).filter(x => x.status === s).length;
-  return dbNotice() + head("Conteúdo", "Crie e publique desafios, lições, projetos, notícias e livros. Rascunhos e itens em revisão não aparecem para os alunos.", '<button class="btn primary" data-act="new" data-t="' + t + '">' + NEWLABEL(t) + "</button>") +
+  return dbNotice() + head("Conteúdo", "Crie e publique desafios, lições, projetos e livros. Rascunhos e itens em revisão não aparecem para os alunos.", '<button class="btn primary" data-act="new" data-t="' + t + '">' + NEWLABEL(t) + "</button>") +
     (L ? '<div class="notice"><b>Edição local:</b> as alterações ficam salvas ' + (DESK ? "neste computador" : "neste navegador") + '. Para publicá-las no site, gere o <code>conteudo.js</code> e substitua o arquivo <code>data/conteudo.js</code> do repositório.<div class="row" style="margin-top:10px"><button class="btn sm primary" data-act="export">Gerar conteudo.js</button><button class="btn sm" data-act="resetlocal">Descartar alterações locais</button></div></div>' : "") +
-    '<div class="tabs" role="tablist">' + Object.entries(TYPES).map(([k, v]) => '<button role="tab" aria-selected="' + (k === t) + '" data-act="ui" data-k="stab" data-v="' + k + '">' + v.label + " (" + all(k).length + ")</button>").join("") + "</div>" +
+    '<div class="tabs" role="tablist">' + Object.entries(TYPES).filter(([k]) => k !== "news" || NEWS_ON).map(([k, v]) => '<button role="tab" aria-selected="' + (k === t) + '" data-act="ui" data-k="stab" data-v="' + k + '">' + v.label + " (" + all(k).length + ")</button>").join("") + "</div>" +
     '<div class="filters"><button class="pill" data-act="ui" data-k="sfilter" data-v="" aria-pressed="' + (!f) + '">Todos</button>' + Object.entries(STATUS).map(([k, v]) => '<button class="pill" data-act="ui" data-k="sfilter" data-v="' + k + '" aria-pressed="' + (f === k) + '">' + v + " (" + cnt(k) + ")</button>").join("") + "</div>" +
     '<div class="panel tbl-wrap">' + (items.length ? "<table><thead><tr><th>Título</th><th>Status</th><th>Atualizado</th><th></th></tr></thead><tbody>" + items.map(x => "<tr><td><b>" + esc(x.title || "(sem título)") + "</b>" + (x.track ? " " + tchip(x.track) : "") + '</td><td><span class="chip st-' + x.status + '">' + (STATUS[x.status] || x.status) + '</span></td><td class="num small">' + fmtDate(x.updatedAt) + '</td><td><div class="row" style="justify-content:flex-end;flex-wrap:nowrap;gap:6px"><button class="btn sm" data-act="edit" data-t="' + t + '" data-id="' + esc(x.id) + '">Editar</button>' + (x.status === "published" ? '<button class="btn sm ghost" data-act="go" data-r="' + ROUTE_OF[t] + '" data-id="' + esc(t === "news" || t === "books" ? "" : x.id) + '">Ver</button>' : "") + "</div></td></tr>").join("") + "</tbody></table>" : emptyBox("Nenhum item " + (f ? "com status " + STATUS[f].toLowerCase() : "cadastrado") + ".")) + "</div>";
 };

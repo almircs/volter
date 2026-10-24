@@ -854,8 +854,8 @@ window.VOLTER_SEED = {
     }
    ],
    "title": "Chatbot de atendimento inventa um preço que não existe",
-   "track": "ia",
-   "updatedAt": "2026-10-19T01:30:00.000Z"
+   "track": "agentes",
+   "updatedAt": "2026-10-24T00:30:00.000Z"
   }
  },
  "lessons": {
@@ -1182,7 +1182,7 @@ window.VOLTER_SEED = {
     "Chaves de API só no servidor."
    ],
    "minutes": 9,
-   "order": 3,
+   "order": 1,
    "questions": [
     {
      "answer": 2,
@@ -1222,8 +1222,8 @@ window.VOLTER_SEED = {
    "status": "published",
    "summary": "O que muda quando a IA passa a usar ferramentas e executar tarefas.",
    "title": "Agentes e automação: do chat à ação",
-   "track": "ia",
-   "updatedAt": "2026-10-19T01:30:00.000Z"
+   "track": "agentes",
+   "updatedAt": "2026-10-24T00:30:00.000Z"
   },
   "iot-1-intro": {
    "author": "",
@@ -1632,8 +1632,8 @@ window.VOLTER_SEED = {
     "API de um modelo de linguagem",
     "Banco vetorial (o armazenamento vetorial do n8n serve para começar)"
    ],
-   "track": "ia",
-   "updatedAt": "2026-10-19T01:30:00.000Z"
+   "track": "agentes",
+   "updatedAt": "2026-10-24T00:30:00.000Z"
   },
   "estacao-esp32": {
    "author": "",

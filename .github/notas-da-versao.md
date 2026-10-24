@@ -10,6 +10,13 @@ Na primeira vez, clique no Volter com o botão direito → **Abrir** → **Abrir
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.2.0: nova grade de trilhas
+- **Seis trilhas e um bônus**, seguindo a nova grade de temas: IA no Trabalho, Agentes e Automação, Programação com IA, Dados e Decisão, IA por Profissão, Segurança e Uso Responsável, e Carreira em Tecnologia
+- Os cursos planejados de cada trilha aparecem como **Em breve**, com o projeto final de cada um
+- A lição de agentes, o projeto do assistente com documentos e o desafio do RAG passaram para a trilha Agentes e Automação
+- A seção **Notícias** foi suspensa e saiu do app
+- A trilha de IoT e robótica saiu da grade; as lições, o projeto e o desafio dela ficam guardados, mas não aparecem para os alunos
+
 ## Versão 2.1.0: visual de streaming
 - **Início novo:** um banner grande com o desafio do dia e fileiras de capas que deslizam para o lado: Continue de onde parou, trilhas, desafios do Laboratório, lições de cada trilha, projetos, notícias e livros
 - **Janela de detalhes:** ao clicar numa capa, abre um resumo com o botão para começar e o de salvar; nas trilhas e lições, as lições aparecem como uma lista de episódios, com barra de progresso

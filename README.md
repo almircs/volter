@@ -1,17 +1,22 @@
 # Volter
 
-**Aprenda tecnologia consertando o que quebrou.**
+**IA prática para quem trabalha.**
 
-O Volter é uma plataforma para quem está começando em tecnologia. Você aprende os conceitos em trilhas curtas e pratica no **Laboratório**, investigando problemas que acontecem de verdade: um chatbot que inventa respostas, uma página que mostra `undefined`, um painel com números errados, um sensor que para de enviar dados.
+O Volter é uma plataforma para quem quer usar IA e tecnologia no trabalho. Cada curso termina com algo pronto para usar, e no **Laboratório** você pratica investigando problemas que acontecem de verdade: um chatbot que inventa respostas, uma página que mostra `undefined`, um painel com números errados.
 
 ## Trilhas
 
 | Trilha | O que você aprende |
 |---|---|
-| **IA, agentes e automação** | Como funcionam os modelos de linguagem, prompts que funcionam, agentes, RAG e automações com n8n |
-| **Programação: Python e web** | Lógica, Python, leitura de erros, HTML, CSS, JavaScript e APIs |
-| **Dados e análise** | Tabelas, SQL, JOIN sem armadilhas, pandas e gráficos |
-| **IoT e robótica** | ESP32, sensores, Wi-Fi, MQTT e dispositivos que se recuperam sozinhos |
+| **IA no Trabalho** | ChatGPT, Claude e Gemini no dia a dia: prompts, documentos, planilhas e pesquisa com fontes conferidas |
+| **Agentes e Automação** | n8n, WhatsApp, APIs de IA e agentes que executam tarefas |
+| **Programação com IA** | Lógica, Python e web com a IA como tutora, até um app instalável |
+| **Dados e Decisão** | Planilhas, SQL e dashboards para decidir com números |
+| **IA por Profissão** | IA aplicada a pequenos negócios, RH, educação, saúde e profissões técnicas |
+| **Segurança e Uso Responsável** | Golpes, deepfakes, LGPD e regras para usar IA com dados da empresa |
+| **Carreira em Tecnologia** (bônus) | Recomeço em tecnologia depois dos 40, com plano de transição e portfólio |
+
+Os cursos que ainda não têm lições aparecem no app como **Em breve**. A lista vem de [`docs/grade-de-temas.md`](docs/grade-de-temas.md) e fica no campo `plan` de cada trilha, em `TRACKS` no `index.html`. A antiga trilha de IoT saiu da grade: os itens com trilha `iot` continuam em `data/conteudo.js`, mas ficam ocultos para os alunos.
 
 ### Planejamento de cursos
 
@@ -24,14 +29,13 @@ A grade de temas em [`docs/grade-de-temas.md`](docs/grade-de-temas.md) define o 
 | **Início** | Banner com o desafio do dia e fileiras de capas, no estilo das plataformas de streaming; cada capa abre uma janela com detalhes e, nas trilhas, a lista de lições como episódios |
 | **Trilhas** | Lições curtas com blocos de código e exercícios |
 | **Laboratório** | Desafios de investigação em 7 etapas: entender, hipóteses, investigar, evidências, causa, corrigir e aprender, com correção comentada |
-| **Projetos** | Projetos guiados com passo a passo, para montar um portfólio (assistente com RAG, site no GitHub Pages, painel de gastos com pandas, estação IoT com ESP32) |
+| **Projetos** | Projetos guiados com passo a passo, para montar um portfólio (assistente com RAG, site no GitHub Pages, painel de gastos com pandas) |
 | **Treino** | Perguntas sorteadas de todas as trilhas e o desafio do dia |
-| **Notícias** | IA, programação, dados e IoT, com prévia, link da fonte e o que muda para quem está aprendendo |
 | **Livros** | Lançamentos e referências, com o motivo de cada leitura |
 | **Meu progresso** | Nível, XP, progresso por trilha, como você investiga e conquistas |
-| **Editor de conteúdo** | Formulários para criar, revisar e publicar desafios, lições, projetos, notícias e livros |
+| **Editor de conteúdo** | Formulários para criar, revisar e publicar desafios, lições, projetos e livros |
 
-Os desafios do Laboratório são exemplos didáticos, marcados como tal. As notícias e os livros são reais, com link para a fonte.
+Os desafios do Laboratório são exemplos didáticos, marcados como tal. Os livros são reais, com link para a fonte.
 
 ## Instalar no computador (Windows e Mac)
 
@@ -72,9 +76,11 @@ Para publicar como site, ative **Settings → Pages** com a branch `main`. Em re
 
 O conteúdo fica em `data/conteudo.js`. Para editar pelo app, abra com `#admin` no fim do endereço (no programa instalado, use **Ferramentas → Ativar o editor de conteúdo**). As mudanças ficam no seu computador; clique em **Gerar conteudo.js** e substitua o arquivo do repositório para publicar.
 
-## Notícias toda semana
+## Notícias (suspensas)
 
-Uma tarefa agendada roda toda segunda-feira de manhã. Ela pesquisa as novidades da semana em IA, programação, dados e IoT e cadastra de 3 a 6 notícias no Volter do claude.ai com status **Em revisão**. Nada aparece para os alunos sem aprovação. Depois, copia todo o conteúdo do claude.ai para `data/conteudo.js` com `ferramentas/sincronizar-conteudo.js` e envia para este repositório, o que gera instaladores atualizados.
+A seção Notícias está suspensa desde a versão 2.2.0: ela não aparece no app e a tarefa semanal que pesquisava e cadastrava notícias está pausada. As notícias já cadastradas continuam no banco, sem aparecer para os alunos. Para reativar, troque `NEWS_ON` para `true` no `index.html` e retome a tarefa agendada.
+
+Para levar ao repositório o que for editado no Volter do claude.ai, exporte as coleções e rode `node ferramentas/sincronizar-conteudo.js <pasta-exportada>`.
 
 ## Três jeitos de usar
 
