@@ -10,6 +10,12 @@ Na primeira vez, clique no Volter com o botão direito → **Abrir** → **Abrir
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.6.0: a experiência do autor dentro do Volter
+- **Quadros "Da bancada do Carlos"** em quatro lições, com casos reais: da válvula ao SMD (história da eletrônica), cada geração de componente pede uma solda diferente, camada sobre camada até a robótica (contatores) e o cuidado com equipamentos de saúde (roteiro de falhas)
+- **Nova lição na aba 40+:** "Sua experiência vale: traduzindo anos de trabalho para a tecnologia", contada a partir da trajetória do autor, do balcão de uma loja à programação e à IA
+- **Novo desafio no Laboratório, baseado num caso real:** o IHM que já avisava e parou na festa de fim de ano
+- No editor de conteúdo, cada lição pode ganhar um quadro "Da bancada"
+
 ## Versão 2.5.0: Eletrônica básica completa
 - **9 lições novas** na etapa Eletrônica básica, que agora tem 14: primeiros circuitos (condutores, isolantes e placas), solda e montagem de placas, ganho do transistor e sensores, relés e alarme com autorretenção, amplificadores, circuitos biestável, monoestável e astável, chips e microprocessadores, a história da eletrônica e um roteiro de falhas
 - **Dois simuladores novos:** transistor ligado por potenciômetro, LDR ou termistor, e amplificador com ganho, polarização e corte

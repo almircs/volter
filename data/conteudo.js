@@ -827,6 +827,187 @@ window.VOLTER_SEED = {
    "track": "dados",
    "updatedAt": "2026-10-19T01:30:00.000Z"
   },
+  "ihm-fim-de-ano": {
+   "actions": [
+    {
+     "correct": true,
+     "feedback": "Correto: resolve a parada e ataca a causa de fundo, que foi adiar a manutenção.",
+     "id": "a1",
+     "text": "Buscar um IHM compatível com urgência, extrair e adaptar o projeto para o novo hardware, testar a linha e depois abrir um plano: IHM reserva no estoque, cópia de segurança do projeto atualizada e troca preventiva dos equipamentos no fim da vida útil",
+     "unsafe": false
+    },
+    {
+     "correct": false,
+     "feedback": "Inseguro: a linha fica sem a interface de alarmes e de confirmação do operador.",
+     "id": "a2",
+     "text": "Forçar as saídas no CLP e rodar a linha sem IHM até depois das festas",
+     "unsafe": true
+    },
+    {
+     "correct": false,
+     "feedback": "Gasta muito e não resolve a falha, que está no IHM.",
+     "id": "a3",
+     "text": "Trocar o CLP inteiro, já que IHM e CLP são da mesma época",
+     "unsafe": false
+    }
+   ],
+   "author": "",
+   "causes": [
+    {
+     "correct": true,
+     "id": "c1",
+     "text": "Falha de hardware do IHM no fim da vida útil, depois de meses de sinais ignorados"
+    },
+    {
+     "correct": false,
+     "id": "c2",
+     "text": "Falha de CPU do CLP"
+    },
+    {
+     "correct": false,
+     "id": "c3",
+     "text": "Cabo de comunicação rompido"
+    }
+   ],
+   "conditions": "Noite de confraternização, equipe técnica reduzida. Não há IHM reserva no almoxarifado.",
+   "context": "É fim de ano e a equipe está na confraternização da empresa quando a linha para. O operador informa que a tela do IHM congelou e não responde. Sem o IHM, não dá para selecionar receitas, reconhecer alarmes nem dar partida no ciclo automático.",
+   "createdAt": "2026-10-24T19:40:00.000Z",
+   "demo": true,
+   "equipment": "Linha de produção automatizada com CLP Siemens e IHM (interface homem-máquina) de painel",
+   "hints": [
+    "O CLP está em RUN. Onde mais pode estar o problema?",
+    "O que o histórico de meses de travamentos está dizendo?",
+    "Além de voltar a produzir, o que precisa mudar para isso não se repetir?"
+   ],
+   "history": "O equipamento dava sinais de fim de vida útil havia meses. A troca nunca foi programada, com a justificativa de que 'ainda está funcionando'.",
+   "hypotheses": [
+    {
+     "correct": true,
+     "id": "h1",
+     "text": "O IHM chegou ao fim da vida útil e o hardware falhou"
+    },
+    {
+     "correct": false,
+     "id": "h2",
+     "text": "O CLP parou e a linha caiu por falha de CPU"
+    },
+    {
+     "correct": false,
+     "id": "h3",
+     "text": "Falta a alimentação de 24 V do painel"
+    },
+    {
+     "correct": false,
+     "id": "h4",
+     "text": "O cabo de rede entre IHM e CLP se rompeu"
+    },
+    {
+     "correct": false,
+     "id": "h5",
+     "text": "Um operador alterou um parâmetro da receita"
+    }
+   ],
+   "level": 3,
+   "objective": "Identificar a causa da parada, devolver a linha à produção com segurança e evitar que isso se repita.",
+   "solution": {
+    "explanation": "Este desafio é baseado num caso vivido pelo autor do Volter. O IHM já dava sinais de fim de vida havia meses: travava, perdia a comunicação, e a equipe contornava com 'jeitinhos'. Na noite da confraternização, ele falhou de vez. A saída foi direto da festa para o aeroporto, buscar um equipamento substituto, e depois extrair, interpretar e adaptar o programa do IHM antigo para o novo hardware, junto com o encarregado da equipe. Somando horas de linha parada, deslocamento emergencial, equipamento comprado fora do planejamento, hora técnica em regime de urgência e produção perdida no pior momento do ano, a conta ficou muito acima do que custaria uma troca planejada.",
+    "lessons": [
+     "Uma troca planejada custa uma fração de uma troca de emergência.",
+     "Sinais repetidos de falha são um pedido de substituição, não algo a contornar.",
+     "Manutenção não é a linha que drena o resultado: é a que protege tudo o que gera resultado."
+    ],
+    "logic": [
+     "CLP em RUN e 24 V presentes: o controle e a alimentação estavam bons.",
+     "O IHM reiniciava em ciclo antes de carregar o projeto: falha do próprio equipamento.",
+     "O histórico mostrava meses de travamentos sem ordem de substituição.",
+     "A correção imediata é a troca; a correção de verdade é parar de adiar a manutenção."
+    ],
+    "mistakes": [
+     "Tratar 'ainda está funcionando' como sinônimo de 'está bom'.",
+     "Não ter cópia de segurança atualizada do projeto do IHM.",
+     "Forçar saídas para produzir sem a interface de operação."
+    ]
+   },
+   "status": "published",
+   "summary": "Baseado num caso real: a interface de operação de uma linha de produção travou de vez durante a confraternização da empresa, e a linha parou junto.",
+   "symptoms": [
+    "Tela do IHM congelada, sem resposta ao toque",
+    "Linha parada no meio do turno",
+    "Nas semanas anteriores, o IHM travava de vez em quando e a comunicação com o CLP caía em alguns momentos",
+    "Os operadores já tinham 'jeitinhos' para contornar: desligar e religar o painel, esperar e tentar de novo"
+   ],
+   "tags": [
+    "IHM",
+    "CLP",
+    "manutenção preventiva",
+    "caso real"
+   ],
+   "techInfo": [
+    "Alimentação do IHM em 24 V CC",
+    "Comunicação IHM–CLP por rede industrial",
+    "O CLP continua em RUN, sem falha de CPU",
+    "O projeto do IHM não tem cópia de segurança atualizada no servidor"
+   ],
+   "tests": [
+    {
+     "how": "Olhar os LEDs da CPU e o diagnóstico pelo software de programação",
+     "id": "t1",
+     "insight": "O CLP está bom: o problema está na interface, não no controle.",
+     "name": "Verificar o estado do CLP",
+     "reading": "RUN · sem falhas",
+     "result": "CPU em RUN, sem erros no buffer de diagnóstico",
+     "value": "util"
+    },
+    {
+     "how": "Multímetro nos bornes de 24 V CC do IHM",
+     "id": "t2",
+     "insight": "A alimentação está correta; descarta falta de energia.",
+     "name": "Medir a alimentação do IHM",
+     "reading": "24,1 V",
+     "result": "24,1 V estáveis",
+     "value": "util"
+    },
+    {
+     "how": "Desligar e religar a alimentação do IHM",
+     "id": "t3",
+     "insight": "Reinício em ciclo, depois de meses de travamentos, aponta para falha de hardware (memória ou placa) no fim da vida útil.",
+     "name": "Reiniciar o IHM e observar a inicialização",
+     "reading": "",
+     "result": "O IHM entra na tela de inicialização, trava no meio da carga do projeto e reinicia sozinho, em ciclo",
+     "value": "util"
+    },
+    {
+     "how": "Trocar o cabo por um reserva e conferir os conectores",
+     "id": "t4",
+     "insight": "O cabo não é a causa, já que o IHM nem chega a carregar o projeto.",
+     "name": "Testar o cabo de comunicação",
+     "reading": "",
+     "result": "Nada muda; o IHM continua reiniciando antes de tentar comunicar",
+     "value": "neutro"
+    },
+    {
+     "how": "Livro de turno e ordens de serviço dos últimos meses",
+     "id": "t5",
+     "insight": "O equipamento avisou por meses; os sinais foram contornados em vez de tratados.",
+     "name": "Consultar o histórico de ocorrências da linha",
+     "reading": "",
+     "result": "Vários registros de 'IHM travou, reiniciado pelo operador', sem ordem de serviço de substituição",
+     "value": "util"
+    },
+    {
+     "how": "Forçar as saídas de partida pelo software de programação, com a linha energizada",
+     "id": "t6",
+     "insight": "Forçar saídas ignora intertravamentos e a confirmação de alarmes que o operador faria pelo IHM. Risco de acidente e de dano à máquina.",
+     "name": "Forçar saídas no CLP para rodar a linha sem o IHM",
+     "reading": "",
+     "result": "Teste não executado",
+     "value": "inseguro"
+    }
+   ],
+   "title": "O IHM que já avisava e parou na festa de fim de ano",
+   "track": "comandos",
+   "updatedAt": "2026-10-24T19:40:00.000Z"
+  },
   "luz-noturna-sem-base": {
    "actions": [
     {
@@ -1227,8 +1408,83 @@ window.VOLTER_SEED = {
   }
  },
  "lessons": {
+  "carreira-experiencia-vale": {
+   "author": "",
+   "bancada": "O curso do SENAI não foi o começo da carreira técnica. Foi a validação de uma que já estava andando havia cinco anos, escondida em consertos feitos em casa de madrugada e num TK83 estudado por conta própria.\n\nSe você está começando depois dos 40, olhe para a sua história com esse mesmo olhar: provavelmente boa parte do que a tecnologia pede você já faz há anos, só que com outro nome.",
+   "body": "Quem começa em tecnologia depois dos 40 costuma achar que começa do zero. Quase nunca é verdade. Esta lição conta uma trajetória real, a do autor do Volter, e mostra como cada fase dela virou uma habilidade que a tecnologia valoriza. Depois, é a sua vez.\n\n## Uma trajetória em capítulos\n- **1982 a 1992, o balcão:** dez anos vendendo sapatos. Atender uma pessoa de cada vez, entender o que ela precisava mesmo quando ela não sabia dizer, e fechar a venda sem forçar.\n- **1984, a curiosidade:** ainda solteiro, a compra de um TK83, um dos primeiros computadores pessoais vendidos no Brasil. Sem nenhuma razão prática, só vontade de entender.\n- **1988, o motivo:** nasce o primeiro de três filhos. Com inflação alta e faculdade difícil de alcançar, vem a decisão de estudar para uma profissão mais rentável.\n- **1992 a 1997, a virada:** trabalho com eletrônica e consertos em casa para completar a renda. Na ponta dos dedos, a evolução inteira dos componentes: válvula, transistor, circuito integrado, SMD.\n- **1996 e 1997, o diploma:** curso de eletrônica e automação no SENAI, que validou cinco anos de prática.\n- **1997 e 1998, a escolha:** um aviso no quadro da escola, um estágio numa indústria e, aos 34 anos, a contratação. O RH oferecia a operação, que pagava mais; a escolha foi insistir na área técnica, porque era ela que levava aonde se queria chegar.\n- **Anos de indústria:** automação, CLPs, IHMs, depois robótica, com Siemens STEP 7 e SIMATIC, treinamentos em linhas de engarrafamento no Brasil e no México.\n- **Hoje:** manutenção de equipamentos biomédicos, como autoclaves e instrumentos odontológicos, onde do outro lado da máquina existe um paciente.\n- **2018 e 2022, de volta aos estudos:** Big Data, filosofia e, depois, HTML, CSS, JavaScript, Git e Linux.\n- **Agora:** inteligência artificial aplicada à manutenção e à engenharia clínica, e este aplicativo.\n\n## O que cada fase ensinou, na língua da tecnologia\n- **Vender sapatos → levantar requisitos.** Entender o que o cliente precisa, mesmo quando ele não sabe explicar, é exatamente o trabalho de quem desenha um sistema ou um produto.\n- **Consertar aparelhos em casa → depurar.** Achar um defeito com método, medindo antes de trocar, é o mesmo raciocínio de achar um erro num programa.\n- **Atravessar da válvula ao SMD → aprender continuamente.** Tecnologia não se domina de uma vez; ela vem em camadas que se sobrepõem. Quem acompanha cada camada nunca fica realmente para trás.\n- **Indústria e manutenção → pensar em sistemas.** Uma linha de produção é uma rede de máquinas que dependem umas das outras, como os serviços de um sistema na nuvem. E parada não planejada sempre custa mais caro que a troca planejada.\n- **Equipamentos de saúde → responsabilidade e qualidade.** Testar com seriedade porque alguém depende do resultado é o que separa um software confiável de um que só \"funciona na minha máquina\".\n- **Escolher o estágio aos 34 → pensar no longo prazo.** O caminho mais curto no salário nem sempre é o caminho mais curto até onde se quer chegar.\n\n## O padrão que se repete\nCada virada começou do mesmo jeito: alguém disposto a admitir que ainda havia algo a aprender, mesmo com anos de experiência. E quase sempre o diploma veio **depois** da competência, não antes. Isso vale para você: o que você já sabe fazer conta, mesmo sem certificado.\n\n## Agora é a sua vez\nPegue papel ou uma planilha e faça três colunas:\n- **O que eu fiz:** cada emprego, função, bico ou responsabilidade, inclusive em casa e na comunidade.\n- **O que eu aprendi a fazer:** atender, negociar, organizar estoque, ensinar, consertar, coordenar equipe, cuidar de alguém.\n- **Como isso se chama em tecnologia:** levantar requisitos, atendimento ao cliente e suporte, gestão de projetos, testes e qualidade, documentação, treinamento, análise de dados.\n\nSe ficar em dúvida na terceira coluna, peça ajuda a uma IA: descreva o que você fazia, com detalhes, e pergunte quais habilidades de tecnologia aquilo mostra. Depois confira se a resposta faz sentido para você.\n\n## Projeto final\n**Lista das habilidades que você já tem.** Termine com pelo menos dez linhas na tabela e escolha as três habilidades que você mais quer mostrar num currículo ou no LinkedIn. Elas serão o ponto de partida dos próximos temas desta etapa.",
+   "createdAt": "2026-10-24T19:40:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T19:40:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Experiência fora da tecnologia vira habilidade de tecnologia.",
+    "Atender bem é levantar requisitos; consertar com método é depurar.",
+    "O diploma costuma vir depois da competência.",
+    "Aprender sempre um passo à frente da necessidade."
+   ],
+   "minutes": 12,
+   "order": 1,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Entender o que a pessoa precisa, mesmo quando ela não sabe explicar, é a base de qualquer projeto de sistema.",
+     "options": [
+      "Programação de CLP",
+      "Levantamento de requisitos e atendimento ao cliente",
+      "Solda de componentes SMD",
+      "Nenhuma habilidade útil"
+     ],
+     "prompt": "Na trajetória contada, a experiência de vender sapatos se traduz em tecnologia como:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Foi uma aposta no longo prazo, que se pagou em décadas na área técnica.",
+     "options": [
+      "Porque a operação não tinha vaga",
+      "Porque o estágio levava à área em que se queria construir carreira",
+      "Porque o estágio pagava mais",
+      "Por indicação do RH"
+     ],
+     "prompt": "Por que, aos 34 anos, a escolha foi o estágio técnico e não a operação, que pagava mais?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "O diploma costuma validar uma competência que já existe; a experiência conta.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Segundo a lição, quem não tem diploma em tecnologia não tem nenhuma habilidade para mostrar.",
+     "type": "vf"
+    },
+    {
+     "answer": 1,
+     "explain": "É o mesmo raciocínio: testar hipóteses e isolar o defeito.",
+     "options": [
+      "Depurar com método",
+      "Escrever documentação",
+      "Vender software",
+      "Montar servidores"
+     ],
+     "prompt": "Consertar aparelhos medindo antes de trocar peças corresponde, em programação, a:",
+     "type": "mc"
+    }
+   ],
+   "status": "published",
+   "summary": "A trajetória de quem saiu do balcão de uma loja, passou pela eletrônica, pela indústria e pelos equipamentos de saúde e, depois dos 50, foi aprender a programar.",
+   "title": "Sua experiência vale: traduzindo anos de trabalho para a tecnologia",
+   "track": "carreira",
+   "updatedAt": "2026-10-24T19:40:00.000Z"
+  },
   "cmd-contatores": {
    "author": "",
+   "bancada": "## Camada sobre camada\nNa indústria, os painéis com contatores e botoeiras foram o primeiro degrau. Depois vieram os CLPs e as IHMs, e por fim a robótica industrial, programada com Siemens STEP 7 e o ambiente SIMATIC.\n\nCada camada nova nunca substituiu a anterior: somou-se a ela. Quem entende o comando com contatores entende o programa ladder de um CLP com muito mais profundidade, e quem entende o CLP chega à robótica com uma base que poucos têm. Por isso vale a pena aprender bem esta lição, mesmo que o seu objetivo seja a automação moderna.",
    "body": "Um painel de comando separa dois circuitos: o de **força**, que leva a corrente grande até o motor, e o de **comando**, que decide quando o motor liga. O comando usa correntes pequenas e botões leves; a força passa pelos contatos robustos do contator.\n\n## Contator\nÉ uma chave operada por uma **bobina**. Quando a bobina recebe tensão (terminais **A1 e A2**), o eletroímã puxa os contatos.\n- **Contatos principais** (1-2, 3-4, 5-6): ligam as três fases do motor.\n- **Contatos auxiliares** para o comando:\n  - **NA** (normalmente aberto), numerados com final 3-4, como **13-14**: fecham quando a bobina é energizada.\n  - **NF** (normalmente fechado), com final 1-2, como **21-22**: abrem quando a bobina é energizada.\n\nUm detalhe que confunde: \"normalmente\" quer dizer **com a bobina desligada**.\n\n## Relé auxiliar e temporizador\nO **relé auxiliar** é um contator pequeno, só com contatos de comando, usado para multiplicar contatos ou fazer lógica. O **relé temporizador** muda os contatos depois de um tempo ajustado, por exemplo para a troca de estrela para triângulo.\n\n## Relé térmico (de sobrecarga)\nFica no circuito de força, depois do contator. Se o motor puxa corrente acima do valor ajustado por tempo demais, ele **abre o contato 95-96**, que está em série com a bobina do contator, e o motor desliga. O contato **97-98** pode acender uma lâmpada de defeito. Ajuste-o pela **corrente nominal da placa do motor**.\n\n## Botoeiras e sinalização\n- **Botão de liga:** contato **NA**, normalmente verde ou preto.\n- **Botão de desliga:** contato **NF**, vermelho. Fica em série com tudo, para que, se o fio dele romper, o motor desligue em vez de ficar sem como parar.\n- **Botão de emergência:** cogumelo vermelho com trava, contato NF.\n- **Sinaleiros:** lâmpadas que indicam ligado, desligado e defeito.\n\n## Proteção do circuito\nAntes de tudo isso vêm os **fusíveis ou disjuntores motor** da força e um disjuntor ou fusível próprio do comando.\n\n## Projeto final\n**Diagrama de comando liga-desliga.** Desenhe o diagrama de comando de uma partida direta com botão de liga, desliga, relé térmico e sinaleiro de motor ligado.",
    "createdAt": "2026-10-24T12:00:00.000Z",
    "demo": false,
@@ -2448,6 +2704,7 @@ window.VOLTER_SEED = {
   },
   "eln-falhas": {
    "author": "",
+   "bancada": "## Quando do outro lado existe um paciente\nHoje eu cuido de equipamentos biomédicos: autoclaves e instrumentos odontológicos de alta e baixa rotação. Tecnicamente, é a mesma linguagem de sempre: motores, sensores, circuitos. Mas uma autoclave que não esteriliza direito, ou uma peça de mão com falha, é um risco para quem vai sentar na cadeira em seguida.\n\nIsso não tornou o diagnóstico mais difícil; tornou cada verificação mais séria. Seguir o roteiro inteiro, registrar o que foi medido e testar de novo depois do conserto deixa de ser capricho e vira obrigação.",
    "body": "Quase todo circuito montado pela primeira vez tem algum errinho, e quase sempre é um detalhe pequeno. O segredo é **procurar com método**, do mais simples para o mais complicado, e **medir antes de trocar**.\n\n## 1. Antes de energizar\n- **Compare a montagem com o esquema**, componente por componente, marcando cada um que conferiu.\n- **Conte as peças:** sobrou alguma na bancada? Faltou alguma na placa?\n- **Polaridade:** LEDs, diodos, capacitores eletrolíticos, transistores e chips têm lado certo. Um transistor com terminais trocados pode até queimar.\n- **Valores:** confira as faixas dos resistores. Um 10 kΩ no lugar de um 100 Ω faz o LED nem acender.\n\n## 2. Inspeção da placa\n- **Solda fria:** emendas opacas, granuladas ou rachadas. Reaqueça.\n- **Pontes de solda:** gotas ligando duas trilhas ou dois terminais. Remova.\n- **Trilhas que deveriam estar cortadas** e não foram, ou cortadas no furo errado.\n- **Terminais encostando** uns nos outros por baixo da placa.\n- **Componente frouxo:** puxe de leve cada um.\n\n## 3. Medindo com o circuito ligado\n- **Alimentação primeiro:** a bateria ou fonte está com a tensão certa? E ela chega aos pontos onde deveria chegar? Muitas vezes o problema é um fio da bateria.\n- **Siga o caminho da corrente** com o voltímetro, do positivo para o negativo, medindo a tensão em cada ponto. Onde a tensão \"some\" de repente, ali está a interrupção.\n- **Transistor:** com o circuito ligado, a base deveria estar uns 0,6 V acima do emissor quando ele conduz. Se a base está a 0 V, o problema está antes dela; se está certa e o coletor não muda, desconfie do transistor ou da carga.\n\n## 4. Medindo com o circuito desligado\n- **Continuidade** em fios e trilhas suspeitos.\n- **Resistência** de resistores (com pelo menos um terminal solto da placa, para o resto do circuito não interferir).\n- **Teste de diodo** do multímetro em LEDs e diodos: num sentido conduz, no outro não.\n\n## 5. Calor também é suspeito\nComponentes podem ser danificados pelo calor do ferro durante a montagem, especialmente transistores e LEDs. Se tudo está certo e mesmo assim não funciona, troque o componente suspeito **um por vez**.\n\n## Hábitos que evitam falhas\n- Use fio próprio para eletrônica, fino e flexível. Fio grosso de instalação elétrica não prende bem na placa e pode encostar em outras partes.\n- Anote o que mediu. Depois de uma pausa, os números ajudam a retomar.\n- Peça para outra pessoa conferir. Olhos novos acham erros que os seus já se acostumaram a não ver.\n\n## E uma regra\nEste roteiro é para circuitos de **baixa tensão**, com pilhas, baterias e fontes de bancada. Nunca faça esses testes em circuitos ligados na tomada sem formação e equipamentos adequados.",
    "createdAt": "2026-10-24T16:30:00.000Z",
    "demo": false,
@@ -2596,6 +2853,7 @@ window.VOLTER_SEED = {
   },
   "eln-historia": {
    "author": "",
+   "bancada": "## Da válvula ao SMD, com as mãos\nEntre 1992 e 1997, consertando aparelhos na oficina e em casa, eu atravessei essa história inteira na bancada: comecei nos equipamentos a **válvula**, passei pelos **transistores**, depois pelos **circuitos integrados** e terminei nos componentes **SMD**, montados na superfície da placa, muito menores e mais delicados.\n\nE antes disso, em 1984, ainda solteiro e vendendo sapatos, comprei um **TK83**, um dos primeiros computadores pessoais vendidos no Brasil. Não havia razão prática nenhuma; era só curiosidade.\n\nA lição que ficou: tecnologia não é uma coisa fixa para dominar de uma vez. É uma sequência de camadas que se sobrepõem, e quem acompanha cada uma com atenção nunca fica para trás.",
    "body": "A eletrônica é uma ciência jovem, com pouco mais de cem anos. Mas ela se apoia em descobertas mais antigas sobre a eletricidade.\n\n## Antes da eletrônica\n- **1800:** Alessandro Volta empilha discos de dois metais diferentes separados por papelão com solução ácida e cria a **pilha**, a primeira fonte de corrente contínua. A unidade **volt** homenageia seu nome.\n- **Década de 1820 em diante:** Charles Babbage projeta máquinas de calcular **mecânicas**, cheias de engrenagens. Eram tão complexas que não foram concluídas na época, mas trazem ideias que os computadores usariam um século depois.\n- **Década de 1830 e 1840:** o **telégrafo** e o **código Morse** mandam mensagens por fio em pulsos curtos e longos, uma forma antiga de comunicação codificada.\n\n## A era das válvulas\n- **1904:** John Ambrose Fleming cria a **válvula diodo**: um tubo de vidro com vácuo, um filamento aquecido que solta elétrons e uma placa de metal. A corrente só passa num sentido, como num diodo de hoje.\n- **1906:** Lee de Forest acrescenta uma **grade** entre o filamento e a placa: nasce o **tríodo**, que consegue **amplificar** sinais e funcionar como chave.\n- **Anos 1920 e 1930:** as válvulas tornam possíveis o **rádio** e, depois, a **televisão**.\n- **Anos 1940:** os primeiros computadores eletrônicos usam válvulas como chaves. O ENIAC, nos Estados Unidos, tinha cerca de 18 mil válvulas, ocupava uma sala inteira e esquentava muito, porque cada válvula precisava de um filamento aquecido.\n\n## O transistor\n- **1947:** nos Laboratórios Bell, John Bardeen, Walter Brattain e William Shockley demonstram o **transistor**. Ele faz o que a válvula faz, mas é pequeno, frio, resistente e gasta muito menos energia.\n- **Anos 1950 e 1960:** surgem os **rádios portáteis** a pilha, conhecidos no Brasil simplesmente como \"transistor\", e os computadores ficam menores.\n\n## O circuito integrado\n- **1958 e 1959:** Jack Kilby, na Texas Instruments, e Robert Noyce, na Fairchild, criam os primeiros **circuitos integrados**: vários componentes num único pedaço de semicondutor.\n- **1971:** a Intel lança o **4004**, um dos primeiros microprocessadores, com cerca de 2.300 transistores.\n- **Hoje:** chips de celular e computador têm **bilhões** de transistores, com detalhes medidos em nanômetros.\n\n## O que isso ensina\nCada salto veio de fazer a mesma função, **controlar a corrente**, com algo menor, mais barato e mais confiável. A ideia do transistor como chave e amplificador, que você está aprendendo nesta etapa, é a mesma que roda dentro do seu celular, só que repetida bilhões de vezes.",
    "createdAt": "2026-10-24T16:30:00.000Z",
    "demo": false,
@@ -2966,6 +3224,7 @@ window.VOLTER_SEED = {
   },
   "eln-solda": {
    "author": "",
+   "bancada": "## Cada geração pede uma mão diferente\nSoldar um aparelho a válvula, com terminais grossos e fios presos em barras, é uma coisa. Soldar um componente SMD, do tamanho de um grão de arroz, sem levantar a trilha, é outra. Na prática dos consertos, a técnica foi mudando junto com os componentes: ponta mais fina, menos calor, mais paciência e boa iluminação.\n\nO que nunca mudou: emenda boa é lisa e brilhante, e componente que esquentou demais pode falhar dias depois. Na dúvida, refaça a emenda.",
    "body": "Soldar é unir dois metais com um terceiro metal que derrete a uma temperatura mais baixa: a **solda**. Ela escorre entre o terminal do componente e a trilha de cobre e, ao endurecer, prende e conduz ao mesmo tempo.\n\n## O que você precisa\n- **Ferro de solda** de 25 a 40 W, com ponta fina. Estações com controle de temperatura facilitam muito; algo em torno de 330 a 360 °C serve para a maioria dos trabalhos.\n- **Solda para eletrônica** em fio fino, com **fluxo** no miolo. O fluxo limpa o metal na hora e ajuda a solda a escorrer. Existe a solda com chumbo (estanho-chumbo), mais fácil de usar, e a **sem chumbo**, que pede um pouco mais de temperatura.\n- **Esponja úmida** ou palha de latão para limpar a ponta.\n- **Alicate de corte**, **alicate de bico**, **desencapador** e um **sugador de solda** ou malha dessoldadora para corrigir erros.\n- **Placa padrão** (perfurada, com trilhas) ou placa ilhada para montar o circuito.\n\n## Segurança\nA ponta passa de 300 °C: use sempre o suporte e nunca segure perto da ponta. Trabalhe com ventilação, porque a fumaça do fluxo irrita. Use óculos ao cortar terminais, que podem voar. Se a solda tiver chumbo, lave as mãos depois e não coma na bancada.\n\n## A técnica, passo a passo\n- **Estanhe a ponta:** com o ferro quente, encoste um pouco de solda na ponta e limpe na esponja. Ponta brilhante transfere calor; ponta escura e oxidada não.\n- **Encaixe o componente** pela frente da placa e dobre levemente os terminais por trás para ele não cair.\n- **Aqueça os dois ao mesmo tempo:** encoste a ponta no terminal **e** na trilha juntos, por um ou dois segundos.\n- **Leve a solda à junção, não à ponta:** encoste o fio de solda do outro lado do terminal. Ela derrete e escorre em volta. Use pouca.\n- **Retire a solda, depois o ferro**, e não mexa no componente enquanto esfria.\n- **Corte o excesso** do terminal rente à solda.\n\n## Como reconhecer uma boa emenda\nUma emenda boa é **lisa, brilhante e em forma de cone**, abraçando o terminal. Uma emenda **opaca, granulada ou em forma de bolinha** é **solda fria**: parece presa, mas o contato é ruim e o circuito falha de vez em quando. A correção é reaquecer, com um pouco de fluxo ou solda nova.\n\n## Placa padrão: interromper e unir trilhas\nNa placa com trilhas contínuas, às vezes o circuito pede que uma trilha seja **cortada**: gire uma broca de 4 a 6 mm com a mão sobre o furo, pelo lado do cobre, até o cobre sair em volta. Quando duas trilhas precisam ser ligadas, use um pedaço de fio (um **jumper**). Antes de energizar, confira com o teste de continuidade que nenhuma gota de solda ligou duas trilhas vizinhas.\n\n## Componentes sensíveis ao calor\nTransistores, LEDs e chips não gostam de calor demorado. Solde rápido, deixe esfriar entre um terminal e outro e, para chips, prefira usar um **soquete** e encaixar o chip no final.",
    "createdAt": "2026-10-24T16:30:00.000Z",
    "demo": false,
