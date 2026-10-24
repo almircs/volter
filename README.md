@@ -13,6 +13,10 @@ O Volter é uma plataforma para quem está começando em tecnologia. Você apren
 | **Dados e análise** | Tabelas, SQL, JOIN sem armadilhas, pandas e gráficos |
 | **IoT e robótica** | ESP32, sensores, Wi-Fi, MQTT e dispositivos que se recuperam sozinhos |
 
+### Planejamento de cursos
+
+A grade de temas em [`docs/grade-de-temas.md`](docs/grade-de-temas.md) define o rumo do Volter: público inicial (profissionais que querem usar IA no trabalho), venda de cursos avulsos e pacotes para empresas (sem assinatura), seis trilhas com 26 cursos e a ordem de lançamento. Ela também mostra como as trilhas atuais se encaixam na nova grade.
+
 ## O que tem no app
 
 | Área | O que faz |
@@ -91,7 +95,7 @@ build/                              ícones (volter.ico, volter.icns, icon.png)
 ferramentas/sincronizar-conteudo.js copia o conteúdo do claude.ai para data/conteudo.js
 .github/workflows/instaladores.yml  gera os instaladores e publica em Releases
 .github/notas-da-versao.md          texto da página de cada versão
-docs/                               especificações do projeto
+docs/                               especificações do projeto e grade de temas
 ```
 
 ---
