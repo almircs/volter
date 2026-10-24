@@ -10,6 +10,12 @@ Na primeira vez, clique no Volter com o botão direito → **Abrir** → **Abrir
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.3.0: abas 40+ e Elétrica e Hardware
+- **Comece aos 40+:** quatro etapas em sequência para quem começa em tecnologia depois dos 40: primeiros passos no digital, IA sem jargão, ferramentas do trabalho e recomeço de carreira
+- **Elétrica, Eletrônica e Hardware:** seis etapas, de fundamentos de eletricidade e instalações residenciais até eletrônica, hardware, IoT e comandos elétricos com CLP
+- Em cada aba, as trilhas são etapas numeradas, com os temas em ordem e o projeto final de cada um
+- As lições, o projeto e o desafio de IoT voltaram, agora como a etapa 5 de Elétrica e Hardware
+
 ## Versão 2.2.0: nova grade de trilhas
 - **Seis trilhas e um bônus**, seguindo a nova grade de temas: IA no Trabalho, Agentes e Automação, Programação com IA, Dados e Decisão, IA por Profissão, Segurança e Uso Responsável, e Carreira em Tecnologia
 - Os cursos planejados de cada trilha aparecem como **Em breve**, com o projeto final de cada um

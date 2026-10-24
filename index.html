@@ -292,6 +292,12 @@ details.fold[open] summary{margin-bottom:14px}
 .thead .ico{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--t) 16%,transparent);color:var(--t);flex-shrink:0}
 .thead .ico svg{width:28px;height:28px}
 
+.seq{border-left:3px solid var(--t)}
+.seq-step{font-size:.78rem;font-weight:700;color:var(--t,var(--muted));text-transform:uppercase;letter-spacing:.06em}
+.seq-n{min-width:34px;height:26px;border-radius:13px;border:1.5px solid var(--t,var(--line-2));color:var(--t,var(--muted));display:grid;place-items:center;font-size:.76rem;font-weight:600;font-variant-numeric:tabular-nums;flex-shrink:0;padding:0 6px}
+.seq .list > *{justify-content:flex-start}
+@media (max-width:560px){.seq .ph{flex-direction:column;align-items:flex-start}}
+
 /* ===== projetos ===== */
 .projects{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
 .project{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:10px;cursor:pointer;text-align:left;color:inherit;min-width:0;border-left:3px solid var(--t)}
@@ -558,7 +564,7 @@ function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = fal
 
 /* ---------- vocabulário ---------- */
 /* Trilhas da grade de temas (docs/grade-de-temas.md). "plan" lista os cursos planejados que ainda não têm lições:
-   aparecem para o aluno como "Em breve". A trilha de IoT saiu da grade: os itens com track "iot" ficam guardados, mas ocultos. */
+   aparecem para o aluno como "Em breve". Trilhas com "area" pertencem às abas Comece aos 40+ e Elétrica, Eletrônica e Hardware. */
 const TRACKS = [
   { id: "ia", name: "IA no Trabalho", short: "IA no trabalho", ico: "ia", desc: "ChatGPT, Claude e Gemini no dia a dia: prompts, documentos, planilhas e pesquisa com fontes conferidas.",
     plan: [["E-mails, atas e relatórios com IA", "Kit de modelos de documentos"], ["Planilhas e Excel com IA", "Planilha automatizada do próprio trabalho"], ["Apresentações e imagens com IA", "Apresentação completa gerada e revisada"], ["Pesquisa e estudo com IA: checar fontes e evitar erros", "Dossiê de pesquisa com fontes verificadas"]] },
@@ -572,10 +578,40 @@ const TRACKS = [
     plan: [["IA para pequenos negócios e autônomos", "Plano de marketing e atendimento com IA"], ["IA para RH e recrutamento", "Processo seletivo assistido por IA"], ["IA para professores", "Plano de aula e materiais gerados"], ["IA para profissionais de saúde (administrativo)", "Rotina de documentos e agenda com IA"], ["IA para técnicos e profissões práticas", "Relatórios técnicos e orçamentos com IA"]] },
   { id: "seguranca", name: "Segurança e Uso Responsável", short: "Segurança", ico: "escudo", desc: "Golpes, deepfakes, LGPD e regras para usar IA com os dados da empresa.",
     plan: [["Golpes, deepfakes e phishing na era da IA", "Checklist de proteção pessoal e da família"], ["LGPD e dados da empresa ao usar IA", "Política de uso de IA para a equipe"]] },
-  { id: "carreira", name: "Carreira em Tecnologia", short: "Carreira", ico: "carreira", desc: "Bônus: recomeço em tecnologia depois dos 40, com plano de transição e portfólio.",
-    plan: [["Recomeço em tecnologia depois dos 40", "Plano de transição de carreira com portfólio"]] }
+  /* Aba "Comece aos 40+": etapas em sequência (a ordem aqui é a ordem das etapas) */
+  { id: "digital", area: "40", color: "#7fd1c7", name: "Primeiros passos no digital", short: "Primeiros passos", ico: "monitor", desc: "Computador, celular, arquivos, internet segura e videochamadas, explicados com calma.",
+    plan: [["Computador e celular sem medo: o básico que ninguém explicou", "Celular e computador configurados do seu jeito"], ["Arquivos e pastas: salvar, encontrar e organizar", "Pastas do trabalho organizadas"], ["Internet segura: senhas, golpes e verificação em duas etapas", "Contas principais protegidas"], ["E-mail, WhatsApp Web e videochamadas", "Reunião por vídeo marcada e conduzida por você"], ["Nuvem: guardar e compartilhar no Google Drive e no OneDrive", "Documentos com cópia na nuvem"]] },
+  { id: "iadia", area: "40", color: "#c39bff", name: "IA no dia a dia, sem jargão", short: "IA sem jargão", ico: "ia", desc: "O que é IA, como conversar com ela, como pedir bem e como saber quando ela errou.",
+    plan: [["O que é IA, explicado com calma", "Mapa do que a IA faz bem e do que ela erra"], ["Primeira conversa com ChatGPT, Claude ou Gemini", "Conta criada e primeiras perguntas feitas"], ["Como pedir bem: prompts com exemplos do seu trabalho", "Cinco prompts prontos para a sua rotina"], ["E-mails, textos e currículo com ajuda da IA", "Currículo revisado com a IA"], ["Checar antes de confiar: como saber se a IA errou", "Lista de verificação pessoal"]] },
+  { id: "ferramentas", area: "40", color: "#ffcb5c", name: "Ferramentas do trabalho moderno", short: "Ferramentas", ico: "planilha", desc: "Planilhas, documentos, apresentações, agenda e automações simples.",
+    plan: [["Planilhas do zero: Excel e Google Planilhas", "Controle de gastos em planilha"], ["Documentos e apresentações bem-feitos", "Apresentação de 5 slides sobre o seu trabalho"], ["Agenda, tarefas e lembretes digitais", "Semana organizada no calendário"], ["Automatizar tarefas repetitivas sem programar", "Uma tarefa repetitiva automatizada"]] },
+  { id: "carreira", area: "40", name: "Recomeço em tecnologia", short: "Recomeço", ico: "carreira", desc: "Transformar a sua experiência em uma nova carreira, com currículo, LinkedIn, portfólio e um plano de 90 dias.",
+    plan: [["Sua experiência vale: traduzindo anos de trabalho para a tecnologia", "Lista das habilidades que você já tem"], ["Mapa de carreiras em tecnologia para quem começa depois dos 40", "Duas carreiras escolhidas para explorar"], ["LinkedIn e currículo para a transição", "Perfil do LinkedIn atualizado"], ["Primeiro portfólio: três projetos simples para mostrar", "Portfólio publicado"], ["Plano de estudo de 90 dias que cabe na rotina", "Plano de 90 dias no calendário"]] },
+  /* Aba "Elétrica, Eletrônica e Hardware" */
+  { id: "eletricidade", area: "hw", color: "#ffd23f", name: "Fundamentos de eletricidade", short: "Eletricidade", ico: "raio", desc: "Tensão, corrente, resistência, multímetro e segurança antes de tudo.",
+    plan: [["Tensão, corrente e resistência: a Lei de Ohm na prática", "Tabela de medições de um circuito simples"], ["Multímetro: medir tensão, corrente e continuidade com segurança", "Roteiro de medição com o seu multímetro"], ["Segurança em eletricidade: choque, EPI e noções de NR-10", "Checklist de segurança antes de qualquer serviço"], ["Circuitos em série e em paralelo", "Circuito montado e medido na protoboard"], ["Potência, consumo e conta de luz", "Cálculo do consumo dos aparelhos da casa"]] },
+  { id: "instalacoes", area: "hw", color: "#ff9f43", name: "Instalações elétricas residenciais", short: "Instalações", ico: "casa", desc: "Diagramas, tomadas, iluminação e proteção, com noções da NBR 5410.",
+    plan: [["Leitura de diagramas e simbologia", "Diagrama unifilar de um cômodo"], ["Tomadas, interruptores e iluminação", "Esquema de ligação de um interruptor paralelo"], ["Disjuntores, DR e DPS: protegendo o circuito", "Quadro de distribuição explicado"], ["Dimensionamento de cabos e circuitos (noções da NBR 5410)", "Tabela de circuitos de uma casa"], ["Diagnóstico de falhas em instalações", "Roteiro para um disjuntor que desarma"]] },
+  { id: "eletronica", area: "hw", color: "#4fe3a6", name: "Eletrônica básica", short: "Eletrônica", ico: "onda", desc: "Componentes, protoboard, transistores, fontes e solda.",
+    plan: [["Componentes: resistor, capacitor, diodo e LED", "Kit de componentes identificado e testado"], ["Protoboard e primeiros circuitos", "Pisca-pisca com LED montado na protoboard"], ["Transistor como chave", "Circuito que liga uma carga com transistor"], ["Fontes de alimentação: da tomada aos 5 V", "Fonte regulada de 5 V montada"], ["Solda e montagem de placas", "Placa soldada e testada"]] },
+  { id: "hardware", area: "hw", color: "#5cc8ff", name: "Hardware de computadores", short: "Hardware", ico: "pc", desc: "Peças, montagem, diagnóstico, redes e manutenção preventiva.",
+    plan: [["Peças do computador e como elas conversam", "Ficha técnica do seu computador"], ["Montagem e upgrade: memória, SSD e fonte", "Upgrade feito e testado"], ["Diagnóstico: o PC não liga, trava ou esquenta", "Roteiro de diagnóstico de defeitos"], ["Redes domésticas: cabos, roteador e Wi-Fi", "Rede de casa configurada e protegida"], ["Manutenção preventiva e backup", "Plano de manutenção e backup"]] },
+  { id: "iot", area: "hw", name: "Microcontroladores e IoT", short: "IoT", ico: "chip", desc: "ESP32, sensores, Wi-Fi, MQTT e dispositivos conectados.",
+    plan: [["Atuadores: relés, motores e servos", "Ventilador ligado pela temperatura"], ["Painel na nuvem com os dados do sensor", "Painel com leituras em tempo real"]] },
+  { id: "comandos", area: "hw", color: "#ff6b6b", name: "Comandos elétricos e automação", short: "Automação", ico: "motor", desc: "Contatores, motores, sensores, CLP e inversores de frequência.",
+    plan: [["Contatores, relés e botoeiras", "Diagrama de comando liga-desliga"], ["Partida direta e reversão de motores", "Esquema de reversão com intertravamento"], ["Sensores indutivos, capacitivos e fotoelétricos (PNP e NPN)", "Ligação correta de um sensor ao CLP"], ["Introdução ao CLP: entradas, saídas e linguagem ladder", "Primeiro programa ladder simulado"], ["Inversor de frequência: parametrização básica", "Roteiro de parametrização de um inversor"]] }
 ];
 const TRACK_IDS = new Set(TRACKS.map(t => t.id));
+/* Abas com trilhas em sequência. As trilhas sem "area" são as da aba Trilhas. */
+const AREAS = [
+  { id: "40", route: "quarenta", name: "Comece aos 40+", short: "40+", ico: "quarenta", lead: "Para quem está começando em tecnologia depois dos 40. Siga as etapas na ordem: cada uma prepara a próxima, com explicações sem pressa e exemplos do dia a dia." },
+  { id: "hw", route: "eletrica", name: "Elétrica, Eletrônica e Hardware", short: "Elétrica e Hardware", ico: "eletrica", lead: "Dos fundamentos de eletricidade até automação e IoT. Siga as etapas na ordem: segurança e fundamentos vêm antes de qualquer montagem." }
+];
+const areaOf = t => t && AREAS.find(a => a.id === t.area) || null;
+const areaTracks = id => TRACKS.filter(t => (t.area || "") === (id || ""));
+const MAIN_TRACKS = areaTracks("");
+const stepOf = t => areaTracks(t.area).indexOf(t) + 1;
+(() => { const st = document.createElement("style"); st.textContent = TRACKS.filter(t => t.color).map(t => '[data-t="' + t.id + '"]{--t:' + t.color + "}").join(""); document.head.appendChild(st); })();
 /* Notícias suspensas: a seção some do app e nada novo é publicado. Para reativar, troque para true. */
 const NEWS_ON = false;
 const trackOf = id => TRACKS.find(t => t.id === id) || TRACKS[0];
@@ -646,14 +682,14 @@ const trackPct = id => { const ls = tracksLessons(id); return ls.length ? Math.r
 /* ---------- navegação ---------- */
 const NAVDEF = [
   ["", [["inicio", "Início"]]],
-  ["Aprender", [["trilhas", "Trilhas"], ["lab", "Laboratório"], ["projetos", "Projetos"], ["desafios", "Treino"]]],
+  ["Aprender", [["trilhas", "Trilhas"], ["quarenta", "Comece aos 40+"], ["eletrica", "Elétrica e Hardware"], ["lab", "Laboratório"], ["projetos", "Projetos"], ["desafios", "Treino"]]],
   ["Ficar em dia", [["noticias", "Notícias"], ["livros", "Livros"]].filter(([r]) => r !== "noticias" || NEWS_ON)],
   ["Você", [["progresso", "Meu progresso"], ["favoritos", "Salvos"]]]
 ];
 const TABS = [["inicio", "Início"], ["trilhas", "Trilhas"], ["lab", "Lab"], ["progresso", "Progresso"]];
 function go(name, id) { if (name === "noticias" && !NEWS_ON) name = "inicio"; S.route = { name, id: id || null }; S.ui.more = false; S.ui.modal = null; window.scrollTo(0, 0); render(true); renderModal(); }
-const FULL = ["inicio", "trilhas"];
-function navGroup() { return { caso: "lab", correcao: "lab", licao: "trilhas", trilha: "trilhas", projeto: "projetos", editor: "admin" }[S.route.name] || S.route.name; }
+const FULL = ["inicio", "trilhas", "quarenta", "eletrica"];
+function navGroup() { const r = S.route; if (r.name === "trilha" || r.name === "licao") { const t = r.name === "trilha" ? TRACKS.find(x => x.id === r.id) : TRACKS.find(x => x.id === (find("lessons", r.id) || {}).track); const a = areaOf(t); if (a) return a.route; } return { caso: "lab", correcao: "lab", licao: "trilhas", trilha: "trilhas", projeto: "projetos", editor: "admin" }[S.route.name] || S.route.name; }
 
 /* ---------- render ---------- */
 function render(force) {
@@ -669,7 +705,7 @@ function render(force) {
 }
 document.addEventListener("focusout", () => setTimeout(() => { if (S.pending) render(); }, 50));
 function navItems() { const g = NAVDEF.slice(); if (S.admin) g.push(["Gestão", [["admin", S.mode === "local" ? "Editor de conteúdo" : "Conteúdo"]]]); return g; }
-const HNAV = [["inicio", "Início"], ["trilhas", "Trilhas"], ["lab", "Laboratório"], ["projetos", "Projetos"], ["desafios", "Treino"], ["noticias", "Notícias"], ["livros", "Livros"]].filter(([r]) => r !== "noticias" || NEWS_ON);
+const HNAV = [["inicio", "Início"], ["trilhas", "Trilhas"], ["quarenta", "40+"], ["eletrica", "Elétrica e Hardware"], ["lab", "Laboratório"], ["projetos", "Projetos"], ["desafios", "Treino"], ["noticias", "Notícias"], ["livros", "Livros"]].filter(([r]) => r !== "noticias" || NEWS_ON);
 function modeText() { return S.mode === "local" ? (DESK ? "Programa instalado" : "Versão web") : S.mode === "claude" ? (S.admin ? "Administrador" : S.uid ? "Aluno" : "Visitante") : "Carregando"; }
 function renderChrome() {
   const grp = navGroup(); const xp = calcXP(), lv = levelFor(xp);
@@ -721,6 +757,15 @@ const IC = {
   codigo: svg('<path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/>'),
   dados: svg('<ellipse cx="12" cy="5.5" rx="7.5" ry="2.8"/><path d="M4.5 5.5v6c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8v-6M4.5 11.5v6c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8v-6"/>'),
   chip: svg('<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/><rect x="10" y="10" width="4" height="4"/>'),
+  quarenta: svg('<path d="M12 21v-9"/><path d="M12 12c0-4 3-6.5 7.5-6.5 0 4.5-3 6.5-7.5 6.5zM12 15c0-3.2-2.4-5.3-6.5-5.3 0 3.4 2.4 5.3 6.5 5.3z"/>'),
+  eletrica: svg('<path d="M9 2v5M15 2v5M6 7h12v4a6 6 0 01-12 0zM12 17v5"/>'),
+  monitor: svg('<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'),
+  planilha: svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/>'),
+  raio: svg('<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>'),
+  casa: svg('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M12 13v4M10 15h4"/>'),
+  onda: svg('<path d="M2 12h4l2-4 3 8 3-8 3 8 2-4h3"/>'),
+  pc: svg('<rect x="6" y="3" width="12" height="18" rx="2"/><path d="M9 7h6M9 11h6M12 17h.01"/>'),
+  motor: svg('<circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><path d="M12 6V2M12 22v-4M6 12H2M22 12h-4"/>'),
   agente: svg('<rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 16.5h5M2 13h3M19 13h3"/>'),
   pessoas: svg('<circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0112 0M16 4.5a3.2 3.2 0 010 6.3M18 14.2A6 6 0 0121 20"/>'),
   escudo: svg('<path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M9 12l2 2 4-4"/>'),
@@ -743,7 +788,7 @@ function artOf(type, x) {
   if (type === "projects") return { t: x.track, ico: "projetos", tag: "Projeto", title: x.title };
   if (type === "news") return { t: NEWS_T[x.category] || "red", ico: NEWS_IC[x.category] || "noticias", tag: x.sourceName || "Notícia", title: x.title };
   if (type === "books") return { t: BOOK_T[x.area] || "ia", ico: "livros", tag: "Livro", title: x.title };
-  return { t: x.id, ico: x.ico, tag: "Trilha", title: x.short };
+  return { t: x.id, ico: x.ico, tag: x.area ? "Etapa " + stepOf(x) : "Trilha", title: x.short };
 }
 function art(type, x, cls, badge) {
   const a = artOf(type, x), h = hash(type + ":" + (x.id || ""));
@@ -781,9 +826,10 @@ VIEWS.inicio = () => {
   const news = pub("news").slice().sort((a, b) => String(b.publishedAt || "").localeCompare(String(a.publishedAt || "")));
   const rows = [
     rail("Continue de onde parou", cont),
-    rail("Escolha uma trilha", TRACKS.map(tTrack), { tall: true, more: ["trilhas"] }),
+    rail("Escolha uma trilha", MAIN_TRACKS.map(tTrack), { tall: true, more: ["trilhas"] })
+  ].concat(AREAS.map(a => rail(a.name, areaTracks(a.id).map(tTrack), { tall: true, more: [a.route] }))).concat([
     rail("Desafios do Laboratório", pub("cases").map(tCase), { more: ["lab"] })
-  ].concat(TRACKS.map(t => rail(t.name, tracksLessons(t.id).map(tLesson), { more: ["trilha", t.id] }))).concat([
+  ]).concat(TRACKS.map(t => rail(t.name, tracksLessons(t.id).map(tLesson), { more: ["trilha", t.id] }))).concat([
     rail("Projetos para o portfólio", pub("projects").map(tProj), { more: ["projetos"] }),
     rail("Notícias da semana", news.map(tNews), { more: ["noticias"] }),
     rail("Livros para ir além", pub("books").map(tBook), { tall: true, more: ["livros"] })
@@ -860,7 +906,7 @@ VIEWS.lab = () => {
   let list = pub("cases").filter(c => (!u.track || c.track === u.track) && (!u.level || c.level === u.level));
   list.sort((a, b) => (a.level - b.level) || a.title.localeCompare(b.title));
   return dbNotice() + head("Laboratório", "Problemas reais para investigar. Você levanta hipóteses, escolhe o que verificar, interpreta o que encontrou e só então descobre a causa. A nota valoriza o raciocínio, não a velocidade.") +
-    '<div class="filters"><button class="pill" data-act="ui" data-k="track" data-v="" aria-pressed="' + (!u.track) + '">Todas as trilhas</button>' + TRACKS.map(t => '<button class="pill" data-t="' + t.id + '" data-act="ui" data-k="track" data-v="' + t.id + '" aria-pressed="' + (u.track === t.id) + '"><span class="dot"></span>' + esc(t.short) + "</button>").join("") + "</div>" +
+    '<div class="filters"><button class="pill" data-act="ui" data-k="track" data-v="" aria-pressed="' + (!u.track) + '">Todas as trilhas</button>' + TRACKS.filter(t => pub("cases").some(c => c.track === t.id)).map(t => '<button class="pill" data-t="' + t.id + '" data-act="ui" data-k="track" data-v="' + t.id + '" aria-pressed="' + (u.track === t.id) + '"><span class="dot"></span>' + esc(t.short) + "</button>").join("") + "</div>" +
     (list.length ? '<div class="issues">' + list.map(issueRow).join("") + "</div>" : emptyBox(S.dbState === "ok" ? "Nenhum desafio com esse filtro." : "Os desafios aparecem aqui quando o conteúdo carregar."));
 };
 function issueRow(c) {
@@ -981,15 +1027,36 @@ VIEWS.correcao = id => {
 };
 
 /* ----- Trilhas e lições ----- */
-VIEWS.trilhas = () => '<div class="gut page-top">' + dbNotice() + head("Trilhas", "Seis trilhas e um bônus de carreira para usar IA no trabalho. Cada curso termina com algo pronto para usar; os que ainda estão sendo produzidos aparecem como Em breve.") + '</div><div class="rows plain">' + rail("Escolha por onde começar", TRACKS.map(tTrack), { tall: true }) + TRACKS.map(t => rail(t.name, tracksLessons(t.id).map(tLesson), { more: ["trilha", t.id] })).join("") + "</div>";
+VIEWS.trilhas = () => '<div class="gut page-top">' + dbNotice() + head("Trilhas", "Seis trilhas para usar IA no trabalho. Cada curso termina com algo pronto para usar; os que ainda estão sendo produzidos aparecem como Em breve.", AREAS.map(a => '<button class="btn" data-act="go" data-r="' + a.route + '">' + IC[a.ico] + esc(a.name) + "</button>").join("")) + '</div><div class="rows plain">' + rail("Escolha por onde começar", MAIN_TRACKS.map(tTrack), { tall: true }) + MAIN_TRACKS.map(t => rail(t.name, tracksLessons(t.id).map(tLesson), { more: ["trilha", t.id] })).join("") + "</div>";
+/* Abas com trilhas em sequência: cada trilha é uma etapa, com os temas numerados na ordem de estudo */
+function seqPanel(t, n) {
+  const ls = tracksLessons(t.id), plan = arr(t.plan);
+  const rows = ls.map(l => ['<button class="link" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">' + esc(l.title) + '</button><p class="small muted" style="margin-top:2px">' + esc(l.summary) + "</p>", lessonDone(l.id) ? '<span class="chip ok">Concluída</span>' : '<span class="chip go">Disponível</span>'])
+    .concat(plan.map(([c, r]) => ["<b>" + esc(c) + '</b><p class="small muted" style="margin-top:2px">Projeto final: ' + esc(r) + "</p>", '<span class="chip">Em breve</span>']));
+  return '<section class="panel seq" data-t="' + t.id + '"><div class="ph"><div style="min-width:0"><span class="seq-step">Etapa ' + n + '</span><h3 style="margin-top:4px">' + esc(t.name) + '</h3><p class="small muted" style="margin-top:4px">' + esc(t.desc) + '</p></div><button class="btn sm" data-act="go" data-r="trilha" data-id="' + esc(t.id) + '">Ver a trilha</button></div><div class="list">' +
+    rows.map(([txt, chip], i) => '<div><span class="seq-n">' + n + "." + (i + 1) + '</span><div style="min-width:0;flex:1">' + txt + "</div>" + chip + "</div>").join("") + "</div></section>";
+}
+function areaView(id) {
+  const a = AREAS.find(x => x.id === id), ts = areaTracks(id);
+  const temas = ts.reduce((s, t) => s + tracksLessons(t.id).length + arr(t.plan).length, 0);
+  return '<div class="gut page-top">' + dbNotice() + head(esc(a.name), esc(a.lead) + ' <span class="dim">' + ts.length + " etapas, " + temas + " temas.</span>") + '</div><div class="rows plain">' + rail("Sua sequência", ts.map(tTrack), { tall: true }) +
+    '</div><div class="gut stack" style="gap:18px;margin-top:26px">' + ts.map((t, i) => seqPanel(t, i + 1)).join("") + "</div>";
+}
+function seqNav(t) {
+  const a = areaOf(t); if (!a) return "";
+  const ts = areaTracks(t.area), i = ts.indexOf(t), prev = ts[i - 1], next = ts[i + 1];
+  return '<div class="row" style="justify-content:space-between">' + (prev ? '<button class="btn" data-act="go" data-r="trilha" data-id="' + esc(prev.id) + '">← Etapa ' + i + ": " + esc(prev.short) + "</button>" : "<span></span>") + (next ? '<button class="btn primary" data-act="go" data-r="trilha" data-id="' + esc(next.id) + '">Próxima etapa: ' + esc(next.name) + "</button>" : '<button class="btn" data-act="go" data-r="' + a.route + '">Ver todas as etapas</button>') + "</div>";
+}
+VIEWS.quarenta = () => areaView("40");
+VIEWS.eletrica = () => areaView("hw");
 VIEWS.trilha = id => {
   const t = trackOf(id); const ls = tracksLessons(t.id); const firstOpen = ls.find(l => !lessonDone(l.id));
   const projs = pub("projects").filter(p => p.track === t.id), cs = pub("cases").filter(c => c.track === t.id);
-  return '<div data-t="' + t.id + '" class="stack" style="gap:26px"><div><button class="back" data-act="go" data-r="trilhas">← Trilhas</button><div class="thead"><span class="ico">' + IC[t.ico] + '</span><div><h1>' + esc(t.name) + '</h1><p class="lead muted" style="margin-top:6px">' + esc(t.desc) + "</p></div></div></div>" +
+  return '<div data-t="' + t.id + '" class="stack" style="gap:26px"><div><button class="back" data-act="go" data-r="' + (areaOf(t) ? areaOf(t).route : "trilhas") + '">← ' + (areaOf(t) ? esc(areaOf(t).name) + "</button><br><span class=\"seq-step\">Etapa " + stepOf(t) + "</span>" : "Trilhas</button>") + '<div class="thead"' + (areaOf(t) ? ' style="margin-top:8px"' : "") + '><span class="ico">' + IC[t.ico] + '</span><div><h1>' + esc(t.name) + '</h1><p class="lead muted" style="margin-top:6px">' + esc(t.desc) + "</p></div></div></div>" +
     '<div class="split"><div class="stack" style="gap:18px">' + (ls.length ? "" : '<div class="panel"><h3>Lições</h3><p class="muted">As primeiras lições desta trilha estão em produção.</p></div>') + (ls.length ? '<div class="panel"><div class="ph"><h3>Lições</h3><span class="chip">' + ls.filter(l => lessonDone(l.id)).length + " de " + ls.length + '</span></div><div class="timeline">' +
     (ls.map((l, i) => { const p = S.prog.lessons[l.id]; const cls = p && p.done ? "done" : l === firstOpen ? "next" : ""; return '<div class="tl-item ' + cls + '"><span class="tl-dot">' + (p && p.done ? "✓" : i + 1) + '</span><div style="min-width:0"><h3><button class="link" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">' + esc(l.title) + '</button></h3><p class="small muted" style="margin-top:3px">' + esc(l.summary) + ' <span class="dim">' + (l.minutes || 5) + " min</span></p></div>" + (p && p.done ? '<span class="chip ok">' + p.score + "/" + arr(l.questions).length + "</span>" : l === firstOpen ? '<button class="btn sm primary" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">Estudar</button>' : "<span></span>") + "</div>"; }).join("") || '<p class="muted">Nenhuma lição publicada nesta trilha.</p>') +
     '</div></div>' : "") + (arr(t.plan).length ? '<div class="panel"><div class="ph"><h3>Em breve</h3><span class="chip">' + arr(t.plan).length + (arr(t.plan).length === 1 ? " curso" : " cursos") + "</span></div>" + planList(t) + "</div>" : "") + '</div><div class="stack" style="gap:18px">' + (projs.length ? '<div class="panel"><h3>Projeto guiado</h3><div class="list">' + projs.map(p => '<div><button class="link" data-act="go" data-r="projeto" data-id="' + esc(p.id) + '">' + esc(p.title) + '</button><span class="small dim">' + esc(p.duration) + "</span></div>").join("") + "</div></div>" : "") +
-    (cs.length ? '<div class="panel"><h3>No Laboratório</h3><div class="list">' + cs.map(c => '<div><button class="link" data-act="go" data-r="caso" data-id="' + esc(c.id) + '">' + esc(c.title) + "</button>" + (S.prog.attempts[c.id] ? '<span class="chip ok">feito</span>' : "") + "</div>").join("") + "</div></div>" : "") + "</div></div></div>";
+    (cs.length ? '<div class="panel"><h3>No Laboratório</h3><div class="list">' + cs.map(c => '<div><button class="link" data-act="go" data-r="caso" data-id="' + esc(c.id) + '">' + esc(c.title) + "</button>" + (S.prog.attempts[c.id] ? '<span class="chip ok">feito</span>' : "") + "</div>").join("") + "</div></div>" : "") + "</div></div>" + seqNav(t) + "</div>";
 };
 VIEWS.licao = id => {
   const l = visible("lessons", id); if (!l) return dbNotice() || emptyBox("Lição não encontrada.", '<button class="btn" data-act="go" data-r="trilhas">Voltar</button>');
@@ -1014,7 +1081,7 @@ function quizQ(q, chosen, kind, ref, qi, noNum) {
 VIEWS.projetos = () => {
   const u = S.ui; const list = pub("projects").filter(p => !u.ptrack || p.track === u.ptrack);
   return dbNotice() + head("Projetos", "Projetos guiados, do zero ao resultado publicado. Cada um vira uma peça do seu portfólio.") +
-    '<div class="filters"><button class="pill" data-act="ui" data-k="ptrack" data-v="" aria-pressed="' + (!u.ptrack) + '">Todos</button>' + TRACKS.map(t => '<button class="pill" data-t="' + t.id + '" data-act="ui" data-k="ptrack" data-v="' + t.id + '" aria-pressed="' + (u.ptrack === t.id) + '"><span class="dot"></span>' + esc(t.short) + "</button>").join("") + "</div>" +
+    '<div class="filters"><button class="pill" data-act="ui" data-k="ptrack" data-v="" aria-pressed="' + (!u.ptrack) + '">Todos</button>' + TRACKS.filter(t => pub("projects").some(p => p.track === t.id)).map(t => '<button class="pill" data-t="' + t.id + '" data-act="ui" data-k="ptrack" data-v="' + t.id + '" aria-pressed="' + (u.ptrack === t.id) + '"><span class="dot"></span>' + esc(t.short) + "</button>").join("") + "</div>" +
     (list.length ? '<div class="projects">' + list.map(p => { const pr = S.prog.projects[p.id]; const n = arr(p.steps).length, d = pr ? Object.values(pr.steps || {}).filter(Boolean).length : 0;
       return '<button class="project" data-t="' + esc(p.track) + '" data-act="go" data-r="projeto" data-id="' + esc(p.id) + '"><div class="row" style="justify-content:space-between">' + tchip(p.track) + (pr && pr.done ? '<span class="chip ok">Entregue</span>' : d ? '<span class="chip go">' + d + " de " + n + " passos</span>" : "") + "</div><h3>" + esc(p.title) + '</h3><p class="small muted">' + esc(p.summary) + '</p><div class="toolset">' + arr(p.tools).slice(0, 4).map(x => '<span class="chip">' + esc(x.split(" (")[0]) + "</span>").join("") + '</div><span class="small dim" style="margin-top:auto">' + esc(p.level) + ", " + esc(p.duration) + "</span></button>"; }).join("") + "</div>" : emptyBox("Nenhum projeto publicado ainda."));
 };
@@ -1090,7 +1157,7 @@ VIEWS.progresso = () => {
   const where = S.mode === "local" ? (DESK ? "Seu progresso fica salvo neste computador, com uma cópia automática por dia." : "Seu progresso fica salvo neste navegador.") : S.progWhere === "conta" ? "Seu progresso está salvo na sua conta e acompanha você em outros dispositivos." : S.uid && S.progWhere !== "local-only" ? "Sincronizando com a sua conta…" : "Seu progresso está salvo apenas neste navegador.";
   return head("Meu progresso", where) +
     '<section class="stats"><div class="stat"><b>' + lv.name + "</b><span>" + (lv.next ? "faltam " + (lv.next[0] - xp) + " XP para " + lv.next[1] : "nível máximo") + '</span></div><div class="stat"><b>' + xp + '</b><span>XP</span></div><div class="stat"><b>' + atts.length + '</b><span>investigações</span></div><div class="stat"><b>' + Object.values(S.prog.lessons).filter(l => l.done).length + "</b><span>lições</span></div></section>" +
-    '<div class="split"><div class="stack" style="gap:18px"><div class="panel"><h3>Trilhas</h3><div class="bars">' + TRACKS.map(t => { const v = trackPct(t.id); return '<div class="bar" data-t="' + t.id + '"><span>' + esc(t.short) + '</span><span class="tr"><i style="width:' + v + '%"></i></span><span class="v">' + v + "%</span></div>"; }).join("") + "</div></div>" +
+    '<div class="split"><div class="stack" style="gap:18px"><div class="panel"><h3>Trilhas</h3><div class="bars">' + TRACKS.filter(t => tracksLessons(t.id).length).map(t => { const v = trackPct(t.id); return '<div class="bar" data-t="' + t.id + '"><span>' + esc(t.short) + '</span><span class="tr"><i style="width:' + v + '%"></i></span><span class="v">' + v + "%</span></div>"; }).join("") + "</div></div>" +
     '<div class="panel"><h3>Como você investiga</h3>' + (atts.length ? '<div class="bars">' + [["Raciocínio", "hyp"], ["Investigação", "inv"], ["Diagnóstico", "diag"], ["Correção", "sol"], ["Segurança", "seg"]].map(([l, k]) => { const v = comp(k); return '<div class="bar"><span>' + l + '</span><span class="tr"><i style="width:' + v + '%"></i></span><span class="v">' + v + "%</span></div>"; }).join("") + "</div>" : '<p class="muted small">Resolva um desafio no Laboratório para ver como você investiga.</p>') + "</div>" +
     '<div class="panel"><h3>Conquistas</h3><div class="badges">' + badges.map(([ic, t, d, on]) => '<div class="badge' + (on ? " on" : "") + '"><span class="ico">' + ic + '</span><div><b class="small">' + t + '</b><div class="small muted">' + d + "</div></div></div>").join("") + "</div></div></div>" +
     '<div class="stack" style="gap:18px"><div class="panel"><h3>Histórico</h3><div class="list">' + (atts.sort((a, b) => b.at.localeCompare(a.at)).slice(0, 10).map(a => { const c = find("cases", a.id); return '<div><div style="min-width:0"><button class="link" data-act="go" data-r="correcao" data-id="' + esc(a.id) + '">' + esc(c ? c.title : a.id) + '</button><div class="small dim">' + fmtDate(a.at) + '</div></div><span style="font-variant-numeric:tabular-nums">' + a.score + "</span></div>"; }).join("") || '<div class="muted small">Nenhuma investigação ainda.</div>') + "</div></div>" +
@@ -1108,7 +1175,7 @@ VIEWS.favoritos = () => {
 
 /* ----- Próximas etapas ----- */
 VIEWS.roteiro = () => {
-  const P = [["Versão 2.2", "Disponível", "ok", ["Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
+  const P = [["Versão 2.3", "Disponível", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
     ["Próxima", "Planejada", "go", ["Cursos completos da trilha IA no Trabalho", "Trilha Agentes e Automação: n8n, WhatsApp e primeiro agente", "Volter Assist também no programa instalado", "Certificado por curso concluído"]],
     ["Depois", "Planejada", "", ["Turmas fechadas e licenças para empresas", "Um curso de IA por profissão a cada etapa", "Aplicativo para celular com modo offline"]]];
   const L = S.mode === "local";
@@ -1119,7 +1186,7 @@ VIEWS.roteiro = () => {
 
 /* ================= ADMINISTRAÇÃO ================= */
 const sec = (l, h) => ({ sec: l, h });
-const TRACK_OPTS = TRACKS.map(t => [t.id, t.name]).concat([["iot", "IoT e robótica (oculta)"]]);
+const TRACK_OPTS = TRACKS.map(t => [t.id, (areaOf(t) ? areaOf(t).short + " · " : "") + t.name]);
 const FIELDS = {
   cases: [
     sec("Identificação"),

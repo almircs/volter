@@ -14,9 +14,15 @@ O Volter é uma plataforma para quem quer usar IA e tecnologia no trabalho. Cada
 | **Dados e Decisão** | Planilhas, SQL e dashboards para decidir com números |
 | **IA por Profissão** | IA aplicada a pequenos negócios, RH, educação, saúde e profissões técnicas |
 | **Segurança e Uso Responsável** | Golpes, deepfakes, LGPD e regras para usar IA com dados da empresa |
-| **Carreira em Tecnologia** (bônus) | Recomeço em tecnologia depois dos 40, com plano de transição e portfólio |
 
-Os cursos que ainda não têm lições aparecem no app como **Em breve**. A lista vem de [`docs/grade-de-temas.md`](docs/grade-de-temas.md) e fica no campo `plan` de cada trilha, em `TRACKS` no `index.html`. A antiga trilha de IoT saiu da grade: os itens com trilha `iot` continuam em `data/conteudo.js`, mas ficam ocultos para os alunos.
+Duas abas têm trilhas próprias, feitas em sequência (etapa 1, 2, 3…) e com temas numerados dentro de cada etapa:
+
+| Aba | Etapas |
+|---|---|
+| **Comece aos 40+** | 1. Primeiros passos no digital · 2. IA no dia a dia, sem jargão · 3. Ferramentas do trabalho moderno · 4. Recomeço em tecnologia |
+| **Elétrica, Eletrônica e Hardware** | 1. Fundamentos de eletricidade · 2. Instalações elétricas residenciais · 3. Eletrônica básica · 4. Hardware de computadores · 5. Microcontroladores e IoT · 6. Comandos elétricos e automação |
+
+Os cursos que ainda não têm lições aparecem no app como **Em breve**. A lista completa está em [`docs/grade-de-temas.md`](docs/grade-de-temas.md) e, no app, no campo `plan` de cada trilha (`TRACKS` no `index.html`); o campo `area` diz em qual aba a trilha fica.
 
 ### Planejamento de cursos
 
@@ -28,8 +34,10 @@ A grade de temas em [`docs/grade-de-temas.md`](docs/grade-de-temas.md) define o 
 |---|---|
 | **Início** | Banner com o desafio do dia e fileiras de capas, no estilo das plataformas de streaming; cada capa abre uma janela com detalhes e, nas trilhas, a lista de lições como episódios |
 | **Trilhas** | Lições curtas com blocos de código e exercícios |
+| **Comece aos 40+** | Trilhas em etapas para quem começa em tecnologia depois dos 40 |
+| **Elétrica e Hardware** | Trilhas em etapas de eletricidade, instalações, eletrônica, hardware, IoT e automação |
 | **Laboratório** | Desafios de investigação em 7 etapas: entender, hipóteses, investigar, evidências, causa, corrigir e aprender, com correção comentada |
-| **Projetos** | Projetos guiados com passo a passo, para montar um portfólio (assistente com RAG, site no GitHub Pages, painel de gastos com pandas) |
+| **Projetos** | Projetos guiados com passo a passo, para montar um portfólio (assistente com RAG, site no GitHub Pages, painel de gastos com pandas, estação IoT com ESP32) |
 | **Treino** | Perguntas sorteadas de todas as trilhas e o desafio do dia |
 | **Livros** | Lançamentos e referências, com o motivo de cada leitura |
 | **Meu progresso** | Nível, XP, progresso por trilha, como você investiga e conquistas |
