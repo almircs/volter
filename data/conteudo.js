@@ -910,7 +910,7 @@ window.VOLTER_SEED = {
    "level": 3,
    "objective": "Identificar a causa da parada, devolver a linha à produção com segurança e evitar que isso se repita.",
    "solution": {
-    "explanation": "Este desafio é baseado num caso vivido pelo autor do Volter. O IHM já dava sinais de fim de vida havia meses: travava, perdia a comunicação, e a equipe contornava com 'jeitinhos'. Na noite da confraternização, ele falhou de vez. A saída foi direto da festa para o aeroporto, buscar um equipamento substituto, e depois extrair, interpretar e adaptar o programa do IHM antigo para o novo hardware, junto com o encarregado da equipe. Somando horas de linha parada, deslocamento emergencial, equipamento comprado fora do planejamento, hora técnica em regime de urgência e produção perdida no pior momento do ano, a conta ficou muito acima do que custaria uma troca planejada.",
+    "explanation": "Este desafio é baseado num caso real, vivido por um técnico de manutenção industrial. O IHM já dava sinais de fim de vida havia meses: travava, perdia a comunicação, e a equipe contornava com 'jeitinhos'. Na noite da confraternização, ele falhou de vez. A saída foi direto da festa para o aeroporto, buscar um equipamento substituto, e depois extrair, interpretar e adaptar o programa do IHM antigo para o novo hardware, junto com o encarregado da equipe. Somando horas de linha parada, deslocamento emergencial, equipamento comprado fora do planejamento, hora técnica em regime de urgência e produção perdida no pior momento do ano, a conta ficou muito acima do que custaria uma troca planejada.",
     "lessons": [
      "Uma troca planejada custa uma fração de uma troca de emergência.",
      "Sinais repetidos de falha são um pedido de substituição, não algo a contornar.",
@@ -1411,7 +1411,7 @@ window.VOLTER_SEED = {
   "carreira-experiencia-vale": {
    "author": "",
    "bancada": "O curso do SENAI não foi o começo da carreira técnica. Foi a validação de uma que já estava andando havia cinco anos, escondida em consertos feitos em casa de madrugada e num TK83 estudado por conta própria.\n\nSe você está começando depois dos 40, olhe para a sua história com esse mesmo olhar: provavelmente boa parte do que a tecnologia pede você já faz há anos, só que com outro nome.",
-   "body": "Quem começa em tecnologia depois dos 40 costuma achar que começa do zero. Quase nunca é verdade. Esta lição conta uma trajetória real, a do autor do Volter, e mostra como cada fase dela virou uma habilidade que a tecnologia valoriza. Depois, é a sua vez.\n\n## Uma trajetória em capítulos\n- **1982 a 1992, o balcão:** dez anos vendendo sapatos. Atender uma pessoa de cada vez, entender o que ela precisava mesmo quando ela não sabia dizer, e fechar a venda sem forçar.\n- **1984, a curiosidade:** ainda solteiro, a compra de um TK83, um dos primeiros computadores pessoais vendidos no Brasil. Sem nenhuma razão prática, só vontade de entender.\n- **1988, o motivo:** nasce o primeiro de três filhos. Com inflação alta e faculdade difícil de alcançar, vem a decisão de estudar para uma profissão mais rentável.\n- **1992 a 1997, a virada:** trabalho com eletrônica e consertos em casa para completar a renda. Na ponta dos dedos, a evolução inteira dos componentes: válvula, transistor, circuito integrado, SMD.\n- **1996 e 1997, o diploma:** curso de eletrônica e automação no SENAI, que validou cinco anos de prática.\n- **1997 e 1998, a escolha:** um aviso no quadro da escola, um estágio numa indústria e, aos 34 anos, a contratação. O RH oferecia a operação, que pagava mais; a escolha foi insistir na área técnica, porque era ela que levava aonde se queria chegar.\n- **Anos de indústria:** automação, CLPs, IHMs, depois robótica, com Siemens STEP 7 e SIMATIC, treinamentos em linhas de engarrafamento no Brasil e no México.\n- **Hoje:** manutenção de equipamentos biomédicos, como autoclaves e instrumentos odontológicos, onde do outro lado da máquina existe um paciente.\n- **2018 e 2022, de volta aos estudos:** Big Data, filosofia e, depois, HTML, CSS, JavaScript, Git e Linux.\n- **Agora:** inteligência artificial aplicada à manutenção e à engenharia clínica, e este aplicativo.\n\n## O que cada fase ensinou, na língua da tecnologia\n- **Vender sapatos → levantar requisitos.** Entender o que o cliente precisa, mesmo quando ele não sabe explicar, é exatamente o trabalho de quem desenha um sistema ou um produto.\n- **Consertar aparelhos em casa → depurar.** Achar um defeito com método, medindo antes de trocar, é o mesmo raciocínio de achar um erro num programa.\n- **Atravessar da válvula ao SMD → aprender continuamente.** Tecnologia não se domina de uma vez; ela vem em camadas que se sobrepõem. Quem acompanha cada camada nunca fica realmente para trás.\n- **Indústria e manutenção → pensar em sistemas.** Uma linha de produção é uma rede de máquinas que dependem umas das outras, como os serviços de um sistema na nuvem. E parada não planejada sempre custa mais caro que a troca planejada.\n- **Equipamentos de saúde → responsabilidade e qualidade.** Testar com seriedade porque alguém depende do resultado é o que separa um software confiável de um que só \"funciona na minha máquina\".\n- **Escolher o estágio aos 34 → pensar no longo prazo.** O caminho mais curto no salário nem sempre é o caminho mais curto até onde se quer chegar.\n\n## O padrão que se repete\nCada virada começou do mesmo jeito: alguém disposto a admitir que ainda havia algo a aprender, mesmo com anos de experiência. E quase sempre o diploma veio **depois** da competência, não antes. Isso vale para você: o que você já sabe fazer conta, mesmo sem certificado.\n\n## Agora é a sua vez\nPegue papel ou uma planilha e faça três colunas:\n- **O que eu fiz:** cada emprego, função, bico ou responsabilidade, inclusive em casa e na comunidade.\n- **O que eu aprendi a fazer:** atender, negociar, organizar estoque, ensinar, consertar, coordenar equipe, cuidar de alguém.\n- **Como isso se chama em tecnologia:** levantar requisitos, atendimento ao cliente e suporte, gestão de projetos, testes e qualidade, documentação, treinamento, análise de dados.\n\nSe ficar em dúvida na terceira coluna, peça ajuda a uma IA: descreva o que você fazia, com detalhes, e pergunte quais habilidades de tecnologia aquilo mostra. Depois confira se a resposta faz sentido para você.\n\n## Projeto final\n**Lista das habilidades que você já tem.** Termine com pelo menos dez linhas na tabela e escolha as três habilidades que você mais quer mostrar num currículo ou no LinkedIn. Elas serão o ponto de partida dos próximos temas desta etapa.",
+   "body": "Quem começa em tecnologia depois dos 40 costuma achar que começa do zero. Quase nunca é verdade. Esta lição conta uma trajetória real, de um técnico que hoje ajuda a criar o conteúdo do Volter, e mostra como cada fase dela virou uma habilidade que a tecnologia valoriza. Depois, é a sua vez.\n\n## Uma trajetória em capítulos\n- **1982 a 1992, o balcão:** dez anos vendendo sapatos. Atender uma pessoa de cada vez, entender o que ela precisava mesmo quando ela não sabia dizer, e fechar a venda sem forçar.\n- **1984, a curiosidade:** ainda solteiro, a compra de um TK83, um dos primeiros computadores pessoais vendidos no Brasil. Sem nenhuma razão prática, só vontade de entender.\n- **1988, o motivo:** nasce o primeiro de três filhos. Com inflação alta e faculdade difícil de alcançar, vem a decisão de estudar para uma profissão mais rentável.\n- **1992 a 1997, a virada:** trabalho com eletrônica e consertos em casa para completar a renda. Na ponta dos dedos, a evolução inteira dos componentes: válvula, transistor, circuito integrado, SMD.\n- **1996 e 1997, o diploma:** curso de eletrônica e automação no SENAI, que validou cinco anos de prática.\n- **1997 e 1998, a escolha:** um aviso no quadro da escola, um estágio numa indústria e, aos 34 anos, a contratação. O RH oferecia a operação, que pagava mais; a escolha foi insistir na área técnica, porque era ela que levava aonde se queria chegar.\n- **Anos de indústria:** automação, CLPs, IHMs, depois robótica, com Siemens STEP 7 e SIMATIC, treinamentos em linhas de engarrafamento no Brasil e no México.\n- **Hoje:** manutenção de equipamentos biomédicos, como autoclaves e instrumentos odontológicos, onde do outro lado da máquina existe um paciente.\n- **2018 e 2022, de volta aos estudos:** Big Data, filosofia e, depois, HTML, CSS, JavaScript, Git e Linux.\n- **Agora:** inteligência artificial aplicada à manutenção e à engenharia clínica.\n\n## O que cada fase ensinou, na língua da tecnologia\n- **Vender sapatos → levantar requisitos.** Entender o que o cliente precisa, mesmo quando ele não sabe explicar, é exatamente o trabalho de quem desenha um sistema ou um produto.\n- **Consertar aparelhos em casa → depurar.** Achar um defeito com método, medindo antes de trocar, é o mesmo raciocínio de achar um erro num programa.\n- **Atravessar da válvula ao SMD → aprender continuamente.** Tecnologia não se domina de uma vez; ela vem em camadas que se sobrepõem. Quem acompanha cada camada nunca fica realmente para trás.\n- **Indústria e manutenção → pensar em sistemas.** Uma linha de produção é uma rede de máquinas que dependem umas das outras, como os serviços de um sistema na nuvem. E parada não planejada sempre custa mais caro que a troca planejada.\n- **Equipamentos de saúde → responsabilidade e qualidade.** Testar com seriedade porque alguém depende do resultado é o que separa um software confiável de um que só \"funciona na minha máquina\".\n- **Escolher o estágio aos 34 → pensar no longo prazo.** O caminho mais curto no salário nem sempre é o caminho mais curto até onde se quer chegar.\n\n## O padrão que se repete\nCada virada começou do mesmo jeito: alguém disposto a admitir que ainda havia algo a aprender, mesmo com anos de experiência. E quase sempre o diploma veio **depois** da competência, não antes. Isso vale para você: o que você já sabe fazer conta, mesmo sem certificado.\n\n## Agora é a sua vez\nPegue papel ou uma planilha e faça três colunas:\n- **O que eu fiz:** cada emprego, função, bico ou responsabilidade, inclusive em casa e na comunidade.\n- **O que eu aprendi a fazer:** atender, negociar, organizar estoque, ensinar, consertar, coordenar equipe, cuidar de alguém.\n- **Como isso se chama em tecnologia:** levantar requisitos, atendimento ao cliente e suporte, gestão de projetos, testes e qualidade, documentação, treinamento, análise de dados.\n\nSe ficar em dúvida na terceira coluna, peça ajuda a uma IA: descreva o que você fazia, com detalhes, e pergunte quais habilidades de tecnologia aquilo mostra. Depois confira se a resposta faz sentido para você.\n\n## Projeto final\n**Lista das habilidades que você já tem.** Termine com pelo menos dez linhas na tabela e escolha as três habilidades que você mais quer mostrar num currículo ou no LinkedIn. Elas serão o ponto de partida dos próximos temas desta etapa.",
    "createdAt": "2026-10-24T19:40:00.000Z",
    "demo": false,
    "history": [
@@ -3463,7 +3463,7 @@ window.VOLTER_SEED = {
     "Para dados da empresa, use RAG."
    ],
    "minutes": 7,
-   "order": 1,
+   "order": 6,
    "questions": [
     {
      "answer": 2,
@@ -3524,7 +3524,7 @@ window.VOLTER_SEED = {
     "Ajuste uma coisa por vez."
    ],
    "minutes": 8,
-   "order": 2,
+   "order": 7,
    "questions": [
     {
      "answer": 2,
@@ -3627,6 +3627,378 @@ window.VOLTER_SEED = {
    "title": "Agentes e automação: do chat à ação",
    "track": "agentes",
    "updatedAt": "2026-10-24T00:30:00.000Z"
+  },
+  "ia-como-aprende": {
+   "author": "",
+   "body": "\"A máquina aprende\" soa misterioso, mas o mecanismo básico é simples: **errar, medir o erro e ajustar um pouco**. Repetido milhões de vezes.\n\n## O neurônio artificial\nÉ uma conta pequena:\n1. Recebe alguns números de entrada, por exemplo, a vibração e a temperatura de um motor.\n2. Multiplica cada entrada por um **peso**, que diz o quanto ela importa.\n3. Soma tudo, mais um ajuste fixo chamado **viés**.\n4. Se o resultado passa de um limite, responde \"sim\" (falha provável); se não, \"não\".\n\nOs pesos começam com valores quaisquer. O neurônio, de início, chuta.\n\n## O treinamento, passo a passo\n1. Mostramos um exemplo cuja resposta certa já sabemos.\n2. O neurônio dá a resposta dele.\n3. Se errou, cada peso é empurrado um pouquinho na direção que diminui o erro. O tamanho desse empurrão é a **taxa de aprendizado**.\n4. Passamos ao próximo exemplo. Uma volta por todos os exemplos se chama **época** (ou rodada).\n\nDepois de algumas rodadas, os pesos se acomodam e o neurônio acerta. Use o simulador abaixo para ver isso acontecer.\n\n## De um neurônio a bilhões\nUm único neurônio só separa grupos com uma linha reta. Empilhando **camadas** de neurônios, cada uma recebendo a saída da anterior, a rede aprende formas muito mais complicadas: rostos, vozes, o sentido de uma frase. O método para ajustar todos os pesos de uma rede em camadas é a **retropropagação**: o erro da saída é distribuído de trás para frente, e cada peso recebe a sua parcela de correção. Em linguagem matemática, é a **descida do gradiente**: dar pequenos passos \"morro abaixo\" na direção em que o erro diminui.\n\n## Três jeitos de aprender\n- **Supervisionado:** os exemplos vêm com a resposta certa (este e-mail é golpe; esta peça é boa). É o mais comum na indústria e nos negócios.\n- **Não supervisionado:** os exemplos vêm sem resposta, e o modelo procura padrões sozinho, como agrupar clientes parecidos ou encontrar uma máquina com comportamento fora do normal.\n- **Por reforço:** o modelo age, recebe uma recompensa ou punição e aprende por tentativa e erro. Foi assim que o AlphaGo melhorou jogando contra si mesmo.\n\n## E os modelos de linguagem?\nEles combinam as três ideias:\n1. **Pré-treinamento:** leem quantidades enormes de texto e aprendem a prever a próxima palavra. A \"resposta certa\" já está no próprio texto, então não precisa de ninguém para etiquetar.\n2. **Ajuste com instruções:** aprendem, com exemplos escritos por pessoas, a responder perguntas e seguir pedidos.\n3. **Ajuste com preferências humanas:** pessoas comparam respostas, e o modelo é ajustado para preferir as mais úteis, corretas e seguras. Uma técnica comum se chama **RLHF**, aprendizado por reforço com retorno humano.\n\n## Cuidados que todo treinamento exige\n- **Decorar em vez de aprender (overfitting):** um modelo que acerta tudo nos exemplos de treino, mas erra nos novos, decorou. Por isso se separa uma parte dos dados só para **teste**, que o modelo nunca vê no treino.\n- **Viés nos dados:** se os exemplos representam mal algum grupo ou situação, o modelo vai errar mais justamente ali.\n- **Mudança do mundo:** um modelo treinado com dados antigos não sabe o que aconteceu depois. É por isso que assistentes de IA têm uma **data de corte** do conhecimento.",
+   "createdAt": "2026-10-24T20:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T20:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Aprender = errar, medir o erro e ajustar os pesos um pouco.",
+    "Taxa de aprendizado: o tamanho de cada ajuste. Época: uma volta por todos os exemplos.",
+    "Supervisionado, não supervisionado e por reforço.",
+    "Separe dados de teste para pegar o modelo que decorou."
+   ],
+   "minutes": 12,
+   "order": 4,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Grande demais, o modelo oscila; pequena demais, demora a aprender.",
+     "options": [
+      "Quantos exemplos existem",
+      "O tamanho do ajuste dos pesos a cada erro",
+      "A velocidade da internet",
+      "Quantos neurônios a rede tem"
+     ],
+     "prompt": "O que a taxa de aprendizado controla?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Não há resposta certa nos exemplos; o modelo procura padrões sozinho.",
+     "options": [
+      "Supervisionado",
+      "Não supervisionado",
+      "Por reforço",
+      "Manual"
+     ],
+     "prompt": "Agrupar máquinas com comportamento parecido, sem dizer quais estão boas ou ruins, é aprendizado:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Ele pode ter decorado (overfitting). Por isso se testa com dados separados.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Um modelo que acerta 100% nos exemplos de treino certamente vai acertar nos casos novos.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Recompensa por vencer, punição por perder, repetido milhões de vezes.",
+     "options": [
+      "Com regras escritas por campeões",
+      "Jogando milhões de partidas contra si mesmo, por aprendizado por reforço",
+      "Copiando a internet",
+      "Com sistemas especialistas"
+     ],
+     "prompt": "Como o AlphaGo melhorou depois de estudar partidas humanas?",
+     "type": "mc"
+    }
+   ],
+   "sim": "neuro",
+   "status": "published",
+   "summary": "O que acontece no treinamento: o neurônio artificial, o erro, o ajuste dos pesos e os três jeitos principais de aprender.",
+   "title": "Como a máquina aprende: neurônios, erros e ajustes",
+   "track": "ia",
+   "updatedAt": "2026-10-24T20:30:00.000Z"
+  },
+  "ia-como-funciona": {
+   "author": "",
+   "bancada": "## O IHM já avisava\nNa indústria, um IHM travou de vez durante a festa de fim de ano e parou uma linha inteira. Ele avisava havia meses: travava de vez em quando, perdia a comunicação com o CLP. Esses sinais estavam lá, mas ninguém os transformou em decisão.\n\nÉ exatamente isso que a **manutenção preditiva** com IA tenta fazer: aprender com o histórico de vibração, temperatura, corrente e falhas de cada equipamento e avisar **antes** da parada. É uma tarefa de prever um número (\"quantos dias até falhar?\") ou de classificar (\"este padrão indica falha próxima?\"). É uma das aplicações de IA que eu estudo hoje, junto com a engenharia clínica.",
+   "body": "\"Inteligência artificial\" é um nome amplo demais. Para entender o que está por trás de uma ferramenta, ajuda separar as camadas, uma dentro da outra.\n\n## As caixas, da maior para a menor\n- **Inteligência artificial:** qualquer técnica que faz um computador executar tarefas que pareceriam exigir inteligência humana. Inclui desde regras escritas à mão até os modelos atuais.\n- **Aprendizado de máquina (machine learning):** a parte da IA em que o computador **aprende com exemplos**, em vez de receber todas as regras prontas.\n- **Aprendizado profundo (deep learning):** aprendizado de máquina com **redes neurais de muitas camadas**. É o que move reconhecimento de voz, de imagem e os modelos de linguagem.\n- **IA generativa:** modelos de aprendizado profundo que **criam conteúdo novo**: texto, imagem, áudio, vídeo, código. ChatGPT, Claude e Gemini estão aqui.\n\n## Regras contra exemplos\nImagine um sistema que separa e-mails de golpe:\n- **Com regras:** alguém escreve \"se tiver a palavra 'prêmio' e um link encurtado, é golpe\". Funciona até o golpista trocar a palavra.\n- **Com aprendizado:** você mostra milhares de e-mails já marcados como golpe ou não, e o sistema descobre sozinho os padrões, inclusive alguns que ninguém pensaria em escrever.\n\n## O que é um modelo\nUm **modelo** é uma função matemática com muitos números ajustáveis, os **parâmetros** (ou pesos). Ele recebe uma entrada e devolve uma saída. **Treinar** é ajustar esses números até as saídas ficarem boas. Um modelo pequeno pode ter dezenas de parâmetros; os grandes modelos de linguagem têm **bilhões**.\n\n## Duas fases: treino e uso\n- **Treinamento:** acontece uma vez (ou de tempos em tempos), em grandes centros de dados, com muitos exemplos e muitas GPUs. É caro e demorado.\n- **Inferência:** é o uso do modelo já treinado. Quando você faz uma pergunta ao chat, o modelo **não está aprendendo** com ela naquele momento; está só calculando uma resposta com os parâmetros que já tem.\n\n## Os tipos de tarefa mais comuns\n- **Classificar:** este e-mail é golpe ou não? Esta peça tem defeito? Esta mancha na radiografia é suspeita?\n- **Prever um número:** quanto vamos vender no mês que vem? Quantos dias até este rolamento falhar?\n- **Agrupar:** quais clientes se parecem entre si?\n- **Gerar:** escrever um texto, criar uma imagem, resumir um documento, traduzir.\n\n## O caminho de uma pergunta num assistente de IA\n1. O texto que você digita é quebrado em pedaços chamados **tokens** (palavras ou partes de palavras).\n2. Cada token vira uma lista de números que representa seu significado.\n3. O modelo calcula qual é o **próximo token mais provável**, considerando tudo o que veio antes.\n4. Ele escreve esse token, acrescenta ao texto e repete, token por token, até terminar a resposta.\n\nPor isso a IA escreve com fluência e, às vezes, **inventa** com a mesma fluência: ela produz o texto mais provável, não consulta uma tabela de verdades. A lição \"O que é um modelo de linguagem\" desta trilha detalha esse ponto.\n\n## Dados são o combustível\nUm modelo só aprende o que está nos dados. Dados ruins, incompletos ou com preconceitos produzem um modelo ruim, incompleto ou preconceituoso. Em IA, a frase clássica é: **lixo entra, lixo sai**.",
+   "createdAt": "2026-10-24T20:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T20:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "IA ⊃ aprendizado de máquina ⊃ deep learning ⊃ IA generativa.",
+    "Modelo: função com parâmetros ajustados no treinamento.",
+    "No uso (inferência) o modelo não aprende com a sua pergunta.",
+    "Classificar, prever, agrupar e gerar: as tarefas mais comuns."
+   ],
+   "minutes": 11,
+   "order": 3,
+   "questions": [
+    {
+     "answer": 3,
+     "explain": "IA engloba as outras três.",
+     "options": [
+      "Deep learning",
+      "IA generativa",
+      "Inteligência artificial",
+      "Aprendizado de máquina"
+     ],
+     "prompt": "Qual destas é a categoria mais ampla?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Isso é a inferência; o treinamento acontece antes, separado.",
+     "options": [
+      "Aprende permanentemente com ela naquele momento",
+      "Usa os parâmetros já treinados para calcular a resposta",
+      "Pesquisa a resposta numa tabela de verdades",
+      "Pede ajuda a uma pessoa"
+     ],
+     "prompt": "Quando você faz uma pergunta ao chat, o modelo:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "A saída é um valor numérico.",
+     "options": [
+      "Classificação",
+      "Previsão de um número",
+      "Geração de imagem",
+      "Agrupamento"
+     ],
+     "prompt": "Prever em quantos dias um rolamento vai falhar é uma tarefa de:",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "Lixo entra, lixo sai.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Um modelo treinado com dados ruins tende a dar resultados ruins.",
+     "type": "vf"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "IA, aprendizado de máquina, deep learning e IA generativa explicados como uma sequência de caixas, e o caminho de uma pergunta até a resposta.",
+   "title": "Como a IA funciona: dados, modelos e previsões",
+   "track": "ia",
+   "updatedAt": "2026-10-24T20:30:00.000Z"
+  },
+  "ia-glossario": {
+   "author": "",
+   "body": "## Fundamentos\n- **Algoritmo:** uma sequência de passos para resolver um problema. Uma receita de bolo é um algoritmo.\n- **Modelo:** o resultado do treinamento: uma função com parâmetros ajustados que transforma entrada em saída.\n- **Parâmetros (pesos):** os números que o treinamento ajusta. O tamanho de um modelo costuma ser medido em bilhões de parâmetros.\n- **Conjunto de dados (dataset):** a coleção de exemplos usada para treinar e testar um modelo.\n- **Treinamento:** o processo de ajustar os parâmetros com exemplos.\n- **Inferência:** usar o modelo já treinado para responder.\n- **Rede neural:** um modelo formado por camadas de neurônios artificiais ligados entre si.\n- **GPU:** a placa de vídeo, que faz milhares de contas em paralelo e por isso é o motor do treinamento de IA.\n\n## Modelos de linguagem\n- **LLM (grande modelo de linguagem):** modelo treinado em enormes volumes de texto para prever e gerar linguagem. ChatGPT, Claude e Gemini usam LLMs.\n- **Token:** o pedaço de texto que o modelo processa, uma palavra ou parte dela. Limites e preços de uso costumam ser contados em tokens.\n- **Janela de contexto:** quanto texto o modelo consegue considerar de uma vez, somando a conversa, os documentos e a resposta.\n- **Prompt:** o pedido ou instrução que você dá ao modelo.\n- **Alucinação:** quando o modelo afirma algo falso com toda a confiança, como uma lei que não existe ou uma citação inventada.\n- **Temperatura:** um ajuste que deixa as respostas mais previsíveis (baixa) ou mais variadas e criativas (alta).\n- **Data de corte:** até quando vão os dados com que o modelo foi treinado.\n\n## Técnicas e aplicações\n- **Embedding:** uma lista de números que representa o significado de um texto ou imagem. Textos parecidos ficam com números parecidos.\n- **RAG (geração aumentada por recuperação):** a IA busca trechos relevantes nos seus documentos e responde com base neles, citando a fonte. Reduz a alucinação.\n- **Ajuste fino (fine-tuning):** treinar um pouco mais um modelo pronto com exemplos de um assunto específico.\n- **Multimodal:** modelo que entende ou gera mais de um tipo de conteúdo: texto, imagem, áudio, vídeo.\n- **Agente:** sistema de IA que usa ferramentas (busca, planilha, e-mail, código) e executa tarefas em várias etapas, não só conversa.\n- **Visão computacional:** IA que interpreta imagens e vídeos: ler placas, contar peças, achar defeitos.\n- **Processamento de linguagem natural (PLN):** a área que trata de texto e fala humana.\n\n## Ética, segurança e o futuro\n- **Viés:** tendência do modelo a errar mais ou a tratar pior certos grupos ou situações, quase sempre herdada dos dados.\n- **IA explicável:** técnicas para mostrar por que o modelo chegou a uma resposta.\n- **Deepfake:** vídeo, áudio ou imagem falsos gerados por IA, muito usados em golpes. A trilha Segurança e Uso Responsável trata disso.\n- **LGPD:** a lei brasileira de proteção de dados pessoais, que vale também quando você coloca dados de pessoas numa ferramenta de IA.\n- **IA geral (AGI):** uma IA hipotética capaz de aprender e fazer qualquer tarefa intelectual humana. Ainda é um objetivo de pesquisa e um tema de debate.\n\n## Dica para estudar\nQuando aparecer um termo novo, peça ao próprio assistente de IA: \"explique como se eu fosse iniciante, com um exemplo do dia a dia\". E confira a resposta numa segunda fonte. É um bom hábito, e um ótimo treino de prompt.",
+   "createdAt": "2026-10-24T20:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T20:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Modelo, parâmetros, treinamento e inferência: o básico.",
+    "Token, contexto, prompt e alucinação: o vocabulário dos chats.",
+    "Embedding e RAG: como a IA responde com base nos seus documentos.",
+    "Viés, deepfake e LGPD: os cuidados."
+   ],
+   "minutes": 10,
+   "order": 5,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Por isso respostas importantes precisam ser conferidas.",
+     "options": [
+      "Um erro de digitação do usuário",
+      "Uma afirmação falsa feita com confiança pelo modelo",
+      "Uma imagem gerada por IA",
+      "Um vírus de computador"
+     ],
+     "prompt": "O que é uma alucinação, em IA?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Geração aumentada por recuperação.",
+     "options": [
+      "Fine-tuning",
+      "RAG",
+      "Temperatura",
+      "Deepfake"
+     ],
+     "prompt": "Qual técnica faz a IA buscar trechos nos seus documentos antes de responder?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Conversa, documentos e resposta somados.",
+     "options": [
+      "O tamanho da tela",
+      "Quanto texto o modelo considera de uma vez",
+      "A data de corte",
+      "O preço do modelo"
+     ],
+     "prompt": "A janela de contexto indica:",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "É o que o diferencia de um chat que só responde.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Um agente de IA pode usar ferramentas e executar tarefas em várias etapas.",
+     "type": "vf"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "As palavras que aparecem em toda conversa sobre IA, explicadas em uma ou duas frases.",
+   "title": "Os nomes da IA: um glossário para não se perder",
+   "track": "ia",
+   "updatedAt": "2026-10-24T20:30:00.000Z"
+  },
+  "ia-historia-1": {
+   "author": "",
+   "bancada": "## Em 1984, um TK83\nEm 1984, quando os sistemas especialistas eram a grande promessa da IA nos laboratórios, eu comprei um **TK83**, um dos primeiros computadores pessoais vendidos no Brasil, com teclado de membrana e memória medida em kilobytes. Não havia razão prática nenhuma; era curiosidade.\n\nQuarenta anos depois, estudo inteligência artificial aplicada à manutenção. Olhando para trás, a lição é a mesma da própria história da IA: as ideias às vezes esperam décadas até a tecnologia alcançá-las. Vale a pena começar a estudar antes de a mudança chegar.",
+   "body": "A inteligência artificial parece coisa dos últimos anos, mas a ideia tem mais de 80 anos. A história dela é feita de grandes promessas, decepções e recomeços. Conhecer esse vai e vem ajuda a entender o momento atual com os pés no chão.\n\n## 1943: o neurônio vira matemática\nOs pesquisadores Warren McCulloch e Walter Pitts publicam um modelo matemático simplificado do **neurônio**: ele soma sinais de entrada e \"dispara\" quando a soma passa de um limite. É a semente das redes neurais de hoje.\n\n## 1950: Alan Turing pergunta se máquinas podem pensar\nO matemático britânico Alan Turing, que havia trabalhado na quebra de códigos durante a Segunda Guerra, publica o artigo \"Computing Machinery and Intelligence\". Em vez de discutir o que é pensar, ele propõe um teste prático, o **jogo da imitação**, hoje chamado de **teste de Turing**: se, conversando por escrito, uma pessoa não consegue distinguir a máquina de um ser humano, a máquina se comporta de forma inteligente.\n\n## 1956: nasce o nome \"inteligência artificial\"\nJohn McCarthy, Marvin Minsky, Claude Shannon e Nathaniel Rochester organizam um encontro de verão na **Faculdade Dartmouth**, nos Estados Unidos. A proposta, escrita em 1955, usa pela primeira vez a expressão **inteligência artificial**. Esse encontro é considerado o marco de fundação da área. O otimismo era enorme: achava-se que em poucas décadas as máquinas fariam tudo o que uma pessoa faz.\n\n## 1958 e 1959: aprender com exemplos\n- **1958:** Frank Rosenblatt apresenta o **perceptron**, uma máquina com neurônios artificiais que aprendia a reconhecer padrões simples ajustando seus próprios pesos.\n- **1959:** Arthur Samuel, da IBM, cria um programa de damas que melhora jogando contra si mesmo e populariza a expressão **aprendizado de máquina** (machine learning).\n\n## 1966: a primeira conversa com um computador\nJoseph Weizenbaum, no MIT, cria o **ELIZA**, um programa que imitava um terapeuta reformulando as frases do usuário como perguntas. Ele não entendia nada, só seguia regras de texto, mas muitas pessoas se sentiam compreendidas. Weizenbaum ficou preocupado com isso: foi o primeiro alerta sobre o quanto tendemos a atribuir inteligência a quem conversa com a gente.\n\n## 1969 a 1980: o primeiro inverno\nEm 1969, Marvin Minsky e Seymour Papert publicam o livro **Perceptrons**, mostrando limites sérios das redes de uma camada. Junto com promessas não cumpridas e computadores ainda fracos, isso esfria o interesse. Em 1973, um relatório encomendado pelo governo britânico (o **relatório Lighthill**) critica a falta de resultados práticos, e o financiamento cai nos dois lados do Atlântico. Esse período ficou conhecido como o **primeiro inverno da IA**.\n\n## Anos 1980: os sistemas especialistas\nA IA volta com outra abordagem: em vez de aprender sozinha, a máquina recebe **regras escritas por especialistas** (\"se a temperatura passa de tal valor e a pressão cai, então...\"). São os **sistemas especialistas**. Um dos mais famosos, o XCON, ajudava a montar pedidos de computadores na empresa DEC e economizou milhões por ano. Empresas e governos investem pesado, como no projeto japonês de Quinta Geração de computadores, de 1982.\n\n## Fim dos anos 1980 e início dos 1990: o segundo inverno\nOs sistemas especialistas eram caros de manter: cada regra nova precisava de um especialista, e eles quebravam diante de situações fora do previsto. O mercado de computadores especializados em IA desaba por volta de 1987, e começa o **segundo inverno**, que dura até o começo dos anos 1990.\n\n## O que fica desta primeira parte\nDuas ideias disputaram a IA desde o início: **escrever as regras** à mão ou deixar a máquina **aprender com exemplos**. Nas primeiras décadas, as regras pareciam mais promissoras. Na parte 2, você vai ver como o aprendizado com exemplos, junto com muito dado e computadores potentes, virou o jogo.",
+   "createdAt": "2026-10-24T20:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T20:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "1943: neurônio matemático. 1950: teste de Turing. 1956: nasce o nome IA, em Dartmouth.",
+    "1958: perceptron. 1959: 'aprendizado de máquina'. 1966: ELIZA.",
+    "Dois invernos: anos 1970 e fim dos anos 1980.",
+    "Regras escritas à mão contra aprender com exemplos: a disputa que atravessa a história."
+   ],
+   "minutes": 12,
+   "order": 1,
+   "questions": [
+    {
+     "answer": 1,
+     "explain": "A proposta de 1955 para o encontro de Dartmouth de 1956 cunhou o termo.",
+     "options": [
+      "Na conferência de Dartmouth, em 1956",
+      "No lançamento do ChatGPT",
+      "Na Segunda Guerra Mundial",
+      "No projeto japonês de 1982"
+     ],
+     "prompt": "Em que encontro a expressão 'inteligência artificial' foi usada como nome da área?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Turing trocou a pergunta 'máquinas pensam?' por um teste prático de comportamento.",
+     "options": [
+      "Medir a velocidade do processador",
+      "Ver se uma pessoa distingue a máquina de um ser humano numa conversa escrita",
+      "Contar quantos neurônios a máquina tem",
+      "Testar se a máquina joga xadrez"
+     ],
+     "prompt": "O que propõe o teste de Turing?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Ele só reformulava frases com regras de texto; mesmo assim, muitos se sentiam compreendidos.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "O ELIZA, de 1966, entendia de verdade o que as pessoas escreviam.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Por isso eram caros de manter e frágeis fora do previsto.",
+     "options": [
+      "Aprendizado com milhões de exemplos",
+      "Regras escritas por especialistas",
+      "Redes neurais profundas",
+      "Internet"
+     ],
+     "prompt": "Os sistemas especialistas dos anos 1980 funcionavam principalmente com:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Como nasceu a ideia de máquinas que pensam, quem deu o nome de inteligência artificial e por que ela passou duas vezes por anos de descrédito.",
+   "title": "A história da IA, parte 1: das primeiras ideias aos invernos (1943–1993)",
+   "track": "ia",
+   "updatedAt": "2026-10-24T20:30:00.000Z"
+  },
+  "ia-historia-2": {
+   "author": "",
+   "body": "## 1986: as redes neurais aprendem a aprender em camadas\nDavid Rumelhart, Geoffrey Hinton e Ronald Williams publicam um artigo que populariza a **retropropagação** (backpropagation): um método para ajustar os pesos de redes com **várias camadas** de neurônios, corrigindo o erro de trás para frente. Isso resolve boa parte dos limites apontados nos anos 1960.\n\n## 1989: a máquina que lê números escritos à mão\nYann LeCun treina uma **rede neural convolucional** para reconhecer dígitos escritos à mão. Nos anos 1990, sistemas assim liam códigos postais e cheques nos Estados Unidos. Foi uma das primeiras aplicações comerciais de redes neurais.\n\n## 1997: o Deep Blue vence Kasparov\nO computador **Deep Blue**, da IBM, vence o campeão mundial de xadrez Garry Kasparov numa partida de seis jogos. O Deep Blue não aprendia como as redes de hoje: calculava milhões de jogadas por segundo, com regras e avaliações escritas por especialistas. Mesmo assim, foi um marco simbólico.\n\n## 2006 a 2012: a virada do aprendizado profundo\n- **2006:** Geoffrey Hinton e colegas mostram formas de treinar redes com muitas camadas, e o termo **deep learning** (aprendizado profundo) ganha força.\n- **2009:** a pesquisadora Fei-Fei Li lança o **ImageNet**, um banco com milhões de imagens etiquetadas, usado como competição de reconhecimento de imagens.\n- **2012:** a rede **AlexNet**, de Alex Krizhevsky, Ilya Sutskever e Hinton, vence a competição do ImageNet com folga. O segredo: muitos dados, redes profundas e **placas de vídeo (GPUs)**, que fazem milhares de contas ao mesmo tempo. A partir daí, quase toda a área migra para o aprendizado profundo.\n\n## 2014 a 2016: máquinas que criam e que jogam Go\n- **2014:** Ian Goodfellow apresenta as **GANs**, redes que geram imagens novas competindo entre si.\n- **2016:** o **AlphaGo**, da DeepMind, vence o campeão Lee Sedol no Go, um jogo muito mais complexo que o xadrez. Ele aprendeu com partidas humanas e depois jogando milhões de vezes contra si mesmo, por **aprendizado por reforço**.\n\n## 2017: o Transformer\nPesquisadores do Google publicam o artigo **\"Attention Is All You Need\"**, que apresenta o **Transformer**: uma arquitetura que olha para todas as palavras de um texto ao mesmo tempo e aprende quais se relacionam com quais (o mecanismo de **atenção**). Ela é a base de praticamente todos os modelos de linguagem atuais. O \"T\" de GPT vem de Transformer.\n\n## 2018 a 2021: modelos cada vez maiores\n- **2018:** surgem o **GPT**, da OpenAI, e o **BERT**, do Google, treinados em enormes quantidades de texto.\n- **2020:** o **GPT-3**, com 175 bilhões de parâmetros, escreve textos surpreendentemente fluentes. No mesmo ano, o **AlphaFold 2**, da DeepMind, prevê a forma de proteínas com precisão inédita, um avanço para a biologia.\n- **2021 e 2022:** modelos que geram **imagens a partir de texto**, como DALL·E, Midjourney e Stable Diffusion, chegam ao público.\n\n## 30 de novembro de 2022: o ChatGPT\nA OpenAI libera o **ChatGPT**, um modelo de linguagem ajustado para conversar e seguir instruções. Em cerca de dois meses, ele passa de 100 milhões de usuários, uma das adoções mais rápidas da história da tecnologia. A IA sai dos laboratórios e entra no dia a dia.\n\n## 2023 em diante: a corrida dos assistentes\n- **2023:** chegam o GPT-4, o **Claude**, da Anthropic, e o **Gemini**, do Google, entre outros, além de modelos abertos que qualquer um pode baixar.\n- **2024:** o Prêmio Nobel de Física vai para John Hopfield e Geoffrey Hinton, por bases das redes neurais, e o de Química inclui Demis Hassabis e John Jumper, pelo AlphaFold.\n- **De 2024 para cá:** modelos que veem imagens, ouvem e falam (**multimodais**), modelos que \"raciocinam\" em etapas antes de responder, e **agentes** que usam ferramentas e executam tarefas sozinhos. A trilha Agentes e Automação trata disso.\n\n## O que mudou de verdade\nA ideia de aprender com exemplos já existia em 1958. O que mudou foram três coisas juntas: **muito dado** (a internet), **muito poder de cálculo** (as GPUs) e **arquiteturas melhores** (redes profundas e o Transformer). Cada salto recente veio da combinação das três.",
+   "createdAt": "2026-10-24T20:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-24T20:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "1986: retropropagação. 1997: Deep Blue. 2012: AlexNet e a virada do deep learning.",
+    "2016: AlphaGo. 2017: Transformer, a base dos modelos de linguagem.",
+    "30/11/2022: ChatGPT leva a IA ao público.",
+    "Dados + poder de cálculo + arquiteturas melhores explicam os saltos."
+   ],
+   "minutes": 12,
+   "order": 2,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "GPT é Generative Pre-trained Transformer.",
+     "options": [
+      "Tecnologia",
+      "Transformer",
+      "Treinamento",
+      "Texto"
+     ],
+     "prompt": "O que o 'T' de GPT significa?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "A partir dela, quase toda a área migrou para o aprendizado profundo.",
+     "options": [
+      "Foi o primeiro computador pessoal",
+      "Mostrou o poder de redes profundas treinadas com muitos dados em GPUs",
+      "Venceu Kasparov no xadrez",
+      "Criou o teste de Turing"
+     ],
+     "prompt": "Por que a AlexNet, em 2012, é considerada uma virada?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Ele calculava jogadas em grande velocidade, com regras e avaliações escritas por especialistas.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "O Deep Blue, que venceu Kasparov em 1997, era uma rede neural treinada com milhões de partidas.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Nenhum deles sozinho teria sido suficiente.",
+     "options": [
+      "Robôs, satélites e internet",
+      "Muitos dados, muito poder de cálculo e arquiteturas melhores",
+      "Leis, patentes e marketing",
+      "Teclado, mouse e tela"
+     ],
+     "prompt": "Quais três fatores, juntos, explicam os saltos recentes da IA?",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Como o aprendizado com exemplos, muitos dados e placas de vídeo levaram às redes neurais profundas e aos assistentes que conversam.",
+   "title": "A história da IA, parte 2: do Deep Blue ao ChatGPT (1986–hoje)",
+   "track": "ia",
+   "updatedAt": "2026-10-24T20:30:00.000Z"
   },
   "ins-diagramas": {
    "author": "",

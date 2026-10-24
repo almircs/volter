@@ -224,8 +224,9 @@ label.chk input{margin-top:5px;accent-color:var(--ink)}
 .ficha dl{display:flex;flex-direction:column;gap:13px;margin:0}
 .ficha dt{font-size:.8rem;color:var(--dim);font-weight:500}
 .ficha dd{margin:3px 0 0;font-size:.92rem}
-.ficha ul,.prose ul{margin:4px 0 0;padding-left:18px}
+.ficha ul,.prose ul,.prose ol{margin:4px 0 0;padding-left:20px}
 .ficha li,.prose li{margin:3px 0}
+.prose ol li::marker{color:var(--t,var(--muted));font-weight:600}
 details.fold summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;font-family:var(--f-display);font-size:1.2rem;font-weight:700}
 details.fold summary::-webkit-details-marker{display:none}
 details.fold summary::after{content:"+";color:var(--muted)}
@@ -582,10 +583,10 @@ function md(t) {
     if (!tb) return "";
     const lines = b.split("\n");
     if (lines[0].startsWith("## ")) { const rest = lines.slice(1).join("\n"); return "<h3>" + inl(lines[0].slice(3)) + "</h3>" + (rest.trim() ? md(rest) : ""); }
-    const out = []; let para = [], list = [];
+    const out = []; let para = [], list = [], lt = "ul";
     const flushP = () => { if (para.length) { out.push("<p>" + inl(para.join(" ")) + "</p>"); para = []; } };
-    const flushL = () => { if (list.length) { out.push("<ul>" + list.map(x => "<li>" + inl(x) + "</li>").join("") + "</ul>"); list = []; } };
-    lines.forEach(l => { const s = l.trim(); if (s.startsWith("- ")) { flushP(); list.push(s.slice(2)); } else if (s) { flushL(); para.push(s); } });
+    const flushL = () => { if (list.length) { out.push("<" + lt + ">" + list.map(x => "<li>" + inl(x) + "</li>").join("") + "</" + lt + ">"); list = []; } };
+    lines.forEach(l => { const s = l.trim(), n = s.match(/^\d+\.\s+(.*)$/); if (s.startsWith("- ") || n) { flushP(); const t = n ? "ol" : "ul"; if (list.length && t !== lt) flushL(); lt = t; list.push(n ? n[1] : s.slice(2)); } else if (s) { flushL(); para.push(s); } });
     flushP(); flushL(); return out.join("");
   }).join("");
 }
@@ -593,7 +594,7 @@ function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = fal
 
 /* ---------- vocabulário ---------- */
 /* Trilhas da grade de temas (docs/grade-de-temas.md). "plan" lista os cursos planejados que ainda não têm lições:
-   aparecem para o aluno como "Em breve". Trilhas com "area" pertencem às abas Comece aos 40+ e Elétrica, Eletrônica e Hardware. */
+   aparecem para o aluno como "Em breve". Trilhas com "area" pertencem às abas Nova Fase e Elétrica, Eletrônica e Hardware. */
 const TRACKS = [
   { id: "ia", name: "IA no Trabalho", short: "IA no trabalho", ico: "ia", desc: "ChatGPT, Claude e Gemini no dia a dia: prompts, documentos, planilhas e pesquisa com fontes conferidas.",
     plan: [["E-mails, atas e relatórios com IA", "Kit de modelos de documentos"], ["Planilhas e Excel com IA", "Planilha automatizada do próprio trabalho"], ["Apresentações e imagens com IA", "Apresentação completa gerada e revisada"], ["Pesquisa e estudo com IA: checar fontes e evitar erros", "Dossiê de pesquisa com fontes verificadas"]] },
@@ -607,7 +608,7 @@ const TRACKS = [
     plan: [["IA para pequenos negócios e autônomos", "Plano de marketing e atendimento com IA"], ["IA para RH e recrutamento", "Processo seletivo assistido por IA"], ["IA para professores", "Plano de aula e materiais gerados"], ["IA para profissionais de saúde (administrativo)", "Rotina de documentos e agenda com IA"], ["IA para técnicos e profissões práticas", "Relatórios técnicos e orçamentos com IA"]] },
   { id: "seguranca", name: "Segurança e Uso Responsável", short: "Segurança", ico: "escudo", desc: "Golpes, deepfakes, LGPD e regras para usar IA com os dados da empresa.",
     plan: [["Golpes, deepfakes e phishing na era da IA", "Checklist de proteção pessoal e da família"], ["LGPD e dados da empresa ao usar IA", "Política de uso de IA para a equipe"]] },
-  /* Aba "Comece aos 40+": etapas em sequência (a ordem aqui é a ordem das etapas) */
+  /* Aba "Nova Fase" (antes "Comece aos 40+"): etapas em sequência (a ordem aqui é a ordem das etapas) */
   { id: "digital", area: "40", color: "#7fd1c7", name: "Primeiros passos no digital", short: "Primeiros passos", ico: "monitor", desc: "Computador, celular, arquivos, internet segura e videochamadas, explicados com calma.",
     plan: [["Computador e celular sem medo: o básico que ninguém explicou", "Celular e computador configurados do seu jeito"], ["Arquivos e pastas: salvar, encontrar e organizar", "Pastas do trabalho organizadas"], ["Internet segura: senhas, golpes e verificação em duas etapas", "Contas principais protegidas"], ["E-mail, WhatsApp Web e videochamadas", "Reunião por vídeo marcada e conduzida por você"], ["Nuvem: guardar e compartilhar no Google Drive e no OneDrive", "Documentos com cópia na nuvem"]] },
   { id: "iadia", area: "40", color: "#c39bff", name: "IA no dia a dia, sem jargão", short: "IA sem jargão", ico: "ia", desc: "O que é IA, como conversar com ela, como pedir bem e como saber quando ela errou.",
@@ -633,7 +634,7 @@ const TRACKS = [
 const TRACK_IDS = new Set(TRACKS.map(t => t.id));
 /* Abas com trilhas em sequência. As trilhas sem "area" são as da aba Trilhas. */
 const AREAS = [
-  { id: "40", route: "quarenta", name: "Comece aos 40+", short: "40+", ico: "quarenta", lead: "Para quem está começando em tecnologia depois dos 40. Siga as etapas na ordem: cada uma prepara a próxima, com explicações sem pressa e exemplos do dia a dia." },
+  { id: "40", route: "quarenta", name: "Nova Fase", short: "Nova Fase", ico: "quarenta", lead: "Para quem começa ou recomeça em tecnologia numa nova fase da vida: depois dos 40, numa troca de carreira ou perto da aposentadoria. Siga as etapas na ordem, com explicações sem pressa e exemplos do dia a dia." },
   { id: "hw", route: "eletrica", name: "Elétrica, Eletrônica e Hardware", short: "Elétrica e Hardware", ico: "eletrica", lead: "Dos fundamentos de eletricidade até automação e IoT. Siga as etapas na ordem: segurança e fundamentos vêm antes de qualquer montagem." }
 ];
 const areaOf = t => t && AREAS.find(a => a.id === t.area) || null;
@@ -711,7 +712,7 @@ const trackPct = id => { const ls = tracksLessons(id); return ls.length ? Math.r
 /* ---------- navegação ---------- */
 const NAVDEF = [
   ["", [["inicio", "Início"]]],
-  ["Aprender", [["trilhas", "Trilhas"], ["quarenta", "Comece aos 40+"], ["eletrica", "Elétrica e Hardware"], ["lab", "Laboratório"], ["projetos", "Projetos"], ["desafios", "Treino"]]],
+  ["Aprender", [["trilhas", "Trilhas"], ["quarenta", "Nova Fase"], ["eletrica", "Elétrica e Hardware"], ["lab", "Laboratório"], ["projetos", "Projetos"], ["desafios", "Treino"]]],
   ["Ficar em dia", [["noticias", "Notícias"], ["livros", "Livros"]].filter(([r]) => r !== "noticias" || NEWS_ON)],
   ["Você", [["progresso", "Meu progresso"], ["favoritos", "Salvos"]]]
 ];
@@ -735,7 +736,7 @@ function render(force) {
 }
 document.addEventListener("focusout", () => setTimeout(() => { if (S.pending) render(); }, 50));
 function navItems() { const g = NAVDEF.slice(); if (S.admin) g.push(["Gestão", [["admin", S.mode === "local" ? "Editor de conteúdo" : "Conteúdo"]]]); return g; }
-const HNAV = [["inicio", "Início"], ["trilhas", "Trilhas"], ["quarenta", "40+"], ["eletrica", "Elétrica e Hardware"], ["lab", "Laboratório"], ["projetos", "Projetos"], ["desafios", "Treino"], ["noticias", "Notícias"], ["livros", "Livros"]].filter(([r]) => r !== "noticias" || NEWS_ON);
+const HNAV = [["inicio", "Início"], ["trilhas", "Trilhas"], ["quarenta", "Nova Fase"], ["eletrica", "Elétrica e Hardware"], ["lab", "Laboratório"], ["projetos", "Projetos"], ["desafios", "Treino"], ["noticias", "Notícias"], ["livros", "Livros"]].filter(([r]) => r !== "noticias" || NEWS_ON);
 function modeText() { return S.mode === "local" ? (DESK ? "Programa instalado" : "Versão web") : S.mode === "claude" ? (S.admin ? "Administrador" : S.uid ? "Aluno" : "Visitante") : "Carregando"; }
 function renderChrome() {
   const grp = navGroup(); const xp = calcXP(), lv = levelFor(xp);
@@ -1176,6 +1177,47 @@ const SIMS = {
       sread(r, t);
     }
   }
+  ,
+  /* ---- 12. Um neurônio artificial aprendendo ---- */
+  neuro: {
+    title: "Simulador: um neurônio aprendendo", hint: "Cada ponto é uma medição de máquina: vibração e temperatura. Verde funcionou bem; vermelho falhou depois. O neurônio aprende uma linha que separa os dois grupos.",
+    init: { w1: -.4, w2: .9, b: .1, lr: .2, ep: 0, run: 0, acc: 0 },
+    pts: (() => { let s = 7; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647; const out = []; while (out.length < 28) { const x = .05 + rnd() * .9, y = .05 + rnd() * .9, z = .62 * x + .38 * y - .52; if (Math.abs(z) < .05) continue; out.push([x, y, z > 0 ? 1 : 0]); } return out; })(),
+    html() {
+      return '<div class="s-fig">' + SVG("0 0 300 300", '<rect x="30" y="10" width="260" height="260" fill="none" stroke="#333"/><text x="120" y="292">vibração →</text><text x="4" y="150" transform="rotate(-90 12 150)">temperatura →</text><polygon data-g="area" fill="var(--bad)" opacity=".08"/><line data-g="lin" stroke="var(--t)" stroke-width="3"/><g data-g="pts">' + this.pts.map(p => '<circle cx="' + (30 + p[0] * 260).toFixed(1) + '" cy="' + (270 - p[1] * 260).toFixed(1) + '" r="6" fill="' + (p[2] ? "var(--bad)" : "var(--ok)") + '" stroke-width="2.5"/>').join("") + "</g>", "Pontos de medição e a linha de decisão do neurônio") + "</div>" +
+        '<div class="s-ctl">' + sRange("neuro", "lr", "Taxa de aprendizado", .02, 1, .02) + '<div class="row" style="gap:6px;flex-wrap:wrap">' + sBtn("neuro", "um", "Treinar 1 rodada", "primary") + sBtn("neuro", "auto", "Treinar até acertar") + sBtn("neuro", "zera", "Recomeçar") + "</div></div>" +
+        sMeters([["ep", "Rodadas de treino"], ["err", "Erros"], ["pesos", "Pesos (vibração, temperatura, viés)"]]);
+    },
+    pred: (st, p) => st.w1 * p[0] + st.w2 * p[1] + st.b > 0 ? 1 : 0,
+    epoch(st) { let e = 0; this.pts.forEach(p => { const d = p[2] - this.pred(st, p); if (d) { e++; st.w1 += st.lr * d * p[0]; st.w2 += st.lr * d * p[1]; st.b += st.lr * d; } }); st.ep++; return e; },
+    draw(r, st) {
+      const errs = this.pts.filter(p => this.pred(st, p) !== p[2]).length;
+      sg(r, "pts").querySelectorAll("circle").forEach((c, i) => { const bad = this.pred(st, this.pts[i]) !== this.pts[i][2]; c.setAttribute("stroke", bad ? "var(--ink)" : "none"); c.setAttribute("r", bad ? 8 : 6); });
+      // linha w1 x + w2 y + b = 0 recortada no quadrado [0,1]²
+      const P = []; const add = (x, y) => { if (x >= -1e-9 && x <= 1 + 1e-9 && y >= -1e-9 && y <= 1 + 1e-9) P.push([x, y]); };
+      if (Math.abs(st.w2) > 1e-9) { add(0, -st.b / st.w2); add(1, -(st.w1 + st.b) / st.w2); }
+      if (Math.abs(st.w1) > 1e-9) { add(-st.b / st.w1, 0); add(-(st.w2 + st.b) / st.w1, 1); }
+      const l = sg(r, "lin");
+      if (P.length >= 2) { const [a, c] = [P[0], P[P.length - 1]]; l.setAttribute("x1", 30 + a[0] * 260); l.setAttribute("y1", 270 - a[1] * 260); l.setAttribute("x2", 30 + c[0] * 260); l.setAttribute("y2", 270 - c[1] * 260); l.style.display = ""; } else l.style.display = "none";
+      // área prevista como falha
+      const grid = []; [[0, 0], [1, 0], [1, 1], [0, 1]].forEach(q => { if (st.w1 * q[0] + st.w2 * q[1] + st.b > 0) grid.push(q); });
+      const poly = grid.concat(P).map(q => [30 + q[0] * 260, 270 - q[1] * 260]); const cx = poly.reduce((s, q) => s + q[0], 0) / (poly.length || 1), cy = poly.reduce((s, q) => s + q[1], 0) / (poly.length || 1);
+      poly.sort((a, b) => Math.atan2(a[1] - cy, a[0] - cx) - Math.atan2(b[1] - cy, b[0] - cx));
+      sg(r, "area").setAttribute("points", poly.map(q => q[0].toFixed(1) + "," + q[1].toFixed(1)).join(" "));
+      so(r, "lr", fmtN(st.lr, 2)); so(r, "ep", String(st.ep)); so(r, "err", errs + " de " + this.pts.length); so(r, "pesos", fmtN(st.w1, 2) + " · " + fmtN(st.w2, 2) + " · " + fmtN(st.b, 2));
+      sg(r, "b-auto").textContent = st.run ? "Pausar" : "Treinar até acertar";
+      sread(r, errs === 0 ? "Pronto: a linha separa todos os pontos. O neurônio <b>aprendeu</b> só ajustando três números (os pesos e o viés) cada vez que errava. Agora ele consegue classificar uma medição nova que nunca viu." : st.ep === 0 ? "Os pesos começaram com valores quaisquer, então a linha está no lugar errado. Os pontos com contorno branco são os que o neurônio classifica errado. Clique em <b>Treinar 1 rodada</b>." : "A cada ponto errado, o neurônio empurra a linha um pouco na direção certa. A taxa de aprendizado diz o tamanho desse empurrão: grande demais, a linha pula de um lado para o outro; pequena demais, demora muitas rodadas.");
+    },
+    act(st, a) {
+      if (a === "um") { this.epoch(st); st.run = 0; }
+      if (a === "auto") st.run = st.run ? 0 : 1;
+      if (a === "zera") { const k = [[-.4, .9, .1], [.8, -.6, -.2], [-.7, -.3, .5], [.2, .9, -.9]][st.ep % 4]; st.w1 = k[0]; st.w2 = k[1]; st.b = k[2]; st.ep = 0; st.run = 0; }
+    },
+    tick(r, st, dt) {
+      if (!st.run) return; st.acc += dt; if (st.acc < (RMOT ? 0 : .35)) return; st.acc = 0;
+      const e = this.epoch(st); if (e === 0 || st.ep >= 300) st.run = 0; this.draw(r, st);
+    }
+  }
 
 };
 const SIM_OPTS = [["", "Nenhum"]].concat(Object.keys(SIMS).map(k => [k, SIMS[k].title.replace("Simulador: ", "")]));
@@ -1504,7 +1546,7 @@ VIEWS.licao = id => {
   const t = trackOf(l.track); const ls = tracksLessons(t.id), idx = ls.findIndex(x => x.id === id), next = ls[idx + 1], prev = ls[idx - 1];
   const p = S.prog.lessons[id] || { answers: {} }; const qs = arr(l.questions);
   return '<div data-t="' + t.id + '" class="stack" style="gap:26px">' + head(esc(l.title), esc(l.summary), favBtn("lessons:" + id), ["trilha", t.short, t.id], tchip(t.id) + ' <span class="small dim" style="margin-left:8px">Lição ' + (idx + 1) + " de " + ls.length + ", " + (l.minutes || 5) + " min</span>") +
-    '<div class="split"><div class="stack" style="gap:20px"><div class="panel"><div class="prose">' + md(l.body) + "</div></div>" + (l.bancada ? '<div class="panel story"><span class="seq-step">Da bancada do Carlos</span><div class="prose" style="margin-top:8px">' + md(l.bancada) + '</div><p class="small dim" style="margin-top:12px">Experiência real do autor do Volter, em mais de 30 anos de eletrônica, automação e manutenção.</p></div>' : "") + (l.sim ? simHTML(l.sim) : "") +
+    '<div class="split"><div class="stack" style="gap:20px"><div class="panel"><div class="prose">' + md(l.body) + "</div></div>" + (l.bancada ? '<div class="panel story"><span class="seq-step">Da bancada · caso real</span><div class="prose" style="margin-top:8px">' + md(l.bancada) + '</div><p class="small dim" style="margin-top:12px">Relato real de um técnico com mais de 30 anos em eletrônica, automação industrial e manutenção de equipamentos.</p></div>' : "") + (l.sim ? simHTML(l.sim) : "") +
     '<div class="panel stack"><div class="ph" style="margin:0"><h3>Pratique</h3>' + (p.done ? '<span class="chip ok">' + p.score + " de " + qs.length + "</span>" : "") + "</div>" + qs.map((q, qi) => quizQ(q, p.answers[qi], "lq", id, qi)).join('<hr style="border:0;border-top:1px solid var(--line);margin:6px 0">') + (p.done ? '<div class="row"><span class="notice ok" style="flex:1">Lição concluída.</span><button class="btn sm" data-act="resetlesson" data-id="' + esc(id) + '">Refazer exercícios</button></div>' : "") + "</div>" +
     '<div class="row" style="justify-content:space-between">' + (prev ? '<button class="btn" data-act="go" data-r="licao" data-id="' + esc(prev.id) + '">← Anterior</button>' : "<span></span>") + (next ? '<button class="btn primary" data-act="go" data-r="licao" data-id="' + esc(next.id) + '">Próxima: ' + esc(next.title) + "</button>" : '<button class="btn primary" data-act="go" data-r="trilha" data-id="' + t.id + '">Ver projeto e desafios da trilha</button>') + "</div></div>" +
     '<div class="stack" style="gap:18px"><div class="panel"><h3>Para lembrar</h3><ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">' + arr(l.keypoints).map(k => "<li>" + inl(k) + "</li>").join("") + '</ul></div><div class="panel"><h3>Nesta trilha</h3><div class="lnav">' + ls.map((x, i) => '<button data-act="go" data-r="licao" data-id="' + esc(x.id) + '"' + (x.id === id ? ' aria-current="page"' : "") + '><span class="d' + (lessonDone(x.id) ? " ok" : "") + '">' + (lessonDone(x.id) ? "✓" : i + 1) + "</span>" + esc(x.title) + "</button>").join("") + "</div></div></div></div></div>";
@@ -1616,7 +1658,7 @@ VIEWS.favoritos = () => {
 
 /* ----- Próximas etapas ----- */
 VIEWS.roteiro = () => {
-  const P = [["Versão 2.6", "Disponível", "ok", ["Quadros Da bancada do Carlos nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba 40+", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
+  const P = [["Versão 2.7", "Disponível", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
     ["Próxima", "Planejada", "go", ["Cursos completos da trilha IA no Trabalho", "Trilha Agentes e Automação: n8n, WhatsApp e primeiro agente", "Volter Assist também no programa instalado", "Certificado por curso concluído"]],
     ["Depois", "Planejada", "", ["Turmas fechadas e licenças para empresas", "Um curso de IA por profissão a cada etapa", "Aplicativo para celular com modo offline"]]];
   const L = S.mode === "local";

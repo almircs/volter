@@ -19,7 +19,7 @@ Duas abas têm trilhas próprias, feitas em sequência (etapa 1, 2, 3…) e com 
 
 | Aba | Etapas |
 |---|---|
-| **Comece aos 40+** | 1. Primeiros passos no digital · 2. IA no dia a dia, sem jargão · 3. Ferramentas do trabalho moderno · 4. Recomeço em tecnologia |
+| **Nova Fase (antes Comece aos 40+)** | 1. Primeiros passos no digital · 2. IA no dia a dia, sem jargão · 3. Ferramentas do trabalho moderno · 4. Recomeço em tecnologia |
 | **Elétrica, Eletrônica e Hardware** | 1. Fundamentos de eletricidade · 2. Instalações elétricas residenciais · 3. Eletrônica básica · 4. Hardware de computadores · 5. Microcontroladores e IoT · 6. Comandos elétricos e automação |
 
 Os cursos que ainda não têm lições aparecem no app como **Em breve**. A lista completa está em [`docs/grade-de-temas.md`](docs/grade-de-temas.md) e, no app, no campo `plan` de cada trilha (`TRACKS` no `index.html`); o campo `area` diz em qual aba a trilha fica.
@@ -34,7 +34,7 @@ A grade de temas em [`docs/grade-de-temas.md`](docs/grade-de-temas.md) define o 
 |---|---|
 | **Início** | Banner com o desafio do dia e fileiras de capas, no estilo das plataformas de streaming; cada capa abre uma janela com detalhes e, nas trilhas, a lista de lições como episódios |
 | **Trilhas** | Lições curtas com blocos de código e exercícios |
-| **Comece aos 40+** | Trilhas em etapas para quem começa em tecnologia depois dos 40 |
+| **Nova Fase** | Trilhas em etapas para quem começa ou recomeça em tecnologia numa nova fase da vida |
 | **Elétrica e Hardware** | Trilhas em etapas de eletricidade, instalações, eletrônica, hardware, IoT e automação, com 27 lições de elétrica e eletrônica e simuladores interativos (lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, transistor com sensor, amplificador, sistema trifásico, partida de motor e paquímetro) |
 | **Laboratório** | Desafios de investigação em 7 etapas: entender, hipóteses, investigar, evidências, causa, corrigir e aprender, com correção comentada |
 | **Projetos** | Projetos guiados com passo a passo, para montar um portfólio (assistente com RAG, site no GitHub Pages, painel de gastos com pandas, estação IoT com ESP32, pisca-pisca com 555 na protoboard, alarme de porta com relé) |

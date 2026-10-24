@@ -10,9 +10,16 @@ Na primeira vez, clique no Volter com o botão direito → **Abrir** → **Abrir
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.7.0: fundamentos de IA e a aba Nova Fase
+- **Cinco lições novas na trilha IA no Trabalho:** a história da IA em duas partes, em ordem cronológica (de 1943 a hoje), como a IA funciona, como a máquina aprende e um glossário com os nomes mais usados
+- **Simulador novo:** um neurônio artificial aprendendo a separar medições de máquinas boas das que falharam
+- **A aba Comece aos 40+ agora se chama Nova Fase**, para quem começa ou recomeça em tecnologia em qualquer fase da vida
+- Os casos reais aparecem em nome da marca, no quadro "Da bancada"
+- As lições agora aceitam listas numeradas
+
 ## Versão 2.6.0: a experiência do autor dentro do Volter
-- **Quadros "Da bancada do Carlos"** em quatro lições, com casos reais: da válvula ao SMD (história da eletrônica), cada geração de componente pede uma solda diferente, camada sobre camada até a robótica (contatores) e o cuidado com equipamentos de saúde (roteiro de falhas)
-- **Nova lição na aba 40+:** "Sua experiência vale: traduzindo anos de trabalho para a tecnologia", contada a partir da trajetória do autor, do balcão de uma loja à programação e à IA
+- **Quadros "Da bancada"** em quatro lições, com casos reais: da válvula ao SMD (história da eletrônica), cada geração de componente pede uma solda diferente, camada sobre camada até a robótica (contatores) e o cuidado com equipamentos de saúde (roteiro de falhas)
+- **Nova lição na aba Comece aos 40+ (hoje Nova Fase):** "Sua experiência vale: traduzindo anos de trabalho para a tecnologia", contada a partir de uma trajetória real, do balcão de uma loja à programação e à IA
 - **Novo desafio no Laboratório, baseado num caso real:** o IHM que já avisava e parou na festa de fim de ano
 - No editor de conteúdo, cada lição pode ganhar um quadro "Da bancada"
 
