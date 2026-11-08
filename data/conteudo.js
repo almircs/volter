@@ -1405,6 +1405,187 @@ window.VOLTER_SEED = {
    "title": "Chatbot de atendimento inventa um preço que não existe",
    "track": "agentes",
    "updatedAt": "2026-10-24T00:30:00.000Z"
+  },
+  "robo-garra-nova": {
+   "actions": [
+    {
+     "correct": true,
+     "feedback": "Correto: com o TCP certo, os mesmos pontos voltam a valer para a ponta da garra nova.",
+     "id": "a1",
+     "text": "Atualizar $TOOL para {X 170, Y 0, Z 0, A 0, B 0, C 0}, testar passo a passo com override baixo e só então voltar à velocidade normal",
+     "unsafe": false
+    },
+    {
+     "correct": false,
+     "feedback": "Funciona até a próxima troca, mas espalha a correção pelo programa e erra pontos em que a ferramenta não está na vertical.",
+     "id": "a2",
+     "text": "Subir todos os pontos do DAT em 60 mm",
+     "unsafe": false
+    },
+    {
+     "correct": false,
+     "feedback": "Inseguro: a colisão já foi confirmada.",
+     "id": "a3",
+     "text": "Rodar em velocidade máxima para ver se o problema some",
+     "unsafe": true
+    }
+   ],
+   "author": "",
+   "causes": [
+    {
+     "correct": true,
+     "id": "c1",
+     "text": "$TOOL ainda com o comprimento da garra antiga: o TCP real está 60 mm além do que o controlador calcula"
+    },
+    {
+     "correct": false,
+     "id": "c2",
+     "text": "Mesa deslocada"
+    },
+    {
+     "correct": false,
+     "id": "c3",
+     "text": "Sinal da garra invertido"
+    }
+   ],
+   "conditions": "Célula parada para a troca. Teste em velocidade reduzida.",
+   "context": "A manutenção trocou a garra do robô por um modelo novo, 60 mm mais comprido, porque o antigo estava gasto. O programa não foi alterado. Na primeira peça, o robô desceu e a garra bateu em cima da peça.",
+   "createdAt": "2026-11-08T22:00:00.000Z",
+   "demo": true,
+   "equipment": "Robô industrial de seis eixos numa célula de pick and place (mesa e esteira), simulado no Korum",
+   "hints": [
+    "O que mudou na célula?",
+    "Como o controlador sabe onde fica a ponta da ferramenta?",
+    "Abra o exemplo T04 · $BASE e $TOOL do Korum e veja o robô mudar de pose com outra ferramenta."
+   ],
+   "history": "O programa rodava sem problemas havia meses. A única mudança foi a troca da garra.",
+   "hypotheses": [
+    {
+     "correct": true,
+     "id": "h1",
+     "text": "A definição da ferramenta ($TOOL) ainda descreve a garra antiga, então o robô acha que o TCP está 60 mm mais perto da flange do que está"
+    },
+    {
+     "correct": false,
+     "id": "h2",
+     "text": "A mesa foi deslocada durante a troca"
+    },
+    {
+     "correct": false,
+     "id": "h3",
+     "text": "A velocidade está alta demais"
+    },
+    {
+     "correct": false,
+     "id": "h4",
+     "text": "O sinal $OUT[1] da garra nova está invertido"
+    },
+    {
+     "correct": false,
+     "id": "h5",
+     "text": "Os pontos do DAT foram apagados"
+    }
+   ],
+   "level": 3,
+   "objective": "Encontrar por que o robô passou a bater na peça e corrigir sem regravar todos os pontos.",
+   "solution": {
+    "explanation": "Os pontos de um robô se referem ao TCP, a ponta da ferramenta. Quem diz ao controlador onde fica essa ponta é a definição da ferramenta ($TOOL). Com a garra nova, 60 mm mais comprida, o programa continuou dizendo que o TCP estava a 110 mm da flange. O robô então levava a flange ao mesmo lugar de antes, e a ponta real da garra ia 60 mm mais longe, batendo na peça. Atualizar $TOOL para 170 mm resolve sem mexer em nenhum ponto.",
+    "lessons": [
+     "Trocou a ferramenta, atualize $TOOL antes de rodar.",
+     "Pontos são da ponta da ferramenta, não da flange.",
+     "Primeiro teste depois de qualquer mudança: passo a passo e override baixo."
+    ],
+    "logic": [
+     "A única mudança foi a garra.",
+     "A diferença de comprimento (60 mm) é igual ao quanto a ponta passou a ficar mais baixa.",
+     "$TOOL continuava com o valor antigo.",
+     "Corrigindo a ferramenta, os pontos voltam a valer."
+    ],
+    "mistakes": [
+     "Regravar todos os pontos em vez de corrigir a ferramenta.",
+     "Testar em velocidade alta depois de uma colisão.",
+     "Desconfiar da garra ou da mesa sem medir."
+    ]
+   },
+   "status": "published",
+   "summary": "Um pick and place que funcionava há meses começou a colidir com a peça logo depois da instalação de uma garra nova, mais comprida.",
+   "symptoms": [
+    "A garra bate na peça na descida até o ponto de pega",
+    "Nos pontos de aproximação, o robô parece passar mais baixo que antes",
+    "O programa é exatamente o mesmo que funcionava com a garra antiga",
+    "Não há mensagem de erro de sintaxe"
+   ],
+   "tags": [
+    "robótica",
+    "KRL",
+    "TOOL",
+    "Korum"
+   ],
+   "techInfo": [
+    "Garra antiga: TCP a 110 mm da flange",
+    "Garra nova: TCP a 170 mm da flange",
+    "O programa define $TOOL = {X 110, Y 0, Z 0, A 0, B 0, C 0} no início",
+    "Pontos do DAT gravados com a garra antiga"
+   ],
+   "tests": [
+    {
+     "how": "Medir a distância da flange até a ponta de cada garra",
+     "id": "t1",
+     "insight": "A ponta real da ferramenta ficou 60 mm mais longe da flange.",
+     "name": "Comparar o comprimento das garras",
+     "reading": "Diferença de 60 mm",
+     "result": "Garra antiga: 110 mm. Garra nova: 170 mm",
+     "value": "util"
+    },
+    {
+     "how": "Abrir o SRC e procurar a atribuição de $TOOL",
+     "id": "t2",
+     "insight": "O controlador continua calculando com a garra antiga.",
+     "name": "Ler a definição de $TOOL no programa",
+     "reading": "TCP a 110 mm",
+     "result": "$TOOL = {X 110, Y 0, Z 0, A 0, B 0, C 0}",
+     "value": "util"
+    },
+    {
+     "how": "Executar em passo a passo, override baixo, e medir a altura da ponta da garra sobre a peça",
+     "id": "t3",
+     "insight": "Toda a trajetória está deslocada pela diferença de comprimento da garra.",
+     "name": "Rodar só até o ponto de aproximação, passo a passo",
+     "reading": "60 mm mais baixa",
+     "result": "A ponta fica 85 mm acima da peça, quando deveria ficar 145 mm",
+     "value": "util"
+    },
+    {
+     "how": "Comparar a posição da mesa com as marcas no piso e no layout da célula",
+     "id": "t4",
+     "insight": "Descarta deslocamento da mesa.",
+     "name": "Conferir a posição da mesa",
+     "reading": "",
+     "result": "Mesa na posição original",
+     "value": "neutro"
+    },
+    {
+     "how": "Acionar $OUT[1] TRUE e FALSE com o robô parado em HOME",
+     "id": "t5",
+     "insight": "O comando da garra está certo, mas isso não explica a colisão na descida.",
+     "name": "Testar a garra abrindo e fechando",
+     "reading": "",
+     "result": "TRUE fecha, FALSE abre, como antes",
+     "value": "irrelevante"
+    },
+    {
+     "how": "Executar o programa completo com override 100 %",
+     "id": "t6",
+     "insight": "Com uma colisão já confirmada, aumentar a velocidade só aumenta o estrago na garra e na peça.",
+     "name": "Rodar o ciclo em velocidade normal para ver se o problema some",
+     "reading": "",
+     "result": "Teste não executado",
+     "value": "inseguro"
+    }
+   ],
+   "title": "Depois da troca da garra, o robô passou a bater na peça",
+   "track": "robotica",
+   "updatedAt": "2026-11-08T22:00:00.000Z"
   }
  },
  "lessons": {
@@ -4405,6 +4586,746 @@ window.VOLTER_SEED = {
    "track": "iot",
    "updatedAt": "2026-10-19T01:30:00.000Z"
   },
+  "kor-1": {
+   "author": "",
+   "body": "O **Korum** é um laboratório virtual de robótica industrial para Windows e Mac. Nele você escreve programas em **KRL**, a linguagem dos robôs KUKA, e um robô de seis eixos em 3D executa cada comando na tela. Dá para errar à vontade: nada quebra, ninguém se machuca.\n\nEste curso é o roteiro guiado. Cada lição explica um assunto e termina com **Pratique no Korum**, dizendo qual exemplo abrir e qual exercício fazer. O Korum avalia os exercícios sozinho e dá nota.\n\n## Importante antes de começar\nO Korum é uma **simulação educacional**. O robô tem medidas didáticas, não é cópia de nenhum modelo comercial, não envia comandos a robôs reais e não valida segurança. Programar um robô de verdade exige treinamento do fabricante, procedimentos da empresa e as normas de segurança da célula.\n\n## Os seis eixos\nO robô é um braço com seis articulações, chamadas **A1 a A6**:\n- **A1:** gira a base, como uma pessoa girando a cintura.\n- **A2 e A3:** levantam e abaixam o braço, como ombro e cotovelo.\n- **A4, A5 e A6:** formam o **punho** e orientam a ferramenta, como girar e dobrar o pulso.\n\nCom seis eixos, o robô consegue levar a ferramenta a um ponto e escolher de que ângulo chega nele.\n\n## TCP: o ponto que importa\nO **TCP** (Tool Center Point, ponto central da ferramenta) é a ponta da ferramenta: o meio dos dedos da garra, a ponta da tocha de solda, o bico de cola. Quando você manda o robô \"ir ao ponto P\", quem vai até P é o TCP.\n\n## HOME\n**HOME** é a posição de descanso, segura e conhecida, de onde os programas saem e para onde voltam. No Korum, todo programa bem escrito começa e termina em `PTP HOME`.\n\n## Coordenadas: X, Y, Z, A, B, C\nUma posição tem seis números:\n- **X, Y, Z:** onde o TCP está, em milímetros. No Korum, X aponta para a frente do robô, Y para a esquerda e Z para cima, a partir do pé do robô.\n- **A, B, C:** a orientação da ferramenta, em graus, girando em torno de Z, Y e X. Nos exercícios, quase sempre se usa **A 0, B 90, C 0**: a ferramenta apontando para baixo, como numa garra que pega peças em uma mesa.\n\n## Sistemas de coordenadas\n- **WORLD (mundo):** a referência fixa da célula.\n- **BASE:** uma referência que você define sobre uma mesa ou um palete. Mudando a base, os mesmos pontos servem em outro lugar.\n- **TOOL (ferramenta):** a referência presa na ponta da ferramenta. Ela diz ao robô onde está o TCP.\n\n## Pratique no Korum\n- Leia as aulas do nível **Fundamentos** do próprio Korum, em especial \"Estrutura mecânica e os seis eixos\" e \"Sistemas de coordenadas\".\n- Use a **movimentação manual (jog)** e mexa um eixo de cada vez. Depois mova em X, Y e Z e repare como vários eixos se mexem juntos para manter a ferramenta numa direção.\n- Abra o exemplo **T01 · Eixo por eixo (E6AXIS)** e rode.",
+   "createdAt": "2026-11-08T22:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-08T22:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "O Korum é um laboratório virtual: o robô em 3D executa o seu programa KRL.",
+    "Seis eixos: A1 a A3 posicionam, A4 a A6 orientam a ferramenta.",
+    "O TCP é a ponta da ferramenta; HOME é a posição de descanso.",
+    "Uma posição tem X, Y, Z (mm) e A, B, C (graus)."
+   ],
+   "minutes": 10,
+   "order": 1,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Tool Center Point: é ele que chega ao ponto programado.",
+     "options": [
+      "O nome do controlador",
+      "A ponta da ferramenta, o ponto que vai até as posições programadas",
+      "O eixo da base",
+      "Um tipo de movimento"
+     ],
+     "prompt": "O que é o TCP?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "O punho orienta a ferramenta.",
+     "options": [
+      "A1, A2 e A3",
+      "A4, A5 e A6",
+      "Só o A1",
+      "Só o A6"
+     ],
+     "prompt": "Quais eixos formam o punho do robô?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "O Korum é educacional: não valida segurança nem reproduz um robô comercial.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Um programa que funciona no Korum pode ser enviado direto a um robô real com segurança.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "É a orientação usada para pegar peças numa mesa.",
+     "options": [
+      "Para cima",
+      "Para baixo",
+      "Para a esquerda",
+      "Para trás"
+     ],
+     "prompt": "Em B 90, com A 0 e C 0, a ferramenta aponta:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "O que é o Korum, como o robô se move e como ele entende posições no espaço: eixos, TCP, HOME e coordenadas.",
+   "title": "O Korum e o robô de seis eixos",
+   "track": "robotica",
+   "updatedAt": "2026-11-08T22:00:00.000Z"
+  },
+  "kor-10": {
+   "author": "",
+   "body": "Todo programador de robô passa mais tempo corrigindo do que escrevendo. O segredo é o mesmo da manutenção: **ler o sintoma, formular hipóteses, testar uma de cada vez**.\n\n## As mensagens do Korum e o que elas querem dizer\n- **\"PTP: ponto inalcançável — fora do alcance do robô\"**: o ponto está longe demais (ou numa posição que o braço não consegue). Confira os números no DAT; um sinal ou um dígito errado é o mais comum.\n- **\"COLISÃO: ferramenta do robô atingiu Mesa A\"**: o caminho ou o ponto passa por dentro de um objeto. Em geral, Z baixo demais, ou um PTP que cortou caminho perto da mesa.\n- **\"LIN: passagem por singularidade\"**: no meio da linha reta, o eixo A5 passou perto de 0° e os eixos do punho precisariam girar muito de uma vez. Troque por PTP, incline a ferramenta ou mude a altura.\n- **\"variável I não declarada\"**: falta o `DECL`.\n\n## Defeitos que não geram mensagem\nAlguns erros não param o programa, mas o resultado sai errado:\n- A garra fecha **antes** de descer até a peça.\n- A peça é solta longe do destino, porque um ponto está trocado.\n- Tudo funciona, mas devagar demais, porque faltou aproximação nos pontos de passagem.\n\n## Um programa com três defeitos\nO exercício **Corrija o programa** do Korum traz um pick and place com três defeitos: a garra é fechada logo no início, o ponto de pega está abaixo do tampo da mesa (Z 135, enquanto o centro da peça fica em Z 175) e o ponto da esteira tem Y −1525, longe demais. Corrigido, fica assim:\n\n```\nDEF corrigido()\n  INI\n  PTP HOME\n  $OUT[1] = FALSE            ; abrir ANTES de descer\n  PTP P_APROX\n  LIN P_PEGA\n  $OUT[1] = TRUE\n  WAIT SEC 0.3\n  LIN P_APROX\n  PTP P_ESTEIRA\n  LIN_REL {Z -140}\n  $OUT[1] = FALSE\n  WAIT SEC 0.3\n  LIN_REL {Z 140}\n  PTP HOME\nEND\n```\n\nE o arquivo de pontos:\n\n```\nDEFDAT corrigido\n  DECL E6POS P_APROX = {X 575, Y 0, Z 320, A 0, B 90, C 0}\n  DECL E6POS P_PEGA = {X 575, Y 0, Z 175, A 0, B 90, C 0}\n  DECL E6POS P_ESTEIRA = {X 300, Y -525, Z 320, A 0, B 90, C 0}\nENDDAT\n```\n\n## Método em cinco passos\n1. **Leia o console** até o fim e anote a linha do erro.\n2. Rode **passo a passo** até a linha anterior ao problema.\n3. Use a **Análise** do Korum: ela lista os pontos e marca os inalcançáveis, as colisões e as singularidades antes de executar.\n4. Mude **uma coisa por vez** e rode de novo.\n5. Quando funcionar, rode com velocidade normal e confira o tempo de ciclo.\n\n## Pratique no Korum\n- Faça o exercício **Corrija o programa**.\n- Abra **Diagnóstico: encontre os erros**, **T19 · Diagnóstico: singularidade de punho** e **T20 · Diagnóstico: limites e alcance**. Teste as soluções sugeridas nos comentários, uma de cada vez.\n- Peça ao **Professor** do Korum para explicar um erro que você não entendeu, mas tente primeiro sozinho.",
+   "createdAt": "2026-11-08T22:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-08T22:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Inalcançável: confira os números do ponto.",
+    "Colisão: Z baixo demais ou PTP cortando perto de obstáculos.",
+    "Singularidade: A5 perto de 0°; use PTP, incline a ferramenta ou mude a altura.",
+    "Método: ler o console, passo a passo, Análise, uma mudança por vez."
+   ],
+   "minutes": 12,
+   "order": 10,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Confira o Z do ponto de pega.",
+     "options": [
+      "Velocidade alta",
+      "O ponto de pega está abaixo do tampo da mesa",
+      "Falta de comentário",
+      "A garra está aberta"
+     ],
+     "prompt": "O Korum avisa \"COLISÃO: ferramenta do robô atingiu Mesa A\" ao descer até a peça. A causa mais provável é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "São as soluções sugeridas no exemplo T19 do Korum.",
+     "options": [
+      "Aumentando a velocidade",
+      "Trocando por PTP, inclinando a ferramenta ou mudando a altura",
+      "Apagando o DAT",
+      "Fechando a garra"
+     ],
+     "prompt": "Uma passagem por singularidade num LIN pode ser resolvida:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Mudando uma por vez, você sabe o que resolveu.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Ao depurar, é melhor mudar várias coisas de uma vez para economizar tempo.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Ela faz uma execução simulada sem animação.",
+     "options": [
+      "O painel de E/S",
+      "A Análise (execução a seco)",
+      "O jog",
+      "O cenário"
+     ],
+     "prompt": "Qual ferramenta do Korum lista os pontos inalcançáveis antes de executar?",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Os erros mais comuns em programas de robô, as mensagens do Korum e um método para encontrar a causa.",
+   "title": "Diagnóstico: quando o robô não faz o que você queria",
+   "track": "robotica",
+   "updatedAt": "2026-11-08T22:00:00.000Z"
+  },
+  "kor-2": {
+   "author": "",
+   "body": "Um programa KRL tem **dois arquivos** com o mesmo nome:\n- **SRC:** os comandos, a sequência do que o robô faz.\n- **DAT:** os dados, principalmente os **pontos** (posições) que o SRC usa.\n\nNo Korum, os dois aparecem em abas lado a lado no editor.\n\n## O programa completo\n```\nDEF primeiro()\n  ; Meu primeiro programa: ir até um ponto e voltar\n  INI\n  PTP HOME\n  PTP ALVO\n  PTP HOME\nEND\n```\n\nE o arquivo de pontos:\n\n```\nDEFDAT primeiro\n  DECL E6POS ALVO = {X 500, Y 300, Z 500, A 0, B 90, C 0}\nENDDAT\n```\n\n## Linha por linha\n- `DEF primeiro()` abre o programa, que se chama **primeiro**. Ele termina em `END`.\n- Tudo depois de `;` é **comentário**: o robô ignora, mas quem lê o programa agradece.\n- `INI` prepara o controlador (velocidades e parâmetros padrão). Vem logo no começo.\n- `PTP HOME` leva o robô à posição de descanso.\n- `PTP ALVO` leva o TCP até o ponto **ALVO**, declarado no DAT.\n- `DEFDAT primeiro` ... `ENDDAT` é o arquivo de dados, com o **mesmo nome** do programa.\n- `DECL E6POS ALVO = {X 500, Y 300, Z 500, A 0, B 90, C 0}` declara um ponto chamado ALVO. **E6POS** é o tipo de dado de uma posição cartesiana completa.\n\n## Regras que evitam a maioria dos erros\n- O nome depois de `DEF` e de `DEFDAT` precisa ser o mesmo.\n- Todo ponto usado no SRC precisa estar declarado no DAT (ou no próprio SRC).\n- KRL não diferencia maiúsculas de minúsculas, mas o costume é escrever comandos em maiúsculas.\n- Use nomes que contem a história: `P_PEGA_MESA` é melhor que `P7`.\n\n## Rodando no Korum\nNo Korum você pode executar o programa direto, com animação, ou **passo a passo**, uma linha de cada vez. O console mostra o que está acontecendo e, se der erro, em qual linha. A aba de **Análise** faz uma execução a seco e lista os pontos com o aviso de alcançável ou não.\n\n## Pratique no Korum\n- Faça o exercício **Primeiro movimento**: leve o TCP até X 500, Y 300, Z 500 com a ferramenta para baixo e volte para HOME.\n- Depois, mude o ponto para X 900 e rode de novo. Leia a mensagem do console: o ponto ficou **fora do alcance**.",
+   "createdAt": "2026-11-08T22:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-08T22:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "SRC tem os comandos; DAT tem os pontos.",
+    "DEF ... END e DEFDAT ... ENDDAT com o mesmo nome.",
+    "INI no começo; PTP HOME no começo e no fim.",
+    "E6POS é o tipo de um ponto com X, Y, Z, A, B, C."
+   ],
+   "minutes": 10,
+   "order": 2,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "O DAT guarda os dados, principalmente os pontos.",
+     "options": [
+      "No arquivo SRC",
+      "No arquivo DAT",
+      "No console",
+      "Na garra"
+     ],
+     "prompt": "Onde ficam os pontos de um programa KRL?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Ele vem logo no começo do programa.",
+     "options": [
+      "Inicia a garra",
+      "Prepara o controlador com velocidades e parâmetros padrão",
+      "Leva o robô a HOME",
+      "Inicia uma repetição"
+     ],
+     "prompt": "O que faz o comando INI?",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "Comentários explicam o programa para as pessoas.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Uma linha que começa com ponto e vírgula é um comentário e não é executada.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "O braço tem um alcance máximo; o console avisa \"ponto inalcançável\".",
+     "options": [
+      "Erro de digitação no INI",
+      "Ponto fora do alcance do robô",
+      "Falta de comentário",
+      "A garra está aberta"
+     ],
+     "prompt": "No Korum, você troca o ponto ALVO para X 900 e o console mostra um erro. O motivo provável é:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Como um programa KRL é organizado, o que cada linha faz e como declarar um ponto.",
+   "title": "Seu primeiro programa KRL: arquivos SRC e DAT",
+   "track": "robotica",
+   "updatedAt": "2026-11-08T22:00:00.000Z"
+  },
+  "kor-3": {
+   "author": "",
+   "body": "Chegar a um ponto é uma coisa; **o caminho** até ele é outra. Em KRL você escolhe o tipo de movimento.\n\n## PTP: ponto a ponto\nCada eixo vai do ângulo atual ao ângulo final pelo caminho mais curto, todos ao mesmo tempo. É o movimento **mais rápido** e o mais folgado para o robô, mas o TCP faz uma **curva** no espaço, difícil de prever. Use em movimentos livres, longe de peças e obstáculos.\n\n## LIN: linha reta\nO TCP vai em **linha reta** até o destino, com a orientação mudando de forma suave. Os eixos trabalham coordenados para isso. Use para **aproximar e afastar** de peças, para descer até uma mesa e para soldar ou colar em linha.\n\n## CIRC: arco de círculo\nO TCP faz um arco que passa por um **ponto auxiliar** e termina no destino: `CIRC auxiliar, destino`. Dois arcos de meia volta fazem um círculo completo.\n\n## Movimentos relativos\n`LIN_REL {Z -100}` move **a partir de onde o robô está**: 100 mm para baixo. Também existe `PTP_REL`. É muito usado para descer até a peça e subir de volta sem declarar mais pontos.\n\n## Um programa com os três\n```\nDEF movimentos()\n  INI\n  $VEL.CP = 0.2              ; 0,2 m/s nos movimentos LIN e CIRC\n  PTP HOME\n  PTP P1                     ; caminho mais rápido para os eixos\n  LIN P2                     ; linha reta de P1 até P2\n  LIN_REL {Z -100}           ; desce 100 mm a partir de onde está\n  LIN_REL {Z 100}            ; sobe de volta\n  CIRC P_AUX, P1             ; arco passando por P_AUX até P1\n  PTP HOME\nEND\n```\n\nE o arquivo de pontos:\n\n```\nDEFDAT movimentos\n  DECL E6POS P1 = {X 450, Y -250, Z 450, A 0, B 90, C 0}\n  DECL E6POS P2 = {X 450, Y 250, Z 450, A 0, B 90, C 0}\n  DECL E6POS P_AUX = {X 650, Y 0, Z 450, A 0, B 90, C 0}\nENDDAT\n```\n\n## Velocidade nos movimentos em linha\n`$VEL.CP` define a velocidade do TCP nos movimentos LIN e CIRC, em **metros por segundo**. `0.2` é 0,2 m/s, uma velocidade boa para aprender. A velocidade do PTP é ajustada de outro jeito, como você vai ver na próxima lição.\n\n## Regra prática de quem programa robô\n**PTP** para ir longe, **LIN** para chegar perto. Quase todo programa de manipulação segue esse ritmo: PTP até um ponto de aproximação acima da peça, LIN para descer, LIN para subir, PTP para ir embora.\n\n## Pratique no Korum\n- Abra o exemplo **Movimentos básicos: PTP e LIN** e ligue a opção **Trajetória** no visualizador. Compare o rastro do PTP com o do LIN entre os mesmos pontos.\n- Abra **Círculo com CIRC** e rode.\n- Faça o exercício **Linha reta**: vá até o ponto A com PTP e depois até B com LIN.",
+   "createdAt": "2026-11-08T22:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-08T22:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "PTP: mais rápido, caminho curvo, para movimentos livres.",
+    "LIN: linha reta, para chegar perto de peças.",
+    "CIRC auxiliar, destino: arco de círculo.",
+    "LIN_REL e PTP_REL movem a partir da posição atual."
+   ],
+   "minutes": 11,
+   "order": 3,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "A linha reta é previsível perto de peças e obstáculos.",
+     "options": [
+      "PTP",
+      "LIN",
+      "CIRC",
+      "Nenhum"
+     ],
+     "prompt": "Para descer até uma peça sobre a mesa, o movimento mais indicado é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "É um movimento relativo.",
+     "options": [
+      "Vai até Z = −100 mm",
+      "Desce 100 mm em linha reta a partir da posição atual",
+      "Gira 100 graus",
+      "Reduz a velocidade em 100"
+     ],
+     "prompt": "O que faz LIN_REL {Z -100}?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "O arco passa pelo auxiliar e termina no destino.",
+     "options": [
+      "O destino",
+      "Um ponto por onde o arco passa",
+      "O centro do círculo",
+      "O ponto HOME"
+     ],
+     "prompt": "No comando CIRC P_AUX, P1, o ponto P_AUX é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "No PTP quem anda direto são os eixos; o TCP faz uma curva.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "No PTP, o TCP sempre anda em linha reta.",
+     "type": "vf"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "A diferença entre o caminho mais rápido, a linha reta e o arco, e os movimentos relativos.",
+   "title": "PTP, LIN e CIRC: três jeitos de se mover",
+   "track": "robotica",
+   "updatedAt": "2026-11-08T22:00:00.000Z"
+  },
+  "kor-4": {
+   "author": "",
+   "body": "Na indústria, cada segundo do **tempo de ciclo** (o tempo para completar uma peça) se multiplica por milhares de peças por dia. Programar bem é também programar rápido, sem perder segurança.\n\n## As três velocidades\n- **$VEL.CP:** velocidade do TCP em LIN e CIRC, em m/s.\n- **Velocidade dos eixos no PTP:** em porcentagem da máxima. No Korum, `BAS(#PTP_PARAMS, 30)` deixa os eixos a 30 %.\n- **Override (OV_PRO):** o \"volume\" geral da velocidade, que o operador ajusta no painel. Ao testar um programa novo, sempre comece com override baixo.\n\n## Parar em cada ponto ou passar por perto\nPor padrão, o robô **para exatamente** em cada ponto antes de seguir para o próximo. Para pontos que são só passagem, não é preciso parar: com **aproximação**, o robô arredonda o canto e segue sem frear.\n- `$APO.CDIS = 30` define o quanto ele pode se afastar do ponto: até 30 mm.\n- `C_DIS` no fim de um LIN liga a aproximação naquele movimento.\n- `C_PTP` faz o mesmo para movimentos PTP.\n\n**Nunca use aproximação** no ponto em que a garra pega ou solta a peça: ali o robô precisa chegar exatamente.\n\n## Exemplo\n```\nDEF velocidade()\n  INI\n  PTP HOME\n  $VEL.CP = 0.5              ; linha reta a 0,5 m/s\n  $APO.CDIS = 30             ; pode passar a até 30 mm do ponto\n  PTP P1\n  LIN P2 C_DIS               ; não para em P2: arredonda o canto\n  LIN P3 C_DIS\n  LIN P1                     ; para exatamente em P1\n  BAS(#PTP_PARAMS, 30)       ; eixos a 30 % da velocidade máxima\n  PTP HOME\n  BAS(#PTP_PARAMS, 100)\nEND\n```\n\nE o arquivo de pontos:\n\n```\nDEFDAT velocidade\n  DECL E6POS P1 = {X 450, Y -250, Z 400, A 0, B 90, C 0}\n  DECL E6POS P2 = {X 650, Y -250, Z 400, A 0, B 90, C 0}\n  DECL E6POS P3 = {X 650, Y 250, Z 400, A 0, B 90, C 0}\nENDDAT\n```\n\nNo Korum, o programa acima roda sem erro, mas nesta versão o simulador ainda **para exatamente em cada ponto** mesmo com `C_DIS`, e o console avisa. Escreva a aproximação assim mesmo: é o jeito certo de programar, e num robô real ela reduz o tempo de ciclo.\n\n## Esperar\n`WAIT SEC 0.4` faz o robô esperar 0,4 segundo. Use, por exemplo, depois de fechar a garra, para dar tempo de ela apertar a peça antes de o braço subir.\n\n## Pratique no Korum\n- Abra **T03 · Velocidades ($VEL.CP e eixos)**: o mesmo trajeto com três velocidades guardadas num vetor.\n- Leia a aula **Velocidade e aproximação** (nível Programação) e a aula **Otimização de trajetórias e tempo de ciclo** (nível Engenharia avançada).",
+   "createdAt": "2026-11-08T22:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-08T22:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "$VEL.CP em m/s para LIN e CIRC; BAS(#PTP_PARAMS, %) para os eixos no PTP.",
+    "Aproximação (C_DIS, C_PTP) arredonda pontos de passagem e reduz o tempo de ciclo.",
+    "Nunca aproxime pontos de pega e de solta.",
+    "Teste programas novos com override baixo."
+   ],
+   "minutes": 10,
+   "order": 4,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "É a velocidade da trajetória cartesiana.",
+     "options": [
+      "50 % da velocidade dos eixos",
+      "TCP a 0,5 m/s em LIN e CIRC",
+      "Meio segundo de espera",
+      "Override de 5 %"
+     ],
+     "prompt": "$VEL.CP = 0.5 significa:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Aproximação reduz paradas desnecessárias.",
+     "options": [
+      "Desligar o robô",
+      "Passar perto do ponto sem parar, arredondando o canto",
+      "Abrir a garra",
+      "Repetir o movimento"
+     ],
+     "prompt": "Para que serve C_DIS no fim de um LIN?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Ali o robô precisa chegar exatamente; aproximação é para pontos de passagem.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "É uma boa ideia usar aproximação no ponto exato em que a garra pega a peça.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "É produtividade.",
+     "options": [
+      "Não importam",
+      "Porque o tempo de ciclo se multiplica por milhares de peças",
+      "Porque o robô esquenta",
+      "Por causa da garra"
+     ],
+     "prompt": "Por que alguns décimos de segundo importam?",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Como controlar a velocidade, arredondar cantos para ganhar tempo e por que isso importa na produção.",
+   "title": "Velocidade, aproximação e tempo de ciclo",
+   "track": "robotica",
+   "updatedAt": "2026-11-08T22:00:00.000Z"
+  },
+  "kor-5": {
+   "author": "",
+   "body": "## Variáveis\nUma variável guarda um valor que pode mudar durante o programa. Em KRL, ela é declarada com `DECL`, logo depois do `DEF` e antes do `INI`:\n- `DECL INT i`: número inteiro, como 1, 2, 3.\n- `DECL REAL lado`: número com casas decimais, como 150.5.\n- `DECL BOOL pronto`: verdadeiro ou falso (`TRUE` ou `FALSE`).\n- `DECL E6POS PEGA`: uma posição completa.\n\nUsar uma variável que não foi declarada gera erro. No Korum, a mensagem é algo como \"variável I não declarada\".\n\n## Decidir: IF\n```\nIF lado < 100 THEN\n  $OUT[2] = TRUE\nELSE\n  $OUT[8] = TRUE\nENDIF\n```\nAs comparações usam `==` (igual), `<>` (diferente), `<`, `>`, `<=`, `>=`, e podem ser combinadas com `AND`, `OR` e `NOT`.\n\n## Repetir\n- **FOR:** um número conhecido de vezes. `FOR i = 1 TO 4` ... `ENDFOR`.\n- **WHILE:** enquanto uma condição for verdadeira, testando **antes**. `WHILE NOT $IN[2]` ... `ENDWHILE`.\n- **REPEAT:** repete e testa **depois**, então roda pelo menos uma vez. `REPEAT` ... `UNTIL $IN[2]`.\n- **LOOP:** repete para sempre, até encontrar um `EXIT`. É o laço típico de um ciclo de produção.\n\n## Exemplo: três quadrados, cada um menor\n```\nDEF quadrados()\n  DECL INT i\n  DECL REAL lado\n  INI\n  lado = 200\n  $VEL.CP = 0.25\n  PTP HOME\n  PTP CANTO\n  FOR i = 1 TO 3\n    LIN_REL {X lado}\n    LIN_REL {Y lado}\n    LIN_REL {X -lado}\n    LIN_REL {Y -lado}\n    lado = lado - 50         ; cada quadrado 50 mm menor\n  ENDFOR\n  IF lado < 100 THEN\n    $OUT[2] = TRUE           ; avisa que terminou\n  ENDIF\n  PTP HOME\nEND\n```\n\nE o arquivo de pontos:\n\n```\nDEFDAT quadrados\n  DECL E6POS CANTO = {X 500, Y -100, Z 300, A 0, B 90, C 0}\nENDDAT\n```\n\nRepare que os quatro `LIN_REL` desenham o quadrado a partir de onde o robô está, e a variável `lado` muda a cada volta. Sem variáveis, seriam doze linhas de movimento.\n\n## Pratique no Korum\n- Abra o exemplo **Quadrado com FOR e LIN_REL** e depois **T02 · Retângulo calculado com variáveis**.\n- Abra **T06 · Sequência de luzes (WHILE e FOR)** e **T08 · Ciclos até o operador parar (REPEAT)**.\n- Faça o exercício **Quadrado de 200 mm**.\n- Desafio: mude o exemplo acima para desenhar cinco quadrados, cada um 30 mm menor.",
+   "createdAt": "2026-11-08T22:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-08T22:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Declare antes de usar: DECL INT, REAL, BOOL, E6POS.",
+    "IF ... THEN ... ELSE ... ENDIF para decidir.",
+    "FOR conta; WHILE testa antes; REPEAT testa depois; LOOP até EXIT.",
+    "Variáveis evitam repetir linhas de movimento."
+   ],
+   "minutes": 12,
+   "order": 5,
+   "questions": [
+    {
+     "answer": 3,
+     "explain": "REPEAT testa depois de executar.",
+     "options": [
+      "FOR",
+      "WHILE",
+      "REPEAT ... UNTIL",
+      "IF"
+     ],
+     "prompt": "Qual laço roda pelo menos uma vez, porque testa a condição no fim?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Toda variável precisa ser declarada.",
+     "options": [
+      "Um ponto no DAT",
+      "DECL INT i antes do INI",
+      "Um comentário",
+      "PTP HOME"
+     ],
+     "prompt": "O Korum mostra \"variável I não declarada\". O que falta?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "EXIT encerra o laço LOOP.",
+     "options": [
+      "Com ENDIF",
+      "Com EXIT",
+      "Com INI",
+      "Não tem como"
+     ],
+     "prompt": "Como sair de um LOOP?",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "Um único = é atribuição.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Em KRL, o sinal para comparar se dois valores são iguais é ==.",
+     "type": "vf"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "DECL, IF, FOR, WHILE, LOOP e REPEAT: o que transforma uma lista de pontos num programa de verdade.",
+   "title": "Variáveis, decisões e repetições",
+   "track": "robotica",
+   "updatedAt": "2026-11-08T22:00:00.000Z"
+  },
+  "kor-6": {
+   "author": "",
+   "body": "## Saídas e entradas digitais\nO robô conversa com o mundo por sinais liga e desliga:\n- **Saídas (`$OUT[n]`):** o robô manda. No Korum, `$OUT[1]` comanda a garra: `TRUE` fecha, `FALSE` abre.\n- **Entradas (`$IN[n]`):** o robô recebe. Um botão do operador, um sensor de peça, um aviso do CLP. No Korum, você liga e desliga as entradas no **painel de E/S**.\n\n## Esperar um sinal\n`WAIT FOR $IN[1]` para o programa até a entrada 1 ligar. Quando o programa chega nessa linha, o console do Korum pede para você ativar a entrada no painel.\n\n## A sequência de pick and place\nÉ a aplicação mais comum de robôs na indústria. A receita:\n1. Abrir a garra **antes** de descer.\n2. **PTP** até um ponto de aproximação, acima da peça.\n3. **LIN** para descer até a peça.\n4. Fechar a garra e **esperar** um pouco.\n5. **LIN** para subir de volta ao ponto de aproximação.\n6. Repetir aproximação, descida e soltura no destino.\n\n## Programa completo\nLeva a peça da Mesa A para a Esteira B, só depois que o operador libera:\n```\nDEF pick_operador()\n  INI\n  $VEL.CP = 0.3\n  PTP HOME\n  $OUT[1] = FALSE            ; garra aberta antes de tudo\n  WAIT FOR $IN[1]            ; espera o operador liberar\n\n  PTP P_APROX_A              ; 1. aproxima por cima\n  LIN P_PEGA_A               ; 2. desce em linha reta\n  $OUT[1] = TRUE             ; 3. fecha a garra\n  WAIT SEC 0.4               ;    dá tempo de fechar\n  LIN P_APROX_A              ; 4. sobe em linha reta\n\n  PTP P_APROX_B\n  LIN P_SOLTA_B\n  $OUT[1] = FALSE            ; solta a peça\n  WAIT SEC 0.3\n  LIN P_APROX_B\n  PTP HOME\nEND\n```\n\nE o arquivo de pontos:\n\n```\nDEFDAT pick_operador\n  DECL E6POS P_APROX_A = {X 575, Y 0, Z 320, A 0, B 90, C 0}\n  DECL E6POS P_PEGA_A = {X 575, Y 0, Z 175, A 0, B 90, C 0}\n  DECL E6POS P_APROX_B = {X 300, Y -525, Z 320, A 0, B 90, C 0}\n  DECL E6POS P_SOLTA_B = {X 300, Y -525, Z 180, A 0, B 90, C 0}\nENDDAT\n```\n\n## Detalhes que fazem diferença\n- A peça tem o centro em Z 175 sobre a mesa: descer abaixo disso faz a garra **bater na mesa**, e o Korum avisa a colisão.\n- Fechar a garra sem o `WAIT SEC` faz o braço subir antes de a peça estar presa.\n- Esquecer de abrir a garra no início faz o robô descer com a garra fechada e empurrar a peça.\n\n## Pratique no Korum\n- Abra o exemplo **Pick and place (mesa → esteira)** e rode passo a passo.\n- Faça os exercícios **Pick and place** e **Partida pelo operador**.\n- Leia as aulas **Pick and place** e **Garras e entradas/saídas digitais** (nível Aplicações industriais).",
+   "createdAt": "2026-11-08T22:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-08T22:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "$OUT manda (garra: $OUT[1]); $IN recebe (botões, sensores, CLP).",
+    "WAIT FOR $IN[n] espera um sinal; WAIT SEC dá tempo à garra.",
+    "Receita: abrir, PTP acima, LIN desce, fecha, LIN sobe.",
+    "Desça só até a peça: abaixo disso é colisão com a mesa."
+   ],
+   "minutes": 11,
+   "order": 6,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "TRUE fecha, FALSE abre.",
+     "options": [
+      "A garra abrir",
+      "A garra fechar",
+      "O robô voltar a HOME",
+      "A esteira ligar"
+     ],
+     "prompt": "No Korum, $OUT[1] = TRUE faz:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Aproximar por cima e descer em linha reta com a garra já aberta.",
+     "options": [
+      "Descer, abrir, fechar, subir",
+      "Abrir, PTP acima, LIN descer, fechar, esperar, LIN subir",
+      "Fechar, descer, abrir, subir",
+      "PTP direto na peça e fechar"
+     ],
+     "prompt": "Qual é a ordem certa para pegar uma peça?",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "No Korum, você liga a entrada no painel de E/S.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "WAIT FOR $IN[1] faz o robô esperar a entrada 1 ligar.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Sem a espera, o braço pode subir sem a peça bem presa.",
+     "options": [
+      "Para economizar energia",
+      "Para a garra terminar de fechar antes de o braço subir",
+      "Para abrir a garra",
+      "Não serve para nada"
+     ],
+     "prompt": "Por que colocar WAIT SEC 0.4 depois de fechar a garra?",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Como o robô abre e fecha a garra, espera sinais do operador e monta a sequência clássica de pegar e soltar.",
+   "title": "Garra, entradas e saídas: o primeiro pick and place",
+   "track": "robotica",
+   "updatedAt": "2026-11-08T22:00:00.000Z"
+  },
+  "kor-7": {
+   "author": "",
+   "body": "Quando a mesma sequência aparece várias vezes, ela vira um **subprograma**: um bloco com nome que você chama quando precisa. O programa principal fica curto e legível, e uma correção feita no subprograma vale para todos os usos.\n\n## Como escrever\nNo mesmo arquivo SRC, depois do `END` do programa principal, você escreve outro `DEF ... END`. Entre os parênteses vão os **parâmetros**: valores que o subprograma recebe.\n\n```\nDEF vai_e_volta()\n  DECL INT n\n  INI\n  PTP HOME\n  $OUT[1] = FALSE\n  FOR n = 1 TO 2\n    pegar(P_A)\n    soltar(P_B)\n    pegar(P_B)\n    soltar(P_A)\n  ENDFOR\n  PTP HOME\nEND\n\nDEF pegar(alvo)\n  PTP alvo                   ; chega 145 mm acima\n  LIN_REL {Z -145}\n  $OUT[1] = TRUE\n  WAIT SEC 0.3\n  LIN_REL {Z 145}\nEND\n\nDEF soltar(alvo)\n  PTP alvo\n  LIN_REL {Z -140}\n  $OUT[1] = FALSE\n  WAIT SEC 0.3\n  LIN_REL {Z 140}\nEND\n```\n\nE o arquivo de pontos:\n\n```\nDEFDAT vai_e_volta\n  DECL E6POS P_A = {X 575, Y 0, Z 320, A 0, B 90, C 0}\n  DECL E6POS P_B = {X 300, Y -525, Z 320, A 0, B 90, C 0}\nENDDAT\n```\n\n## O que acontece aqui\n- `pegar(P_A)` executa o subprograma **pegar** com `alvo` valendo `P_A`.\n- Os pontos do DAT ficam **145 mm acima** da peça; o subprograma desce e sobe com `LIN_REL`. Assim, o mesmo subprograma serve para qualquer lugar.\n- O programa principal lê quase como uma frase: pegar em A, soltar em B, pegar em B, soltar em A.\n\n## Boas práticas\n- Um subprograma, uma tarefa: `pegar`, `soltar`, `ir_para_casa`, `sinalizar_fim`.\n- Nomes de verbo para ações.\n- Valores que podem mudar (como os 145 mm) podem virar variáveis ou parâmetros.\n- O Korum também aceita funções que devolvem valor (`DEFFCT` ... `ENDFCT`), úteis para cálculos.\n\n## Pratique no Korum\n- Abra o exemplo **Ciclo com E/S: LOOP, WAIT FOR, subprogramas** e rode. Ative IN 1 para cada ciclo e IN 2 para encerrar.\n- Reescreva o seu programa do exercício **Pick and place** usando `pegar` e `soltar`.\n- Leia a aula **Programas e subprogramas** (nível Programação).",
+   "createdAt": "2026-11-08T22:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-08T22:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Subprograma: DEF nome(parâmetros) ... END, no mesmo SRC.",
+    "Chame com nome(valor): pegar(P_A).",
+    "Pontos de aproximação + LIN_REL deixam a rotina reaproveitável.",
+    "Uma correção no subprograma vale para todos os usos."
+   ],
+   "minutes": 10,
+   "order": 7,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Organização e manutenção.",
+     "options": [
+      "Deixa o robô mais rápido",
+      "Evita repetir código e concentra as correções num lugar",
+      "Dispensa o arquivo DAT",
+      "Abre a garra sozinho"
+     ],
+     "prompt": "Qual a principal vantagem de um subprograma?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Dentro do subprograma, alvo vale P_A.",
+     "options": [
+      "O nome do subprograma",
+      "O valor passado para o parâmetro alvo",
+      "Uma entrada digital",
+      "A velocidade"
+     ],
+     "prompt": "Em pegar(P_A), o que é P_A?",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "É assim no exemplo de ciclo do Korum.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Os subprogramas podem ser escritos no mesmo arquivo SRC, depois do END do programa principal.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Assim a mesma rotina serve em qualquer lugar.",
+     "options": [
+      "Por erro",
+      "Porque o subprograma desce e sobe com LIN_REL a partir deles",
+      "Para economizar memória",
+      "Porque a garra é curta"
+     ],
+     "prompt": "Por que os pontos P_A e P_B estão 145 mm acima das peças?",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Como dividir o programa em partes com nome, passar pontos como parâmetro e reaproveitar a mesma rotina de pegar e soltar.",
+   "title": "Subprogramas: organizar para não repetir",
+   "track": "robotica",
+   "updatedAt": "2026-11-08T22:00:00.000Z"
+  },
+  "kor-8": {
+   "author": "",
+   "body": "Um palete com 4 posições ainda dá para declarar à mão. Com 40, não. Na paletização, você declara **um ponto de referência** e **calcula** os outros.\n\n## Copiar e alterar um ponto\n```\nPEGA = MESA_1\nPEGA.Y = MESA_1.Y + 100\n```\nA primeira linha copia o ponto inteiro (X, Y, Z, A, B, C). A segunda muda só o Y. O ponto continua com a mesma altura e a mesma orientação.\n\n## Linhas e colunas com dois FOR\nUm laço dentro do outro percorre a grade: o de fora conta as **linhas**, o de dentro as **colunas**. Com passo de 100 mm, a posição é a referência mais `coluna × 100` em X e `linha × 100` em Y.\n\n```\nDEF palete_2x2()\n  DECL INT lin, col, n\n  DECL E6POS PEGA, SOLTA\n  INI\n  $VEL.CP = 0.4\n  PTP HOME\n  $OUT[1] = FALSE\n  n = 0\n  FOR lin = 0 TO 1\n    FOR col = 0 TO 1\n      PEGA = MESA_1                    ; copia o ponto de referência\n      PEGA.Y = MESA_1.Y + n * 100      ; peça n na fila da mesa\n      SOLTA = PALETE_1\n      SOLTA.X = PALETE_1.X + col * 100 ; coluna no palete\n      SOLTA.Y = PALETE_1.Y + lin * 100 ; linha no palete\n      PTP PEGA\n      LIN_REL {Z -145}\n      $OUT[1] = TRUE\n      WAIT SEC 0.3\n      LIN_REL {Z 145}\n      PTP SOLTA\n      LIN_REL {Z -170}\n      $OUT[1] = FALSE\n      WAIT SEC 0.2\n      LIN_REL {Z 170}\n      n = n + 1\n    ENDFOR\n  ENDFOR\n  PTP HOME\nEND\n```\n\nE o arquivo de pontos:\n\n```\nDEFDAT palete_2x2\n  DECL E6POS MESA_1 = {X 500, Y -150, Z 320, A 0, B 90, C 0}\n  DECL E6POS PALETE_1 = {X 200, Y -550, Z 320, A 0, B 90, C 0}\nENDDAT\n```\n\n## Como pensar uma paletização\n1. Meça o tamanho da peça e defina o **passo** (distância entre centros) com uma folga.\n2. Escolha a posição 1 e declare só ela.\n3. Desenhe a grade no papel: linha 0 e 1, coluna 0 e 1.\n4. Escreva a conta de X e Y para uma posição qualquer.\n5. Teste no Korum com velocidade baixa e confira se nenhuma peça ficou empilhada.\n\n## Camadas\nPara mais de uma camada, um terceiro laço sobe o Z a cada camada pelo valor da altura da peça. Em paletes de caixas reais, as camadas costumam **alternar a posição** (camadas cruzadas) para o palete ficar firme.\n\n## Pratique no Korum\n- Abra **Paletização 2×2 com FOR** e compare com a versão de dois laços acima.\n- Faça o exercício **Paletização 2×2**: o Korum confere se as 4 peças estão no palete, sem empilhar e se você usou repetição.\n- Depois explore **T13 · Paletização em 2 camadas**, **T21 · Esteira com pacotes e palete de camadas cruzadas** e **T25 · Paletizador de caixas de refrigerante**.",
+   "createdAt": "2026-11-08T22:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-08T22:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Declare um ponto de referência e calcule os demais.",
+    "PEGA = REF copia; PEGA.Y = REF.Y + passo muda só um campo.",
+    "Dois FOR: linhas e colunas; um terceiro para camadas.",
+    "Desenhe a grade no papel antes de programar."
+   ],
+   "minutes": 12,
+   "order": 8,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "É só uma conta; o movimento vem depois, no PTP SOLTA.",
+     "options": [
+      "Move o robô 100 mm",
+      "Calcula o X da coluna col a partir da referência",
+      "Declara um ponto novo no DAT",
+      "Fecha a garra"
+     ],
+     "prompt": "O que faz a linha SOLTA.X = PALETE_1.X + col * 100?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "3 × 4 = 12.",
+     "options": [
+      "7",
+      "12",
+      "34",
+      "4"
+     ],
+     "prompt": "Para um palete de 3 linhas e 4 colunas, quantas posições há numa camada?",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "A cópia leva todos os campos.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Depois de PEGA = MESA_1, o ponto PEGA tem também a altura e a orientação de MESA_1.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Cada camada fica uma altura de peça acima da anterior.",
+     "options": [
+      "O A",
+      "O Z, pela altura da peça",
+      "A velocidade",
+      "O nome do programa"
+     ],
+     "prompt": "Para empilhar uma segunda camada, você precisa mudar principalmente:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Como copiar um ponto de referência, mudar só X ou Y e montar camadas com laços.",
+   "title": "Paletização: calcular as posições em vez de declarar todas",
+   "track": "robotica",
+   "updatedAt": "2026-11-08T22:00:00.000Z"
+  },
+  "kor-9": {
+   "author": "",
+   "body": "Numa célula real, o robô não trabalha sozinho: um **CLP** coordena esteiras, sensores e máquinas, e os dois trocam sinais o tempo todo.\n\n## Handshake: um pergunta, o outro confirma\nO padrão mais usado é a conversa em etapas, chamada **handshake**:\n1. O robô liga **pronto** (`$OUT[2]`).\n2. O CLP liga **peça disponível** (`$IN[1]`).\n3. O robô desliga pronto, trabalha e liga **ciclo concluído** (`$OUT[3]`).\n4. O CLP desliga `$IN[1]` para confirmar, e o robô desliga `$OUT[3]`.\n\nCada lado espera o outro. Assim, nenhum se adianta, mesmo que um sinal demore.\n\n## Interrupção: vigiar enquanto trabalha\nUm `WAIT FOR` só olha o sinal naquele ponto do programa. Uma **interrupção** vigia **o tempo todo**: quando a condição acontece, o robô executa um subprograma, onde quer que esteja.\n```\nINTERRUPT DECL 10 WHEN $IN[5] DO parada()\nINTERRUPT ON 10\n```\nA primeira linha declara a interrupção número 10; a segunda a liga. `INTERRUPT OFF 10` desliga.\n\n## Programa da célula\n```\nDEF celula()\n  DECL INT pecas\n  INI\n  INTERRUPT DECL 10 WHEN $IN[5] DO parada()\n  INTERRUPT ON 10\n  pecas = 0\n  PTP HOME\n  REPEAT\n    $OUT[2] = TRUE           ; avisa o CLP: robô pronto\n    WAIT FOR $IN[1]          ; CLP avisa: peça disponível\n    $OUT[2] = FALSE\n    PTP PA\n    LIN PB\n    PTP PA\n    pecas = pecas + 1\n    $OUT[3] = TRUE           ; avisa o CLP: ciclo concluído\n    WAIT FOR NOT $IN[1]      ; CLP confirma\n    $OUT[3] = FALSE\n  UNTIL pecas >= 3\n  INTERRUPT OFF 10\n  PTP HOME\nEND\n\nDEF parada()\n  $OUT[8] = TRUE             ; alarme\n  WAIT FOR NOT $IN[5]        ; espera a cortina de luz liberar\n  $OUT[8] = FALSE\nEND\n```\n\nE o arquivo de pontos:\n\n```\nDEFDAT celula\n  DECL E6POS PA = {X 500, Y -250, Z 400, A 0, B 90, C 0}\n  DECL E6POS PB = {X 500, Y 250, Z 400, A 0, B 90, C 0}\nENDDAT\n```\n\nNo Korum, a entrada 5 faz o papel de uma **cortina de luz**: ative-a durante o ciclo e veja o alarme `$OUT[8]` acender até você desligá-la.\n\n**Atenção:** num robô real, a segurança de pessoas é feita por hardware de segurança certificado (circuitos de parada de emergência, cortinas e portas com relés de segurança), não por uma interrupção no programa. No Korum, a interrupção serve para aprender o conceito.\n\n## Escolher o programa: SWITCH\nO CLP pode mandar um número, e o robô escolhe o que fazer:\n```\nSWITCH prog\nCASE 1\n  PTP POS_1\nCASE 2\n  PTP POS_2\nDEFAULT\n  $OUT[8] = TRUE\nENDSWITCH\n```\n`DEFAULT` trata qualquer número que não esteja na lista: é ali que você avisa um erro.\n\n## Pratique no Korum\n- Abra **T07 · Seleção de programa pelo CLP (SWITCH)** e **T09 · Interrupção de segurança (INTERRUPT)**.\n- Abra **T18 · Célula completa com handshake de CLP** e acompanhe os sinais no painel de E/S.\n- Leia a aula **Comunicação industrial e integração com CLPs** (nível Engenharia avançada).",
+   "createdAt": "2026-11-08T22:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-08T22:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Handshake: pronto → peça disponível → concluído → confirmação.",
+    "WAIT FOR olha um instante; INTERRUPT vigia o tempo todo.",
+    "SWITCH escolhe entre programas; DEFAULT trata o inesperado.",
+    "Segurança real de pessoas é feita por hardware certificado."
+   ],
+   "minutes": 12,
+   "order": 9,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Ela dispara onde quer que o programa esteja.",
+     "options": [
+      "É mais rápida de escrever",
+      "Vigia a condição durante todo o ciclo, não só numa linha",
+      "Abre a garra",
+      "Dispensa o CLP"
+     ],
+     "prompt": "Qual a vantagem de uma interrupção sobre um WAIT FOR?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Cada lado confirma o que o outro fez.",
+     "options": [
+      "Para gastar tempo",
+      "Para ter certeza de que o CLP recebeu o aviso de concluído",
+      "Porque a garra exige",
+      "Não precisa esperar"
+     ],
+     "prompt": "No handshake, por que o robô espera o CLP desligar $IN[1] antes de seguir?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Segurança de pessoas exige dispositivos e circuitos de segurança certificados.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Num robô real, uma interrupção no programa é suficiente para garantir a segurança das pessoas.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "É ali que se sinaliza um número inválido.",
+     "options": [
+      "Repetir o programa",
+      "Tratar valores que não estão em nenhum CASE",
+      "Voltar a HOME",
+      "Declarar variáveis"
+     ],
+     "prompt": "No SWITCH, para que serve o DEFAULT?",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Handshake com o CLP, seleção de programa e uma interrupção que vigia a segurança durante o ciclo.",
+   "title": "Conversando com a célula: CLP, SWITCH e interrupção",
+   "track": "robotica",
+   "updatedAt": "2026-11-08T22:00:00.000Z"
+  },
   "prog-1-logica": {
    "author": "",
    "body": "Todo programa é feito de três ideias: **guardar dados**, **decidir** e **repetir**.\n\n## Variáveis\n```python\nnome = \"Ana\"\nidade = 19\naltura = 1.68\n```\n\n## Decisões\n```python\nif idade >= 18:\n    print(nome, \"é maior de idade\")\nelse:\n    print(nome, \"é menor de idade\")\n```\nO Python usa a **indentação** (o recuo) para saber o que está dentro do if.\n\n## Repetições\n```python\nfor numero in range(1, 4):\n    print(\"Volta\", numero)\n```\nIsso imprime Volta 1, Volta 2 e Volta 3: o range vai do primeiro número até antes do último.\n\n## Onde rodar\nInstale o Python em python.org e use o VS Code, ou teste no navegador em sites como o Google Colab.",
@@ -4729,6 +5650,54 @@ window.VOLTER_SEED = {
    ],
    "track": "iot",
    "updatedAt": "2026-10-19T01:30:00.000Z"
+  },
+  "korum-celula-palete": {
+   "author": "",
+   "challenge": "Faça uma segunda camada no palete e alterne a orientação das peças a cada camada, como nos paletes de caixas reais (veja o exemplo T25 do Korum).",
+   "createdAt": "2026-11-08T22:00:00.000Z",
+   "demo": false,
+   "duration": "3 a 5 horas",
+   "goal": "Juntar tudo o que o curso ensinou num programa único, organizado em subprogramas, testado no Korum e documentado como se fosse entregar a uma fábrica.",
+   "history": [
+    {
+     "at": "2026-11-08T22:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "level": "Intermediário",
+   "result": "Um programa organizado, testado e comentado, com o tempo de ciclo anotado, pronto para mostrar num portfólio ou numa entrevista.",
+   "skills": [
+    "KRL",
+    "Pick and place",
+    "Paletização com laços",
+    "Subprogramas",
+    "Handshake com CLP",
+    "Interrupções",
+    "Diagnóstico"
+   ],
+   "status": "published",
+   "steps": [
+    "Abra o cenário Paletização e anote as posições: a fila de quatro peças na mesa e o palete. Desenhe a grade 2×2 no papel, com o passo de 100 mm.",
+    "Crie um programa novo chamado celula_palete. Declare no DAT só dois pontos de referência, MESA_1 e PALETE_1, 145 a 170 mm acima das peças.",
+    "Escreva os subprogramas pegar(alvo) e soltar(alvo), como na lição de subprogramas.",
+    "No programa principal, calcule a posição de cada peça e de cada lugar do palete com dois laços FOR, como na lição de paletização.",
+    "Acrescente a partida pelo operador: o robô só sai de HOME depois de WAIT FOR $IN[1].",
+    "Acrescente o handshake: $OUT[2] pronto no início, $OUT[3] ciclo concluído no fim, esperando o CLP confirmar desligando $IN[1].",
+    "Declare uma interrupção na entrada 5 (cortina de luz) que acende o alarme $OUT[8] e espera a entrada desligar.",
+    "Rode a Análise do Korum e corrija qualquer ponto inalcançável, colisão ou singularidade.",
+    "Rode passo a passo, depois com animação. Ative a entrada 5 no meio do ciclo para testar a interrupção.",
+    "Use aproximação (C_PTP ou C_DIS) só nos pontos de passagem e anote o tempo de ciclo que a Análise do Korum estima. Lembre que, nesta versão do Korum, o robô ainda para em cada ponto mesmo com aproximação.",
+    "Escreva no topo do programa, em comentários, o que ele faz, os sinais de E/S usados e como testar."
+   ],
+   "summary": "Um programa que espera o operador, paletiza quatro peças numa camada 2×2, conversa com o CLP por handshake e vigia uma cortina de luz.",
+   "title": "Célula de paletização completa no Korum",
+   "tools": [
+    "Korum instalado (Windows ou Mac), baixado na página Releases do repositório do Korum",
+    "Cenário Paletização (mesa + palete)",
+    "Papel e lápis para desenhar a grade do palete"
+   ],
+   "track": "robotica",
+   "updatedAt": "2026-11-08T22:00:00.000Z"
   },
   "painel-gastos": {
    "author": "",
