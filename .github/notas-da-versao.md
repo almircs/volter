@@ -15,6 +15,12 @@ Isso só é preciso na primeira vez.
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.8.0: curso de programação de robôs com o Korum
+- **Nova etapa 7 na aba Elétrica, Eletrônica e Hardware:** "Programação de robôs com o Korum", com 10 lições de KRL praticadas no laboratório virtual Korum: o robô de seis eixos, arquivos SRC e DAT, PTP, LIN e CIRC, velocidade e aproximação, variáveis e repetições, garra e entradas/saídas, subprogramas, paletização, comunicação com o CLP e diagnóstico
+- Cada lição indica o exemplo e o exercício do Korum para praticar; os programas das lições foram testados no próprio Korum
+- **Novo desafio no Laboratório:** depois da troca da garra, o robô passou a bater na peça
+- **Novo projeto guiado:** célula de paletização completa no Korum
+
 ## Versão 2.7.0: fundamentos de IA e a aba Nova Fase
 - **Cinco lições novas na trilha IA no Trabalho:** a história da IA em duas partes, em ordem cronológica (de 1943 a hoje), como a IA funciona, como a máquina aprende e um glossário com os nomes mais usados
 - **Simulador novo:** um neurônio artificial aprendendo a separar medições de máquinas boas das que falharam
