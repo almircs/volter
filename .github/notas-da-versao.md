@@ -15,6 +15,14 @@ Isso só é preciso na primeira vez.
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.9.0: layout novo, mais fácil de navegar
+- **Menu lateral** com as três áreas (Trilhas, Nova Fase e Elétrica e Hardware) e todas as etapas numeradas, com o progresso de cada uma
+- **Busca** em todo o conteúdo: lições, desafios, projetos, etapas e livros
+- **Início em blocos:** continue de onde parou, um cartão por área com as etapas, e atalhos para Laboratório, Projetos, Treino e Livros
+- Páginas das áreas com uma grade de etapas e a lista de temas de cada uma
+- No celular, o menu abre pelo botão do topo
+- Sai o visual de streaming (banner e fileiras de capas)
+
 ## Versão 2.8.0: curso de programação de robôs com o Korum
 - **Nova etapa 7 na aba Elétrica, Eletrônica e Hardware:** "Programação de robôs com o Korum", com 10 lições de KRL praticadas no laboratório virtual Korum: o robô de seis eixos, arquivos SRC e DAT, PTP, LIN e CIRC, velocidade e aproximação, variáveis e repetições, garra e entradas/saídas, subprogramas, paletização, comunicação com o CLP e diagnóstico
 - Cada lição indica o exemplo e o exercício do Korum para praticar; os programas das lições foram testados no próprio Korum
