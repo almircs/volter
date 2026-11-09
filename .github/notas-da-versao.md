@@ -15,6 +15,11 @@ Isso só é preciso na primeira vez.
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.13.0: sopradora, moldagem por estiramento e sopro
+- **Nova etapa 8 na aba Elétrica, Eletrônica e Hardware: "Processos da linha de envase"**, começando pela lição da sopradora: do PET à garrafa, o processo biorientado, as fases do ciclo, a haste de estiragem, a válvula de três vias, pressão e vazão, a came do pré-sopro, o perfil de aquecimento por zonas e os tipos de fundo
+- **Simulador animado:** molde, preforma, haste e válvula de três vias em cada fase (molde fecha, estiragem, pré-sopro, sopro, degasagem, extração), com câmera lenta e avanço fase a fase; mude a came, a pressão, a vazão e o aquecimento das zonas e veja a espessura do ombro, do corpo e do fundo
+- **Linha de envase:** o bloco Sopradora vem com o escopo detalhado (função, entradas, saídas, acionamentos, sensores, parâmetros, falhas e anotações) e o simulador dentro do bloco; nada do que já foi escrito é apagado
+
 ## Versão 2.12.0: área externa de gases
 - **Linha de envase:** novo setor com os tanques de CO₂ e nitrogênio, numa área externa separada da linha, da sala de máquinas, da caldeira e do sopro; o CO₂ já aparece ligado ao mixer e carbonatador
 - Projetos já começados recebem os dois tanques sem perder nada do que foi escrito

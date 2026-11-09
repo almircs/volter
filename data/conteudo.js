@@ -3626,6 +3626,106 @@ window.VOLTER_SEED = {
    "track": "eletronica",
    "updatedAt": "2026-10-24T16:30:00.000Z"
   },
+  "env-sopradora": {
+   "author": "",
+   "body": "## Do PET à garrafa\nO **PET** (politereftalato de etileno) é um plástico termoplástico criado em 1941 pelos químicos britânicos Whinfield e Dickson. Ele nasce da reação entre o **ácido tereftálico** e o **etilenoglicol**, numa policondensação. Amolece com o calor e endurece ao esfriar, por isso pode ser moldado. É usado em fibras para tecidos e, principalmente, em embalagens de bebida.\n\nA garrafa não é injetada pronta. Primeiro se injeta a **preforma**, um tubo grosso parecido com um tubo de ensaio, que já tem o gargalo e a rosca no tamanho final. Na sopradora, essa preforma é aquecida e transformada em garrafa.\n\n## Por que esticar e soprar: o processo biorientado\nNa sopradora a preforma é esticada em **dois sentidos**: no comprimento, pela haste de estiragem (estiramento axial), e no diâmetro, pelo ar (estiramento radial). As cadeias do PET, que estavam emboladas, se alinham e formam uma malha cruzada. O resultado:\n- a resistência mecânica e ao impacto aumenta muito: o material passa de cerca de **7.000 psi** na preforma para cerca de **24.000 psi** na garrafa;\n- a parede fica menos permeável e a bebida perde menos **CO₂**.\n\nPor isso uma garrafa de parede fina aguenta a pressão de um refrigerante.\n\n## As fases do ciclo\nCada posto da sopradora repete o mesmo ciclo. Rode o simulador abaixo em câmera lenta e acompanhe:\n\n1. **Molde fecha:** a preforma chega aquecida do forno, o molde fecha em volta dela e o bico de sopro desce e veda o gargalo.\n2. **Estiragem:** a haste desce a cerca de **0,8 m/s**, empurrada por um cilindro de cerca de **7 bar**. Ela toca o centro do fundo da preforma e estica o material até o fundo do molde, quase dobrando o comprimento.\n3. **Pré-sopro:** com a haste ainda descendo, entra ar de **7 a 13 bar** (o mais comum é perto de 7). O ar abre a preforma no sentido radial e espalha o material em volta da haste.\n4. **Sopro:** a pressão sobe para **35 a 40 bar**. O ar aperta a parede contra o molde frio, forma o fundo e resfria a garrafa.\n5. **Degasagem:** antes de o bico subir, o ar da garrafa é aliviado. Essa saída rápida também ajuda a resfriar.\n6. **Extração:** o molde abre e a garrafa segue para a rotuladora.\n\nA ordem de atuação é sempre **estiragem, pré-sopro, sopro**, e depois a degasagem.\n\n## A haste de estiragem\nA haste não só estica: no fundo do molde ela **segura** a preforma, para o ponto de injeção (aquele pontinho no centro do fundo da garrafa) ficar centralizado. A altura da haste é regulada pela espessura do fundo da preforma: ela deve penetrar cerca de **2/3 dessa espessura**. Haste curta deixa o fundo escorregar e o ponto sai do centro; haste longa demais pode furar ou marcar o fundo.\n\n## A válvula de três vias\nCada posto tem uma **válvula de três vias** que comuta o ar entre pré-sopro, sopro e degasagem. Quem manda nela são **cames**: a came de pré-sopro, a de sopro e a de degasagem empurram o êmbolo da válvula para a posição certa em cada momento do giro da máquina.\n\n## Pressão e vazão não são a mesma coisa\n- **Pressão** é força por área (bar ou kgf/cm²). Na sopradora, a pressão do pré-sopro é regulada numa **única válvula para todos os postos**.\n- **Vazão** é quantidade de ar por tempo (litros por segundo). Ela é regulada **posto a posto**, numa válvula em cada um, contando as voltas do ajuste.\n\nNa prática: mexer na pressão afeta a máquina inteira; mexer na vazão corrige um posto que está diferente dos outros.\n\n## O que decide onde fica o material\nO pré-sopro, junto com a estiragem, é o que mais influencia a **distribuição de massa** da garrafa. Para descrever o momento em que o pré-sopro entra, usa-se uma escala no curso da haste: o **ponto 0** é o início do estiramento ativo (a haste encostando no fundo da preforma) e o **ponto 10** é o fim do estiramento.\n\n- **Pré-sopro adiantado** (came num ponto baixo, por exemplo 2): a preforma abre cedo, estica menos perto do gargalo, e a haste leva **menos** material para o fundo. Sobra material no **ombro**, e o fundo fica mais fino.\n- **Pré-sopro atrasado** (came num ponto alto, por exemplo 8): a preforma estica mais na parte de cima, e a haste leva **mais** material para o fundo, tirando do ombro.\n- **Mais pressão ou mais vazão** fazem a bolha abrir mais depressa, com efeito parecido com adiantar o pré-sopro.\n\n## O perfil de aquecimento\nO forno aquece a preforma por **zonas** (lâmpadas em alturas diferentes, numeradas de baixo para cima). Cada zona da preforma vira uma região da garrafa. A regra é simples: **zona mais quente estica mais e fica mais fina; zona mais fria estica menos e fica mais grossa**. Por isso cada zona tem o seu percentual de potência (por exemplo 75%, 90%, 100%).\n\nPara corrigir um problema de espessura numa região da parede, primeiro se localiza qual zona da preforma forma aquela região e se ajusta o percentual dela, em passos pequenos, conferindo a garrafa depois de cada ajuste.\n\n## Tipos de fundo\nO desenho do fundo depende do produto: **petalóide** (os \"pezinhos\" das garrafas de refrigerante, que aguentam a pressão do gás), fundo **sem pull-shape**, fundo para **enchimento a quente** (hot fill), fundo para **óleo**, e garrafas **cilíndricas**, **quadradas** e **retangulares**. Quanto mais simples o desenho do fundo, menor a pressão de sopro necessária para formá-lo.",
+   "createdAt": "2026-11-09T23:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-09T23:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Estiramento em dois sentidos (biorientado): garrafa mais resistente e que perde menos CO₂.",
+    "Ordem: estiragem, pré-sopro (7 a 13 bar), sopro (35 a 40 bar) e degasagem.",
+    "A haste entra cerca de 2/3 da espessura do fundo para centralizar o ponto de injeção.",
+    "Pré-sopro adiantado acumula material no ombro; atrasado leva material para o fundo.",
+    "Pressão: uma válvula para todos os postos. Vazão: uma válvula por posto.",
+    "Zona do forno mais quente estica mais e deixa aquela região mais fina."
+   ],
+   "minutes": 16,
+   "order": 1,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "A haste começa a esticar, o pré-sopro entra durante a estiragem e o sopro de alta vem por último, seguido da degasagem.",
+     "options": [
+      "Sopro, pré-sopro, estiragem",
+      "Estiragem, pré-sopro, sopro",
+      "Pré-sopro, sopro, estiragem",
+      "Pré-sopro, estiragem, sopro"
+     ],
+     "prompt": "Qual é a ordem correta de atuação no ciclo de moldagem?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Atrasando o pré-sopro, a preforma estica mais em cima e a haste leva mais material para o fundo, tirando do ombro.",
+     "options": [
+      "Adiantar a came do pré-sopro",
+      "Atrasar a came do pré-sopro",
+      "Aumentar a pressão do pré-sopro",
+      "Aumentar a vazão em todos os postos"
+     ],
+     "prompt": "As garrafas estão saindo com o ombro grosso e o fundo fino. Qual ajuste faz sentido primeiro?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "A pressão é comum a todos os postos; a vazão é regulada individualmente, posto a posto.",
+     "options": [
+      "A pressão do pré-sopro",
+      "A vazão daquele posto",
+      "O perfil do forno inteiro",
+      "A pressão do sopro"
+     ],
+     "prompt": "Só um posto da sopradora produz garrafas diferentes dos outros. O ajuste mais indicado é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "É o contrário: a zona mais quente estica mais e fica mais fina.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Aumentar o aquecimento de uma zona do forno deixa a parede daquela região da garrafa mais grossa.",
+     "type": "vf"
+    },
+    {
+     "answer": 1,
+     "explain": "Penetrando cerca de 2/3 da espessura, a haste segura o fundo e o ponto de injeção fica centralizado.",
+     "options": [
+      "Para a haste entrar cerca de 2/3 da espessura e manter o ponto de injeção no centro",
+      "Para a haste não tocar a preforma",
+      "Para aumentar a pressão de sopro",
+      "Para resfriar o gargalo"
+     ],
+     "prompt": "Por que a altura da haste é regulada pela espessura do fundo da preforma?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "A degasagem alivia a pressão interna antes do bico subir; a saída rápida do ar também resfria.",
+     "options": [
+      "Aquecer a preforma",
+      "Tirar o ar da garrafa antes de o bico subir, ajudando também a resfriar",
+      "Formar o fundo petalóide",
+      "Esticar a preforma no comprimento"
+     ],
+     "prompt": "Qual é a função da degasagem?",
+     "type": "mc"
+    }
+   ],
+   "sim": "sopro",
+   "status": "published",
+   "summary": "Como a preforma de PET vira garrafa: estiragem, pré-sopro, sopro e degasagem, a válvula de três vias e como corrigir a espessura da parede.",
+   "title": "Sopradora: moldagem por estiramento e sopro",
+   "track": "envase",
+   "updatedAt": "2026-11-09T23:30:00.000Z"
+  },
   "ia-1-modelos": {
    "author": "",
    "body": "Um modelo de linguagem (LLM) foi treinado com uma quantidade enorme de texto para fazer uma coisa: prever qual pedaço de texto vem a seguir. Repetindo isso muito rápido, ele escreve respostas inteiras.\n\n## O que isso significa na prática\n- **Ele não consulta um banco de dados** por padrão. Responde com base no que aprendeu no treino e no que você coloca na conversa.\n- **Ele pode inventar com confiança.** Quando falta informação, o modelo completa com algo plausível. Isso se chama **alucinação**.\n- **O contexto é a memória de trabalho.** Tudo o que está na conversa (sua pergunta, documentos colados, instruções) influencia a resposta.\n\n## Tokens\nO modelo lê e escreve em **tokens**, pedaços de palavras. Os limites de tamanho e o custo das APIs são medidos em tokens.\n\n## Como usar bem\nDê contexto, peça fontes quando possível e confira fatos importantes. Para responder sobre os documentos da sua empresa, use RAG: o sistema busca os trechos certos e entrega ao modelo junto com a pergunta.",

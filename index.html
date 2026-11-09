@@ -514,6 +514,7 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 @media (max-width:560px){.sim .s-fig svg[viewBox="0 0 140 200"],.sim .s-fig svg[viewBox="0 0 160 170"]{max-width:190px}}
 .split .row > .btn{white-space:normal;text-align:left;max-width:100%}
 .sim svg text{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.sim .s-fig svg[viewBox="0 0 430 310"]{max-width:520px;max-height:420px}
 .sim .w{stroke:#3d3d3d;stroke-width:3;fill:none;stroke-linejoin:round;transition:stroke .15s}
 .sim .w.on{stroke:var(--t)}
 .sim .s-ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 22px;margin-top:16px;align-items:end}
@@ -789,7 +790,9 @@ const TRACKS = [
   { id: "comandos", area: "hw", color: "#ff6b6b", name: "Comandos elétricos e automação", short: "Automação", ico: "motor", desc: "Contatores, motores, sensores, CLP e inversores de frequência.",
     plan: [["Introdução ao CLP: entradas, saídas e linguagem ladder", "Primeiro programa ladder simulado"], ["Inversor de frequência: parametrização básica", "Roteiro de parametrização de um inversor"]] },
   { id: "robotica", area: "hw", color: "#7aa2ff", name: "Programação de robôs com o Korum", short: "Robôs com o Korum", ico: "robo", desc: "Programe um robô industrial de seis eixos em KRL, praticando no laboratório virtual Korum: movimentos, garra, paletização, CLP e diagnóstico.",
-    plan: [] }
+    plan: [] },
+  { id: "envase", area: "hw", color: "#22d3ee", name: "Processos da linha de envase", short: "Linha de envase", ico: "fabrica", desc: "Como funcionam as máquinas de uma linha de envase de refrigerantes, da sopradora à paletizadora, com simuladores das fases do processo.",
+    plan: [["Enchedora: enchimento por contrapressão", "Roteiro de ajuste de nível"], ["Mixer e carbonatador", "Cálculo da proporção xarope e água"], ["Transportes, acúmulo e controle de velocidade", "Lógica de acúmulo entre duas máquinas"]] }
 ];
 const TRACK_IDS = new Set(TRACKS.map(t => t.id));
 /* Abas com trilhas em sequência. As trilhas sem "area" são as da aba Trilhas. */
@@ -1017,6 +1020,106 @@ function zig(a, b, c, v) {
 }
 
 const SIMS = {
+  /* ---- sopradora: moldagem por estiramento e sopro ---- */
+  sopro: {
+    title: "Simulador: moldagem por estiramento e sopro", hint: "Rode o ciclo e acompanhe cada fase. Depois mude a posição da came do pré-sopro, a pressão, a vazão e o aquecimento por zona e veja como a espessura da garrafa muda no ombro, no corpo e no fundo.",
+    init: { came: 5, pres: 10, vaz: 5, hO: 85, hC: 85, hF: 85, t: 0, run: 0, vel: 1 },
+    // perfil do molde (meia-largura) em função da altura
+    cav(y) { if (y < 52) return 11; if (y < 100) { const u = (y - 52) / 48, s = u * u * (3 - 2 * u); return 11 + 49 * s; } if (y < 246) return 60; if (y >= 272) return 0; return 60 * Math.sqrt(Math.max(0, 1 - Math.pow((y - 246) / 26, 2))); },
+    PH: [[0, .08, "Molde fecha", "A preforma chega aquecida do forno, as duas metades do molde fecham em volta dela e o bico de sopro desce e veda o gargalo. O gargalo (rosca) não muda: ele já sai pronto da injeção da preforma."],
+      [.08, .55, "Estiragem", "A haste desce a cerca de 0,8 m/s, empurrada por um cilindro de 7 bar. Ela toca o centro do fundo da preforma e estica o material no sentido do comprimento até o fundo do molde, quase dobrando o tamanho. É o estiramento axial."],
+      [.55, .75, "Sopro", "A válvula de três vias comuta para o sopro de alta, de 35 a 40 bar. O ar aperta as paredes contra o molde frio, forma o fundo petalóide e resfria a garrafa. Quanto mais simples o desenho do fundo, menos pressão ele precisa."],
+      [.75, .88, "Degasagem", "Antes de o bico subir, a válvula de três vias abre o escape e tira o ar da garrafa. Essa saída rápida também ajuda a resfriar."],
+      [.88, 1.01, "Extração", "O molde abre e a garrafa pronta segue pelo transporte para a rotuladora."]],
+    calc(st) {
+      const E = -(st.came - 5) / 3 + (st.pres - 10) / 6 + (st.vaz - 5) / 6, f = h => 1 - (h - 85) / 100 * 2;
+      let o = (1 + .22 * E) * f(st.hO), c = f(st.hC), b = (1 - .22 * E) * f(st.hF); const m = (o + c + b) / 3; o /= m; c /= m; b /= m;
+      return { E, o, c, b };
+    },
+    geo(st, t) {
+      const ponto = t < .08 ? 0 : t < .55 ? (t - .08) / .47 * 10 : 10, rod = 112 + ponto / 10 * 154;
+      const k = 1.5 + st.vaz * .25, q = Math.max(0, Math.min(1, (ponto - st.came) / 10 * k)), maxPre = .45 + (st.pres - 7) * .04;
+      const s = t < .55 ? 0 : Math.min(1, (t - .55) / .12);
+      const yb = t < .08 ? 112 : t < .55 ? Math.max(112, rod + 4) : 272;
+      return { ponto, rod: t < .08 ? 52 + t / .08 * 56 : t < .75 ? rod : rod - Math.min(1, (t - .75) / .1) * 214, q: s ? 1 : q, maxPre, s, yb, pre: ponto >= st.came && t < .55 && t >= .08 };
+    },
+    html: () => '<div class="s-fig">' + SVG("0 0 430 310",
+      '<defs><linearGradient id="spm" x1="0" x2="1"><stop offset="0" stop-color="#1b2a44"/><stop offset="1" stop-color="#0f1a2e"/></linearGradient></defs>' +
+      '<g data-g="ml"><path d="M64 30H178V40H169V52H169' + (() => { let p = ""; for (let y = 52; y <= 272; y += 4) p += "L" + (180 - SIMS.sopro.cav(y)).toFixed(1) + " " + y; return p; })() + 'L180 272V290H64Z" fill="url(#spm)" stroke="#2a3b62"/></g>' +
+      '<g data-g="mr"><path d="M296 30H182V40H191V52' + (() => { let p = ""; for (let y = 52; y <= 272; y += 4) p += "L" + (180 + SIMS.sopro.cav(y)).toFixed(1) + " " + y; return p; })() + 'L180 272V290H296Z" fill="url(#spm)" stroke="#2a3b62"/></g>' +
+      '<rect x="160" y="24" width="40" height="16" rx="3" fill="#4b5d82" data-g="bico"/><text x="204" y="35" style="font-size:9px">bico</text>' +
+      '<path data-g="pf" fill="rgba(52,211,153,.28)" stroke="#34d399" stroke-width="2"/>' +
+      '<g data-g="wall"><path data-g="wo" fill="none" stroke-linecap="round"/><path data-g="wc" fill="none" stroke-linecap="round"/><path data-g="wb" fill="none" stroke-linecap="round"/></g>' +
+      '<line data-g="rod" x1="180" x2="180" y1="0" stroke="#e5e7eb" stroke-width="4" stroke-linecap="round"/>' +
+      '<g data-g="air" opacity="0">' + [70, 130, 190, 240].map(y => '<path d="M186 ' + y + 'h26m-6 -4 6 4 -6 4M174 ' + y + 'h-26m6 -4 -6 4 6 4" stroke="#7dd3fc" stroke-width="1.6" fill="none"/>').join("") + '</g>' +
+      '<g data-g="deg" opacity="0"><path d="M172 22V4m-4 6 4-6 4 6M188 22V4m-4 6 4-6 4 6" stroke="#fbbf24" stroke-width="2" fill="none"/></g>' +
+      [0, 2, 4, 5, 6, 8, 10].map(n => '<line x1="246" x2="' + (n % 5 ? 252 : 256) + '" y1="' + (112 + n * 15.4).toFixed(1) + '" y2="' + (112 + n * 15.4).toFixed(1) + '" stroke="#6c7ea3"/><text x="258" y="' + (116 + n * 15.4).toFixed(1) + '" style="font-size:9px">' + n + "</text>").join("") +
+      '<path data-g="came" d="M240 0l-8 -5v10z" fill="#fbbf24"/><text x="268" y="104" style="font-size:9px">ponto</text>' +
+      '<text data-g="lbl" x="180" y="304" text-anchor="middle" style="font-size:10px;fill:var(--ink)"></text>' +
+      '<g transform="translate(352 120)"><text x="0" y="-8" style="font-size:9px">válvula 3 vias</text>' + [["vp", "pré-sopro", 0], ["vs", "sopro", 1], ["vd", "degas.", 2]].map(v => '<rect data-g="' + v[0] + '" x="0" y="' + v[2] * 26 + '" width="66" height="20" rx="4" fill="#142039" stroke="#2a3b62"/><text x="8" y="' + (v[2] * 26 + 14) + '" style="font-size:9.5px">' + v[1] + "</text>").join("") + '<text data-g="bar" x="0" y="96" style="font-size:13px;fill:var(--ink)"></text></g>', "Molde, preforma e haste de estiragem") + "</div>" +
+      '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center">' + sBtn("sopro", "play", "Rodar o ciclo", "primary") + sBtn("sopro", "back", "← Fase") + sBtn("sopro", "next", "Fase →") + sSeg("sopro", "vel", [["1", "Normal"], ["0.35", "Câmera lenta"]]) + "</div>" +
+      '<div class="notice" style="margin-top:12px"><b data-o="fase"></b> <span data-o="fdesc"></span></div>' +
+      '<div class="s-ctl">' + sRange("sopro", "came", "Came do pré-sopro (entra no ponto)", 2, 8, 1) + sRange("sopro", "pres", "Pressão do pré-sopro", 7, 13, 1) + sRange("sopro", "vaz", "Vazão do pré-sopro (voltas da válvula)", 2, 8, 1) +
+      sRange("sopro", "hO", "Aquecimento da zona do ombro", 70, 100, 5) + sRange("sopro", "hC", "Aquecimento da zona do corpo", 70, 100, 5) + sRange("sopro", "hF", "Aquecimento da zona do fundo", 70, 100, 5) + "</div>" +
+      sMeters([["mo", "Ombro"], ["mc", "Corpo"], ["mb", "Fundo"]]),
+    draw(r, st) {
+      const t = st.t, g = this.geo(st, t), K = this.calc(st), cav = y => this.cav(y);
+      so(r, "came", "ponto " + st.came); so(r, "pres", st.pres + " bar"); so(r, "vaz", st.vaz + " voltas"); so(r, "hO", st.hO + "%"); so(r, "hC", st.hC + "%"); so(r, "hF", st.hF + "%");
+      const open = t < .08 ? 1 - t / .08 : t > .88 ? Math.min(1, (t - .88) / .08) : 0;
+      sg(r, "ml").setAttribute("transform", "translate(" + (-46 * open).toFixed(1) + " 0)"); sg(r, "mr").setAttribute("transform", "translate(" + (46 * open).toFixed(1) + " 0)");
+      sg(r, "bico").setAttribute("y", t < .04 ? 10 + t / .04 * 14 : t > .86 ? 24 - Math.min(1, (t - .86) / .03) * 14 : 24);
+      // forma da preforma / garrafa
+      const thin = t < .55 ? 9 - 3 * Math.min(1, g.ponto / 10) : 9, pts = [], yb = g.yb;
+      for (let y = 40; y <= yb; y += 3) {
+        let hw;
+        if (y < 52) hw = 11; else {
+          const rel = (y - 52) / Math.max(1, yb - 52), ePre = Math.max(0, Math.min(g.maxPre, g.q * g.maxPre * 1.5 - rel * .5 * g.q));
+          const e = g.s ? ePre + (1 - ePre) * g.s : ePre; hw = thin + (cav(y) - thin) * e;
+          if (!g.s && y > yb - 8) hw *= Math.sqrt(Math.max(0, 1 - Math.pow((y - (yb - 8)) / 8, 2)));
+          if (g.s) hw = Math.min(hw, cav(y));
+        }
+        pts.push([hw, y]);
+      }
+      const L = pts.map(p => (180 - p[0]).toFixed(1) + " " + p[1]), R = pts.slice().reverse().map(p => (180 + p[0]).toFixed(1) + " " + p[1]);
+      const pf = sg(r, "pf"); pf.setAttribute("d", "M" + L.join("L") + "L" + R.join("L") + "Z");
+      const done = t >= .7, zc = v => v < .85 || v > 1.15 ? "#f87171" : v < .92 || v > 1.08 ? "#fbbf24" : "#34d399";
+      sg(r, "wall").style.opacity = done ? 1 : 0; pf.style.opacity = t > .96 ? .25 : 1;
+      if (done) {
+        const seg = (a, b) => { const s = []; for (let y = a; y <= b; y += 3) s.push([cav(y), y]); return "M" + s.map(p => (180 - p[0]).toFixed(1) + " " + p[1]).join("L") + "M" + s.map(p => (180 + p[0]).toFixed(1) + " " + p[1]).join("L"); };
+        [["wo", 52, 100, K.o], ["wc", 100, 246, K.c], ["wb", 246, 271, K.b]].forEach(([k, a, b, v]) => { const p = sg(r, k); p.setAttribute("d", seg(a, b)); p.setAttribute("stroke", zc(v)); p.setAttribute("stroke-width", (4.5 * v).toFixed(1)); });
+      }
+      const rod = sg(r, "rod"); rod.setAttribute("y2", g.rod.toFixed(1)); rod.style.opacity = t > .86 ? 0 : 1;
+      sg(r, "came").setAttribute("transform", "translate(0 " + (112 + st.came * 15.4).toFixed(1) + ")");
+      sg(r, "air").setAttribute("opacity", g.pre || (t >= .55 && t < .75) ? (t >= .55 ? 1 : .55) : 0);
+      sg(r, "deg").setAttribute("opacity", t >= .75 && t < .88 ? 1 : 0);
+      const lamp = (k, on, c) => { const e = sg(r, k); e.setAttribute("fill", on ? c : "#142039"); e.setAttribute("stroke", on ? c : "#2a3b62"); };
+      lamp("vp", g.pre, "rgba(125,211,252,.35)"); lamp("vs", t >= .55 && t < .75, "rgba(34,211,238,.45)"); lamp("vd", t >= .75 && t < .88, "rgba(251,191,36,.4)");
+      sg(r, "bar").textContent = g.pre ? st.pres + " bar" : t >= .55 && t < .75 ? "38 bar" : t >= .75 && t < .88 ? "escape" : "0 bar";
+      const ph = this.PH.findIndex(p => t >= p[0] && t < p[1]), P = this.PH[Math.max(0, ph)];
+      const nome = ph === 1 && g.pre ? "Estiragem + pré-sopro" : P[2];
+      const desc = ph === 1 && g.pre ? "No ponto " + st.came + " da haste, a came comanda a válvula de três vias e entra o pré-sopro de " + st.pres + " bar. Junto com a estiragem, é ele que distribui a massa: o ar abre a preforma no sentido radial, espalhando o material em volta da haste. A haste segura o fundo, entrando cerca de 2/3 da espessura dele, para o ponto de injeção ficar centrado." : P[3];
+      so(r, "fase", (st.t === 0 && !st.run ? "Pronto. " : "") + nome + ":"); so(r, "fdesc", desc);
+      sg(r, "lbl").textContent = "ponto da haste: " + fmtN(g.ponto, 1);
+      const pc = v => fmtN(v * 100, 0) + "%"; so(r, "mo", pc(K.o)); so(r, "mc", pc(K.c)); so(r, "mb", pc(K.b));
+      const msg = [];
+      if (K.o > 1.08) msg.push("<b>ombro grosso</b>: o pré-sopro está abrindo a preforma cedo, e a haste leva pouco material para o fundo. Atrase a came, diminua a pressão ou a vazão, ou aqueça mais a zona do ombro");
+      if (K.o < .92) msg.push("<b>ombro fino</b>: o pré-sopro entra tarde e a haste puxa material demais para baixo. Adiante a came, aumente a pressão ou a vazão, ou aqueça menos a zona do ombro");
+      if (K.b > 1.08) msg.push("<b>fundo grosso</b>: aqueça um pouco mais a zona do fundo ou adiante o pré-sopro");
+      if (K.b < .92) msg.push("<b>fundo fino</b>: material de menos no fundo. Aqueça menos a zona do fundo ou atrase o pré-sopro");
+      if (K.c > 1.08) msg.push("<b>corpo grosso</b>: aqueça mais a zona do corpo");
+      if (K.c < .92) msg.push("<b>corpo fino</b>: aqueça menos a zona do corpo");
+      sread(r, (msg.length ? "Espessura fora do ideal. " + msg.join("; ") + "." : "Espessura equilibrada: ombro, corpo e fundo perto de 100%.") + " Lembre: zona mais quente estica mais e fica mais fina. A pressão é regulada numa única válvula para todos os postos; a vazão, numa válvula em cada posto.");
+    },
+    input(st) { if (!st.run && st.t === 0) st.t = 0; },
+    act(st, a) {
+      const starts = this.PH.map(p => p[0]).concat([.3]).sort((x, y) => x - y);
+      if (a === "play") { st.t = 0; st.run = 1; }
+      if (a === "next") { st.run = 0; const n = starts.find(s => s > st.t + .001); st.t = n == null ? .999 : n + .001; }
+      if (a === "back") { st.run = 0; const p = starts.filter(s => s < st.t - .002); st.t = p.length ? p[p.length - 1] + .001 : 0; }
+    },
+    tick(r, st, dt) { if (!st.run) return; st.t = Math.min(.999, st.t + dt * Number(st.vel) / 6); if (st.t >= .999) st.run = 0; this.draw(r, st); }
+  },
+
   /* ---- 1. Lei de Ohm ---- */
   ohm: {
     title: "Simulador: lei de Ohm", hint: "Mude a tensão da fonte e a resistência. Veja a corrente, a potência e o brilho da lâmpada.",
@@ -1590,6 +1693,17 @@ const ENV_F = [
   ["falhas", "Falhas típicas e diagnóstico", "Defeitos comuns, causas e como investigar; viram desafios de treinamento."],
   ["notas", "Anotações", "Ideias, dúvidas, referências, decisões."]
 ];
+const ENV_SOPRO = {
+  funcao: "Transforma a preforma de PET em garrafa por moldagem por estiramento e sopro (processo biorientado). A preforma é aquecida no forno, esticada no comprimento pela haste e soprada no diâmetro dentro do molde. O estiramento nos dois sentidos alinha as cadeias do PET numa malha: a garrafa fica mais resistente à pressão e ao impacto e perde menos CO₂ (de cerca de 7.000 psi na preforma para cerca de 24.000 psi na garrafa).\n\nCiclo de cada posto: molde fecha e bico desce; estiragem; pré-sopro; sopro; degasagem; molde abre e a garrafa sai.",
+  entradas: "Pré-formas do abastecimento de pré-formas.\nAr de alta pressão (35 a 40 bar) da unidade de ar de sopro.\nAr de comando para cilindros e válvulas.\nÁgua gelada do chiller do sopro para os moldes.\nEnergia para o forno de aquecimento.",
+  saidas: "Garrafas sopradas para a rotuladora.\nAr de escape da degasagem.\nSinais para o CLP: máquina pronta, em falha, contagem, rejeitos.",
+  acion: "Forno com lâmpadas por zonas de aquecimento.\nAbertura e fechamento dos moldes.\nBico de sopro (desce e veda o gargalo).\nHaste de estiragem acionada por cilindro (cerca de 7 bar, cerca de 0,8 m/s).\nVálvula de três vias em cada posto, comandada pelas cames de pré-sopro, sopro e degasagem.",
+  sensores: "Pressão do pré-sopro e do sopro.\nTemperatura do forno e da preforma por zona.\nPresença de preforma e de garrafa.\nPosição da haste e do molde.\nTemperatura da água dos moldes.",
+  parametros: "Estiragem: cilindro com cerca de 7 bar, haste a cerca de 0,8 m/s; a haste deve penetrar cerca de 2/3 da espessura do fundo da preforma para centralizar o ponto de injeção.\nPré-sopro: 7 a 13 bar; entrada definida pela came, na escala da haste de 0 (início do estiramento ativo) a 10 (fim do estiramento).\nSopro: 35 a 40 bar.\nPressão do pré-sopro: uma válvula para todos os postos.\nVazão do pré-sopro: uma válvula por posto, regulada em voltas.\nPerfil de aquecimento: percentual por zona do forno; cada zona da preforma forma uma região da garrafa.",
+  falhas: "Ombro grosso e fundo fino: pré-sopro entrando cedo, ou pressão ou vazão altas. Atrasar a came ou reduzir pressão ou vazão.\nOmbro fino: pré-sopro entrando tarde. Adiantar a came.\nUm posto diferente dos outros: conferir a vazão daquele posto.\nEspessura irregular numa região: ajustar o percentual da zona do forno correspondente (zona mais quente estica mais e fica mais fina).\nPonto de injeção fora do centro: altura da haste errada.\nFundo mal formado: pressão de sopro baixa ou molde com refrigeração ruim.\nGarrafa deformando depois de sair: degasagem ou resfriamento insuficiente.",
+  notas: "Ordem de atuação: estiragem, pré-sopro, sopro e degasagem. O pré-sopro junto com a estiragem é o que mais influencia a distribuição de massa.\nTipos de fundo: petalóide, sem pull-shape, hot fill, para óleo; garrafas cilíndricas, quadradas e retangulares. Fundo mais simples pede menos pressão de sopro.",
+  sim: "sopro", licao: "env-sopradora"
+};
 const ENV_TPL = [
   ["xarope", "Tratamento de água", "Deixa a água dentro do padrão da bebida (filtração, cloração e decloração, carvão ativado). Primeiro passo do caminho do produto.", { interlig: "Tratamento de água → Xarope simples: água tratada" }],
   ["xarope", "Xarope simples", "Dissolve o açúcar na água tratada, filtra e resfria.", { interlig: "Xarope simples → Xarope composto" }],
@@ -1606,7 +1720,7 @@ const ENV_TPL = [
   ["linha", "Estoque", "Recebe os paletes prontos na saída da linha.", {}],
   ["sopro", "Estoque de pré-formas", "Armazena as pré-formas para o sopro.", { interlig: "Estoque de pré-formas → Abastecimento de pré-formas" }],
   ["sopro", "Abastecimento de pré-formas", "Leva as pré-formas até a sopradora.", { interlig: "Abastecimento de pré-formas → Sopradora" }],
-  ["sopro", "Sopradora", "Aquece as pré-formas e sopra as garrafas.", { interlig: "Sopradora → Rotuladora (transporte)\nChiller do sopro → Sopradora: água gelada\nUnidade de ar de sopro → Sopradora: ar de alta pressão" }],
+  ["sopro", "Sopradora", "Aquece as pré-formas e sopra as garrafas.", { interlig: "Sopradora → Rotuladora (transporte)\nChiller do sopro → Sopradora: água gelada\nUnidade de ar de sopro → Sopradora: ar de alta pressão", ...ENV_SOPRO }],
   ["sopro", "Rotuladora", "Aplica o rótulo nas garrafas.", { interlig: "Rotuladora → Transfer" }],
   ["sopro", "Transfer até a linha de envase", "Leva as garrafas do setor de sopro até a enchedora.", { interlig: "Transfer → Enchedora (linha de envase)" }],
   ["sopro", "Chiller do sopro", "Água gelada para a sopradora, separado do chiller da sala de máquinas por causa da capacidade.", { interlig: "Chiller do sopro → Sopradora" }],
@@ -1624,7 +1738,7 @@ const ENV_OLD = { util: "maq", xarope: "xarope", enche: "linha", emb: "linha" };
 const ENV_OLDTPL = ["Tratamento de água", "Sala de máquinas: ar comprimido", "Refrigeração (chiller)", "CO₂", "Vapor e água quente", "Xarope simples", "Xarope composto", "CIP (limpeza no local)", "Mixer e carbonatador", "Alimentação de pré-formas", "Sopradora", "Transporte aéreo de garrafas", "Bloco rinser, enchedora e capsuladora", "Inspeção de nível e tampa", "Rotuladora", "Codificador de lote e validade", "Transportadores e acúmulo", "Empacotadora (shrink)", "Paletizadora", "Envolvedora (stretch) e etiqueta do palete"];
 const envNew = () => ENV_TPL.map((b, i) => Object.assign({ id: "b" + (i + 1), area: b[0], nome: b[1], status: "ideia", funcao: b[2] }, b[3]));
 function envP() {
-  if (!S.prog.envase) S.prog.envase = { v: 3, proj: { nome: "Linha de envase de refrigerantes PET", produto: "", capacidade: "", formatos: "", turnos: "", objetivo: "", escopo: "", premissas: "", arquitetura: "" }, blocks: envNew(), seq: ENV_TPL.length };
+  if (!S.prog.envase) S.prog.envase = { v: 4, proj: { nome: "Linha de envase de refrigerantes PET", produto: "", capacidade: "", formatos: "", turnos: "", objetivo: "", escopo: "", premissas: "", arquitetura: "" }, blocks: envNew(), seq: ENV_TPL.length };
   const E = S.prog.envase;
   if (!(E.v >= 2)) { // v1 → v2: novo desenho da planta, mantendo o que já foi escrito
     const blocks = envNew(), keys = ENV_F.map(f => f[0]).filter(k => k !== "funcao"), N = s => norm(String(s || "")).replace(/[^a-z0-9]/g, "");
@@ -1634,12 +1748,17 @@ function envP() {
       if (m) { keys.forEach(k => { if (String(b[k] || "").trim()) m[k] = (m[k] && k === "interlig" ? m[k] + "\n" : "") + b[k]; }); if (b.status !== "ideia") m.status = b.status; }
       else if (edited(b)) { E.seq = (E.seq || 40) + 1; blocks.push(Object.assign({}, b, { id: "b" + (100 + E.seq), area: ENV_OLD[b.area] || b.area })); }
     });
-    E.blocks = blocks; E.seq = Math.max(E.seq || 0, 200); E.v = 3; S.ui.envSel = null; saveProg();
+    E.blocks = blocks; E.seq = Math.max(E.seq || 0, 200); E.v = 4; S.ui.envSel = null; saveProg();
   }
   if (E.v === 2) { // v2 → v3: tanques de CO₂ e nitrogênio na área externa
     const N = s => norm(String(s || "")).replace(/[^a-z0-9]/g, "");
     envNew().filter(b => b.area === "gases" && !E.blocks.some(x => N(x.nome) === N(b.nome))).forEach(b => { E.seq = (E.seq || 200) + 1; E.blocks.push(Object.assign(b, { id: "b" + E.seq })); });
     E.v = 3; saveProg();
+  }
+  if (E.v === 3) { // v3 → v4: detalhes da sopradora (só preenche campos vazios)
+    const b = E.blocks.find(x => /sopradora/i.test(x.nome));
+    if (b) Object.entries(ENV_SOPRO).forEach(([k, v]) => { if (k === "funcao" ? !b.funcao || b.funcao === "Aquece as pré-formas e sopra as garrafas." : !String(b[k] || "").trim()) b[k] = v; });
+    E.v = 4; saveProg();
   }
   return E;
 }
@@ -1675,7 +1794,8 @@ VIEWS.envase = () => {
       ed = '<div class="panel" id="env-ed" style="border-color:' + (ENV_SECS.find(s => s[0] === sel.area) || ENV_SECS[0])[2] + '"><div class="ph"><h3>' + esc(sel.nome || "Bloco") + '</h3><div class="env-tools"><button class="btn sm" data-act="envmove" data-d="-1" aria-label="Mover para antes">← Antes</button><button class="btn sm" data-act="envmove" data-d="1" aria-label="Mover para depois">Depois →</button><button class="btn sm" data-act="envdup">Duplicar</button>' + (S.ui.envDel === sel.id ? '<button class="btn sm danger" data-act="envdel">Confirmar exclusão</button><button class="btn sm" data-act="envdelno">Cancelar</button>' : '<button class="btn sm danger" data-act="envdelask">Excluir</button>') + '</div></div><div class="env-ed">' +
         envField("blocks." + i + ".nome", "Nome do bloco", sel.nome) +
         '<label class="f">Parte da linha<select data-env="blocks.' + i + '.area" data-rerender="1">' + ENV_SECS.map(s => '<option value="' + s[0] + '"' + (s[0] === sel.area ? " selected" : "") + ">" + esc(s[1]) + "</option>").join("") + '</select></label><label class="f">Situação do escopo<select data-env="blocks.' + i + '.status" data-rerender="1">' + Object.entries(ENV_ST).map(([k, v]) => '<option value="' + k + '"' + (k === sel.status ? " selected" : "") + ">" + v + "</option>").join("") + "</select></label><span></span>" +
-        ENV_F.map(([k, l, hnt]) => envField("blocks." + i + "." + k, l, sel[k], hnt, k === "funcao" || k === "notas" ? 3 : 4)).join("") + "</div></div>";
+        (sel.sim && SIMS[sel.sim] ? '<div class="wide" style="--t:' + (ENV_SECS.find(s => s[0] === sel.area) || ENV_SECS[0])[2] + '">' + simHTML(sel.sim) + (sel.licao && pub("lessons").some(l => l.id === sel.licao) ? '<p style="margin-top:10px"><button class="btn sm" data-act="go" data-r="licao" data-id="' + esc(sel.licao) + '">Abrir a lição completa →</button></p>' : "") + "</div>" : "") +
+        ENV_F.map(([k, l, hnt]) => envField("blocks." + i + "." + k, l, sel[k], hnt, k === "funcao" || k === "notas" || k === "falhas" || k === "parametros" ? 6 : 4)).join("") + "</div></div>";
     } else ed = '<div class="notice">Clique num bloco para abrir o escopo dele. Os blocos seguem a ordem do processo, da esquerda para a direita, em cada parte da linha.</div>';
     body = flow + ed;
   }
@@ -2050,7 +2170,7 @@ VIEWS.favoritos = () => {
 
 /* ----- Próximas etapas ----- */
 VIEWS.roteiro = () => {
-  const P = [["Versão 2.12", "Disponível", "ok", ["Linha de envase: área externa com os tanques de CO₂ e nitrogênio"]], ["Versão 2.11", "Concluída", "ok", ["Linha de envase no desenho real da planta: xaroparia, linha de envase, sopro, sala de máquinas, caldeira, sala de CIP e transportes com sensores e CLPs, com o mapa da planta"]], ["Versão 2.10", "Concluída", "ok", ["Cores tecnológicas (ciano e índigo) e o novo item Linha de envase, para montar o projeto e o escopo de uma linha completa com as máquinas interligadas"]], ["Versão 2.9", "Concluída", "ok", ["Layout novo: menu lateral com todas as áreas e etapas, início com blocos por área, busca em todo o conteúdo e fim do visual de streaming"]], ["Versão 2.8", "Concluída", "ok", ["Curso Programação de robôs com o Korum: 10 lições de KRL com prática no laboratório virtual Korum, um desafio no Laboratório e um projeto de célula de paletização"]], ["Versão 2.7", "Concluída", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
+  const P = [["Versão 2.13", "Disponível", "ok", ["Sopradora: lição de moldagem por estiramento e sopro com simulador animado, e o escopo da sopradora detalhado na Linha de envase"]], ["Versão 2.12", "Concluída", "ok", ["Linha de envase: área externa com os tanques de CO₂ e nitrogênio"]], ["Versão 2.11", "Concluída", "ok", ["Linha de envase no desenho real da planta: xaroparia, linha de envase, sopro, sala de máquinas, caldeira, sala de CIP e transportes com sensores e CLPs, com o mapa da planta"]], ["Versão 2.10", "Concluída", "ok", ["Cores tecnológicas (ciano e índigo) e o novo item Linha de envase, para montar o projeto e o escopo de uma linha completa com as máquinas interligadas"]], ["Versão 2.9", "Concluída", "ok", ["Layout novo: menu lateral com todas as áreas e etapas, início com blocos por área, busca em todo o conteúdo e fim do visual de streaming"]], ["Versão 2.8", "Concluída", "ok", ["Curso Programação de robôs com o Korum: 10 lições de KRL com prática no laboratório virtual Korum, um desafio no Laboratório e um projeto de célula de paletização"]], ["Versão 2.7", "Concluída", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
     ["Próxima", "Planejada", "go", ["Cursos completos da trilha IA no Trabalho", "Trilha Agentes e Automação: n8n, WhatsApp e primeiro agente", "Volter Assist também no programa instalado", "Certificado por curso concluído"]],
     ["Depois", "Planejada", "", ["Turmas fechadas e licenças para empresas", "Um curso de IA por profissão a cada etapa", "Aplicativo para celular com modo offline"]]];
   const L = S.mode === "local";
