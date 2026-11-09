@@ -15,6 +15,13 @@ Isso só é preciso na primeira vez.
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.14.0: instalações elétricas residenciais completas
+- **Seis lições novas na etapa Instalações**, do poste ao quadro, seguindo a NBR 5410: potência e previsão de cargas; fornecimento, padrão de entrada e quadro de distribuição; divisão em circuitos, cores dos fios, simbologia e projeto na planta; corrente, bitola, disjuntor e queda de tensão; DR e fio terra; eletrodutos, lista de material e selo do Inmetro
+- **Simulador de previsão de cargas:** escolha o cômodo e as medidas e veja a iluminação mínima e as tomadas, desenhadas na planta
+- **Simulador de dimensionamento:** potência, tensão, agrupamento e comprimento dão a corrente, a seção do fio, o disjuntor e a queda de tensão, explicando o porquê
+- **Novo desafio no Laboratório:** o disjuntor do chuveiro novo desarma depois de alguns minutos
+- **Novo projeto guiado:** projeto elétrico de uma casa de dois quartos, da planta à lista de material
+
 ## Versão 2.13.0: sopradora, moldagem por estiramento e sopro
 - **Nova etapa 8 na aba Elétrica, Eletrônica e Hardware: "Processos da linha de envase"**, começando pela lição da sopradora: do PET à garrafa, o processo biorientado, as fases do ciclo, a haste de estiragem, a válvula de três vias, pressão e vazão, a came do pré-sopro, o perfil de aquecimento por zonas e os tipos de fundo
 - **Simulador animado:** molde, preforma, haste e válvula de três vias em cada fase (molde fecha, estiragem, pré-sopro, sopro, degasagem, extração), com câmera lenta e avanço fase a fase; mude a came, a pressão, a vazão e o aquecimento das zonas e veja a espessura do ombro, do corpo e do fundo

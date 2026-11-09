@@ -779,8 +779,8 @@ const TRACKS = [
   /* Aba "Elétrica, Eletrônica e Hardware" */
   { id: "eletricidade", area: "hw", color: "#ffd23f", name: "Fundamentos de eletricidade", short: "Eletricidade", ico: "raio", desc: "Tensão, corrente, resistência, multímetro e segurança antes de tudo, mais consumo de energia e o paquímetro da bancada.",
     plan: [] },
-  { id: "instalacoes", area: "hw", color: "#ff9f43", name: "Instalações elétricas residenciais", short: "Instalações", ico: "casa", desc: "Diagramas, tomadas, iluminação e proteção, com noções da NBR 5410.",
-    plan: [["Dimensionamento de cabos e circuitos (noções da NBR 5410)", "Tabela de circuitos de uma casa"], ["Diagnóstico de falhas em instalações", "Roteiro para um disjuntor que desarma"]] },
+  { id: "instalacoes", area: "hw", color: "#ff9f43", name: "Instalações elétricas residenciais", short: "Instalações", ico: "casa", desc: "Do poste ao quadro: previsão de cargas, circuitos, dimensionamento de fios e disjuntores, DR, aterramento e projeto na planta, seguindo a NBR 5410.",
+    plan: [["Diagnóstico de falhas em instalações", "Roteiro para um disjuntor que desarma"], ["Aterramento e esquemas TN e TT", "Medição da resistência de aterramento"]] },
   { id: "eletronica", area: "hw", color: "#4fe3a6", name: "Eletrônica básica", short: "Eletrônica", ico: "onda", desc: "Componentes, protoboard, solda, transistores, relés, fontes, amplificadores, lógica digital e chips.",
     plan: [] },
   { id: "hardware", area: "hw", color: "#5cc8ff", name: "Hardware de computadores", short: "Hardware", ico: "pc", desc: "Peças, montagem, diagnóstico, redes e manutenção preventiva.",
@@ -1020,6 +1020,83 @@ function zig(a, b, c, v) {
 }
 
 const SIMS = {
+  /* ---- previsão de cargas de um cômodo (NBR 5410) ---- */
+  carga: {
+    title: "Simulador: previsão de cargas de um cômodo", hint: "Escolha o tipo de cômodo e as medidas. O simulador aplica as regras mínimas da NBR 5410 para iluminação e tomadas de uso geral e desenha onde elas podem ficar.",
+    init: { tipo: "sala", a: 3.6, b: 4.2 },
+    TIPOS: { sala: ["Sala ou quarto", 5, 0], cozinha: ["Cozinha, copa ou área de serviço", 3.5, 1], banheiro: ["Banheiro", 0, 1], varanda: ["Varanda", 0, 0], outro: ["Hall, corredor e outros", 5, 0] },
+    html() { return '<div class="s-fig">' + SVG("0 0 360 260", '<rect data-g="room" fill="rgba(34,211,238,.06)" stroke="#9db0d3" stroke-width="3"/><g data-g="tug"></g><circle data-g="luz" r="9" fill="#fbbf24" opacity=".9"/><text data-g="dimA" style="font-size:11px" text-anchor="middle"></text><text data-g="dimB" style="font-size:11px" text-anchor="middle"></text>', "Planta do cômodo com tomadas") + "</div>" +
+      '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("carga", "tipo", Object.entries(this.TIPOS).map(([k, v]) => [k, v[0]])) + "</div>" +
+      '<div class="s-ctl">' + sRange("carga", "a", "Largura", 1, 8, .05) + sRange("carga", "b", "Comprimento", 1, 10, .05) + "</div>" +
+      sMeters([["area", "Área"], ["per", "Perímetro"], ["ilum", "Iluminação mínima"], ["ntug", "Tomadas (TUG) mínimas"], ["ptug", "Potência das TUG"]]); },
+    calc(st) {
+      const T = this.TIPOS[st.tipo], A = st.a * st.b, P = 2 * (st.a + st.b);
+      const ilum = A <= 6 ? 100 : 100 + 60 * Math.floor((A - 6) / 4 + 1e-9);
+      let n; if (st.tipo === "banheiro" || st.tipo === "varanda") n = 1; else if (st.tipo === "outro" && A <= 6) n = 1; else n = Math.ceil(P / T[1] - 1e-9);
+      if (st.tipo === "cozinha") n = Math.max(n, 2);
+      const pt = T[2] ? Math.min(n, 3) * 600 + Math.max(0, n - 3) * 100 : n * 100;
+      return { A, P, ilum, n, pt, molhada: T[2] };
+    },
+    draw(r, st) {
+      const k = this.calc(st), s = Math.min(270 / st.a, 200 / st.b), w = st.a * s, h = st.b * s, x = (360 - w) / 2, y = (250 - h) / 2 + 4;
+      so(r, "a", fmtN(st.a, 2) + " m"); so(r, "b", fmtN(st.b, 2) + " m");
+      const rm = sg(r, "room"); rm.setAttribute("x", x); rm.setAttribute("y", y); rm.setAttribute("width", w); rm.setAttribute("height", h);
+      const L = sg(r, "luz"); L.setAttribute("cx", x + w / 2); L.setAttribute("cy", y + h / 2);
+      const dA = sg(r, "dimA"); dA.setAttribute("x", x + w / 2); dA.setAttribute("y", y - 6); dA.textContent = fmtN(st.a, 2) + " m";
+      const dB = sg(r, "dimB"); dB.setAttribute("x", x + w + 8); dB.setAttribute("y", y + h / 2); dB.setAttribute("text-anchor", "start"); dB.textContent = fmtN(st.b, 2) + " m";
+      // tomadas espalhadas pelo perímetro
+      const per = 2 * (w + h), pos = d => { d = ((d % per) + per) % per; if (d < w) return [x + d, y]; d -= w; if (d < h) return [x + w, y + d]; d -= h; if (d < w) return [x + w - d, y + h]; d -= w; return [x, y + h - d]; };
+      let g = ""; for (let i = 0; i < k.n; i++) { const [px, py] = pos(per * (i + .5) / k.n); g += '<g transform="translate(' + px.toFixed(1) + " " + py.toFixed(1) + ')"><circle r="12" fill="#0c1424" stroke="' + (k.molhada && i < 3 ? "#f87171" : "#22d3ee") + '" stroke-width="2.5"/><text y="3" text-anchor="middle" style="font-size:8px;fill:var(--ink)">' + (k.molhada && i < 3 ? "600" : "100") + "</text></g>"; }
+      sg(r, "tug").innerHTML = g;
+      so(r, "area", fmtN(k.A, 2) + " m²"); so(r, "per", fmtN(k.P, 2) + " m"); so(r, "ilum", k.ilum + " VA"); so(r, "ntug", String(k.n)); so(r, "ptug", k.pt + " VA");
+      const T = this.TIPOS[st.tipo], extra = k.A > 6 ? Math.floor((k.A - 6) / 4 + 1e-9) : 0;
+      const ilTxt = k.A <= 6 ? "Até 6 m²: 100 VA." : "100 VA pelos primeiros 6 m² + " + extra + " × 60 VA (blocos inteiros de 4 m² nos " + fmtN(k.A - 6, 2) + " m² restantes) = " + k.ilum + " VA.";
+      const tTxt = st.tipo === "banheiro" ? "Banheiro: pelo menos uma tomada junto ao lavatório, afastada do boxe." : st.tipo === "varanda" ? "Varanda: pelo menos uma tomada." : st.tipo === "outro" && k.A <= 6 ? "Até 6 m²: pelo menos uma tomada." : "Uma tomada a cada " + fmtN(T[1], 1) + " m de perímetro ou fração: " + fmtN(k.P, 2) + " ÷ " + fmtN(T[1], 1) + " → " + k.n + (st.tipo === "cozinha" ? " (e no mínimo duas sobre a bancada da pia)" : "") + ".";
+      const pTxt = k.molhada ? "Área molhada: 600 VA nas três primeiras tomadas (em vermelho) e 100 VA nas demais." : "100 VA por tomada.";
+      sread(r, "<b>Iluminação:</b> " + ilTxt + " <b>Tomadas:</b> " + tTxt + " " + pTxt + " Em watts: iluminação " + k.ilum + " W e tomadas " + Math.round(k.pt * .8) + " W (fator 0,8). Esses são os mínimos; prever mais tomadas evita extensões e benjamins.");
+    }
+  },
+
+  /* ---- dimensionamento de um circuito ---- */
+  bitola: {
+    title: "Simulador: fio, disjuntor e queda de tensão de um circuito", hint: "Informe a potência, a tensão, o tipo de circuito, quantos circuitos dividem o eletroduto e o comprimento. Valores de capacidade da NBR 5410 para cobre com PVC em eletroduto embutido (método B1), para estudo.",
+    init: { p: 5500, u: 220, tipo: "forca", ag: 1, len: 15 },
+    SEC: [1.5, 2.5, 4, 6, 10, 16, 25, 35], CAP: [17.5, 24, 32, 41, 57, 76, 101, 125], FG: [1, .8, .7, .65, .6, .57], DJ: [10, 16, 20, 25, 32, 40, 50, 63, 70, 80, 100, 125],
+    html() { return '<div class="s-fig">' + SVG("0 0 360 190", '<circle cx="80" cy="95" r="62" fill="#142039" stroke="#2a3b62" stroke-width="2"/><circle data-g="cu" cx="80" cy="95" fill="#f59e0b"/><circle data-g="iso" cx="80" cy="95" fill="none" stroke="#9db0d3" stroke-width="4"/><text data-g="secT" x="80" y="178" text-anchor="middle" style="font-size:12px;fill:var(--ink)"></text>' +
+      '<text x="170" y="34">corrente de projeto</text><rect x="170" y="40" width="170" height="14" rx="3" fill="#142039"/><rect data-g="bIb" x="170" y="40" height="14" rx="3" fill="#22d3ee"/>' +
+      '<text x="170" y="78">disjuntor</text><rect x="170" y="84" width="170" height="14" rx="3" fill="#142039"/><rect data-g="bIn" x="170" y="84" height="14" rx="3" fill="#a78bfa"/>' +
+      '<text x="170" y="122">o fio aguenta (corrigido)</text><rect x="170" y="128" width="170" height="14" rx="3" fill="#142039"/><rect data-g="bIz" x="170" y="128" height="14" rx="3" fill="#34d399"/><text data-g="ok" x="170" y="172" style="font-size:12px"></text>', "Seção do fio e comparação de correntes") + "</div>" +
+      '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("bitola", "u", [["127", "127 V"], ["220", "220 V"]]) + sSeg("bitola", "tipo", [["ilum", "Iluminação"], ["forca", "Tomadas e aparelhos"]]) + "</div>" +
+      '<div class="s-ctl">' + sRange("bitola", "p", "Potência do circuito", 100, 12000, 100) + sRange("bitola", "ag", "Circuitos no mesmo eletroduto", 1, 6, 1) + sRange("bitola", "len", "Comprimento do circuito", 2, 80, 1) + "</div>" +
+      sMeters([["ib", "Corrente de projeto"], ["sec", "Seção do fio"], ["dj", "Disjuntor"], ["iz", "Capacidade corrigida"], ["dv", "Queda de tensão"]]); },
+    calc(st) {
+      const U = Number(st.u), Ib = st.p / U, fg = this.FG[st.ag - 1], min = st.tipo === "ilum" ? 1.5 : 2.5, why = [];
+      let i = this.SEC.indexOf(min), res = null;
+      for (; i < this.SEC.length; i++) {
+        const S = this.SEC[i], Iz = this.CAP[i] * fg, In = this.DJ.find(d => d >= Ib * 1.0 && Ib / d <= .96) || null, dv = 2 * st.len * Ib * .0178 / S / U * 100;
+        if (!In || In > Iz) { why.push(fmtN(S, 1) + " mm² aguenta só " + fmtN(Iz, 1) + " A aqui"); continue; }
+        if (dv > 4) { why.push(fmtN(S, 1) + " mm² daria " + fmtN(dv, 1) + "% de queda"); continue; }
+        res = { S, Iz, In, dv }; break;
+      }
+      return { U, Ib, fg, min, res, why };
+    },
+    draw(r, st) {
+      const k = this.calc(st), R = k.res;
+      so(r, "p", fmtN(st.p, 0) + " VA"); so(r, "ag", String(st.ag) + " (fator " + fmtN(k.fg, 2) + ")"); so(r, "len", st.len + " m");
+      so(r, "ib", fmtN(k.Ib, 1) + " A");
+      const cu = sg(r, "cu"), iso = sg(r, "iso");
+      if (!R) { so(r, "sec", "acima de 35 mm²"); so(r, "dj", "–"); so(r, "iz", "–"); so(r, "dv", "–"); cu.setAttribute("r", 40); iso.setAttribute("r", 46); sg(r, "secT").textContent = "rever o circuito"; sread(r, "Corrente alta demais para um circuito terminal residencial com essas condições. Divida a carga, use 220 V ou diminua o agrupamento."); return; }
+      so(r, "sec", fmtN(R.S, 1) + " mm²"); so(r, "dj", R.In + " A"); so(r, "iz", fmtN(R.Iz, 1) + " A"); so(r, "dv", fmtN(R.dv, 1) + "%");
+      const rad = 6 + Math.sqrt(R.S) * 6; cu.setAttribute("r", rad.toFixed(1)); iso.setAttribute("r", (rad + 5).toFixed(1)); sg(r, "secT").textContent = fmtN(R.S, 1) + " mm²";
+      const mx = Math.max(R.Iz, R.In, k.Ib) * 1.1, W = v => (170 * v / mx).toFixed(1);
+      sg(r, "bIb").setAttribute("width", W(k.Ib)); sg(r, "bIn").setAttribute("width", W(R.In)); sg(r, "bIz").setAttribute("width", W(R.Iz));
+      const ok = sg(r, "ok"); ok.textContent = fmtN(k.Ib, 1) + " A ≤ " + R.In + " A ≤ " + fmtN(R.Iz, 1) + " A  ✓"; ok.style.fill = "#34d399";
+      sread(r, "I = " + fmtN(st.p, 0) + " ÷ " + k.U + " = <b>" + fmtN(k.Ib, 1) + " A</b>. " + (st.ag > 1 ? "Com " + st.ag + " circuitos no eletroduto, a capacidade do fio cai para " + fmtN(k.fg * 100, 0) + "%. " : "") +
+        "Mínimo da norma para " + (st.tipo === "ilum" ? "iluminação: 1,5 mm²" : "tomadas e aparelhos: 2,5 mm²") + ". " + (k.why.length ? "Descartados: " + k.why.join("; ") + ". " : "") +
+        "Resultado: <b>" + fmtN(R.S, 1) + " mm²</b> com disjuntor de <b>" + R.In + " A</b>, e queda de " + fmtN(R.dv, 1) + "% em " + st.len + " m (limite de 4%)." + (k.Ib > 10 && st.tipo !== "ilum" && st.p > 0 ? " Acima de 10 A, se for um aparelho, ele precisa de circuito exclusivo." : "") + " Terra com a mesma seção da fase.");
+    }
+  },
+
   /* ---- sopradora: moldagem por estiramento e sopro ---- */
   sopro: {
     title: "Simulador: moldagem por estiramento e sopro", hint: "Rode o ciclo e acompanhe cada fase. Depois mude a posição da came do pré-sopro, a pressão, a vazão e o aquecimento por zona e veja como a espessura da garrafa muda no ombro, no corpo e no fundo.",
@@ -2170,7 +2247,7 @@ VIEWS.favoritos = () => {
 
 /* ----- Próximas etapas ----- */
 VIEWS.roteiro = () => {
-  const P = [["Versão 2.13", "Disponível", "ok", ["Sopradora: lição de moldagem por estiramento e sopro com simulador animado, e o escopo da sopradora detalhado na Linha de envase"]], ["Versão 2.12", "Concluída", "ok", ["Linha de envase: área externa com os tanques de CO₂ e nitrogênio"]], ["Versão 2.11", "Concluída", "ok", ["Linha de envase no desenho real da planta: xaroparia, linha de envase, sopro, sala de máquinas, caldeira, sala de CIP e transportes com sensores e CLPs, com o mapa da planta"]], ["Versão 2.10", "Concluída", "ok", ["Cores tecnológicas (ciano e índigo) e o novo item Linha de envase, para montar o projeto e o escopo de uma linha completa com as máquinas interligadas"]], ["Versão 2.9", "Concluída", "ok", ["Layout novo: menu lateral com todas as áreas e etapas, início com blocos por área, busca em todo o conteúdo e fim do visual de streaming"]], ["Versão 2.8", "Concluída", "ok", ["Curso Programação de robôs com o Korum: 10 lições de KRL com prática no laboratório virtual Korum, um desafio no Laboratório e um projeto de célula de paletização"]], ["Versão 2.7", "Concluída", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
+  const P = [["Versão 2.14", "Disponível", "ok", ["Instalações elétricas residenciais: seis lições novas (previsão de cargas, entrada e quadro, circuitos e planta, dimensionamento, DR e aterramento, eletrodutos e material), dois simuladores, um desafio e um projeto"]], ["Versão 2.13", "Concluída", "ok", ["Sopradora: lição de moldagem por estiramento e sopro com simulador animado, e o escopo da sopradora detalhado na Linha de envase"]], ["Versão 2.12", "Concluída", "ok", ["Linha de envase: área externa com os tanques de CO₂ e nitrogênio"]], ["Versão 2.11", "Concluída", "ok", ["Linha de envase no desenho real da planta: xaroparia, linha de envase, sopro, sala de máquinas, caldeira, sala de CIP e transportes com sensores e CLPs, com o mapa da planta"]], ["Versão 2.10", "Concluída", "ok", ["Cores tecnológicas (ciano e índigo) e o novo item Linha de envase, para montar o projeto e o escopo de uma linha completa com as máquinas interligadas"]], ["Versão 2.9", "Concluída", "ok", ["Layout novo: menu lateral com todas as áreas e etapas, início com blocos por área, busca em todo o conteúdo e fim do visual de streaming"]], ["Versão 2.8", "Concluída", "ok", ["Curso Programação de robôs com o Korum: 10 lições de KRL com prática no laboratório virtual Korum, um desafio no Laboratório e um projeto de célula de paletização"]], ["Versão 2.7", "Concluída", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
     ["Próxima", "Planejada", "go", ["Cursos completos da trilha IA no Trabalho", "Trilha Agentes e Automação: n8n, WhatsApp e primeiro agente", "Volter Assist também no programa instalado", "Certificado por curso concluído"]],
     ["Depois", "Planejada", "", ["Turmas fechadas e licenças para empresas", "Um curso de IA por profissão a cada etapa", "Aplicativo para celular com modo offline"]]];
   const L = S.mode === "local";

@@ -210,6 +210,172 @@ window.VOLTER_SEED = {
    "track": "prog",
    "updatedAt": "2026-10-19T01:30:00.000Z"
   },
+  "chuveiro-novo-desarma": {
+   "actions": [
+    {
+     "correct": true,
+     "feedback": "Correto: fio e disjuntor passam a ser compatíveis com os 34 A, e o disjuntor continua protegendo o fio.",
+     "id": "a1",
+     "text": "Refazer o circuito para a nova potência: trocar o fio por 6 mm² (cerca de 41 A sozinho no eletroduto) e o disjuntor por um bipolar de 40 A, conferindo as conexões e o borne do chuveiro. Ou voltar a um chuveiro que caiba no circuito atual",
+     "unsafe": false
+    },
+    {
+     "correct": false,
+     "feedback": "Inseguro: o disjuntor deixaria passar uma corrente que o fio de 4 mm² não aguenta, com risco de derreter a isolação dentro da parede e de incêndio.",
+     "id": "a2",
+     "text": "Trocar só o disjuntor por um de 50 A",
+     "unsafe": true
+    },
+    {
+     "correct": false,
+     "feedback": "Evita o desarme, mas não resolve: qualquer pessoa pode voltar a usar o modo inverno.",
+     "id": "a3",
+     "text": "Usar o chuveiro só no modo verão",
+     "unsafe": false
+    }
+   ],
+   "author": "",
+   "causes": [
+    {
+     "correct": true,
+     "id": "c1",
+     "text": "Chuveiro de 7.500 W (34 A) num circuito dimensionado para 5.500 W: fio de 4 mm² e disjuntor de 32 A ficam sobrecarregados, e o disjuntor desarma por sobrecarga"
+    },
+    {
+     "correct": false,
+     "id": "c2",
+     "text": "Disjuntor defeituoso"
+    },
+    {
+     "correct": false,
+     "id": "c3",
+     "text": "Fuga para a terra na resistência"
+    }
+   ],
+   "conditions": "Casa com fornecimento bifásico 127/220 V. Circuito do chuveiro com cerca de 14 m, sozinho no eletroduto. Alicate amperímetro disponível.",
+   "context": "A família trocou o chuveiro antigo, de 5.500 W, por um de 7.500 W. No modo verão funciona. No modo inverno, depois de três a cinco minutos o disjuntor do chuveiro desarma. Um vizinho sugeriu colocar um disjuntor de 50 A.",
+   "createdAt": "2026-11-09T23:50:00.000Z",
+   "demo": true,
+   "equipment": "Chuveiro elétrico de 7.500 W em 220 V, circuito exclusivo com fio de 4 mm² e disjuntor bipolar de 32 A",
+   "hints": [
+    "Quanto o chuveiro novo consome, pela placa?",
+    "O fio e o disjuntor foram dimensionados para qual chuveiro?",
+    "O disjuntor protege o quê: o chuveiro ou o fio?"
+   ],
+   "history": "A instalação original foi feita para o chuveiro de 5.500 W. Fio e disjuntor não foram mudados na troca.",
+   "hypotheses": [
+    {
+     "correct": true,
+     "id": "h1",
+     "text": "A corrente do chuveiro novo passa da capacidade do fio e do disjuntor; o disjuntor está cumprindo a função dele"
+    },
+    {
+     "correct": false,
+     "id": "h2",
+     "text": "O disjuntor está com defeito e desarma sozinho"
+    },
+    {
+     "correct": false,
+     "id": "h3",
+     "text": "Há uma fuga para a terra no chuveiro"
+    },
+    {
+     "correct": false,
+     "id": "h4",
+     "text": "A tensão da rua está alta"
+    }
+   ],
+   "level": 2,
+   "objective": "Descobrir por que o disjuntor desarma e resolver de forma segura.",
+   "solution": {
+    "explanation": "O chuveiro novo puxa cerca de 34 A no modo inverno. O circuito tinha sido feito para o chuveiro antigo, de 25 A, com fio de 4 mm² e disjuntor de 32 A. Acima de 32 A, o disjuntor desarma por sobrecarga depois de alguns minutos, exatamente como deve. O fio escurecido no quadro mostra que ele já esquentou além do normal.",
+    "lessons": [
+     "Aparelho novo e mais potente pede conferir fio e disjuntor.",
+     "O disjuntor protege o fio; ele é o último que se aumenta.",
+     "Fio escurecido é sinal de aquecimento: troque o trecho."
+    ],
+    "logic": [
+     "A conta da corrente já indicava 34 A.",
+     "O alicate confirmou 33,8 A no inverno e 15,6 A no verão.",
+     "O DR funciona e a tensão está normal: não é fuga nem rede.",
+     "Logo, o circuito está subdimensionado para o aparelho novo."
+    ],
+    "mistakes": [
+     "Trocar o disjuntor por um maior sem trocar o fio.",
+     "Achar que o disjuntor está com defeito porque desarma.",
+     "Trocar o aparelho sem conferir o circuito."
+    ]
+   },
+   "status": "published",
+   "summary": "Depois da troca por um chuveiro mais potente, o banho é interrompido sempre alguns minutos depois de ligar o modo inverno.",
+   "symptoms": [
+    "Desarma só no modo inverno",
+    "Demora alguns minutos para desarmar",
+    "O espelho do disjuntor fica morno",
+    "A parte de fora da isolação do fio no quadro está levemente escurecida"
+   ],
+   "tags": [
+    "chuveiro",
+    "disjuntor",
+    "dimensionamento",
+    "NBR 5410"
+   ],
+   "techInfo": [
+    "Fio de 4 mm² em eletroduto embutido: cerca de 32 A sozinho",
+    "Disjuntor bipolar de 32 A, curva C",
+    "Placa do chuveiro: 7.500 W, 220 V"
+   ],
+   "tests": [
+    {
+     "how": "I = P ÷ U, com os dados da placa",
+     "id": "t1",
+     "insight": "A corrente prevista já passa dos 32 A do disjuntor e da capacidade do fio de 4 mm².",
+     "name": "Calcular a corrente do chuveiro novo",
+     "reading": "34 A",
+     "result": "7.500 ÷ 220 = 34 A",
+     "value": "util"
+    },
+    {
+     "how": "Alicate em uma das fases do chuveiro, no quadro, com o chuveiro ligado no inverno",
+     "id": "t2",
+     "insight": "A medição confirma a conta: o circuito trabalha acima do que foi projetado para aguentar.",
+     "name": "Medir a corrente com o alicate no modo inverno",
+     "reading": "33,8 A",
+     "result": "33,8 A",
+     "value": "util"
+    },
+    {
+     "how": "Mesmo método, no modo verão",
+     "id": "t3",
+     "insight": "No verão a corrente fica bem abaixo do limite, por isso o problema só aparece no inverno.",
+     "name": "Medir a corrente no modo verão",
+     "reading": "15,6 A",
+     "result": "15,6 A",
+     "value": "util"
+    },
+    {
+     "how": "Com o circuito ligado, apertar o botão de teste do DR do quadro",
+     "id": "t4",
+     "insight": "O DR funciona, e quem desarma no banho é o disjuntor, não o DR: não é fuga para a terra.",
+     "name": "Apertar o botão de teste do DR",
+     "reading": "",
+     "result": "O DR desliga na hora",
+     "value": "neutro"
+    },
+    {
+     "how": "Multímetro entre as fases no quadro",
+     "id": "t5",
+     "insight": "A tensão está normal; não explica o desarme.",
+     "name": "Medir a tensão na tomada",
+     "reading": "218 V",
+     "result": "218 V",
+     "value": "irrelevante"
+    }
+   ],
+   "title": "O disjuntor do chuveiro novo desarma depois de alguns minutos",
+   "track": "instalacoes",
+   "updatedAt": "2026-11-09T23:50:00.000Z"
+  },
   "esp32-wifi-madrugada": {
    "actions": [
     {
@@ -4281,6 +4447,94 @@ window.VOLTER_SEED = {
    "track": "ia",
    "updatedAt": "2026-10-24T20:30:00.000Z"
   },
+  "ins-circuitos-planta": {
+   "author": "",
+   "body": "## Por que dividir em circuitos\nUm **circuito** é o conjunto de pontos (luzes, tomadas, aparelhos) ligados ao mesmo disjuntor. Dividir a casa em vários circuitos:\n- limita o problema: um defeito desliga só uma parte da casa;\n- facilita a manutenção, porque dá para desligar só o trecho em que se vai mexer;\n- mantém os fios finos e fáceis de ligar nas caixinhas.\n\n## As regras mínimas\n- **Iluminação separada das tomadas de uso geral.**\n- **Circuito exclusivo para cada aparelho com corrente acima de 10 A.** Em 127 V, isso é todo aparelho acima de cerca de 1.270 VA: chuveiro, torneira elétrica, forno, ar-condicionado, micro-ondas grande.\n- **Recomendação prática:** nos circuitos de iluminação e de tomadas de uso geral, ficar perto de **10 A** (cerca de 1.270 VA em 127 V ou 2.200 VA em 220 V). Circuito muito carregado pede fio grosso demais para os bornes de tomadas e interruptores.\n\n## Em qual tensão ligar\nNum fornecimento bifásico:\n- iluminação e tomadas de uso geral em **127 V** (fase-neutro);\n- aparelhos de corrente alta, como o chuveiro, em **220 V** (fase-fase). Na mesma potência, a corrente cai quase pela metade e o fio pode ser mais fino.\n\nO alimentador de um fornecimento bifásico ou trifásico é calculado na tensão entre fases.\n\n## Um exemplo de divisão\nUma casa de dois quartos poderia ficar assim:\n\n1. Iluminação de todos os cômodos: 780 VA, em 127 V.\n2. Tomadas da sala e dos quartos: 1.000 VA, em 127 V.\n3. Tomadas da bancada da cozinha: 1.200 VA, em 127 V.\n4. Outra tomada da cozinha e a do banheiro: 1.200 VA, em 127 V.\n5. Tomadas da área de serviço: 1.200 VA, em 127 V.\n6. Máquina de lavar: 1.000 W, em 127 V.\n7. Chuveiro: 5.500 W, em 220 V.\n\nCada ponto recebe na planta o **número do circuito** a que pertence.\n\n## Cores dos condutores\n- **Neutro:** azul-claro, obrigatoriamente.\n- **Proteção (terra, PE):** verde e amarelo, ou verde, obrigatoriamente.\n- **Fase:** outras cores, como preto, vermelho ou branco.\n- **Retorno** (o fio que volta do interruptor para a lâmpada): uma cor diferente da fase, sempre a mesma na obra inteira.\n\n## Simbologia\nA planta elétrica usa símbolos para quadro, ponto de luz, interruptores, tomadas baixas, médias e altas, campainha, eletroduto embutido na laje, na parede ou no piso, e para os fios fase, neutro, retorno e terra. Não existe mais uma norma brasileira única de símbolos em vigor, então **todo projeto deve trazer a sua legenda**. O ponto de luz costuma vir anotado com três informações: potência, número do circuito e a letra do interruptor que o comanda.\n\n## Desenhando os eletrodutos\n1. Marque primeiro o **quadro de distribuição**.\n2. Saia do quadro com um eletroduto até o ponto de luz do teto do cômodo mais próximo.\n3. Do ponto de luz, desça para os interruptores e tomadas daquele cômodo.\n4. Siga para o próximo cômodo pelo caminho mais curto.\n5. Abra outro eletroduto a partir do quadro quando um trecho ficar cheio.\n\nO ponto de luz no teto funciona como uma caixa de passagem.\n\n## Desenhando a fiação\nPara cada trecho de eletroduto, anote **quais fios passam** e **de que circuito** são. Para isso, é preciso saber ligar cada coisa:\n- **Lâmpada com interruptor simples:** a fase vai ao interruptor; o retorno vai do interruptor ao **contato central** do soquete; o neutro vai direto à **rosca** do soquete; o terra vai à luminária metálica.\n- **Interruptores paralelos** (comando de dois pontos): a fase entra no borne comum de um interruptor, os dois **retornos** ligam um interruptor ao outro, e o borne comum do segundo segue para a lâmpada.\n- **Interruptor intermediário:** entra entre dois paralelos, nos dois retornos, para comandar de três pontos ou mais.\n- **Tomada 2P+T:** fase, neutro e terra.\n- **Tomada de uso específico bifásica:** fase, fase e terra.\n\nNa prática, evite passar **mais de 6 ou 7 fios** no mesmo eletroduto. Fica difícil enfiar e tirar os fios, e o aquecimento obriga a usar fios mais grossos.\n\nÉ no papel que se acerta o caminho. Mudar o quadro de lugar custa uma borracha no projeto e um rasgo de parede na obra.",
+   "createdAt": "2026-11-09T23:50:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-09T23:50:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Iluminação separada das tomadas; circuito exclusivo acima de 10 A.",
+    "Iluminação e TUG perto de 10 A por circuito.",
+    "Chuveiro em 220 V: menos corrente, fio mais fino.",
+    "Neutro azul-claro; terra verde-amarelo ou verde.",
+    "Interruptor sempre na fase; neutro na rosca do soquete.",
+    "No máximo 6 ou 7 fios por eletroduto, na prática."
+   ],
+   "minutes": 13,
+   "order": 6,
+   "questions": [
+    {
+     "answer": 3,
+     "explain": "2.000 ÷ 127 ≈ 15,7 A. Acima de 10 A, a NBR 5410 pede circuito exclusivo.",
+     "options": [
+      "No circuito de iluminação",
+      "No circuito das tomadas da cozinha",
+      "Num circuito exclusivo, porque passa de 10 A",
+      "Em qualquer circuito com disjuntor de 10 A"
+     ],
+     "prompt": "Um forno elétrico de 2.000 W em 127 V deve ficar:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Neutro é azul-claro; verde-amarelo é reservado ao terra.",
+     "options": [
+      "Preto",
+      "Azul-claro",
+      "Verde-amarelo",
+      "Vermelho"
+     ],
+     "prompt": "Qual é a cor obrigatória do neutro?",
+     "type": "mc"
+    },
+    {
+     "answer": 3,
+     "explain": "Neutro na rosca e retorno no contato central. Assim, com o interruptor desligado, a rosca não fica energizada.",
+     "options": [
+      "A fase",
+      "O retorno",
+      "O neutro",
+      "O terra"
+     ],
+     "prompt": "Na lâmpada com interruptor simples, o que vai ligado à rosca do soquete?",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "I = P ÷ U: com a tensão maior, a corrente cai.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Ligar o chuveiro em 220 V em vez de 127 V reduz a corrente para a mesma potência.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Dois paralelos nas pontas e o intermediário entre eles, nos retornos.",
+     "options": [
+      "Três interruptores simples",
+      "Dois paralelos e um intermediário",
+      "Três paralelos",
+      "Um paralelo e dois simples"
+     ],
+     "prompt": "Para comandar uma lâmpada de três pontos diferentes, usam-se:",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Por que separar a casa em circuitos, as regras da NBR 5410, as cores dos fios e como desenhar eletrodutos e fiação na planta.",
+   "title": "Divisão em circuitos, simbologia e o projeto na planta",
+   "track": "instalacoes",
+   "updatedAt": "2026-11-09T23:50:00.000Z"
+  },
   "ins-diagramas": {
    "author": "",
    "body": "Antes de mexer numa instalação, é preciso saber **ler o desenho** dela. O mesmo circuito pode aparecer de três formas, cada uma boa para uma finalidade.\n\n## Diagrama funcional\nMostra **como o circuito funciona**, sem se preocupar com onde as coisas ficam. A fonte fica em cima, a carga embaixo, e você segue o caminho da corrente. É o melhor para entender e para procurar defeito.\n\n## Diagrama multifilar\nDesenha **cada fio** separadamente: fase, neutro, retorno e terra. Mostra exatamente quantos condutores passam em cada trecho. É o que se usa na hora de montar.\n\n## Diagrama unifilar\nDesenha a instalação sobre a **planta da casa**, com um traço só por eletroduto. Os condutores que passam por ele aparecem como pequenos traços cortando a linha. É o desenho do projeto elétrico: mostra onde ficam tomadas, pontos de luz, interruptores e o quadro.\n\n## Símbolos que aparecem em quase todo projeto\n- **Ponto de luz no teto:** um círculo, com a potência e o circuito anotados.\n- **Interruptor:** um pequeno círculo com a letra que indica qual lâmpada ele comanda.\n- **Tomada:** triângulo; a altura (baixa, média, alta) e a potência vêm indicadas.\n- **Quadro de distribuição:** retângulo com o número de cada circuito.\n- **Condutores no eletroduto:** traços que indicam fase, neutro, retorno e terra.\n\nOs símbolos variam um pouco entre projetistas. Todo projeto bem-feito traz uma **legenda**: leia primeiro.\n\n## Cores dos fios\nPela norma de instalações de baixa tensão, o **neutro é azul-claro** e o **terra é verde ou verde e amarelo**. Fase e retorno costumam usar outras cores (preto, vermelho, branco, cinza), conforme o padrão do projeto. Nunca confie só na cor: em instalação antiga pode estar tudo trocado. **Meça.**\n\n## Projeto final\n**Diagrama unifilar de um cômodo.** Desenhe a planta de um cômodo da sua casa com tomadas, pontos de luz, interruptores e o circuito de cada um.",
@@ -4354,6 +4608,420 @@ window.VOLTER_SEED = {
    "title": "Leitura de diagramas e simbologia",
    "track": "instalacoes",
    "updatedAt": "2026-10-24T12:00:00.000Z"
+  },
+  "ins-dimensionamento": {
+   "author": "",
+   "body": "## 1. A corrente do circuito\nCom a potência e a tensão de cada circuito, a corrente sai da conta **I = P ÷ U**:\n- tomadas da cozinha, 1.200 VA em 127 V: 1.200 ÷ 127 = **9,4 A**;\n- chuveiro, 5.500 W em 220 V: 5.500 ÷ 220 = **25 A**.\n\nEssa é a **corrente de projeto**, que o circuito vai carregar quando estiver cheio.\n\n## 2. A demanda do alimentador\nNuma casa, nem tudo funciona ao mesmo tempo. Por isso o alimentador (do medidor ao quadro) não é calculado com a soma de tudo, e sim com a **demanda**: a potência instalada multiplicada por **fatores de demanda**. Esses fatores são menores quanto maior for a potência e quanto mais aparelhos houver, e vêm das tabelas da norma da distribuidora.\n\nExemplo, só para entender a ideia: se a soma de iluminação e tomadas de uso geral der 4.460 W e a tabela indicar fator 0,52 para essa faixa, entram na conta cerca de 2.320 W. Os aparelhos de uso específico também recebem um fator, que diminui conforme o número de circuitos.\n\n## 3. Quanto o fio aguenta\nCada seção de fio de cobre tem uma **capacidade de corrente**. Ela depende do isolamento e da forma de instalação. Para fios com isolamento de PVC em eletroduto embutido na alvenaria, com dois condutores carregados, a NBR 5410 dá aproximadamente:\n\n- 1,5 mm²: 17,5 A\n- 2,5 mm²: 24 A\n- 4 mm²: 32 A\n- 6 mm²: 41 A\n- 10 mm²: 57 A\n- 16 mm²: 76 A\n\nQuando vários circuitos passam pelo **mesmo eletroduto**, eles se aquecem uns aos outros, e a capacidade cai. Multiplique pelo **fator de agrupamento**:\n\n- 1 circuito: 1,00\n- 2 circuitos: 0,80\n- 3 circuitos: 0,70\n- 4 circuitos: 0,65\n\nExemplo: o 2,5 mm² dividindo o eletroduto com mais dois circuitos aguenta 24 × 0,70 = **16,8 A**.\n\nPara saber o agrupamento de cada circuito, siga o caminho dele na planta e veja o trecho em que ele encontra **mais** circuitos juntos.\n\n## 4. O disjuntor\nO disjuntor protege **o fio**. A regra tem duas metades:\n\n- **corrente de projeto ≤ corrente nominal do disjuntor:** ele não pode desarmar no uso normal;\n- **corrente nominal do disjuntor ≤ capacidade do fio corrigida:** ele precisa desarmar antes de o fio esquentar demais.\n\nValores comuns de disjuntor: 10, 16, 20, 25, 32, 40, 50, 63 e 70 A.\n\nNunca troque um disjuntor que desarma por um maior sem refazer a conta do fio. O disjuntor maior deixa passar uma corrente que o fio não aguenta, e o resultado é isolamento derretido dentro da parede.\n\n## 5. A seção mínima\nMesmo que a conta dê um fio mais fino, a NBR 5410 exige **1,5 mm²** nos circuitos de iluminação e **2,5 mm²** nos circuitos de força (tomadas e aparelhos). Vale sempre o **maior** entre o calculado e o mínimo.\n\n## 6. A queda de tensão\nFio longo perde tensão no caminho, e o aparelho recebe menos do que deveria. Nos circuitos terminais, a queda não deve passar de **4%**. Num circuito de duas vias, uma estimativa simples é:\n\n**queda (V) ≈ 2 × comprimento (m) × corrente (A) × 0,0178 ÷ seção (mm²)**\n\nSe passar do limite, aumente a seção.\n\n## 7. O fio terra\nAté 16 mm², o condutor de proteção tem a **mesma seção** da fase. Acima disso, pode ser menor: 16 mm² para fases de 25 e 35 mm², e metade da seção da fase daí para cima.\n\n## 8. O DR\nO dispositivo DR deve ter **sensibilidade de 30 mA** e corrente nominal **igual ou maior** que a do disjuntor que o antecede. As correntes mais comuns são 25, 40, 63, 80 e 100 A.\n\nUse o simulador para repetir o raciocínio com qualquer circuito.",
+   "createdAt": "2026-11-09T23:50:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-09T23:50:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "I = P ÷ U dá a corrente de projeto.",
+    "Agrupar circuitos no mesmo eletroduto reduz o que o fio aguenta.",
+    "Corrente de projeto ≤ disjuntor ≤ capacidade corrigida do fio.",
+    "Mínimos: 1,5 mm² na iluminação e 2,5 mm² em tomadas e aparelhos.",
+    "Queda de tensão até 4% nos circuitos terminais.",
+    "Disjuntor que desarma não se troca por um maior sem refazer a conta."
+   ],
+   "minutes": 16,
+   "order": 7,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "6.600 ÷ 220 = 30 A.",
+     "options": [
+      "20 A",
+      "30 A",
+      "52 A",
+      "15 A"
+     ],
+     "prompt": "Qual é a corrente de um chuveiro de 6.600 W ligado em 220 V?",
+     "type": "mc"
+    },
+    {
+     "answer": 3,
+     "explain": "Três circuitos juntos: fator 0,70. 24 × 0,70 = 16,8 A.",
+     "options": [
+      "24 A",
+      "19,2 A",
+      "16,8 A",
+      "12 A"
+     ],
+     "prompt": "Um fio de 2,5 mm² (24 A sozinho) passa num eletroduto com mais dois circuitos. Quanto ele aguenta?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "A NBR 5410 exige pelo menos 2,5 mm² em circuitos de força; vale o maior valor.",
+     "options": [
+      "1,5 mm²",
+      "2,5 mm², o mínimo para circuitos de força",
+      "1 mm²",
+      "4 mm²"
+     ],
+     "prompt": "O cálculo de um circuito de tomadas indicou 1,5 mm². Qual seção usar?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "O disjuntor protege o fio. Aumentá-lo sem trocar o fio deixa o cabo superaquecer.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Se o disjuntor do chuveiro desarma sempre, a solução segura é colocar um disjuntor maior.",
+     "type": "vf"
+    },
+    {
+     "answer": 3,
+     "explain": "Até 16 mm², o terra tem a mesma seção da fase.",
+     "options": [
+      "2,5 mm²",
+      "4 mm²",
+      "6 mm²",
+      "10 mm²"
+     ],
+     "prompt": "Qual é a seção do terra de um circuito com fases de 6 mm²?",
+     "type": "mc"
+    }
+   ],
+   "sim": "bitola",
+   "status": "published",
+   "summary": "Como sair da potência do circuito para a corrente, escolher a seção do fio, o disjuntor e conferir a queda de tensão.",
+   "title": "Corrente, bitola dos fios e disjuntor de cada circuito",
+   "track": "instalacoes",
+   "updatedAt": "2026-11-09T23:50:00.000Z"
+  },
+  "ins-dr-aterramento": {
+   "author": "",
+   "body": "## O que o DR enxerga\nO disjuntor comum só percebe **excesso de corrente**: sobrecarga ou curto-circuito. Uma corrente de poucos centésimos de ampère passando pelo corpo de uma pessoa não chega nem perto disso, e já pode matar.\n\nO **dispositivo DR** (diferencial residual) compara a corrente que vai pela fase com a que volta pelo neutro. Se faltar um pouco na volta, é porque a corrente está escapando por outro caminho: o terra, uma parede úmida ou uma pessoa. Com uma diferença de até **30 mA**, o DR desliga em uma fração de segundo.\n\nEle protege contra os dois tipos de choque:\n- **Contato direto:** encostar numa parte que normalmente tem tensão, como um fio desencapado ou o borne de uma tomada aberta.\n- **Contato indireto:** encostar numa parte metálica que **não deveria** ter tensão, mas ficou energizada por um defeito, como a carcaça da máquina de lavar com a isolação ruim.\n\nUm aterramento completo tem **os dois**: o fio terra, que dá um caminho para a corrente de defeito, e o DR, que desliga quando ela aparece.\n\n## Onde o DR de 30 mA é obrigatório\nA NBR 5410 exige proteção DR de alta sensibilidade nos circuitos que servem:\n- pontos em locais com **banheira ou chuveiro**;\n- **tomadas em áreas externas**;\n- **tomadas internas que possam alimentar aparelhos usados do lado de fora** (a tomada perto da porta onde se liga a lavadora de alta pressão, por exemplo);\n- tomadas de **cozinhas, copas, lavanderias, áreas de serviço, garagens** e de qualquer local interno molhado ou lavado.\n\nOs demais circuitos podem ter só o disjuntor, mas proteger a casa inteira com DR é uma boa prática.\n\n## Os modelos\n- **Disjuntor DR:** é disjuntor e DR no mesmo aparelho. Protege o fio e as pessoas.\n- **Interruptor DR (IDR):** só tem a função DR e liga e desliga manualmente. Precisa de um **disjuntor antes dele** para proteger o fio.\n\nAmbos existem em versões bipolares (fase e neutro, ou duas fases) e tetrapolares.\n\n## DR geral ou DR por circuito\n- **Um DR geral** no quadro protege tudo de uma vez. É mais barato, mas soma as pequenas fugas naturais de todos os aparelhos, desarma com mais facilidade e, quando desarma, apaga a casa inteira.\n- **DRs por grupo de circuitos** (por exemplo: um para o banheiro e a área de serviço, outro para a cozinha) desarmam menos, e um defeito não deixa a casa no escuro.\n\n## Erros de ligação que fazem o DR desarmar\n- **Neutro de um circuito passando por outro DR,** ou neutros de circuitos diferentes emendados entre si. O DR vê corrente indo por um lado e voltando por outro.\n- **Neutro ligado ao terra depois do DR,** dentro da casa. Parte da corrente volta pelo terra e o DR entende que é fuga. Neutro e terra só se encontram antes do DR, no padrão de entrada.\n- **Chuveiro com resistência exposta à água,** em que parte da corrente escapa pela água. A solução é um chuveiro com resistência blindada e a carcaça aterrada, nunca tirar o DR.\n\n## Teste mensal\nTodo DR tem um botão de **teste**. Apertado com o circuito ligado, ele deve desligar na hora. Se não desligar, o DR precisa ser trocado.",
+   "createdAt": "2026-11-09T23:50:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-09T23:50:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "DR compara a corrente da fase com a do neutro e desliga com 30 mA de diferença.",
+    "Contato direto: parte viva. Contato indireto: carcaça energizada por defeito.",
+    "Obrigatório em banheiros, áreas molhadas, cozinhas, áreas de serviço e tomadas externas.",
+    "Interruptor DR precisa de um disjuntor antes dele.",
+    "Neutro não pode ser aterrado depois do DR nem misturado entre circuitos.",
+    "Teste o botão do DR uma vez por mês."
+   ],
+   "minutes": 12,
+   "order": 8,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Se volta menos corrente do que foi, existe uma fuga para a terra ou para uma pessoa.",
+     "options": [
+      "A tensão da rede",
+      "A diferença entre a corrente que vai pela fase e a que volta pelo neutro",
+      "A temperatura do fio",
+      "A potência do aparelho"
+     ],
+     "prompt": "O que o DR mede para decidir desligar?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Contato indireto: uma parte metálica que normalmente não tem tensão ficou energizada por falha.",
+     "options": [
+      "Contato direto",
+      "Contato indireto",
+      "Curto-circuito",
+      "Sobrecarga"
+     ],
+     "prompt": "Uma pessoa encosta na carcaça de uma máquina de lavar que ficou energizada por um defeito. Esse choque é por:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "O IDR só faz a função DR. Precisa de um disjuntor ou fusível antes dele para proteger o fio.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "O interruptor DR protege sozinho os fios contra sobrecarga e curto-circuito.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Neutros misturados ou aterrados depois do DR desequilibram as correntes que ele mede.",
+     "options": [
+      "Lâmpada de potência alta",
+      "O neutro daquele circuito está emendado com o neutro de outro circuito ou ligado ao terra depois do DR",
+      "Disjuntor muito pequeno",
+      "Tensão baixa na rua"
+     ],
+     "prompt": "O DR desarma assim que se liga a luz do corredor. Uma causa provável é:",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Áreas de serviço estão na lista de locais molhados ou lavados.",
+     "options": [
+      "Iluminação do quarto",
+      "Tomadas da área de serviço",
+      "Tomadas da sala",
+      "Campainha"
+     ],
+     "prompt": "Em qual destes circuitos a NBR 5410 exige DR de 30 mA?",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Contato direto e indireto, os locais em que o DR é obrigatório, DR geral ou por circuito e os erros de ligação que fazem o DR desarmar.",
+   "title": "DR e fio terra: onde a NBR 5410 exige e como ligar",
+   "track": "instalacoes",
+   "updatedAt": "2026-11-09T23:50:00.000Z"
+  },
+  "ins-eletrodutos-material": {
+   "author": "",
+   "body": "## O tamanho do eletroduto\nO eletroduto precisa deixar os fios entrarem e saírem com facilidade, sem raspar a isolação. Para isso, a norma limita a **taxa de ocupação**: com três ou mais condutores, eles não podem ocupar mais de **40% da área interna**. Os outros 60% são folga.\n\nNa prática, usa-se uma tabela que cruza **quantos condutores passam no trecho** com a **maior seção** entre eles e devolve o tamanho nominal do eletroduto. Para os fios mais usados em casa, uma regra de bolso:\n- **Fios de 1,5 mm²:** até 7 condutores cabem num eletroduto de **16 mm**.\n- **Fios de 2,5 mm²:** até 4 condutores em **16 mm**; de 5 a 8, em **20 mm**.\n- **Fios de 4 e 6 mm²,** do chuveiro, e **alimentadores de 10 e 16 mm²:** consulte a tabela. O alimentador costuma pedir **25 mm** ou mais.\n\nComo fazer, trecho por trecho:\n1. Conte os condutores do trecho na planta da fiação.\n2. Veja qual é a maior seção entre eles.\n3. Leia o tamanho na tabela e anote na planta (por exemplo, \"ø20\").\n\nNa planta, costuma-se anotar só as exceções e indicar numa nota o tamanho padrão do resto (por exemplo: \"eletrodutos não indicados: ø20; condutores não indicados: 2,5 mm²\").\n\n## O levantamento de material\nLevantar o material é **medir, contar, somar e relacionar** tudo o que aparece na planta:\n- **Condutores:** meça cada trecho de eletroduto na escala e multiplique pelo número de fios de cada tipo e seção que passam nele. Acrescente as sobras para as ligações nas caixas, cerca de 15 a 20 cm por ponta.\n- **Eletrodutos:** some os metros por diâmetro e divida pelo tamanho da barra (normalmente 3 m).\n- **Curvas, luvas, buchas e arruelas:** conte na planta, uma por curva e por emenda.\n- **Caixas:** 4×2 para interruptores e tomadas; octogonais 4×4 no teto para os pontos de luz; 4×4 onde houver mais ligações.\n- **Interruptores, tomadas e conjuntos:** conte por tipo.\n- **Quadro, disjuntores e DRs:** saem da tabela de circuitos.\n\nOrganize tudo numa lista com quantidade, preço unitário e total. Ela vira o orçamento e a lista de compras.\n\n## O selo do Inmetro\nVários materiais elétricos só podem ser vendidos com **certificação do Inmetro**, que garante um mínimo de qualidade e segurança. Entre eles:\n- fios e cabos isolados em PVC até 750 V e cabos 0,6/1 kV;\n- interruptores, tomadas, plugues e adaptadores;\n- disjuntores;\n- reatores e lâmpadas.\n\nAntes de comprar, procure o selo na embalagem ou no produto. Fio \"baratinho\" sem selo costuma ter **menos cobre** do que a seção anunciada: o 2,5 mm² que na verdade é 2,0 esquenta além do que o projeto previu.",
+   "createdAt": "2026-11-09T23:50:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-09T23:50:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Com três ou mais condutores, ocupação de até 40% da área do eletroduto.",
+    "Fios de 1,5 mm²: até 7 em 16 mm. Fios de 2,5 mm²: até 4 em 16 mm e até 8 em 20 mm.",
+    "Levantar material é medir, contar, somar e relacionar.",
+    "Some as sobras de ponta nas caixas.",
+    "Fios, cabos, tomadas, interruptores e disjuntores precisam do selo do Inmetro."
+   ],
+   "minutes": 10,
+   "order": 9,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "Com 2,5 mm², de 5 a 8 condutores pedem 20 mm.",
+     "options": [
+      "16 mm",
+      "20 mm",
+      "32 mm",
+      "40 mm"
+     ],
+     "prompt": "Num trecho passam 6 fios, o maior de 2,5 mm². Qual eletroduto usar?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "A folga evita danos na enfiação e na manutenção e ajuda no aquecimento.",
+     "options": [
+      "Para economizar fio",
+      "Para facilitar enfiar e tirar os fios sem danificar a isolação e para dissipar o calor",
+      "Por estética",
+      "Para a tensão não cair"
+     ],
+     "prompt": "Por que o eletroduto não pode ficar cheio de fios?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Sem certificação, a seção real e o isolamento podem estar abaixo do anunciado.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "Um fio sem selo do Inmetro com a mesma bitola anunciada é tão seguro quanto um certificado.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "Mede-se cada trecho, multiplica-se pelos fios que passam nele e somam-se as pontas.",
+     "options": [
+      "Contando as tomadas",
+      "Comprimento do trecho × número de fios de cada tipo que passam nele, mais as sobras nas caixas",
+      "Pela potência do circuito",
+      "Pelo número de disjuntores"
+     ],
+     "prompt": "Como se calcula o fio de um trecho no levantamento?",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Como escolher o tamanho do eletroduto, levantar o material a partir da planta e reconhecer os produtos que precisam do selo do Inmetro.",
+   "title": "Eletrodutos, lista de material e selo do Inmetro",
+   "track": "instalacoes",
+   "updatedAt": "2026-11-09T23:50:00.000Z"
+  },
+  "ins-entrada-quadro": {
+   "author": "",
+   "body": "## O tipo de fornecimento\nCom a potência instalada calculada, a **distribuidora de energia** decide como vai ligar a casa:\n- **Monofásico:** dois fios, uma fase e o neutro. Na maior parte do Brasil, 127 V (em algumas regiões, 220 V).\n- **Bifásico:** três fios, duas fases e o neutro. Tem duas tensões: fase-neutro (127 V) e fase-fase (220 V).\n- **Trifásico:** quatro fios, três fases e o neutro, com as mesmas duas tensões.\n\nOs limites de potência de cada tipo **variam de uma distribuidora para outra** e estão na norma de fornecimento dela. Em Minas Gerais, por exemplo, a referência é a norma de fornecimento da Cemig para edificações individuais. Antes de projetar, consulte a da sua região.\n\nNa prática, casas com chuveiro elétrico e alguns aparelhos maiores quase sempre ficam no bifásico, que permite ligar o chuveiro em 220 V.\n\n## O padrão de entrada\nÉ o conjunto que o morador instala, seguindo a norma da distribuidora, para receber a energia:\n- **poste ou pontalete,** com o isolador onde chega o ramal;\n- **ramal de entrada,** os fios que descem até a medição;\n- **caixa de medição,** onde fica o medidor;\n- **disjuntor geral,** que protege o ramal até o quadro;\n- **haste de aterramento,** com o condutor que a liga ao barramento.\n\nCom tudo pronto, a distribuidora **inspeciona**. Se estiver conforme, ela instala o medidor e liga o **ramal de ligação**, o trecho que vem da rede da rua.\n\n## O caminho da energia\n1. A rede de baixa tensão passa na rua.\n2. O **ramal de ligação** chega ao padrão.\n3. O **medidor** registra o consumo.\n4. O **circuito de distribuição** (alimentador) leva a energia do medidor até o quadro da casa.\n5. Do **quadro de distribuição** saem os **circuitos terminais**, que alimentam as lâmpadas, as tomadas e os aparelhos.\n\n## O quadro de distribuição\nÉ o centro da instalação. Ele recebe o alimentador, abriga as proteções e distribui os circuitos. Por dentro tem:\n- **disjuntor ou interruptor DR geral,** ou DRs por grupo de circuitos;\n- **barramento das fases,** que leva as fases aos disjuntores;\n- **disjuntores dos circuitos terminais:** monopolares para os circuitos fase-neutro, bipolares para os fase-fase;\n- **barramento de neutro,** **isolado** da caixa do quadro;\n- **barramento de proteção (terra),** **ligado** à caixa metálica do quadro.\n\nOnde colocar:\n- em lugar de **fácil acesso,** sem móveis na frente;\n- o **mais perto possível do medidor,** porque o alimentador tem os fios mais grossos (e mais caros) da casa;\n- longe de áreas molhadas.\n\nDeixe sempre **espaço de reserva** no quadro para circuitos futuros e cole nele a lista dos circuitos. Quem for desligar um circuito para manutenção agradece.",
+   "createdAt": "2026-11-09T23:50:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-09T23:50:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Monofásico: F+N. Bifásico: 2F+N, com 127 V e 220 V. Trifásico: 3F+N.",
+    "Os limites de cada tipo estão na norma da distribuidora local.",
+    "O padrão de entrada é do morador; o medidor e o ramal de ligação são da distribuidora.",
+    "Neutro isolado da caixa do quadro; terra ligado à caixa.",
+    "Quadro perto do medidor, acessível e com espaço de reserva."
+   ],
+   "minutes": 11,
+   "order": 5,
+   "questions": [
+    {
+     "answer": 3,
+     "explain": "Com duas fases e neutro, há a tensão fase-neutro (127 V) e a fase-fase (220 V).",
+     "options": [
+      "Só 127 V",
+      "Só 220 V",
+      "127 V entre fase e neutro e 220 V entre fases",
+      "380 V"
+     ],
+     "prompt": "No fornecimento bifásico, quais tensões ficam disponíveis?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Quanto mais curto o circuito de distribuição, menos cabo grosso se compra.",
+     "options": [
+      "Para o medidor ler melhor",
+      "Porque o alimentador usa os fios mais grossos e caros da instalação",
+      "Por causa da cor dos fios",
+      "Para o disjuntor esquentar menos"
+     ],
+     "prompt": "Por que o quadro de distribuição deve ficar perto do medidor?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "O neutro fica isolado da caixa; só o barramento de proteção é ligado a ela.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "No quadro, o barramento de neutro deve ficar ligado à caixa metálica, como o de terra.",
+     "type": "vf"
+    },
+    {
+     "answer": 2,
+     "explain": "O morador monta o padrão; a distribuidora inspeciona, instala o medidor e liga.",
+     "options": [
+      "O eletricista do morador",
+      "A distribuidora de energia, depois de inspecionar o padrão",
+      "A prefeitura",
+      "O fabricante do quadro"
+     ],
+     "prompt": "Quem instala o medidor e liga o ramal de ligação?",
+     "type": "mc"
+    }
+   ],
+   "sim": "",
+   "status": "published",
+   "summary": "Monofásico, bifásico ou trifásico, o que é o padrão de entrada e como o quadro de distribuição organiza a casa.",
+   "title": "Do poste ao quadro: fornecimento, padrão de entrada e quadro de distribuição",
+   "track": "instalacoes",
+   "updatedAt": "2026-11-09T23:50:00.000Z"
+  },
+  "ins-potencia-cargas": {
+   "author": "",
+   "body": "Antes de escolher fio, disjuntor ou quadro, o projeto responde a uma pergunta: **quanta potência esta casa vai pedir?** Essa conta se chama **previsão de cargas**, e a NBR 5410 dá as regras mínimas para fazê-la.\n\n## Tensão, corrente e potência, em uma frase cada\n- **Tensão (V):** o \"empurrão\" que faz os elétrons andarem no fio.\n- **Corrente (A):** os elétrons andando de forma ordenada.\n- **Potência:** o efeito que aparece quando há tensão e corrente juntas: luz, calor, movimento.\n\n## Aparente, ativa e reativa\nMultiplicando tensão por corrente chega-se à **potência aparente**, medida em **volt-ampère (VA)**. Ela tem duas partes:\n- **Potência ativa (W):** a parte que vira trabalho útil, como calor no chuveiro, luz na lâmpada ou giro no motor.\n- **Potência reativa (VAr):** a parte que só cria o campo magnético de motores, transformadores e reatores. Ela vai e volta na rede, ocupa o fio, mas não vira trabalho.\n\nO **fator de potência** diz quanto da potência aparente vira potência ativa: **W = VA × fator de potência**. Num chuveiro, que é só resistência, o fator é 1 (todo VA vira W). Num aparelho com motor, é menor que 1.\n\nNo projeto residencial usam-se valores combinados:\n- **Iluminação:** fator 1,0.\n- **Tomadas de uso geral:** fator 0,8.\n\nAssim, 2.000 VA de tomadas de uso geral correspondem a 2.000 × 0,8 = **1.600 W**.\n\n## Quantos pontos de luz e quanta potência\n- Cada cômodo tem **pelo menos um ponto de luz no teto**, comandado por interruptor na parede.\n- A potência mínima de iluminação depende da **área**:\n  - até 6 m²: **100 VA**;\n  - acima de 6 m²: **100 VA** pelos primeiros 6 m², mais **60 VA a cada 4 m² inteiros** que passarem disso.\n\nExemplo: uma sala de 3,60 × 4,20 m tem 15,12 m². Tirando os primeiros 6 m², sobram 9,12 m², que contêm dois blocos inteiros de 4 m². Iluminação mínima: 100 + 2 × 60 = **220 VA**.\n\nIsso é o mínimo da norma para dimensionar circuitos, não o projeto de iluminação. Com LED, 220 VA iluminam muito bem uma sala; o número serve para garantir que o circuito aguente.\n\n## Tomadas de uso geral (TUG)\nSão as tomadas comuns, para aparelhos que se ligam e desligam: ventilador, carregador, liquidificador, aspirador. A **quantidade mínima** depende do cômodo:\n- **Salas e dormitórios:** uma tomada a cada **5 m** de perímetro, ou fração.\n- **Cozinhas, copas, áreas de serviço e lavanderias:** uma a cada **3,5 m** de perímetro, ou fração. Sobre a bancada da pia, pelo menos **duas**.\n- **Banheiros:** pelo menos uma, perto do lavatório e afastada do boxe.\n- **Varandas:** pelo menos uma.\n- **Outros cômodos** (corredor, hall): até 6 m², pelo menos uma; acima disso, uma a cada 5 m de perímetro.\n\nA **potência mínima** de cada tomada:\n- Em **cozinhas, copas, áreas de serviço, lavanderias e banheiros:** **600 VA** por tomada até a terceira, e **100 VA** para as demais.\n- Nos **outros cômodos:** **100 VA** por tomada.\n\nA conta da norma dá o mínimo. Prever mais tomadas do que o mínimo é barato na obra e evita o uso de benjamins e extensões, que aquecem, desperdiçam energia e causam incêndios.\n\n## Tomadas de uso específico (TUE)\nSão os pontos de um aparelho **fixo**, que fica sempre no mesmo lugar: chuveiro, torneira elétrica, máquina de lavar, forno, ar-condicionado. A potência prevista é a **potência nominal do aparelho**, que está na placa dele. A ligação nem sempre é por tomada: o chuveiro, por exemplo, costuma ser ligado com conector.\n\n## Fechando a conta da casa\nSome cada tipo e converta para watts:\n- iluminação (VA) × 1,0;\n- tomadas de uso geral (VA) × 0,8;\n- tomadas de uso específico, que já estão em W.\n\nO total em watts é a **potência instalada**. É ela que decide o tipo de fornecimento que a distribuidora vai ligar, assunto da próxima lição.\n\nUse o simulador para calcular cômodo por cômodo.",
+   "createdAt": "2026-11-09T23:50:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-09T23:50:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "VA é potência aparente; W é a parte que vira trabalho (ativa).",
+    "W = VA × fator de potência: 1,0 na iluminação e 0,8 nas tomadas de uso geral.",
+    "Iluminação: 100 VA até 6 m², mais 60 VA a cada 4 m² inteiros.",
+    "Tomadas: a cada 5 m de perímetro na sala e no quarto, a cada 3,5 m na cozinha e na área de serviço.",
+    "600 VA nas três primeiras tomadas de áreas molhadas; 100 VA nas demais.",
+    "Tomada de uso específico entra com a potência da placa do aparelho."
+   ],
+   "minutes": 14,
+   "order": 4,
+   "questions": [
+    {
+     "answer": 2,
+     "explain": "12 m²: 100 VA pelos primeiros 6 m² e mais 60 VA pelo bloco inteiro de 4 m² que sobra (os outros 2 m² não completam um bloco).",
+     "options": [
+      "100 VA",
+      "160 VA",
+      "220 VA",
+      "60 VA"
+     ],
+     "prompt": "Qual é a iluminação mínima de um quarto de 3,00 × 4,00 m pela NBR 5410?",
+     "type": "mc"
+    },
+    {
+     "answer": 3,
+     "explain": "12 ÷ 3,5 = 3,4. Arredondando a fração para cima, são 4 tomadas.",
+     "options": [
+      "2",
+      "3",
+      "4",
+      "5"
+     ],
+     "prompt": "Uma cozinha de 3,00 × 3,00 m (perímetro de 12 m) precisa de no mínimo quantas tomadas de uso geral?",
+     "type": "mc"
+    },
+    {
+     "answer": 2,
+     "explain": "Nas tomadas de uso geral usa-se fator de potência 0,8: 3.000 × 0,8 = 2.400 W.",
+     "options": [
+      "3.000 W",
+      "2.400 W",
+      "3.750 W",
+      "1.500 W"
+     ],
+     "prompt": "Quanto vale, em watts, a previsão de 3.000 VA de tomadas de uso geral?",
+     "type": "mc"
+    },
+    {
+     "answer": 1,
+     "explain": "Em cargas resistivas toda a potência aparente vira calor, ou seja, potência ativa.",
+     "options": [
+      "Verdadeiro",
+      "Falso"
+     ],
+     "prompt": "O chuveiro elétrico tem fator de potência 1, porque é praticamente só resistência.",
+     "type": "vf"
+    },
+    {
+     "answer": 3,
+     "explain": "Para aparelhos fixos usa-se a potência que está na placa do aparelho.",
+     "options": [
+      "100 VA fixos",
+      "600 VA fixos",
+      "Pela potência nominal do aparelho que vai ser ligado",
+      "Pela área do cômodo"
+     ],
+     "prompt": "Como se prevê a potência de uma tomada de uso específico?",
+     "type": "mc"
+    }
+   ],
+   "sim": "carga",
+   "status": "published",
+   "summary": "Volt-ampère e watt, o fator de potência e como a NBR 5410 manda prever a iluminação e as tomadas de cada cômodo.",
+   "title": "Potência, fator de potência e previsão de cargas",
+   "track": "instalacoes",
+   "updatedAt": "2026-11-09T23:50:00.000Z"
   },
   "ins-protecao": {
    "author": "",
@@ -5939,6 +6607,53 @@ window.VOLTER_SEED = {
    ],
    "track": "prog",
    "updatedAt": "2026-10-19T01:30:00.000Z"
+  },
+  "projeto-casa-dois-quartos": {
+   "author": "",
+   "challenge": "Acrescente um ar-condicionado de 12.000 BTU no quarto 1 e um forno elétrico de 2.000 W na cozinha. Refaça a previsão, veja se o tipo de fornecimento muda e dimensione os dois circuitos novos.",
+   "createdAt": "2026-11-09T23:50:00.000Z",
+   "demo": false,
+   "duration": "6 a 8 horas",
+   "goal": "Fazer, passo a passo, o projeto elétrico completo de uma residência simples, usando as regras das lições de instalações e os dois simuladores.",
+   "history": [
+    {
+     "at": "2026-11-09T23:50:00.000Z",
+     "status": "published"
+    }
+   ],
+   "level": "Intermediário",
+   "result": "Uma planta elétrica com legenda, a tabela de circuitos (potência, tensão, corrente, seção, disjuntor e DR) e a lista de material com orçamento.",
+   "skills": [
+    "Previsão de cargas pela NBR 5410",
+    "Divisão em circuitos",
+    "Leitura e desenho de planta elétrica",
+    "Dimensionamento de fios, disjuntores e DR",
+    "Levantamento de material"
+   ],
+   "status": "published",
+   "steps": [
+    "Desenhe a planta com as medidas: sala 3,60 × 4,20 m, cozinha 2,50 × 2,70 m, quarto 1 3,20 × 3,50 m, quarto 2 2,80 × 3,00 m, banheiro 1,60 × 2,40 m e área de serviço 1,50 × 1,80 m. Ou use a sua própria casa.",
+    "Calcule a área e o perímetro de cada cômodo e preencha, no simulador de previsão de cargas, a iluminação mínima, o número de tomadas de uso geral e a potência delas.",
+    "Liste as tomadas de uso específico com a potência da placa: chuveiro de 5.500 W em 220 V e máquina de lavar de 1.000 W, por exemplo.",
+    "Some tudo em watts (iluminação × 1,0, tomadas de uso geral × 0,8, tomadas de uso específico como estão) e consulte, na norma da distribuidora, o tipo de fornecimento para essa potência.",
+    "Divida em circuitos: iluminação separada, tomadas de uso geral perto de 10 A cada, um circuito exclusivo para cada aparelho acima de 10 A, e o chuveiro em 220 V.",
+    "Marque na planta o quadro, os pontos de luz, os interruptores e as tomadas, com o número do circuito de cada um, e faça a legenda dos símbolos.",
+    "Trace os eletrodutos saindo do quadro pelo caminho mais curto e desenhe a fiação de cada trecho: fase, neutro, retorno e terra, com o número do circuito.",
+    "Para cada circuito, veja na planta o trecho com mais circuitos juntos e use o simulador de dimensionamento para achar a corrente, a seção do fio, o disjuntor e a queda de tensão.",
+    "Defina quais circuitos levam DR de 30 mA (banheiro, cozinha, área de serviço, tomadas externas) e como agrupar os DRs no quadro.",
+    "Dimensione os eletrodutos de cada trecho e faça a lista de material com quantidades e preços."
+   ],
+   "summary": "Da planta baixa à lista de material: previsão de cargas, divisão em circuitos, dimensionamento e quadro de uma casa pequena, seguindo a NBR 5410.",
+   "title": "Projeto elétrico de uma casa de dois quartos",
+   "tools": [
+    "Planta baixa da casa em escala (pode ser desenhada à mão em papel quadriculado)",
+    "Régua de escala ou escalímetro",
+    "Planilha ou papel para as tabelas",
+    "Os simuladores de previsão de cargas e de dimensionamento do Volter",
+    "Norma de fornecimento da distribuidora da sua região"
+   ],
+   "track": "instalacoes",
+   "updatedAt": "2026-11-09T23:50:00.000Z"
   }
  },
  "news": {
