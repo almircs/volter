@@ -15,6 +15,10 @@ Isso só é preciso na primeira vez.
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.12.0: área externa de gases
+- **Linha de envase:** novo setor com os tanques de CO₂ e nitrogênio, numa área externa separada da linha, da sala de máquinas, da caldeira e do sopro; o CO₂ já aparece ligado ao mixer e carbonatador
+- Projetos já começados recebem os dois tanques sem perder nada do que foi escrito
+
 ## Versão 2.11.0: a linha de envase no desenho real da planta
 - **Mapa da planta** no topo: o caminho do produto (tratamento de água, xarope simples, xarope composto, filtro polidor, mixer e carbonatador, enchedora, capsuladora, medidor de nível, codificador, empacotadora, paletizadora, stretch e estoque), o caminho das garrafas desde o sopro até a enchedora e quem cada utilidade atende
 - **Setores separados:** tratamento de água e xaroparia, linha de envase, sopro (com chiller e unidade de ar próprios, estoque e abastecimento de pré-formas, sopradora, rotuladora e transfer), sala de máquinas (compressores e chiller), caldeira, sala de CIP, e transportes com sensores e CLPs

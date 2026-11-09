@@ -1572,6 +1572,7 @@ const ENV_SECS = [
   ["sopro", "Sopro (setor separado)", "#a78bfa", "Setor mais distante, com chiller e unidade de ar de sopro próprios por causa da capacidade maior. Entrega as garrafas rotuladas à enchedora pelo transfer.", true, ["linha"]],
   ["maq", "Sala de máquinas", "#38bdf8", "Compressores e chiller. Atende a xaroparia e a linha de envase.", false, ["xarope", "linha"]],
   ["caldeira", "Caldeira (setor separado)", "#f87171", "Vapor e água quente para a xaroparia, a linha de envase e a sala de CIP.", false, ["xarope", "linha", "cip"]],
+  ["gases", "Tanques de CO₂ e nitrogênio (área externa)", "#94a3b8", "Área externa, separada da linha, da sala de máquinas, da caldeira e do sopro.", false, ["linha"]],
   ["cip", "Sala de CIP (separada)", "#34d399", "Limpeza no local de tanques e tubulações, com aquecimento vindo da caldeira.", false, []],
   ["transp", "Transportes, sensores e CLPs", "#818cf8", "Todo o transporte e os transfers, até a saída do palete para o estoque, são controlados por sensores interligados aos CLPs.", false, ["sopro", "linha"]]
 ];
@@ -1613,6 +1614,8 @@ const ENV_TPL = [
   ["maq", "Compressores", "Ar comprimido para a xaroparia e a linha de envase.", { interlig: "Compressores → Xaroparia\nCompressores → Linha de envase" }],
   ["maq", "Chiller", "Água gelada para a xaroparia e a linha de envase.", { interlig: "Chiller → Xaroparia\nChiller → Linha de envase" }],
   ["caldeira", "Caldeira", "Gera vapor e água quente. Fica num setor separado.", { interlig: "Caldeira → Xaroparia\nCaldeira → Linha de envase\nCaldeira → Sala de CIP" }],
+  ["gases", "Tanque de CO₂", "Armazena e vaporiza o CO₂ usado na carbonatação.", { interlig: "Tanque de CO₂ → Mixer e carbonatador" }],
+  ["gases", "Tanque de nitrogênio", "Armazena o nitrogênio usado no processo.", {}],
   ["cip", "Sala de CIP", "Limpeza no local, com soda, ácido e enxágues.", { interlig: "Caldeira → Sala de CIP: aquecimento" }],
   ["transp", "Transportadores e acúmulo", "Ligam todas as máquinas, com controle de velocidade e acúmulo entre elas.", { sensores: "Sensores em todos os transportes e transfers até a saída do palete para o estoque, interligados aos CLPs." }],
   ["transp", "Sensores e CLPs da linha", "Os sensores dos transportes e das máquinas ficam ligados aos CLPs, que controlam a velocidade e o acúmulo.", {}]
@@ -1621,9 +1624,9 @@ const ENV_OLD = { util: "maq", xarope: "xarope", enche: "linha", emb: "linha" };
 const ENV_OLDTPL = ["Tratamento de água", "Sala de máquinas: ar comprimido", "Refrigeração (chiller)", "CO₂", "Vapor e água quente", "Xarope simples", "Xarope composto", "CIP (limpeza no local)", "Mixer e carbonatador", "Alimentação de pré-formas", "Sopradora", "Transporte aéreo de garrafas", "Bloco rinser, enchedora e capsuladora", "Inspeção de nível e tampa", "Rotuladora", "Codificador de lote e validade", "Transportadores e acúmulo", "Empacotadora (shrink)", "Paletizadora", "Envolvedora (stretch) e etiqueta do palete"];
 const envNew = () => ENV_TPL.map((b, i) => Object.assign({ id: "b" + (i + 1), area: b[0], nome: b[1], status: "ideia", funcao: b[2] }, b[3]));
 function envP() {
-  if (!S.prog.envase) S.prog.envase = { v: 2, proj: { nome: "Linha de envase de refrigerantes PET", produto: "", capacidade: "", formatos: "", turnos: "", objetivo: "", escopo: "", premissas: "", arquitetura: "" }, blocks: envNew(), seq: ENV_TPL.length };
+  if (!S.prog.envase) S.prog.envase = { v: 3, proj: { nome: "Linha de envase de refrigerantes PET", produto: "", capacidade: "", formatos: "", turnos: "", objetivo: "", escopo: "", premissas: "", arquitetura: "" }, blocks: envNew(), seq: ENV_TPL.length };
   const E = S.prog.envase;
-  if (E.v !== 2) { // v1 → v2: novo desenho da planta, mantendo o que já foi escrito
+  if (!(E.v >= 2)) { // v1 → v2: novo desenho da planta, mantendo o que já foi escrito
     const blocks = envNew(), keys = ENV_F.map(f => f[0]).filter(k => k !== "funcao"), N = s => norm(String(s || "")).replace(/[^a-z0-9]/g, "");
     const edited = b => b.status !== "ideia" || keys.some(k => String(b[k] || "").trim()) || ENV_OLDTPL.indexOf(b.nome) < 0;
     E.blocks.forEach(b => {
@@ -1631,7 +1634,12 @@ function envP() {
       if (m) { keys.forEach(k => { if (String(b[k] || "").trim()) m[k] = (m[k] && k === "interlig" ? m[k] + "\n" : "") + b[k]; }); if (b.status !== "ideia") m.status = b.status; }
       else if (edited(b)) { E.seq = (E.seq || 40) + 1; blocks.push(Object.assign({}, b, { id: "b" + (100 + E.seq), area: ENV_OLD[b.area] || b.area })); }
     });
-    E.blocks = blocks; E.seq = Math.max(E.seq || 0, 200); E.v = 2; S.ui.envSel = null; saveProg();
+    E.blocks = blocks; E.seq = Math.max(E.seq || 0, 200); E.v = 3; S.ui.envSel = null; saveProg();
+  }
+  if (E.v === 2) { // v2 → v3: tanques de CO₂ e nitrogênio na área externa
+    const N = s => norm(String(s || "")).replace(/[^a-z0-9]/g, "");
+    envNew().filter(b => b.area === "gases" && !E.blocks.some(x => N(x.nome) === N(b.nome))).forEach(b => { E.seq = (E.seq || 200) + 1; E.blocks.push(Object.assign(b, { id: "b" + E.seq })); });
+    E.v = 3; saveProg();
   }
   return E;
 }
@@ -1676,7 +1684,7 @@ VIEWS.envase = () => {
     '<div class="tabs" role="tablist">' + tabs.map(([k, l]) => '<button role="tab" aria-selected="' + (tab === k) + '" data-act="envtab" data-k="' + k + '">' + l + "</button>").join("") + "</div>" + body + "</div>";
 };
 function envMap(E) {
-  const sec = id => ENV_SECS.find(s => s[0] === id), nm = id => sec(id)[1].replace(/ \(.*\)$/, ""), alvo = { xarope: "a xaroparia", linha: "a linha de envase", cip: "a sala de CIP", sopro: "o sopro" };
+  const sec = id => ENV_SECS.find(s => s[0] === id), nm = id => sec(id)[1].replace(/ \(.*\)$/, ""), alvo = { gases: "a área de gases", xarope: "a xaroparia", linha: "a linha de envase", cip: "a sala de CIP", sopro: "o sopro" };
   const chip = b => '<button class="mchip" data-act="envsel" data-id="' + b.id + '" style="--sc:' + sec(b.area)[2] + '">' + esc(b.nome) + "</button>";
   const prod = E.blocks.filter(b => (b.area === "xarope" || b.area === "linha"));
   const sopro = E.blocks.filter(b => b.area === "sopro" && !/chiller|ar de sopro/i.test(b.nome));
@@ -2042,7 +2050,7 @@ VIEWS.favoritos = () => {
 
 /* ----- Próximas etapas ----- */
 VIEWS.roteiro = () => {
-  const P = [["Versão 2.11", "Disponível", "ok", ["Linha de envase no desenho real da planta: xaroparia, linha de envase, sopro, sala de máquinas, caldeira, sala de CIP e transportes com sensores e CLPs, com o mapa da planta"]], ["Versão 2.10", "Concluída", "ok", ["Cores tecnológicas (ciano e índigo) e o novo item Linha de envase, para montar o projeto e o escopo de uma linha completa com as máquinas interligadas"]], ["Versão 2.9", "Concluída", "ok", ["Layout novo: menu lateral com todas as áreas e etapas, início com blocos por área, busca em todo o conteúdo e fim do visual de streaming"]], ["Versão 2.8", "Concluída", "ok", ["Curso Programação de robôs com o Korum: 10 lições de KRL com prática no laboratório virtual Korum, um desafio no Laboratório e um projeto de célula de paletização"]], ["Versão 2.7", "Concluída", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
+  const P = [["Versão 2.12", "Disponível", "ok", ["Linha de envase: área externa com os tanques de CO₂ e nitrogênio"]], ["Versão 2.11", "Concluída", "ok", ["Linha de envase no desenho real da planta: xaroparia, linha de envase, sopro, sala de máquinas, caldeira, sala de CIP e transportes com sensores e CLPs, com o mapa da planta"]], ["Versão 2.10", "Concluída", "ok", ["Cores tecnológicas (ciano e índigo) e o novo item Linha de envase, para montar o projeto e o escopo de uma linha completa com as máquinas interligadas"]], ["Versão 2.9", "Concluída", "ok", ["Layout novo: menu lateral com todas as áreas e etapas, início com blocos por área, busca em todo o conteúdo e fim do visual de streaming"]], ["Versão 2.8", "Concluída", "ok", ["Curso Programação de robôs com o Korum: 10 lições de KRL com prática no laboratório virtual Korum, um desafio no Laboratório e um projeto de célula de paletização"]], ["Versão 2.7", "Concluída", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
     ["Próxima", "Planejada", "go", ["Cursos completos da trilha IA no Trabalho", "Trilha Agentes e Automação: n8n, WhatsApp e primeiro agente", "Volter Assist também no programa instalado", "Certificado por curso concluído"]],
     ["Depois", "Planejada", "", ["Turmas fechadas e licenças para empresas", "Um curso de IA por profissão a cada etapa", "Aplicativo para celular com modo offline"]]];
   const L = S.mode === "local";
