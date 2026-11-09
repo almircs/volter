@@ -532,24 +532,102 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .s-tt th{color:var(--muted);font-weight:500}
 .s-tt tr.cur td{background:color-mix(in srgb,var(--t) 22%,transparent);color:var(--ink)}
 .sim .btn.sm{min-height:34px;padding:6px 12px;font-size:.86rem}
+
+/* ===== layout com barra lateral (substitui o visual de streaming) ===== */
+:root{--side:272px;--hdr:0px}
+.hdr,.tabbar,.sheet{display:none!important}
+.mbar{display:none}
+.side{position:fixed;top:0;left:0;bottom:0;width:var(--side);z-index:30;background:#121213;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:14px;padding:18px 14px 14px;padding-left:max(14px,env(safe-area-inset-left,0px));overflow-y:auto;scrollbar-width:thin}
+.side .brand{padding:2px 6px}
+.side-search{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line-2);border-radius:8px;padding:0 10px;color:var(--muted)}
+.side-search:focus-within{border-color:var(--ink)}
+.side-search svg{width:17px;height:17px;flex-shrink:0}
+.side-search input{border:0!important;background:transparent!important;padding:9px 0!important;outline:none}
+.snav{gap:1px}
+.snav .grp{padding:14px 10px 5px;text-transform:uppercase;letter-spacing:.06em;font-size:.7rem}
+.snav button,.snav summary{min-height:38px}
+.snav details{border-radius:8px}
+.snav summary{display:flex;align-items:center;gap:11px;color:var(--muted);padding:8px 10px;border-radius:6px;cursor:pointer;list-style:none;font-size:.95rem}
+.snav summary::-webkit-details-marker{display:none}
+.snav summary:hover,.snav button:hover{color:var(--ink);background:var(--surface)}
+.snav summary svg{width:18px;height:18px;flex-shrink:0}
+.snav summary .chev{margin-left:auto;width:14px;height:14px;transition:transform .15s}
+.snav details[open] > summary .chev{transform:rotate(90deg)}
+.snav summary.cur{color:#fff}
+.snav .subs{display:flex;flex-direction:column;gap:1px;margin:2px 0 6px 19px;padding-left:10px;border-left:1px solid var(--line-2)}
+.snav .subs button{font-size:.86rem;padding:6px 8px;min-height:32px;gap:9px}
+.snav .subs .dot{width:8px;height:8px}
+.snav .subs .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.snav .subs .count{font-variant-numeric:tabular-nums}
+.side-foot{margin-top:auto;border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.side-foot .prof{width:100%;padding:6px;border-radius:8px}
+.side-foot .prof:hover{background:var(--surface)}
+.side-foot .prof-txt{display:flex!important}
+main,main.full{margin-left:var(--side);max-width:1240px;padding-top:34px;padding-bottom:48px;padding-left:max(28px,3vw);padding-right:max(28px,3vw);gap:30px}
+.page-top{padding-top:0}
+.foot{margin-left:0!important;margin-right:0!important}
+.gut{padding-left:0;padding-right:0}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:29}
+@media (max-width:980px){
+  .mbar{display:flex;position:sticky;top:0;z-index:25;align-items:center;justify-content:space-between;gap:10px;height:56px;padding:0 10px;padding-top:env(safe-area-inset-top,0px);background:rgba(15,15,16,.96);border-bottom:1px solid var(--line)}
+  .mbar .brand b{font-size:1.25rem}
+  .side{transform:translateX(-102%);transition:transform .2s ease;box-shadow:0 0 40px rgba(0,0,0,.6)}
+  .side.open{transform:none}
+  main,main.full{margin-left:0;padding:22px 16px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+}
+/* blocos do início */
+.hello h1{font-size:2.1rem}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
+.sec-h h2{font-family:var(--f-body);font-size:1.15rem;font-weight:700;letter-spacing:0}
+.areas{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.area{background:var(--surface);border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.area-top{display:flex;gap:12px;align-items:flex-start;padding:18px 18px 12px}
+.area-top .ico{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;background:var(--surface-2);color:var(--ink);flex-shrink:0}
+.area-top .ico svg{width:22px;height:22px}
+.area-top h3{font-size:1.2rem}
+.area-top p{font-size:.86rem;color:var(--muted);margin-top:4px}
+.area-list{display:flex;flex-direction:column;padding:0 8px 8px}
+.area-list button{display:grid;grid-template-columns:26px minmax(0,1fr) 64px;gap:10px;align-items:center;background:none;border:0;color:var(--ink);text-align:left;padding:8px 10px;border-radius:7px;cursor:pointer;font-size:.92rem}
+.area-list button:hover{background:var(--surface-2)}
+.area-list .n{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--t);color:var(--t);display:grid;place-items:center;font-size:.72rem;font-weight:600}
+.area-list .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.area-list .meter{margin:0}
+.area-foot{margin-top:auto;border-top:1px solid var(--line);padding:10px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.84rem;color:var(--muted)}
+.blocks{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.blk{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:6px;text-align:left;color:inherit;cursor:pointer;min-width:0}
+.blk:hover{background:var(--surface-2);border-color:var(--line-2)}
+.blk svg{width:22px;height:22px;color:var(--muted)}
+.blk b{font-size:1rem}
+.blk span{font-size:.84rem;color:var(--muted)}
+.qlist{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.qlist button{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 16px;background:none;border:0;border-bottom:1px solid var(--line);color:inherit;text-align:left;cursor:pointer}
+.qlist button:last-child{border-bottom:0}
+.qlist button:hover{background:var(--surface-2)}
+.qlist .k{font-size:.78rem;color:var(--muted)}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.tgrid .track .tag{font-size:.74rem;font-weight:700;color:var(--t);text-transform:uppercase;letter-spacing:.06em}
+.tgrid .track p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tgrid .track .tf{display:flex;justify-content:space-between;gap:8px;font-size:.8rem;color:var(--dim);margin-top:auto}
+.res{display:flex;flex-direction:column;gap:22px}
+.res mark{background:color-mix(in srgb,var(--dados) 35%,transparent);color:inherit;border-radius:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
 </head>
 <body>
-<header class="hdr" id="hdr">
-  <div class="hdr-in">
-    <button class="brand" data-act="go" data-r="inicio" aria-label="Volter, início">
-      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#181818" stroke="#3d3d3d"/><path d="M8.5 9 L16 24 L23.5 9" fill="none" stroke="#e8202a" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="8.5" cy="9" r="2.4" fill="#b69cff"/><circle cx="23.5" cy="9" r="2.4" fill="#5cc8ff"/><circle cx="16" cy="24" r="2.4" fill="#4fe3a6"/><circle cx="16" cy="9" r="2.4" fill="#ffcb5c"/></svg>
-      <b>Volter</b>
-    </button>
-    <nav class="hnav" id="hnav" aria-label="Seções"></nav>
-    <div class="hright" id="hright"></div>
-  </div>
+<header class="mbar" id="mbar">
+  <button class="icon-btn" data-act="menu" aria-label="Abrir o menu" aria-controls="side" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <button class="brand" data-act="go" data-r="inicio" aria-label="Volter, início"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#181818" stroke="#3d3d3d"/><path d="M8.5 9 L16 24 L23.5 9" fill="none" stroke="#e8202a" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="8.5" cy="9" r="2.4" fill="#b69cff"/><circle cx="23.5" cy="9" r="2.4" fill="#5cc8ff"/><circle cx="16" cy="24" r="2.4" fill="#4fe3a6"/><circle cx="16" cy="9" r="2.4" fill="#ffcb5c"/></svg><b>Volter</b></button>
+  <button class="icon-btn" data-act="msearch" aria-label="Buscar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
 </header>
+<aside class="side" id="side" aria-label="Menu do Volter">
+  <button class="brand" data-act="go" data-r="inicio" aria-label="Volter, início"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#181818" stroke="#3d3d3d"/><path d="M8.5 9 L16 24 L23.5 9" fill="none" stroke="#e8202a" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="8.5" cy="9" r="2.4" fill="#b69cff"/><circle cx="23.5" cy="9" r="2.4" fill="#5cc8ff"/><circle cx="16" cy="24" r="2.4" fill="#4fe3a6"/><circle cx="16" cy="9" r="2.4" fill="#ffcb5c"/></svg><b>Volter</b></button>
+  <label class="side-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="q" placeholder="Buscar lição, desafio, projeto" aria-label="Buscar no Volter" autocomplete="off"></label>
+  <nav class="snav" id="snav" aria-label="Seções"></nav>
+  <div class="side-foot" id="sfoot"></div>
+</aside>
+<div class="scrim" id="scrim" data-act="menu" hidden></div>
 <main id="view" aria-live="polite"></main>
-<div class="sheet" id="sheet" hidden></div>
-<nav class="tabbar" id="tabbar" aria-label="Navegação"></nav>
 <div id="modal" hidden></div>
 <div class="toast" id="toast" hidden></div>
 <script src="data/conteudo.js"></script>
@@ -668,7 +746,7 @@ const S = {
   mode: "loading", db: null, user: null, assets: null, sample: null, uid: null, admin: false,
   dbState: "loading", content: { cases: [], lessons: [], projects: [], news: [], books: [] },
   prog: null, progWhere: "local", route: { name: "inicio", id: null },
-  editor: null, quiz: null, assist: {}, ui: { modal: null, track: "", level: 0, q: "", ncat: "", barea: "", ptrack: "", stab: "cases", sfilter: "", open: {}, more: false }, pending: false
+  editor: null, quiz: null, assist: {}, ui: { side: {}, busca: "", modal: null, track: "", level: 0, q: "", ncat: "", barea: "", ptrack: "", stab: "cases", sfilter: "", open: {}, more: false }, pending: false
 };
 function defProg() { return { v: 1, attempts: {}, runs: {}, favorites: [], lessons: {}, projects: {}, quick: [], recent: [], settings: { hintPenalty: true }, updatedAt: "" }; }
 S.prog = Object.assign(defProg(), lsGet("volter.prog", {}));
@@ -719,8 +797,8 @@ const NAVDEF = [
   ["Você", [["progresso", "Meu progresso"], ["favoritos", "Salvos"]]]
 ];
 const TABS = [["inicio", "Início"], ["trilhas", "Trilhas"], ["lab", "Lab"], ["progresso", "Progresso"]];
-function go(name, id) { if (name === "noticias" && !NEWS_ON) name = "inicio"; S.route = { name, id: id || null }; S.ui.more = false; S.ui.modal = null; window.scrollTo(0, 0); render(true); renderModal(); }
-const FULL = ["inicio", "trilhas", "quarenta", "eletrica"];
+function go(name, id) { if (name === "noticias" && !NEWS_ON) name = "inicio"; S.route = { name, id: id || null }; S.ui.more = false; S.ui.modal = null; sideOpen(false); window.scrollTo(0, 0); render(true); renderModal(); }
+const FULL = [];
 function navGroup() { const r = S.route; if (r.name === "trilha" || r.name === "licao") { const t = r.name === "trilha" ? TRACKS.find(x => x.id === r.id) : TRACKS.find(x => x.id === (find("lessons", r.id) || {}).track); const a = areaOf(t); if (a) return a.route; } return { caso: "lab", correcao: "lab", licao: "trilhas", trilha: "trilhas", projeto: "projetos", editor: "admin" }[S.route.name] || S.route.name; }
 
 /* ---------- render ---------- */
@@ -740,21 +818,34 @@ document.addEventListener("focusout", () => setTimeout(() => { if (S.pending) re
 function navItems() { const g = NAVDEF.slice(); if (S.admin) g.push(["Gestão", [["admin", S.mode === "local" ? "Editor de conteúdo" : "Conteúdo"]]]); return g; }
 const HNAV = [["inicio", "Início"], ["trilhas", "Trilhas"], ["quarenta", "Nova Fase"], ["eletrica", "Elétrica e Hardware"], ["lab", "Laboratório"], ["projetos", "Projetos"], ["desafios", "Treino"], ["noticias", "Notícias"], ["livros", "Livros"]].filter(([r]) => r !== "noticias" || NEWS_ON);
 function modeText() { return S.mode === "local" ? (DESK ? "Programa instalado" : "Versão web") : S.mode === "claude" ? (S.admin ? "Administrador" : S.uid ? "Aluno" : "Visitante") : "Carregando"; }
-function renderChrome() {
-  const grp = navGroup(); const xp = calcXP(), lv = levelFor(xp);
-  const items = HNAV.concat(S.admin ? [["admin", "Conteúdo"]] : []);
-  $("#hnav").innerHTML = items.map(([r, l]) => '<button data-act="go" data-r="' + r + '"' + (grp === r ? ' aria-current="page"' : "") + ">" + l + "</button>").join("");
-  $("#hright").innerHTML = '<button class="icon-btn" data-act="go" data-r="favoritos" aria-label="Salvos"' + (grp === "favoritos" ? ' aria-current="page"' : "") + ">" + IC.favoritos + '</button><button class="prof" data-act="go" data-r="progresso" aria-label="Meu progresso: ' + esc(lv.name) + ", " + xp + ' XP"><span class="avatar">' + esc(lv.name[0]) + '</span><span class="prof-txt"><b>' + esc(lv.name) + "</b><span>" + xp + " XP</span></span></button>";
-  const counts = { lab: pub("cases").length, projetos: pub("projects").length, noticias: pub("news").length, livros: pub("books").length, favoritos: S.prog.favorites.length || "" };
-  const navHTML = navItems().map(([g, its]) => (g ? '<div class="grp">' + g + "</div>" : "") + its.map(([r, l]) => '<button data-act="go" data-r="' + r + '"' + (grp === r ? ' aria-current="page"' : "") + ">" + (IC[r] || "") + "<span>" + l + "</span>" + (counts[r] ? '<span class="count">' + counts[r] + "</span>" : "") + "</button>").join("")).join("");
-  const tabG = TABS.some(t => t[0] === grp) ? grp : "mais";
-  $("#tabbar").innerHTML = TABS.map(([r, l]) => '<button data-act="go" data-r="' + r + '"' + (tabG === r && !S.ui.more ? ' aria-current="page"' : "") + ">" + (IC[r] || "") + l + "</button>").join("") + '<button data-act="more"' + ((tabG === "mais" || S.ui.more) ? ' aria-current="page"' : "") + ' aria-expanded="' + S.ui.more + '">' + IC.mais + "Mais</button>";
-  const sh = $("#sheet"); sh.hidden = !S.ui.more;
-  if (S.ui.more) sh.innerHTML = '<nav class="snav">' + navHTML + '<div class="grp">Sobre</div><button data-act="go" data-r="roteiro">' + IC.roteiro + "<span>Próximas etapas</span></button></nav>";
-  setHeader();
+const CHEV = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
+const MAIN_AREA = { id: "", route: "trilhas", name: "Trilhas", short: "Trilhas", ico: "trilhas", lead: "IA no trabalho, agentes, programação, dados, segurança e carreira." };
+const ALL_AREAS = () => [MAIN_AREA].concat(AREAS);
+function curTrackId() { const r = S.route; if (r.name === "trilha") return r.id; if (r.name === "licao") return (find("lessons", r.id) || {}).track || ""; return ""; }
+function sideHTML() {
+  const grp = navGroup(), ct = curTrackId(), r = S.route.name;
+  const btn = (route, label, ico, count) => '<button data-act="go" data-r="' + route + '"' + (grp === route ? ' aria-current="page"' : "") + ">" + (IC[ico] || "") + "<span>" + label + "</span>" + (count ? '<span class="count">' + count + "</span>" : "") + "</button>";
+  const area = a => {
+    const ts = areaTracks(a.id), here = grp === a.route || ts.some(t => t.id === ct), open = here || S.ui.side[a.route];
+    return '<details data-sg="' + a.route + '"' + (open ? " open" : "") + '><summary class="' + (here ? "cur" : "") + '">' + (IC[a.ico] || "") + "<span>" + esc(a.short) + "</span>" + CHEV + '</summary><div class="subs"><button data-act="go" data-r="' + a.route + '"' + (r === a.route ? ' aria-current="page"' : "") + '><span class="nm">Visão geral</span></button>' +
+      ts.map((t, i) => '<button data-act="go" data-r="trilha" data-id="' + t.id + '" data-t="' + t.id + '"' + (ct === t.id ? ' aria-current="page"' : "") + ' title="' + esc(t.name) + '"><span class="dot"></span><span class="nm">' + (a.id ? i + 1 + ". " : "") + esc(t.short) + "</span>" + (trackPct(t.id) ? '<span class="count">' + trackPct(t.id) + "%</span>" : "") + "</button>").join("") + "</div></details>";
+  };
+  return btn("inicio", "Início", "inicio") +
+    '<div class="grp">Estudar</div>' + ALL_AREAS().map(area).join("") +
+    '<div class="grp">Praticar</div>' + btn("lab", "Laboratório", "lab", pub("cases").length) + btn("projetos", "Projetos", "projetos", pub("projects").length) + btn("desafios", "Treino", "desafios") +
+    '<div class="grp">Consultar</div>' + (NEWS_ON ? btn("noticias", "Notícias", "noticias", pub("news").length) : "") + btn("livros", "Livros", "livros", pub("books").length) + btn("busca", "Buscar", "busca") +
+    '<div class="grp">Você</div>' + btn("progresso", "Meu progresso", "progresso") + btn("favoritos", "Salvos", "favoritos", S.prog.favorites.length || "") + btn("roteiro", "Próximas etapas", "roteiro") +
+    (S.admin ? '<div class="grp">Gestão</div>' + btn("admin", S.mode === "local" ? "Editor de conteúdo" : "Conteúdo", "admin") : "");
 }
-function setHeader() { const h = $("#hdr"); if (h) h.classList.toggle("solid", window.scrollY > 8 || !FULL.includes(S.route.name)); }
-window.addEventListener("scroll", setHeader, { passive: true });
+function renderChrome() {
+  const xp = calcXP(), lv = levelFor(xp);
+  $("#snav").innerHTML = sideHTML();
+  $("#sfoot").innerHTML = '<button class="prof" data-act="go" data-r="progresso" aria-label="Meu progresso: ' + esc(lv.name) + ", " + xp + ' XP"><span class="avatar">' + esc(lv.name[0]) + '</span><span class="prof-txt"><b>' + esc(lv.name) + "</b><span>" + xp + " XP · " + esc(modeText()) + "</span></span></button>";
+  const q = $("#q"); if (q && document.activeElement !== q && q.value !== (S.ui.busca || "")) q.value = S.ui.busca || "";
+}
+function sideOpen(on) { const s = $("#side"); if (!s) return; s.classList.toggle("open", on); $("#scrim").hidden = !on; const b = document.querySelector('[data-act="menu"]'); if (b) b.setAttribute("aria-expanded", on); }
+function setHeader() {}
+document.addEventListener("toggle", e => { const d = e.target; if (d && d.dataset && d.dataset.sg) S.ui.side[d.dataset.sg] = d.open; }, true);
 function footHTML() { return '<footer class="foot"><div class="row" style="gap:20px"><button class="link small" data-act="go" data-r="roteiro">Próximas etapas</button><button class="link small" data-act="go" data-r="progresso">Meu progresso</button><button class="link small" data-act="go" data-r="favoritos">Salvos</button></div><span class="small dim">Volter, ' + esc(modeText().toLowerCase()) + "</span></footer>"; }
 function dbNotice() {
   if (S.dbState === "loading") return '<div class="notice">Carregando conteúdo…</div>';
@@ -795,6 +886,7 @@ const IC = {
   monitor: svg('<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'),
   planilha: svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/>'),
   robo: svg('<path d="M4 21h8M8 21v-4l3-6 5-3"/><circle cx="11" cy="11" r="1.6"/><circle cx="16" cy="8" r="1.6"/><path d="M17.3 6.8 20 4.5M18 9.5l2.6 1.4"/>'),
+  busca: svg('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
   raio: svg('<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>'),
   casa: svg('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M12 13v4M10 15h4"/>'),
   onda: svg('<path d="M2 12h4l2-4 3 8 3-8 3 8 2-4h3"/>'),
@@ -1297,7 +1389,7 @@ const tBook = b => tile("books", b, { cls: "poster book", meta: "<span>" + esc(b
 const lessonsTxt = n => n + (n === 1 ? " lição" : " lições");
 const tTrack = t => tile("track", t, { cls: "poster", pct: trackPct(t.id), meta: "<span>" + (tracksLessons(t.id).length ? lessonsTxt(tracksLessons(t.id).length) : "Em breve") + "</span>" + (trackPct(t.id) ? "<span>" + trackPct(t.id) + "%</span>" : "") });
 
-VIEWS.inicio = () => {
+VIEWS.inicio_streaming = () => {
   const f = dailyCase();
   let bill = "";
   if (f) {
@@ -1322,6 +1414,67 @@ VIEWS.inicio = () => {
   ]);
   const notice = dbNotice();
   return bill + '<div class="rows' + (bill ? "" : " nob") + '">' + (notice ? '<div class="gut">' + notice + "</div>" : "") + rows.join("") + "</div>";
+};
+
+
+/* ===== Início: mapa de blocos ===== */
+function trackRow(t, n) {
+  const ls = tracksLessons(t.id), pc = trackPct(t.id);
+  return '<button data-act="go" data-r="trilha" data-id="' + t.id + '" data-t="' + t.id + '" title="' + esc(t.name) + '"><span class="n">' + n + '</span><span class="nm">' + esc(t.name) + '</span><span class="meter" aria-label="' + pc + '% concluído"><i style="width:' + pc + '%"></i></span></button>';
+}
+function areaCard(a) {
+  const ts = areaTracks(a.id), nl = ts.reduce((s, t) => s + tracksLessons(t.id).length, 0), done = ts.reduce((s, t) => s + tracksLessons(t.id).filter(l => lessonDone(l.id)).length, 0);
+  return '<section class="area"><div class="area-top"><span class="ico">' + (IC[a.ico] || "") + '</span><div style="min-width:0"><h3>' + esc(a.name) + "</h3><p>" + esc(a.id ? a.lead.split(".")[0] + "." : a.lead) + '</p></div></div><div class="area-list">' + ts.map((t, i) => trackRow(t, i + 1)).join("") +
+    '</div><div class="area-foot"><span>' + ts.length + (a.id ? " etapas · " : " trilhas · ") + lessonsTxt(nl) + (done ? " · " + done + " feitas" : "") + '</span><button class="btn sm" data-act="go" data-r="' + a.route + '">Abrir</button></div></section>';
+}
+function continueItems() {
+  const out = [];
+  Object.keys(S.prog.runs).forEach(id => { const c = visible("cases", id); if (c) out.push(["Laboratório", c.title, "Etapa " + S.prog.runs[id].stage + " de 7", "caso", c.id, c.track]); });
+  TRACKS.forEach(t => { const ls = tracksLessons(t.id); if (ls.some(l => S.prog.lessons[l.id])) { const nx = ls.find(l => !lessonDone(l.id)); if (nx) out.push(["Próxima lição · " + t.short, nx.title, (nx.minutes || 5) + " min", "licao", nx.id, t.id]); } });
+  pub("projects").forEach(p => { const pc = projPct(p); if (pc && pc < 100) out.push(["Projeto", p.title, pc + "%", "projeto", p.id, p.track]); });
+  return out.slice(0, 6);
+}
+VIEWS.inicio = () => {
+  const cont = continueItems(), f = dailyCase();
+  const blocks = [["lab", "Laboratório", pub("cases").length + " desafios de diagnóstico"], ["projetos", "Projetos", pub("projects").length + " projetos guiados"], ["desafios", "Treino", "Perguntas sorteadas de todas as trilhas"], ["livros", "Livros", pub("books").length + " leituras recomendadas"], ["progresso", "Meu progresso", calcXP() + " XP"], ["favoritos", "Salvos", (S.prog.favorites.length || "Nenhum") + " item(ns) salvo(s)"]];
+  return '<div class="stack hello" style="gap:28px">' + dbNotice() + head("Início", "Escolha um bloco para estudar ou continue de onde parou. O menu à esquerda mostra todas as áreas e etapas; use a busca para achar qualquer lição.") +
+    (cont.length ? '<section><div class="sec-h"><h2>Continue de onde parou</h2></div><div class="qlist">' + cont.map(c => '<button data-act="go" data-r="' + c[3] + '" data-id="' + esc(c[4]) + '" data-t="' + esc(c[5]) + '"><span class="dot"></span><span style="min-width:0"><span class="k">' + esc(c[0]) + "</span><br><b>" + esc(c[1]) + '</b></span><span class="small dim">' + esc(c[2]) + "</span></button>").join("") + "</div></section>" : "") +
+    '<section><div class="sec-h"><h2>Áreas de estudo</h2></div><div class="areas">' + ALL_AREAS().map(areaCard).join("") + "</div></section>" +
+    '<section><div class="sec-h"><h2>Praticar e consultar</h2>' + (f ? '<button class="link small" data-act="go" data-r="caso" data-id="' + esc(f.id) + '">Desafio do dia: ' + esc(f.title) + " →</button>" : "") + '</div><div class="blocks">' + blocks.map(b => '<button class="blk" data-act="go" data-r="' + b[0] + '">' + (IC[b[0]] || "") + "<b>" + b[1] + "</b><span>" + esc(b[2]) + "</span></button>").join("") + "</div></section></div>";
+};
+
+/* ===== trilhas e áreas em grade de blocos ===== */
+function trackCard(t, n, label) {
+  const ls = tracksLessons(t.id), pl = arr(t.plan).length, pc = trackPct(t.id);
+  return '<button class="track" data-act="go" data-r="trilha" data-id="' + t.id + '" data-t="' + t.id + '"><span class="tag">' + label + " " + n + '</span><span class="ico">' + (IC[t.ico] || "") + "</span><h3>" + esc(t.name) + "</h3><p>" + esc(t.desc) + '</p><span class="tf"><span>' + (ls.length ? lessonsTxt(ls.length) : "Em breve") + (pl ? " · " + pl + " em breve" : "") + "</span><span>" + (pc ? pc + "%" : "") + '</span></span><span class="meter"><i style="width:' + pc + '%"></i></span></button>';
+}
+VIEWS.trilhas = () => '<div class="stack" style="gap:26px">' + dbNotice() + head("Trilhas", esc(MAIN_AREA.lead) + " Cada trilha termina com algo pronto para usar; o que ainda está sendo produzido aparece como Em breve.") +
+  '<div class="tgrid">' + MAIN_TRACKS.map((t, i) => trackCard(t, i + 1, "Trilha")).join("") + '</div><div class="stack" style="gap:18px">' + MAIN_TRACKS.map((t, i) => seqPanel(t, i + 1, "Trilha")).join("") + "</div></div>";
+function areaView(id) {
+  const a = AREAS.find(x => x.id === id), ts = areaTracks(id);
+  const temas = ts.reduce((s, t) => s + tracksLessons(t.id).length + arr(t.plan).length, 0);
+  return '<div class="stack" style="gap:26px">' + dbNotice() + head(esc(a.name), esc(a.lead) + ' <span class="dim">' + ts.length + " etapas, " + temas + " temas.</span>") +
+    '<div class="tgrid">' + ts.map((t, i) => trackCard(t, i + 1, "Etapa")).join("") + '</div><div class="stack" style="gap:18px">' + ts.map((t, i) => seqPanel(t, i + 1)).join("") + "</div></div>";
+}
+
+/* ===== busca ===== */
+const norm = s => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+function hl(text, q) { const t = String(text || ""), i = norm(t).indexOf(q); return i < 0 ? esc(t) : esc(t.slice(0, i)) + "<mark>" + esc(t.slice(i, i + q.length)) + "</mark>" + esc(t.slice(i + q.length)); }
+VIEWS.busca = () => {
+  const raw = (S.ui.busca || "").trim(), q = norm(raw);
+  const intro = head("Buscar", "Digite no campo de busca do menu para encontrar lições, desafios, projetos, trilhas e livros.");
+  if (q.length < 2) return '<div class="stack" style="gap:20px">' + intro + emptyBox("Digite pelo menos duas letras.") + "</div>";
+  const score = (title, rest) => norm(title).includes(q) ? 2 : norm(rest).includes(q) ? 1 : 0;
+  const groups = [
+    ["Trilhas e etapas", TRACKS.map(t => [score(t.name, t.desc), t.name, t.desc, "trilha", t.id, t.id])],
+    ["Lições", pub("lessons").map(l => [score(l.title, l.summary + " " + arr(l.keypoints).join(" ") + " " + l.body), l.title, l.summary, "licao", l.id, l.track])],
+    ["Laboratório", pub("cases").map(c => [score(c.title, c.summary + " " + c.equipment), c.title, c.summary, "caso", c.id, c.track])],
+    ["Projetos", pub("projects").map(p => [score(p.title, p.summary + " " + arr(p.skills).join(" ")), p.title, p.summary, "projeto", p.id, p.track])],
+    ["Livros", pub("books").map(b => [score(b.title, b.authors + " " + b.why), b.title, b.authors, "livros", "", ""])]
+  ].map(([g, its]) => [g, its.filter(x => x[0]).sort((a, b) => b[0] - a[0])]).filter(([, its]) => its.length);
+  const n = groups.reduce((s, [, its]) => s + its.length, 0);
+  return '<div class="stack" style="gap:20px">' + intro + '<p class="muted">' + (n ? n + " resultado(s) para <b>" + esc(raw) + "</b>" : "Nada encontrado para <b>" + esc(raw) + "</b>. Tente outra palavra.") + '</p><div class="res">' +
+    groups.map(([g, its]) => '<section><div class="sec-h"><h2>' + g + '</h2><span class="small dim">' + its.length + '</span></div><div class="qlist">' + its.slice(0, 30).map(x => '<button data-act="go" data-r="' + x[3] + '"' + (x[4] ? ' data-id="' + esc(x[4]) + '"' : "") + (x[5] ? ' data-t="' + esc(x[5]) + '"' : "") + '><span class="dot"></span><span style="min-width:0"><b>' + hl(x[1], q) + '</b><br><span class="small muted">' + hl(String(x[2] || "").slice(0, 160), q) + "</span></span>" + (x[5] ? tchip(x[5]) : "<span></span>") + "</button>").join("") + "</div></section>").join("") + "</div></div>";
 };
 
 /* ---------- janela de detalhes ---------- */
@@ -1513,20 +1666,14 @@ VIEWS.correcao = id => {
 };
 
 /* ----- Trilhas e lições ----- */
-VIEWS.trilhas = () => '<div class="gut page-top">' + dbNotice() + head("Trilhas", "Seis trilhas para usar IA no trabalho. Cada curso termina com algo pronto para usar; os que ainda estão sendo produzidos aparecem como Em breve.", AREAS.map(a => '<button class="btn" data-act="go" data-r="' + a.route + '">' + IC[a.ico] + esc(a.name) + "</button>").join("")) + '</div><div class="rows plain">' + rail("Escolha por onde começar", MAIN_TRACKS.map(tTrack), { tall: true }) + MAIN_TRACKS.map(t => rail(t.name, tracksLessons(t.id).map(tLesson), { more: ["trilha", t.id] })).join("") + "</div>";
+/* VIEWS.trilhas está acima, com a grade de blocos */
 /* Abas com trilhas em sequência: cada trilha é uma etapa, com os temas numerados na ordem de estudo */
-function seqPanel(t, n) {
+function seqPanel(t, n, label) {
   const ls = tracksLessons(t.id), plan = arr(t.plan);
   const rows = ls.map(l => ['<button class="link" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">' + esc(l.title) + '</button><p class="small muted" style="margin-top:2px">' + esc(l.summary) + "</p>", lessonDone(l.id) ? '<span class="chip ok">Concluída</span>' : '<span class="chip go">Disponível</span>'])
     .concat(plan.map(([c, r]) => ["<b>" + esc(c) + '</b><p class="small muted" style="margin-top:2px">Projeto final: ' + esc(r) + "</p>", '<span class="chip">Em breve</span>']));
-  return '<section class="panel seq" data-t="' + t.id + '"><div class="ph"><div style="min-width:0"><span class="seq-step">Etapa ' + n + '</span><h3 style="margin-top:4px">' + esc(t.name) + '</h3><p class="small muted" style="margin-top:4px">' + esc(t.desc) + '</p></div><button class="btn sm" data-act="go" data-r="trilha" data-id="' + esc(t.id) + '">Ver a trilha</button></div><div class="list">' +
+  return '<section class="panel seq" data-t="' + t.id + '"><div class="ph"><div style="min-width:0"><span class="seq-step">' + (label || "Etapa") + " " + n + '</span><h3 style="margin-top:4px">' + esc(t.name) + '</h3><p class="small muted" style="margin-top:4px">' + esc(t.desc) + '</p></div><button class="btn sm" data-act="go" data-r="trilha" data-id="' + esc(t.id) + '">Ver a trilha</button></div><div class="list">' +
     rows.map(([txt, chip], i) => '<div><span class="seq-n">' + n + "." + (i + 1) + '</span><div style="min-width:0;flex:1">' + txt + "</div>" + chip + "</div>").join("") + "</div></section>";
-}
-function areaView(id) {
-  const a = AREAS.find(x => x.id === id), ts = areaTracks(id);
-  const temas = ts.reduce((s, t) => s + tracksLessons(t.id).length + arr(t.plan).length, 0);
-  return '<div class="gut page-top">' + dbNotice() + head(esc(a.name), esc(a.lead) + ' <span class="dim">' + ts.length + " etapas, " + temas + " temas.</span>") + '</div><div class="rows plain">' + rail("Sua sequência", ts.map(tTrack), { tall: true }) +
-    '</div><div class="gut stack" style="gap:18px;margin-top:26px">' + ts.map((t, i) => seqPanel(t, i + 1)).join("") + "</div>";
 }
 function seqNav(t) {
   const a = areaOf(t); if (!a) return "";
@@ -1661,7 +1808,7 @@ VIEWS.favoritos = () => {
 
 /* ----- Próximas etapas ----- */
 VIEWS.roteiro = () => {
-  const P = [["Versão 2.8", "Disponível", "ok", ["Curso Programação de robôs com o Korum: 10 lições de KRL com prática no laboratório virtual Korum, um desafio no Laboratório e um projeto de célula de paletização"]], ["Versão 2.7", "Concluída", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
+  const P = [["Versão 2.9", "Disponível", "ok", ["Layout novo: menu lateral com todas as áreas e etapas, início com blocos por área, busca em todo o conteúdo e fim do visual de streaming"]], ["Versão 2.8", "Concluída", "ok", ["Curso Programação de robôs com o Korum: 10 lições de KRL com prática no laboratório virtual Korum, um desafio no Laboratório e um projeto de célula de paletização"]], ["Versão 2.7", "Concluída", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
     ["Próxima", "Planejada", "go", ["Cursos completos da trilha IA no Trabalho", "Trilha Agentes e Automação: n8n, WhatsApp e primeiro agente", "Volter Assist também no programa instalado", "Certificado por curso concluído"]],
     ["Depois", "Planejada", "", ["Turmas fechadas e licenças para empresas", "Um curso de IA por profissão a cada etapa", "Aplicativo para celular com modo offline"]]];
   const L = S.mode === "local";
@@ -1885,6 +2032,8 @@ const ACT = {
   mclose: () => { S.ui.modal = null; renderModal(); },
   rail: el => { const r = el.parentElement.querySelector(".rail"); if (r) r.scrollBy({ left: Number(el.dataset.d) * r.clientWidth * 0.9, behavior: "smooth" }); },
   more: () => { S.ui.more = !S.ui.more; renderChrome(); },
+  menu: () => sideOpen(!$("#side").classList.contains("open")),
+  msearch: () => { sideOpen(true); setTimeout(() => $("#q").focus(), 60); },
   ui: el => { const k = el.dataset.k; let v = el.dataset.v; if (k === "level") v = Number(v); S.ui[k] = v; render(true); },
   toggle: el => { S.ui.open[el.dataset.k] = !S.ui.open[el.dataset.k]; render(true); },
   copy: el => { const code = el.parentElement.querySelector("code").textContent; const done = () => { el.textContent = "Copiado"; setTimeout(() => el.textContent = "Copiar", 1500); };
@@ -1944,6 +2093,7 @@ document.addEventListener("change", e => {
 });
 document.addEventListener("input", e => {
   const el = e.target;
+  if (el.id === "q") { S.ui.busca = el.value; if (S.route.name !== "busca") { S.route = { name: "busca", id: null }; } clearTimeout(ACT._bq); ACT._bq = setTimeout(() => { render(true); }, 120); return; }
   if (el.dataset.simIn) { simInput(el); return; }
   if (el.dataset.path && S.editor && el.dataset.kind !== "bool") {
     const k = el.dataset.kind; let v = el.value;
@@ -1958,7 +2108,7 @@ document.addEventListener("submit", e => {
   const f = e.target; e.preventDefault();
   if (f.dataset.form === "assist") { const q = $("#assist-q").value.trim(); if (q) askAssist(f.dataset.id, q); }
 });
-document.addEventListener("keydown", e => { if (e.key !== "Escape") return; if (S.ui.modal) { S.ui.modal = null; renderModal(); } else if (S.ui.more) { S.ui.more = false; renderChrome(); } });
+document.addEventListener("keydown", e => { if (e.key !== "Escape") return; if ($("#side").classList.contains("open")) { sideOpen(false); return; } if (S.ui.modal) { S.ui.modal = null; renderModal(); } else if (S.ui.more) { S.ui.more = false; renderChrome(); } });
 async function uploadImg(el) {
   const file = el.files[0]; if (file.size > 20 * 1024 * 1024) { toast("Imagem acima de 20 MB."); return; }
   toast("Enviando imagem…");

@@ -32,7 +32,7 @@ A grade de temas em [`docs/grade-de-temas.md`](docs/grade-de-temas.md) define o 
 
 | Área | O que faz |
 |---|---|
-| **Início** | Banner com o desafio do dia e fileiras de capas, no estilo das plataformas de streaming; cada capa abre uma janela com detalhes e, nas trilhas, a lista de lições como episódios |
+| **Início** | Blocos por área de estudo, com as etapas e o progresso de cada uma, "continue de onde parou" e atalhos para Laboratório, Projetos, Treino e Livros. Um menu lateral mostra todas as áreas e etapas, e a busca encontra qualquer lição, desafio ou projeto |
 | **Trilhas** | Lições curtas com blocos de código e exercícios |
 | **Nova Fase** | Trilhas em etapas para quem começa ou recomeça em tecnologia numa nova fase da vida |
 | **Elétrica e Hardware** | Trilhas em etapas de eletricidade, instalações, eletrônica, hardware, IoT e automação, com 27 lições de elétrica e eletrônica e um curso de programação de robôs em KRL com prática no Korum, e simuladores interativos (lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, transistor com sensor, amplificador, sistema trifásico, partida de motor e paquímetro) |
