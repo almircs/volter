@@ -365,6 +365,7 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
 .tabs button{background:none;border:0;padding:9px 14px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
 .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.tabs button[aria-selected="true"]{border-bottom-color:var(--cyan,var(--ink))}
 .empty{border:1px dashed var(--line-2);border-radius:var(--r);padding:34px;text-align:center;color:var(--muted);display:flex;flex-direction:column;gap:12px;align-items:center}
 .badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
 .badge{display:flex;gap:11px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:var(--r)}
@@ -610,6 +611,70 @@ main,main.full{margin-left:var(--side);max-width:1240px;padding-top:34px;padding
 .tgrid .track .tf{display:flex;justify-content:space-between;gap:8px;font-size:.8rem;color:var(--dim);margin-top:auto}
 .res{display:flex;flex-direction:column;gap:22px}
 .res mark{background:color-mix(in srgb,var(--dados) 35%,transparent);color:inherit;border-radius:2px}
+
+/* ===== paleta tecnológica (v2.10) ===== */
+:root{
+  --bg:#060a13; --bg-2:#03060c; --surface:#0c1424; --surface-2:#142039; --line:#1a2641; --line-2:#2a3b62;
+  --ink:#e9f1ff; --muted:#9db0d3; --dim:#6c7ea3;
+  --red:#22d3ee; --red-2:#0ea5c6; --focus:#22d3ee; --code-bg:#050913;
+  --cyan:#22d3ee; --indigo:#818cf8; --grad:linear-gradient(135deg,#22d3ee 0%,#818cf8 100%);
+}
+body{background:radial-gradient(900px 500px at 85% -10%,rgba(129,140,248,.14),transparent 60%),radial-gradient(800px 500px at 10% 110%,rgba(34,211,238,.10),transparent 60%),var(--bg);background-attachment:fixed}
+.side{background:linear-gradient(180deg,#0a1222 0%,#060a13 100%);border-right-color:#16223c}
+.snav button[aria-current="page"]{background:linear-gradient(90deg,rgba(34,211,238,.16),rgba(129,140,248,.06));color:#fff;box-shadow:inset 2px 0 0 var(--cyan)}
+.snav summary.cur{color:#fff}
+.snav summary.cur svg:first-child{color:var(--cyan)}
+.side-search:focus-within{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.15)}
+h1{background:linear-gradient(90deg,#f1f6ff 0%,#9ad8ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn.primary{background:var(--grad);color:#041021;border-color:transparent}
+.btn.primary:hover{filter:brightness(1.08);background:var(--grad)}
+.btn:hover{background:var(--surface-2);border-color:var(--line-2)}
+.pill[aria-pressed="true"]{background:var(--grad);color:#041021;border-color:transparent}
+.meter i,.bar .tr i{background:linear-gradient(90deg,var(--t,var(--cyan)),color-mix(in srgb,var(--t,var(--indigo)) 55%,#ffffff))}
+.area{background:linear-gradient(180deg,rgba(20,32,57,.75),rgba(12,20,36,.9));border-color:var(--line);position:relative}
+.area::before{content:"";position:absolute;inset:0 0 auto;height:2px;background:var(--grad);opacity:.8}
+.area-top .ico,.blk svg{color:var(--cyan)}
+.area-top .ico{background:rgba(34,211,238,.10);box-shadow:inset 0 0 0 1px rgba(34,211,238,.25)}
+.blk,.qlist,.panel,.track{background:linear-gradient(180deg,rgba(20,32,57,.55),rgba(12,20,36,.85))}
+.blk:hover,.track:hover{border-color:rgba(34,211,238,.45);box-shadow:0 0 0 1px rgba(34,211,238,.15),0 10px 30px -18px rgba(34,211,238,.6)}
+.avatar{background:var(--grad);color:#041021}
+.chip.go{border-color:color-mix(in srgb,var(--cyan) 50%,transparent);color:var(--cyan)}
+.seq-step{letter-spacing:.08em}
+.codebox{border-color:#1d2b4a}
+.codebox pre{color:#cfe6ff}
+:focus-visible{outline-color:var(--cyan)}
+
+/* ===== projeto da linha de envase ===== */
+.env-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.env-kpis div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.env-kpis span{display:block;font-size:.76rem;color:var(--muted)}
+.env-kpis b{font-family:var(--f-display);font-size:1.6rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.flow{display:flex;flex-direction:column;gap:14px}
+.flow-sec{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:rgba(8,14,26,.6)}
+.flow-sec > header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.flow-sec > header h3{font-family:var(--f-body);font-size:.95rem;font-weight:700;display:flex;gap:8px;align-items:center}
+.flow-sec > header h3 i{width:10px;height:10px;border-radius:3px;background:var(--sc)}
+.flow-row{display:flex;gap:0;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:thin}
+.fblk{position:relative;flex:0 0 168px;min-height:92px;margin-right:26px;background:linear-gradient(180deg,#132341,#0c1629);border:1px solid #23365c;border-radius:10px;padding:10px 12px;text-align:left;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.fblk::after{content:"";position:absolute;right:-22px;top:50%;width:18px;height:2px;background:linear-gradient(90deg,var(--sc),transparent)}
+.fblk::before{content:"";position:absolute;right:-24px;top:calc(50% - 4px);border:5px solid transparent;border-left-color:var(--sc);opacity:.8}
+.fblk:last-child{margin-right:0}
+.fblk:last-child::after,.fblk:last-child::before{display:none}
+.fblk:hover{border-color:var(--sc)}
+.fblk[aria-pressed="true"]{border-color:var(--sc);box-shadow:0 0 0 2px color-mix(in srgb,var(--sc) 35%,transparent),0 10px 30px -14px var(--sc)}
+.fblk b{font-size:.9rem;line-height:1.25}
+.fblk .st{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--muted);margin-top:auto}
+.fblk .st i{width:8px;height:8px;border-radius:50%}
+.fblk .mat{height:3px;border-radius:2px;background:#1e2d4d;overflow:hidden}
+.fblk .mat i{display:block;height:100%;background:var(--sc)}
+.st-ideia{background:#6c7ea3}.st-escopo{background:#fbbf24}.st-fechado{background:#34d399}
+.env-ed{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.env-ed .wide{grid-column:1/-1}
+@media (max-width:760px){.env-ed{grid-template-columns:1fr}}
+.env-ed label.f textarea{min-height:92px}
+.env-tools{display:flex;gap:8px;flex-wrap:wrap}
+.itbl td{vertical-align:top}
+.itbl td:first-child{white-space:nowrap;font-weight:600}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -617,11 +682,11 @@ main,main.full{margin-left:var(--side);max-width:1240px;padding-top:34px;padding
 <body>
 <header class="mbar" id="mbar">
   <button class="icon-btn" data-act="menu" aria-label="Abrir o menu" aria-controls="side" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-  <button class="brand" data-act="go" data-r="inicio" aria-label="Volter, início"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#181818" stroke="#3d3d3d"/><path d="M8.5 9 L16 24 L23.5 9" fill="none" stroke="#e8202a" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="8.5" cy="9" r="2.4" fill="#b69cff"/><circle cx="23.5" cy="9" r="2.4" fill="#5cc8ff"/><circle cx="16" cy="24" r="2.4" fill="#4fe3a6"/><circle cx="16" cy="9" r="2.4" fill="#ffcb5c"/></svg><b>Volter</b></button>
+  <button class="brand" data-act="go" data-r="inicio" aria-label="Volter, início"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="vg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#818cf8"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="8" fill="#181818" stroke="#3d3d3d"/><path d="M8.5 9 L16 24 L23.5 9" fill="none" stroke="url(#vg)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="8.5" cy="9" r="2.4" fill="#b69cff"/><circle cx="23.5" cy="9" r="2.4" fill="#5cc8ff"/><circle cx="16" cy="24" r="2.4" fill="#4fe3a6"/><circle cx="16" cy="9" r="2.4" fill="#ffcb5c"/></svg><b>Volter</b></button>
   <button class="icon-btn" data-act="msearch" aria-label="Buscar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
 </header>
 <aside class="side" id="side" aria-label="Menu do Volter">
-  <button class="brand" data-act="go" data-r="inicio" aria-label="Volter, início"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#181818" stroke="#3d3d3d"/><path d="M8.5 9 L16 24 L23.5 9" fill="none" stroke="#e8202a" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="8.5" cy="9" r="2.4" fill="#b69cff"/><circle cx="23.5" cy="9" r="2.4" fill="#5cc8ff"/><circle cx="16" cy="24" r="2.4" fill="#4fe3a6"/><circle cx="16" cy="9" r="2.4" fill="#ffcb5c"/></svg><b>Volter</b></button>
+  <button class="brand" data-act="go" data-r="inicio" aria-label="Volter, início"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="vg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#818cf8"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="8" fill="#181818" stroke="#3d3d3d"/><path d="M8.5 9 L16 24 L23.5 9" fill="none" stroke="url(#vg)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="8.5" cy="9" r="2.4" fill="#b69cff"/><circle cx="23.5" cy="9" r="2.4" fill="#5cc8ff"/><circle cx="16" cy="24" r="2.4" fill="#4fe3a6"/><circle cx="16" cy="9" r="2.4" fill="#ffcb5c"/></svg><b>Volter</b></button>
   <label class="side-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="q" placeholder="Buscar lição, desafio, projeto" aria-label="Buscar no Volter" autocomplete="off"></label>
   <nav class="snav" id="snav" aria-label="Seções"></nav>
   <div class="side-foot" id="sfoot"></div>
@@ -832,6 +897,7 @@ function sideHTML() {
   };
   return btn("inicio", "Início", "inicio") +
     '<div class="grp">Estudar</div>' + ALL_AREAS().map(area).join("") +
+    '<div class="grp">Meus projetos</div>' + btn("envase", "Linha de envase", "fabrica", envBlocks().length) +
     '<div class="grp">Praticar</div>' + btn("lab", "Laboratório", "lab", pub("cases").length) + btn("projetos", "Projetos", "projetos", pub("projects").length) + btn("desafios", "Treino", "desafios") +
     '<div class="grp">Consultar</div>' + (NEWS_ON ? btn("noticias", "Notícias", "noticias", pub("news").length) : "") + btn("livros", "Livros", "livros", pub("books").length) + btn("busca", "Buscar", "busca") +
     '<div class="grp">Você</div>' + btn("progresso", "Meu progresso", "progresso") + btn("favoritos", "Salvos", "favoritos", S.prog.favorites.length || "") + btn("roteiro", "Próximas etapas", "roteiro") +
@@ -886,6 +952,7 @@ const IC = {
   monitor: svg('<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'),
   planilha: svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/>'),
   robo: svg('<path d="M4 21h8M8 21v-4l3-6 5-3"/><circle cx="11" cy="11" r="1.6"/><circle cx="16" cy="8" r="1.6"/><path d="M17.3 6.8 20 4.5M18 9.5l2.6 1.4"/>'),
+  fabrica: svg('<path d="M3 21V10l5 3V10l5 3V10l5 3V4h3v17z"/><path d="M7 17h2M12 17h2M17 17h2"/>'),
   busca: svg('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
   raio: svg('<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>'),
   casa: svg('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M12 13v4M10 15h4"/>'),
@@ -1436,7 +1503,7 @@ function continueItems() {
 }
 VIEWS.inicio = () => {
   const cont = continueItems(), f = dailyCase();
-  const blocks = [["lab", "Laboratório", pub("cases").length + " desafios de diagnóstico"], ["projetos", "Projetos", pub("projects").length + " projetos guiados"], ["desafios", "Treino", "Perguntas sorteadas de todas as trilhas"], ["livros", "Livros", pub("books").length + " leituras recomendadas"], ["progresso", "Meu progresso", calcXP() + " XP"], ["favoritos", "Salvos", (S.prog.favorites.length || "Nenhum") + " item(ns) salvo(s)"]];
+  const blocks = [["envase", "Linha de envase", "Projeto e escopo da linha: " + envBlocks().length + " blocos"], ["lab", "Laboratório", pub("cases").length + " desafios de diagnóstico"], ["projetos", "Projetos", pub("projects").length + " projetos guiados"], ["desafios", "Treino", "Perguntas sorteadas de todas as trilhas"], ["livros", "Livros", pub("books").length + " leituras recomendadas"], ["progresso", "Meu progresso", calcXP() + " XP"], ["favoritos", "Salvos", (S.prog.favorites.length || "Nenhum") + " item(ns) salvo(s)"]];
   return '<div class="stack hello" style="gap:28px">' + dbNotice() + head("Início", "Escolha um bloco para estudar ou continue de onde parou. O menu à esquerda mostra todas as áreas e etapas; use a busca para achar qualquer lição.") +
     (cont.length ? '<section><div class="sec-h"><h2>Continue de onde parou</h2></div><div class="qlist">' + cont.map(c => '<button data-act="go" data-r="' + c[3] + '" data-id="' + esc(c[4]) + '" data-t="' + esc(c[5]) + '"><span class="dot"></span><span style="min-width:0"><span class="k">' + esc(c[0]) + "</span><br><b>" + esc(c[1]) + '</b></span><span class="small dim">' + esc(c[2]) + "</span></button>").join("") + "</div></section>" : "") +
     '<section><div class="sec-h"><h2>Áreas de estudo</h2></div><div class="areas">' + ALL_AREAS().map(areaCard).join("") + "</div></section>" +
@@ -1476,6 +1543,122 @@ VIEWS.busca = () => {
   return '<div class="stack" style="gap:20px">' + intro + '<p class="muted">' + (n ? n + " resultado(s) para <b>" + esc(raw) + "</b>" : "Nada encontrado para <b>" + esc(raw) + "</b>. Tente outra palavra.") + '</p><div class="res">' +
     groups.map(([g, its]) => '<section><div class="sec-h"><h2>' + g + '</h2><span class="small dim">' + its.length + '</span></div><div class="qlist">' + its.slice(0, 30).map(x => '<button data-act="go" data-r="' + x[3] + '"' + (x[4] ? ' data-id="' + esc(x[4]) + '"' : "") + (x[5] ? ' data-t="' + esc(x[5]) + '"' : "") + '><span class="dot"></span><span style="min-width:0"><b>' + hl(x[1], q) + '</b><br><span class="small muted">' + hl(String(x[2] || "").slice(0, 160), q) + "</span></span>" + (x[5] ? tchip(x[5]) : "<span></span>") + "</button>").join("") + "</div></section>").join("") + "</div></div>";
 };
+
+const ACT_EXTRA = {};
+IC.envase = IC.fabrica;
+
+/* ===== Meus projetos: linha de envase (projeto e escopo) =====
+   Fica no progresso do usuário (S.prog.envase): no programa instalado vai para o arquivo de dados com cópia diária,
+   no navegador fica no navegador e no claude.ai fica na conta. */
+const ENV_SECS = [
+  ["util", "Utilidades e sala de máquinas", "#38bdf8"],
+  ["xarope", "Xaroparia e preparo da bebida", "#f59e0b"],
+  ["enche", "Sopro, enchimento e fechamento", "#22d3ee"],
+  ["emb", "Rotulagem, embalagem e paletização", "#a78bfa"]
+];
+const ENV_ST = { ideia: "Ideia", escopo: "Em escopo", fechado: "Escopo fechado" };
+const ENV_F = [
+  ["funcao", "Função no processo", "O que este bloco faz e por que existe na linha."],
+  ["entradas", "O que entra", "Materiais, produto e utilidades (ar, água, CO₂, vapor, energia)."],
+  ["saidas", "O que sai", "Produto, sinais, resíduos."],
+  ["interlig", "Interligações com outros blocos", "Um por linha, por exemplo: Enchedora → Sopradora: pede garrafas (acúmulo baixo)."],
+  ["acion", "Acionamentos", "Motores, servomotores, inversores, cilindros, válvulas."],
+  ["sensores", "Sensores e instrumentos", "Presença, nível, pressão, temperatura, vazão, visão."],
+  ["automacao", "CLP, rede e tags", "S7, Profinet, IHM, tags principais e telas."],
+  ["parametros", "Parâmetros e capacidade", "Velocidade (garrafas/hora), formatos, tempos, receitas."],
+  ["seguranca", "Segurança", "Proteções, portas, emergências, NR-12."],
+  ["falhas", "Falhas típicas e diagnóstico", "Defeitos comuns, causas e como investigar; viram desafios de treinamento."],
+  ["notas", "Anotações", "Ideias, dúvidas, referências, decisões."]
+];
+const ENV_TPL = [
+  ["util", "Tratamento de água", "Deixa a água dentro do padrão da bebida: filtração, cloração/decloração, carvão ativado."],
+  ["util", "Sala de máquinas: ar comprimido", "Compressores de baixa (comando e transporte) e de alta pressão (sopro), secadores e reservatórios."],
+  ["util", "Refrigeração (chiller)", "Água gelada para resfriar produto, moldes da sopradora e processo."],
+  ["util", "CO₂", "Recebimento, armazenagem e vaporização do CO₂ para a carbonatação."],
+  ["util", "Vapor e água quente", "Aquecimento para xaroparia e CIP."],
+  ["xarope", "Xarope simples", "Dissolução de açúcar em água tratada, filtração e resfriamento."],
+  ["xarope", "Xarope composto", "Mistura do xarope simples com concentrados e aditivos, por receita."],
+  ["xarope", "CIP (limpeza no local)", "Limpeza automática de tanques e tubulações com soda, ácido e enxágues."],
+  ["xarope", "Mixer e carbonatador", "Proporciona xarope e água, retira o ar, carbonata e resfria a bebida."],
+  ["enche", "Alimentação de pré-formas", "Tombador, silo e elevador que levam as pré-formas à sopradora."],
+  ["enche", "Sopradora", "Aquece as pré-formas e sopra as garrafas PET nos moldes."],
+  ["enche", "Transporte aéreo de garrafas", "Leva as garrafas vazias da sopradora ao bloco de enchimento por ar."],
+  ["enche", "Bloco rinser, enchedora e capsuladora", "Enxágua, enche por contrapressão e fecha com a tampa."],
+  ["enche", "Inspeção de nível e tampa", "Rejeita garrafas com nível baixo ou tampa mal colocada."],
+  ["emb", "Rotuladora", "Aplica o rótulo (envolvente ou sleeve)."],
+  ["emb", "Codificador de lote e validade", "Imprime data, lote e hora em cada garrafa."],
+  ["emb", "Transportadores e acúmulo", "Esteiras, divisores e acúmulos entre as máquinas."],
+  ["emb", "Empacotadora (shrink)", "Agrupa as garrafas e envolve com filme termoencolhível no túnel."],
+  ["emb", "Paletizadora", "Monta as camadas de fardos no palete, com divisórias."],
+  ["emb", "Envolvedora (stretch) e etiqueta do palete", "Envolve o palete com filme e identifica para a expedição."]
+];
+function envP() {
+  if (!S.prog.envase) S.prog.envase = { v: 1, proj: { nome: "Linha de envase de refrigerantes PET", produto: "", capacidade: "", formatos: "", turnos: "", objetivo: "", escopo: "", premissas: "", arquitetura: "" }, blocks: ENV_TPL.map((b, i) => ({ id: "b" + (i + 1), area: b[0], nome: b[1], status: "ideia", funcao: b[2] })), seq: ENV_TPL.length };
+  return S.prog.envase;
+}
+const envBlocks = () => (S.prog && S.prog.envase ? S.prog.envase.blocks : ENV_TPL);
+const envFill = b => Math.round(ENV_F.filter(([k]) => String(b[k] || "").trim()).length / ENV_F.length * 100);
+let envSaveT = 0;
+function envSave() { clearTimeout(envSaveT); envSaveT = setTimeout(() => { envP().updatedAt = new Date().toISOString(); saveProg(); const k = $("#env-saved"); if (k) k.textContent = "Salvo " + new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }); }, 400); }
+function envField(path, label, val, hint, rows) {
+  return '<label class="f' + (rows ? " wide" : "") + '">' + label + (hint ? "<small>" + hint + "</small>" : "") + (rows ? '<textarea rows="' + rows + '" data-env="' + path + '">' + esc(val || "") + "</textarea>" : '<input type="text" data-env="' + path + '" value="' + esc(val || "") + '">') + "</label>";
+}
+VIEWS.envase = () => {
+  const E = envP(), P = E.proj, sel = E.blocks.find(b => b.id === S.ui.envSel) || null;
+  const tot = E.blocks.length, fech = E.blocks.filter(b => b.status === "fechado").length, mat = tot ? Math.round(E.blocks.reduce((s, b) => s + envFill(b), 0) / tot) : 0;
+  const tab = S.ui.envTab || "linha";
+  const tabs = [["linha", "Linha e blocos"], ["projeto", "Dados do projeto"], ["interlig", "Interligações"], ["exportar", "Exportar"]];
+  let body = "";
+  if (tab === "projeto") {
+    body = '<div class="panel"><div class="env-ed">' + envField("proj.nome", "Nome do projeto", P.nome) + envField("proj.produto", "Produto", P.produto, "Ex.: refrigerante carbonatado em PET") + envField("proj.capacidade", "Capacidade nominal", P.capacidade, "Ex.: 12.000 garrafas/hora em 2 L") + envField("proj.formatos", "Formatos", P.formatos, "Ex.: 600 mL, 1,5 L, 2 L") + envField("proj.turnos", "Regime de trabalho", P.turnos, "Turnos, dias por semana, paradas programadas") +
+      envField("proj.objetivo", "Objetivo", P.objetivo, "Para que serve esta linha virtual: treinamento de operação, manutenção, automação…", 4) + envField("proj.escopo", "Escopo geral", P.escopo, "O que está dentro e o que fica fora do projeto.", 6) + envField("proj.premissas", "Premissas e restrições", P.premissas, "Normas, espaço, utilidades disponíveis, decisões já tomadas.", 5) +
+      envField("proj.arquitetura", "Arquitetura de automação", P.arquitetura, "CLPs (S7), rede (Profinet), IHMs e supervisório, drives e servos, como as máquinas conversam.", 6) + "</div></div>";
+  } else if (tab === "interlig") {
+    const rows = E.blocks.flatMap(b => String(b.interlig || "").split("\n").map(s => s.trim()).filter(Boolean).map(s => [b, s]));
+    body = '<div class="panel">' + (rows.length ? '<div class="tbl-wrap"><table class="itbl"><thead><tr><th>Bloco</th><th>Interligação</th></tr></thead><tbody>' + rows.map(([b, s]) => '<tr><td><button class="link" data-act="envsel" data-id="' + b.id + '">' + esc(b.nome) + "</button></td><td>" + esc(s) + "</td></tr>").join("") + "</tbody></table></div>" : emptyBox("Nenhuma interligação escrita ainda. Abra um bloco e preencha o campo Interligações com outros blocos, uma por linha.")) + "</div>";
+  } else if (tab === "exportar") {
+    body = '<div class="panel stack"><p class="muted">O projeto fica salvo sozinho a cada alteração. Use estas opções para guardar uma cópia, levar o projeto para outro computador ou usar o escopo num documento.</p><div class="env-tools"><button class="btn primary" data-act="envexp" data-f="md">Baixar escopo (.md)</button><button class="btn" data-act="envexp" data-f="json">Baixar cópia do projeto (.json)</button><button class="btn" data-act="envcopy">Copiar escopo como texto</button><label class="btn">Importar cópia (.json)<input type="file" accept=".json,application/json" data-envimp hidden></label></div>' +
+      (S.mode === "claude" ? '<p class="small dim">No claude.ai, os botões de baixar podem não funcionar; use "Copiar escopo como texto".</p>' : "") + "</div>";
+  } else {
+    const flow = '<div class="flow">' + ENV_SECS.map(([sid, sn, sc]) => { const bs = E.blocks.filter(b => b.area === sid); return '<section class="flow-sec" style="--sc:' + sc + '"><header><h3><i></i>' + esc(sn) + ' <span class="small dim">' + bs.length + '</span></h3><button class="btn sm" data-act="envadd" data-a="' + sid + '">+ Bloco</button></header><div class="flow-row">' +
+      (bs.map(b => '<button class="fblk" data-act="envsel" data-id="' + b.id + '" aria-pressed="' + (sel && sel.id === b.id) + '"><b>' + esc(b.nome || "Sem nome") + '</b><span class="mat"><i style="width:' + envFill(b) + '%"></i></span><span class="st"><i class="st-' + b.status + '"></i>' + ENV_ST[b.status] + " · " + envFill(b) + "%</span></button>").join("") || '<p class="small dim">Nenhum bloco nesta parte.</p>') + "</div></section>"; }).join("") + "</div>";
+    let ed = "";
+    if (sel) {
+      const i = E.blocks.indexOf(sel);
+      ed = '<div class="panel" id="env-ed" style="border-color:' + (ENV_SECS.find(s => s[0] === sel.area) || ENV_SECS[0])[2] + '"><div class="ph"><h3>' + esc(sel.nome || "Bloco") + '</h3><div class="env-tools"><button class="btn sm" data-act="envmove" data-d="-1" aria-label="Mover para antes">← Antes</button><button class="btn sm" data-act="envmove" data-d="1" aria-label="Mover para depois">Depois →</button><button class="btn sm" data-act="envdup">Duplicar</button>' + (S.ui.envDel === sel.id ? '<button class="btn sm danger" data-act="envdel">Confirmar exclusão</button><button class="btn sm" data-act="envdelno">Cancelar</button>' : '<button class="btn sm danger" data-act="envdelask">Excluir</button>') + '</div></div><div class="env-ed">' +
+        envField("blocks." + i + ".nome", "Nome do bloco", sel.nome) +
+        '<label class="f">Parte da linha<select data-env="blocks.' + i + '.area" data-rerender="1">' + ENV_SECS.map(s => '<option value="' + s[0] + '"' + (s[0] === sel.area ? " selected" : "") + ">" + esc(s[1]) + "</option>").join("") + '</select></label><label class="f">Situação do escopo<select data-env="blocks.' + i + '.status" data-rerender="1">' + Object.entries(ENV_ST).map(([k, v]) => '<option value="' + k + '"' + (k === sel.status ? " selected" : "") + ">" + v + "</option>").join("") + "</select></label><span></span>" +
+        ENV_F.map(([k, l, hnt]) => envField("blocks." + i + "." + k, l, sel[k], hnt, k === "funcao" || k === "notas" ? 3 : 4)).join("") + "</div></div>";
+    } else ed = '<div class="notice">Clique num bloco para abrir o escopo dele. Os blocos seguem a ordem do processo, da esquerda para a direita, em cada parte da linha.</div>';
+    body = flow + ed;
+  }
+  return '<div class="stack" style="gap:22px">' + head("Linha de envase", "Projeto e escopo de uma linha de envase completa, com as máquinas interligadas no processo. Aqui você descreve cada bloco, como ele conversa com os outros e o que precisa existir para a linha rodar. Esta é a base para montar depois a linha virtual, no estilo do Korum.", '<span class="small dim" id="env-saved">Salvo automaticamente</span>') +
+    '<div class="env-kpis"><div><span>Blocos</span><b>' + tot + '</b></div><div><span>Escopo fechado</span><b>' + fech + '</b></div><div><span>Campos preenchidos</span><b>' + mat + '%</b></div><div><span>Interligações</span><b>' + E.blocks.reduce((s, b) => s + String(b.interlig || "").split("\n").filter(x => x.trim()).length, 0) + "</b></div></div>" +
+    '<div class="tabs" role="tablist">' + tabs.map(([k, l]) => '<button role="tab" aria-selected="' + (tab === k) + '" data-act="envtab" data-k="' + k + '">' + l + "</button>").join("") + "</div>" + body + "</div>";
+};
+function envMarkdown() {
+  const E = envP(), P = E.proj, L = ["# " + (P.nome || "Linha de envase"), ""];
+  [["Produto", P.produto], ["Capacidade nominal", P.capacidade], ["Formatos", P.formatos], ["Regime de trabalho", P.turnos]].forEach(([k, v]) => { if (v) L.push("- **" + k + ":** " + v); });
+  [["Objetivo", P.objetivo], ["Escopo geral", P.escopo], ["Premissas e restrições", P.premissas], ["Arquitetura de automação", P.arquitetura]].forEach(([k, v]) => { if (v) L.push("", "## " + k, "", v); });
+  ENV_SECS.forEach(([sid, sn]) => { const bs = E.blocks.filter(b => b.area === sid); if (!bs.length) return; L.push("", "## " + sn); bs.forEach((b, i) => { L.push("", "### " + (i + 1) + ". " + b.nome + " (" + ENV_ST[b.status] + ")"); ENV_F.forEach(([k, l]) => { const v = String(b[k] || "").trim(); if (v) L.push("", "**" + l + "**", "", v); }); }); });
+  return L.join("\n") + "\n";
+}
+function envDownload(name, text, type) {
+  if (DESK && DESK.saveFile) { DESK.saveFile(name, text).then(r => toast(r && r.saved ? "Arquivo salvo" : "Cancelado")); return; }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); toast("Arquivo gerado");
+}
+Object.assign(ACT_EXTRA, {
+  envtab: el => { S.ui.envTab = el.dataset.k; render(true); },
+  envsel: el => { S.ui.envSel = el.dataset.id; S.ui.envDel = null; S.ui.envTab = "linha"; render(true); const e = $("#env-ed"); if (e && e.scrollIntoView) e.scrollIntoView({ behavior: "smooth", block: "start" }); },
+  envadd: el => { const E = envP(); E.seq = (E.seq || E.blocks.length) + 1; const b = { id: "b" + E.seq, area: el.dataset.a, nome: "Novo bloco", status: "ideia" }; const last = E.blocks.map(x => x.area).lastIndexOf(el.dataset.a); E.blocks.splice(last + 1, 0, b); S.ui.envSel = b.id; envSave(); render(true); },
+  envmove: el => { const E = envP(), b = E.blocks.find(x => x.id === S.ui.envSel); if (!b) return; const same = E.blocks.filter(x => x.area === b.area), k = same.indexOf(b), to = same[k + Number(el.dataset.d)]; if (!to) return; const i = E.blocks.indexOf(b), j = E.blocks.indexOf(to); E.blocks[i] = to; E.blocks[j] = b; envSave(); render(true); },
+  envdup: () => { const E = envP(), b = E.blocks.find(x => x.id === S.ui.envSel); if (!b) return; E.seq = (E.seq || E.blocks.length) + 1; const c = Object.assign(clone(b), { id: "b" + E.seq, nome: b.nome + " (cópia)", status: "ideia" }); E.blocks.splice(E.blocks.indexOf(b) + 1, 0, c); S.ui.envSel = c.id; envSave(); render(true); },
+  envdelask: () => { S.ui.envDel = S.ui.envSel; render(true); },
+  envdelno: () => { S.ui.envDel = null; render(true); },
+  envdel: () => { const E = envP(); E.blocks = E.blocks.filter(x => x.id !== S.ui.envDel); S.ui.envSel = null; S.ui.envDel = null; envSave(); render(true); toast("Bloco excluído"); },
+  envexp: el => el.dataset.f === "md" ? envDownload("escopo-linha-de-envase.md", envMarkdown(), "text/markdown") : envDownload("projeto-linha-de-envase.json", JSON.stringify(envP(), null, 1), "application/json"),
+  envcopy: () => { const t = envMarkdown(); (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast("Escopo copiado"), () => { S.ui.envTab = "exportar"; toast("Não foi possível copiar"); }); }
+});
 
 /* ---------- janela de detalhes ---------- */
 function renderModal() {
@@ -2028,6 +2211,7 @@ async function saveEditor(status) {
 const ACT = {
   go: el => go(el.dataset.r, el.dataset.id),
   sim: el => simAct(el),
+  ...ACT_EXTRA,
   open: el => { renderModal.back = el; S.ui.modal = { type: el.dataset.type, id: el.dataset.id }; renderModal(); },
   mclose: () => { S.ui.modal = null; renderModal(); },
   rail: el => { const r = el.parentElement.querySelector(".rail"); if (r) r.scrollBy({ left: Number(el.dataset.d) * r.clientWidth * 0.9, behavior: "smooth" }); },
@@ -2083,6 +2267,7 @@ document.addEventListener("click", e => {
 document.addEventListener("change", e => {
   const el = e.target;
   if (el.dataset.act === "pref" || el.dataset.act === "pstep") { ACT[el.dataset.act](el); return; }
+  if (el.hasAttribute("data-envimp") && el.files && el.files[0]) { el.files[0].text().then(t => { const d = JSON.parse(t); if (!d || !Array.isArray(d.blocks) || !d.proj) throw 0; S.prog.envase = d; S.ui.envSel = null; saveProg(); render(true); toast("Projeto importado"); }).catch(() => toast("Arquivo inválido")); el.value = ""; return; }
   if (el.dataset.path && S.editor) {
     const k = el.dataset.kind; let v = el.value;
     if (k === "bool") v = el.checked; else if (k === "num") v = el.value === "" ? "" : Number(el.value); else if (k === "lines") v = el.value.split("\n");
@@ -2093,6 +2278,7 @@ document.addEventListener("change", e => {
 });
 document.addEventListener("input", e => {
   const el = e.target;
+  if (el.dataset.env) { const E = envP(); setPath(E, el.dataset.env, el.value); envSave(); if (el.dataset.rerender) render(true); else if (/\.nome$/.test(el.dataset.env)) { const b = document.querySelector('.fblk[aria-pressed="true"] b'); if (b) b.textContent = el.value || "Sem nome"; } return; }
   if (el.id === "q") { S.ui.busca = el.value; if (S.route.name !== "busca") { S.route = { name: "busca", id: null }; } clearTimeout(ACT._bq); ACT._bq = setTimeout(() => { render(true); }, 120); return; }
   if (el.dataset.simIn) { simInput(el); return; }
   if (el.dataset.path && S.editor && el.dataset.kind !== "bool") {
