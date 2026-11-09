@@ -667,6 +667,21 @@ h1{background:linear-gradient(90deg,#f1f6ff 0%,#9ad8ff 100%);-webkit-background-
 .fblk .st i{width:8px;height:8px;border-radius:50%}
 .fblk .mat{height:3px;border-radius:2px;background:#1e2d4d;overflow:hidden}
 .fblk .mat i{display:block;height:100%;background:var(--sc)}
+
+.flow-row.solo .fblk::after,.flow-row.solo .fblk::before{display:none}
+.flow-row.solo .fblk{margin-right:12px}
+.flow-sec > header h3 + p{max-width:72ch}
+.pmap{display:flex;flex-direction:column;gap:12px}
+.mrow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;align-items:start}
+@media (max-width:760px){.mrow{grid-template-columns:1fr;gap:6px}}
+.mlab{font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);padding-top:7px}
+.mflow{display:flex;align-items:center;gap:6px 6px;flex-wrap:wrap;row-gap:8px}
+.mflow.wrap{flex-wrap:wrap}
+.mchip{flex:0 0 auto;border:1px solid color-mix(in srgb,var(--sc) 55%,transparent);background:color-mix(in srgb,var(--sc) 12%,transparent);color:var(--ink);border-radius:999px;padding:5px 11px;font-size:.8rem;cursor:pointer;white-space:nowrap}
+.mchip:hover{background:color-mix(in srgb,var(--sc) 25%,transparent)}
+.marr{font-style:normal;color:var(--dim);flex:0 0 auto}
+.mut{border-left:3px solid var(--sc);background:var(--surface);border-radius:6px;padding:6px 10px;font-size:.82rem;color:var(--muted)}
+.mut b{color:var(--ink)}
 .st-ideia{background:#6c7ea3}.st-escopo{background:#fbbf24}.st-fechado{background:#34d399}
 .env-ed{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .env-ed .wide{grid-column:1/-1}
@@ -1551,10 +1566,14 @@ IC.envase = IC.fabrica;
    Fica no progresso do usuário (S.prog.envase): no programa instalado vai para o arquivo de dados com cópia diária,
    no navegador fica no navegador e no claude.ai fica na conta. */
 const ENV_SECS = [
-  ["util", "Utilidades e sala de máquinas", "#38bdf8"],
-  ["xarope", "Xaroparia e preparo da bebida", "#f59e0b"],
-  ["enche", "Sopro, enchimento e fechamento", "#22d3ee"],
-  ["emb", "Rotulagem, embalagem e paletização", "#a78bfa"]
+  // [id, nome, cor, como é o setor, encadeado (máquinas em sequência com transporte), quem ele atende]
+  ["xarope", "Tratamento de água e xaroparia", "#f59e0b", "Preparo do produto: a água tratada vira xarope simples e depois xarope composto, que segue para a linha de envase.", true, ["linha"]],
+  ["linha", "Linha de envase", "#22d3ee", "Do filtro polidor até o palete no estoque. As máquinas são interligadas por transportadores com controle de velocidade e acúmulo.", true, []],
+  ["sopro", "Sopro (setor separado)", "#a78bfa", "Setor mais distante, com chiller e unidade de ar de sopro próprios por causa da capacidade maior. Entrega as garrafas rotuladas à enchedora pelo transfer.", true, ["linha"]],
+  ["maq", "Sala de máquinas", "#38bdf8", "Compressores e chiller. Atende a xaroparia e a linha de envase.", false, ["xarope", "linha"]],
+  ["caldeira", "Caldeira (setor separado)", "#f87171", "Vapor e água quente para a xaroparia, a linha de envase e a sala de CIP.", false, ["xarope", "linha", "cip"]],
+  ["cip", "Sala de CIP (separada)", "#34d399", "Limpeza no local de tanques e tubulações, com aquecimento vindo da caldeira.", false, []],
+  ["transp", "Transportes, sensores e CLPs", "#818cf8", "Todo o transporte e os transfers, até a saída do palete para o estoque, são controlados por sensores interligados aos CLPs.", false, ["sopro", "linha"]]
 ];
 const ENV_ST = { ideia: "Ideia", escopo: "Em escopo", fechado: "Escopo fechado" };
 const ENV_F = [
@@ -1571,30 +1590,50 @@ const ENV_F = [
   ["notas", "Anotações", "Ideias, dúvidas, referências, decisões."]
 ];
 const ENV_TPL = [
-  ["util", "Tratamento de água", "Deixa a água dentro do padrão da bebida: filtração, cloração/decloração, carvão ativado."],
-  ["util", "Sala de máquinas: ar comprimido", "Compressores de baixa (comando e transporte) e de alta pressão (sopro), secadores e reservatórios."],
-  ["util", "Refrigeração (chiller)", "Água gelada para resfriar produto, moldes da sopradora e processo."],
-  ["util", "CO₂", "Recebimento, armazenagem e vaporização do CO₂ para a carbonatação."],
-  ["util", "Vapor e água quente", "Aquecimento para xaroparia e CIP."],
-  ["xarope", "Xarope simples", "Dissolução de açúcar em água tratada, filtração e resfriamento."],
-  ["xarope", "Xarope composto", "Mistura do xarope simples com concentrados e aditivos, por receita."],
-  ["xarope", "CIP (limpeza no local)", "Limpeza automática de tanques e tubulações com soda, ácido e enxágues."],
-  ["xarope", "Mixer e carbonatador", "Proporciona xarope e água, retira o ar, carbonata e resfria a bebida."],
-  ["enche", "Alimentação de pré-formas", "Tombador, silo e elevador que levam as pré-formas à sopradora."],
-  ["enche", "Sopradora", "Aquece as pré-formas e sopra as garrafas PET nos moldes."],
-  ["enche", "Transporte aéreo de garrafas", "Leva as garrafas vazias da sopradora ao bloco de enchimento por ar."],
-  ["enche", "Bloco rinser, enchedora e capsuladora", "Enxágua, enche por contrapressão e fecha com a tampa."],
-  ["enche", "Inspeção de nível e tampa", "Rejeita garrafas com nível baixo ou tampa mal colocada."],
-  ["emb", "Rotuladora", "Aplica o rótulo (envolvente ou sleeve)."],
-  ["emb", "Codificador de lote e validade", "Imprime data, lote e hora em cada garrafa."],
-  ["emb", "Transportadores e acúmulo", "Esteiras, divisores e acúmulos entre as máquinas."],
-  ["emb", "Empacotadora (shrink)", "Agrupa as garrafas e envolve com filme termoencolhível no túnel."],
-  ["emb", "Paletizadora", "Monta as camadas de fardos no palete, com divisórias."],
-  ["emb", "Envolvedora (stretch) e etiqueta do palete", "Envolve o palete com filme e identifica para a expedição."]
+  ["xarope", "Tratamento de água", "Deixa a água dentro do padrão da bebida (filtração, cloração e decloração, carvão ativado). Primeiro passo do caminho do produto.", { interlig: "Tratamento de água → Xarope simples: água tratada" }],
+  ["xarope", "Xarope simples", "Dissolve o açúcar na água tratada, filtra e resfria.", { interlig: "Xarope simples → Xarope composto" }],
+  ["xarope", "Xarope composto", "Mistura o xarope simples com os concentrados, conforme a receita.", { interlig: "Xarope composto → Filtro polidor (linha de envase)" }],
+  ["linha", "Filtro polidor", "Polimento final do xarope antes do mixer.", { interlig: "Filtro polidor → Mixer e carbonatador" }],
+  ["linha", "Mixer e carbonatador", "Proporciona xarope e água, retira o ar, carbonata e resfria a bebida.", { interlig: "Mixer e carbonatador → Enchedora: bebida pronta" }],
+  ["linha", "Enchedora", "Enche as garrafas que chegam do sopro.", { interlig: "Transfer do sopro → Enchedora: garrafas rotuladas\nEnchedora → Capsuladora (transporte)" }],
+  ["linha", "Capsuladora", "Fecha as garrafas com a tampa.", { interlig: "Capsuladora → Medidor de nível (transporte)" }],
+  ["linha", "Medidor de nível", "Confere o nível de cada garrafa e rejeita as fora do padrão.", { interlig: "Medidor de nível → Codificador (transporte)" }],
+  ["linha", "Codificador", "Imprime lote, validade e hora em cada garrafa.", { interlig: "Codificador → Empacotadora (transporte)" }],
+  ["linha", "Empacotadora", "Agrupa as garrafas em fardos.", { interlig: "Empacotadora → Paletizadora (transporte)" }],
+  ["linha", "Paletizadora", "Monta as camadas de fardos no palete.", { interlig: "Paletizadora → Stretch (transporte de paletes)" }],
+  ["linha", "Stretch", "Envolve o palete com filme.", { interlig: "Stretch → Estoque: saída do palete" }],
+  ["linha", "Estoque", "Recebe os paletes prontos na saída da linha.", {}],
+  ["sopro", "Estoque de pré-formas", "Armazena as pré-formas para o sopro.", { interlig: "Estoque de pré-formas → Abastecimento de pré-formas" }],
+  ["sopro", "Abastecimento de pré-formas", "Leva as pré-formas até a sopradora.", { interlig: "Abastecimento de pré-formas → Sopradora" }],
+  ["sopro", "Sopradora", "Aquece as pré-formas e sopra as garrafas.", { interlig: "Sopradora → Rotuladora (transporte)\nChiller do sopro → Sopradora: água gelada\nUnidade de ar de sopro → Sopradora: ar de alta pressão" }],
+  ["sopro", "Rotuladora", "Aplica o rótulo nas garrafas.", { interlig: "Rotuladora → Transfer" }],
+  ["sopro", "Transfer até a linha de envase", "Leva as garrafas do setor de sopro até a enchedora.", { interlig: "Transfer → Enchedora (linha de envase)" }],
+  ["sopro", "Chiller do sopro", "Água gelada para a sopradora, separado do chiller da sala de máquinas por causa da capacidade.", { interlig: "Chiller do sopro → Sopradora" }],
+  ["sopro", "Unidade de ar de sopro", "Ar comprimido para o sopro, separado da sala de máquinas por causa da capacidade.", { interlig: "Unidade de ar de sopro → Sopradora" }],
+  ["maq", "Compressores", "Ar comprimido para a xaroparia e a linha de envase.", { interlig: "Compressores → Xaroparia\nCompressores → Linha de envase" }],
+  ["maq", "Chiller", "Água gelada para a xaroparia e a linha de envase.", { interlig: "Chiller → Xaroparia\nChiller → Linha de envase" }],
+  ["caldeira", "Caldeira", "Gera vapor e água quente. Fica num setor separado.", { interlig: "Caldeira → Xaroparia\nCaldeira → Linha de envase\nCaldeira → Sala de CIP" }],
+  ["cip", "Sala de CIP", "Limpeza no local, com soda, ácido e enxágues.", { interlig: "Caldeira → Sala de CIP: aquecimento" }],
+  ["transp", "Transportadores e acúmulo", "Ligam todas as máquinas, com controle de velocidade e acúmulo entre elas.", { sensores: "Sensores em todos os transportes e transfers até a saída do palete para o estoque, interligados aos CLPs." }],
+  ["transp", "Sensores e CLPs da linha", "Os sensores dos transportes e das máquinas ficam ligados aos CLPs, que controlam a velocidade e o acúmulo.", {}]
 ];
+const ENV_OLD = { util: "maq", xarope: "xarope", enche: "linha", emb: "linha" };
+const ENV_OLDTPL = ["Tratamento de água", "Sala de máquinas: ar comprimido", "Refrigeração (chiller)", "CO₂", "Vapor e água quente", "Xarope simples", "Xarope composto", "CIP (limpeza no local)", "Mixer e carbonatador", "Alimentação de pré-formas", "Sopradora", "Transporte aéreo de garrafas", "Bloco rinser, enchedora e capsuladora", "Inspeção de nível e tampa", "Rotuladora", "Codificador de lote e validade", "Transportadores e acúmulo", "Empacotadora (shrink)", "Paletizadora", "Envolvedora (stretch) e etiqueta do palete"];
+const envNew = () => ENV_TPL.map((b, i) => Object.assign({ id: "b" + (i + 1), area: b[0], nome: b[1], status: "ideia", funcao: b[2] }, b[3]));
 function envP() {
-  if (!S.prog.envase) S.prog.envase = { v: 1, proj: { nome: "Linha de envase de refrigerantes PET", produto: "", capacidade: "", formatos: "", turnos: "", objetivo: "", escopo: "", premissas: "", arquitetura: "" }, blocks: ENV_TPL.map((b, i) => ({ id: "b" + (i + 1), area: b[0], nome: b[1], status: "ideia", funcao: b[2] })), seq: ENV_TPL.length };
-  return S.prog.envase;
+  if (!S.prog.envase) S.prog.envase = { v: 2, proj: { nome: "Linha de envase de refrigerantes PET", produto: "", capacidade: "", formatos: "", turnos: "", objetivo: "", escopo: "", premissas: "", arquitetura: "" }, blocks: envNew(), seq: ENV_TPL.length };
+  const E = S.prog.envase;
+  if (E.v !== 2) { // v1 → v2: novo desenho da planta, mantendo o que já foi escrito
+    const blocks = envNew(), keys = ENV_F.map(f => f[0]).filter(k => k !== "funcao"), N = s => norm(String(s || "")).replace(/[^a-z0-9]/g, "");
+    const edited = b => b.status !== "ideia" || keys.some(k => String(b[k] || "").trim()) || ENV_OLDTPL.indexOf(b.nome) < 0;
+    E.blocks.forEach(b => {
+      const m = blocks.find(n => N(n.nome) === N(b.nome));
+      if (m) { keys.forEach(k => { if (String(b[k] || "").trim()) m[k] = (m[k] && k === "interlig" ? m[k] + "\n" : "") + b[k]; }); if (b.status !== "ideia") m.status = b.status; }
+      else if (edited(b)) { E.seq = (E.seq || 40) + 1; blocks.push(Object.assign({}, b, { id: "b" + (100 + E.seq), area: ENV_OLD[b.area] || b.area })); }
+    });
+    E.blocks = blocks; E.seq = Math.max(E.seq || 0, 200); E.v = 2; S.ui.envSel = null; saveProg();
+  }
+  return E;
 }
 const envBlocks = () => (S.prog && S.prog.envase ? S.prog.envase.blocks : ENV_TPL);
 const envFill = b => Math.round(ENV_F.filter(([k]) => String(b[k] || "").trim()).length / ENV_F.length * 100);
@@ -1620,7 +1659,7 @@ VIEWS.envase = () => {
     body = '<div class="panel stack"><p class="muted">O projeto fica salvo sozinho a cada alteração. Use estas opções para guardar uma cópia, levar o projeto para outro computador ou usar o escopo num documento.</p><div class="env-tools"><button class="btn primary" data-act="envexp" data-f="md">Baixar escopo (.md)</button><button class="btn" data-act="envexp" data-f="json">Baixar cópia do projeto (.json)</button><button class="btn" data-act="envcopy">Copiar escopo como texto</button><label class="btn">Importar cópia (.json)<input type="file" accept=".json,application/json" data-envimp hidden></label></div>' +
       (S.mode === "claude" ? '<p class="small dim">No claude.ai, os botões de baixar podem não funcionar; use "Copiar escopo como texto".</p>' : "") + "</div>";
   } else {
-    const flow = '<div class="flow">' + ENV_SECS.map(([sid, sn, sc]) => { const bs = E.blocks.filter(b => b.area === sid); return '<section class="flow-sec" style="--sc:' + sc + '"><header><h3><i></i>' + esc(sn) + ' <span class="small dim">' + bs.length + '</span></h3><button class="btn sm" data-act="envadd" data-a="' + sid + '">+ Bloco</button></header><div class="flow-row">' +
+    const flow = envMap(E) + '<div class="flow">' + ENV_SECS.map(([sid, sn, sc, sd, chain]) => { const bs = E.blocks.filter(b => b.area === sid); return '<section class="flow-sec" style="--sc:' + sc + '"><header><div><h3><i></i>' + esc(sn) + ' <span class="small dim">' + bs.length + '</span></h3><p class="small muted" style="margin-top:4px">' + esc(sd) + '</p></div><button class="btn sm" data-act="envadd" data-a="' + sid + '">+ Bloco</button></header><div class="flow-row' + (chain ? "" : " solo") + '">' +
       (bs.map(b => '<button class="fblk" data-act="envsel" data-id="' + b.id + '" aria-pressed="' + (sel && sel.id === b.id) + '"><b>' + esc(b.nome || "Sem nome") + '</b><span class="mat"><i style="width:' + envFill(b) + '%"></i></span><span class="st"><i class="st-' + b.status + '"></i>' + ENV_ST[b.status] + " · " + envFill(b) + "%</span></button>").join("") || '<p class="small dim">Nenhum bloco nesta parte.</p>') + "</div></section>"; }).join("") + "</div>";
     let ed = "";
     if (sel) {
@@ -1636,6 +1675,18 @@ VIEWS.envase = () => {
     '<div class="env-kpis"><div><span>Blocos</span><b>' + tot + '</b></div><div><span>Escopo fechado</span><b>' + fech + '</b></div><div><span>Campos preenchidos</span><b>' + mat + '%</b></div><div><span>Interligações</span><b>' + E.blocks.reduce((s, b) => s + String(b.interlig || "").split("\n").filter(x => x.trim()).length, 0) + "</b></div></div>" +
     '<div class="tabs" role="tablist">' + tabs.map(([k, l]) => '<button role="tab" aria-selected="' + (tab === k) + '" data-act="envtab" data-k="' + k + '">' + l + "</button>").join("") + "</div>" + body + "</div>";
 };
+function envMap(E) {
+  const sec = id => ENV_SECS.find(s => s[0] === id), nm = id => sec(id)[1].replace(/ \(.*\)$/, ""), alvo = { xarope: "a xaroparia", linha: "a linha de envase", cip: "a sala de CIP", sopro: "o sopro" };
+  const chip = b => '<button class="mchip" data-act="envsel" data-id="' + b.id + '" style="--sc:' + sec(b.area)[2] + '">' + esc(b.nome) + "</button>";
+  const prod = E.blocks.filter(b => (b.area === "xarope" || b.area === "linha"));
+  const sopro = E.blocks.filter(b => b.area === "sopro" && !/chiller|ar de sopro/i.test(b.nome));
+  const ench = prod.find(b => /enchedora/i.test(b.nome));
+  const ut = ENV_SECS.filter(s => s[5].length && s[0] !== "xarope" && s[0] !== "sopro");
+  return '<div class="panel pmap"><div class="ph"><h3>Mapa da planta</h3><span class="small dim">Clique numa máquina para abrir o escopo</span></div>' +
+    '<div class="mrow"><span class="mlab">Caminho do produto</span><div class="mflow">' + prod.map(chip).join('<i class="marr">→</i>') + "</div></div>" +
+    '<div class="mrow"><span class="mlab">Garrafas (sopro)</span><div class="mflow">' + sopro.map(chip).join('<i class="marr">→</i>') + (ench ? '<i class="marr">→</i>' + chip(ench) : "") + "</div></div>" +
+    '<div class="mrow"><span class="mlab">Utilidades</span><div class="mflow wrap">' + ut.map(s => '<span class="mut" style="--sc:' + s[2] + '"><b>' + esc(nm(s[0])) + "</b> atende " + s[5].map(k => alvo[k] || nm(k)).join(", ").replace(/, ([^,]*)$/, " e $1") + "</span>").join("") + "</div></div></div>";
+}
 function envMarkdown() {
   const E = envP(), P = E.proj, L = ["# " + (P.nome || "Linha de envase"), ""];
   [["Produto", P.produto], ["Capacidade nominal", P.capacidade], ["Formatos", P.formatos], ["Regime de trabalho", P.turnos]].forEach(([k, v]) => { if (v) L.push("- **" + k + ":** " + v); });
@@ -1991,7 +2042,7 @@ VIEWS.favoritos = () => {
 
 /* ----- Próximas etapas ----- */
 VIEWS.roteiro = () => {
-  const P = [["Versão 2.10", "Disponível", "ok", ["Cores tecnológicas (ciano e índigo) e o novo item Linha de envase, para montar o projeto e o escopo de uma linha completa com as máquinas interligadas"]], ["Versão 2.9", "Concluída", "ok", ["Layout novo: menu lateral com todas as áreas e etapas, início com blocos por área, busca em todo o conteúdo e fim do visual de streaming"]], ["Versão 2.8", "Concluída", "ok", ["Curso Programação de robôs com o Korum: 10 lições de KRL com prática no laboratório virtual Korum, um desafio no Laboratório e um projeto de célula de paletização"]], ["Versão 2.7", "Concluída", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
+  const P = [["Versão 2.11", "Disponível", "ok", ["Linha de envase no desenho real da planta: xaroparia, linha de envase, sopro, sala de máquinas, caldeira, sala de CIP e transportes com sensores e CLPs, com o mapa da planta"]], ["Versão 2.10", "Concluída", "ok", ["Cores tecnológicas (ciano e índigo) e o novo item Linha de envase, para montar o projeto e o escopo de uma linha completa com as máquinas interligadas"]], ["Versão 2.9", "Concluída", "ok", ["Layout novo: menu lateral com todas as áreas e etapas, início com blocos por área, busca em todo o conteúdo e fim do visual de streaming"]], ["Versão 2.8", "Concluída", "ok", ["Curso Programação de robôs com o Korum: 10 lições de KRL com prática no laboratório virtual Korum, um desafio no Laboratório e um projeto de célula de paletização"]], ["Versão 2.7", "Concluída", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
     ["Próxima", "Planejada", "go", ["Cursos completos da trilha IA no Trabalho", "Trilha Agentes e Automação: n8n, WhatsApp e primeiro agente", "Volter Assist também no programa instalado", "Certificado por curso concluído"]],
     ["Depois", "Planejada", "", ["Turmas fechadas e licenças para empresas", "Um curso de IA por profissão a cada etapa", "Aplicativo para celular com modo offline"]]];
   const L = S.mode === "local";

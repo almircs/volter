@@ -15,6 +15,11 @@ Isso só é preciso na primeira vez.
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.11.0: a linha de envase no desenho real da planta
+- **Mapa da planta** no topo: o caminho do produto (tratamento de água, xarope simples, xarope composto, filtro polidor, mixer e carbonatador, enchedora, capsuladora, medidor de nível, codificador, empacotadora, paletizadora, stretch e estoque), o caminho das garrafas desde o sopro até a enchedora e quem cada utilidade atende
+- **Setores separados:** tratamento de água e xaroparia, linha de envase, sopro (com chiller e unidade de ar próprios, estoque e abastecimento de pré-formas, sopradora, rotuladora e transfer), sala de máquinas (compressores e chiller), caldeira, sala de CIP, e transportes com sensores e CLPs
+- Interligações já preenchidas conforme o processo; quem já tinha escrito algo no projeto mantém o que escreveu
+
 ## Versão 2.10.0: cores novas e o projeto da linha de envase
 - **Visual tecnológico:** azul-marinho escuro com ciano e índigo, botões e destaques em degradê
 - **Novo item "Linha de envase"** (grupo Meus projetos): a linha em fluxo com setas, dividida em utilidades, xaroparia, sopro e enchimento, e fim de linha, com 20 blocos prontos para editar
