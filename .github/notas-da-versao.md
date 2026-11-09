@@ -15,6 +15,13 @@ Isso só é preciso na primeira vez.
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.10.0: cores novas e o projeto da linha de envase
+- **Visual tecnológico:** azul-marinho escuro com ciano e índigo, botões e destaques em degradê
+- **Novo item "Linha de envase"** (grupo Meus projetos): a linha em fluxo com setas, dividida em utilidades, xaroparia, sopro e enchimento, e fim de linha, com 20 blocos prontos para editar
+- Cada bloco tem o seu escopo: função, entradas e saídas, interligações, acionamentos, sensores, CLP e tags, parâmetros, segurança (NR-12), falhas e anotações, com a situação (ideia, em escopo, escopo fechado) e o quanto já está preenchido
+- Dados do projeto, tabela de interligações e exportação do escopo em .md ou do projeto em .json (com importação)
+- Tudo salvo sozinho no arquivo de dados do programa, com cópia diária
+
 ## Versão 2.9.0: layout novo, mais fácil de navegar
 - **Menu lateral** com as três áreas (Trilhas, Nova Fase e Elétrica e Hardware) e todas as etapas numeradas, com o progresso de cada uma
 - **Busca** em todo o conteúdo: lições, desafios, projetos, etapas e livros
