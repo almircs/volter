@@ -15,6 +15,11 @@ Isso só é preciso na primeira vez.
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.15.0: instalações elétricas residenciais, versão ampliada
+- **Doze lições** em vez de seis, bem mais detalhadas, acompanhando uma mesma casa de dois quartos do começo ao fim: potência e fator de potência; previsão de cargas cômodo por cômodo; potência total, fornecimento e padrão de entrada; o quadro e os dispositivos de proteção por dentro; divisão em circuitos; simbologia e esquemas de ligação; eletrodutos e fiação na planta; corrente e demanda do alimentador; dimensionamento de fios, disjuntores e queda de tensão; DR e aterramento; dimensionamento de eletrodutos; levantamento de material e selo do Inmetro
+- **Tabelas nas lições**, quadros de dica e subtítulos, para consultar os valores com facilidade
+- Projeto guiado da casa de dois quartos ampliado
+
 ## Versão 2.14.0: instalações elétricas residenciais completas
 - **Seis lições novas na etapa Instalações**, do poste ao quadro, seguindo a NBR 5410: potência e previsão de cargas; fornecimento, padrão de entrada e quadro de distribuição; divisão em circuitos, cores dos fios, simbologia e projeto na planta; corrente, bitola, disjuntor e queda de tensão; DR e fio terra; eletrodutos, lista de material e selo do Inmetro
 - **Simulador de previsão de cargas:** escolha o cômodo e as medidas e veja a iluminação mínima e as tomadas, desenhadas na planta
