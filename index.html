@@ -568,6 +568,7 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .snav .subs .dot{width:8px;height:8px}
 .snav .subs .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .snav .subs .count{font-variant-numeric:tabular-nums}
+.side-foot:empty{display:none}
 .side-foot{margin-top:auto;border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
 .side-foot .prof{width:100%;padding:6px;border-radius:8px}
 .side-foot .prof:hover{background:var(--surface)}
@@ -644,6 +645,7 @@ h1{background:linear-gradient(90deg,#f1f6ff 0%,#9ad8ff 100%);-webkit-background-
 .area-top .ico,.blk svg{color:var(--cyan)}
 .area-top .ico{background:rgba(34,211,238,.10);box-shadow:inset 0 0 0 1px rgba(34,211,238,.25)}
 .blk,.qlist,.panel,.track{background:linear-gradient(180deg,rgba(20,32,57,.55),rgba(12,20,36,.85))}
+.blk.on{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(34,211,238,.4)}
 .blk:hover,.track:hover{border-color:rgba(34,211,238,.45);box-shadow:0 0 0 1px rgba(34,211,238,.15),0 10px 30px -18px rgba(34,211,238,.6)}
 .avatar{background:var(--grad);color:#041021}
 .chip.go{border-color:color-mix(in srgb,var(--cyan) 50%,transparent);color:var(--cyan)}
@@ -710,7 +712,7 @@ h1{background:linear-gradient(90deg,#f1f6ff 0%,#9ad8ff 100%);-webkit-background-
 </header>
 <aside class="side" id="side" aria-label="Menu do Volter">
   <button class="brand" data-act="go" data-r="inicio" aria-label="Volter, início"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="vg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#818cf8"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="8" fill="#181818" stroke="#3d3d3d"/><path d="M8.5 9 L16 24 L23.5 9" fill="none" stroke="url(#vg)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="8.5" cy="9" r="2.4" fill="#b69cff"/><circle cx="23.5" cy="9" r="2.4" fill="#5cc8ff"/><circle cx="16" cy="24" r="2.4" fill="#4fe3a6"/><circle cx="16" cy="9" r="2.4" fill="#ffcb5c"/></svg><b>Volter</b></button>
-  <label class="side-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="q" placeholder="Buscar lição, desafio, projeto" aria-label="Buscar no Volter" autocomplete="off"></label>
+  <label class="side-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="q" placeholder="Buscar lição ou simulador" aria-label="Buscar no Volter" autocomplete="off"></label>
   <nav class="snav" id="snav" aria-label="Seções"></nav>
   <div class="side-foot" id="sfoot"></div>
 </aside>
@@ -893,7 +895,7 @@ const NAVDEF = [
   ["Você", [["progresso", "Meu progresso"], ["favoritos", "Salvos"]]]
 ];
 const TABS = [["inicio", "Início"], ["trilhas", "Trilhas"], ["lab", "Lab"], ["progresso", "Progresso"]];
-function go(name, id) { if (name === "noticias" && !NEWS_ON) name = "inicio"; S.route = { name, id: id || null }; S.ui.more = false; S.ui.modal = null; sideOpen(false); window.scrollTo(0, 0); render(true); renderModal(); }
+function go(name, id) { if ((name === "noticias" && !NEWS_ON) || GONE.includes(name)) name = "inicio"; if (name === "trilha" && !trackShown(TRACKS.find(t => t.id === id))) name = "inicio"; S.route = { name, id: id || null }; S.ui.more = false; S.ui.modal = null; sideOpen(false); window.scrollTo(0, 0); render(true); renderModal(); }
 const FULL = [];
 function navGroup() { const r = S.route; if (r.name === "trilha" || r.name === "licao") { const t = r.name === "trilha" ? TRACKS.find(x => x.id === r.id) : TRACKS.find(x => x.id === (find("lessons", r.id) || {}).track); const a = areaOf(t); if (a) return a.route; } return { caso: "lab", correcao: "lab", licao: "trilhas", trilha: "trilhas", projeto: "projetos", editor: "admin" }[S.route.name] || S.route.name; }
 
@@ -904,6 +906,7 @@ function render(force) {
   S.pending = false;
   renderChrome();
   let html;
+  if (GONE.includes(S.route.name)) S.route = { name: "inicio", id: null };
   try { html = (VIEWS[S.route.name] || VIEWS.inicio)(S.route.id); }
   catch (e) { console.error(e); html = '<div class="notice bad">Não foi possível abrir esta tela: ' + esc(e.message) + '</div><div><button class="btn" data-act="go" data-r="inicio">Voltar ao início</button></div>'; }
   const v = $("#view"); v.className = FULL.includes(S.route.name) ? "full" : ""; v.innerHTML = html + footHTML();
@@ -916,7 +919,12 @@ const HNAV = [["inicio", "Início"], ["trilhas", "Trilhas"], ["quarenta", "Nova 
 function modeText() { return S.mode === "local" ? (DESK ? "Programa instalado" : "Versão web") : S.mode === "claude" ? (S.admin ? "Administrador" : S.uid ? "Aluno" : "Visitante") : "Carregando"; }
 const CHEV = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
 const MAIN_AREA = { id: "", route: "trilhas", name: "Trilhas", short: "Trilhas", ico: "trilhas", lead: "IA no trabalho, agentes, programação, dados, segurança e carreira." };
-const ALL_AREAS = () => [MAIN_AREA].concat(AREAS);
+const HIDE_AREAS = ["40"];
+const ALL_AREAS = () => [MAIN_AREA].concat(AREAS.filter(a => !HIDE_AREAS.includes(a.id)));
+const trackShown = t => t && !HIDE_AREAS.includes(t.area || "");
+const lessonShown = l => trackShown(TRACKS.find(t => t.id === l.track));
+/* telas retiradas: laboratório, projetos, treino, livros, progresso, próximas etapas, Nova Fase */
+const GONE = ["lab", "caso", "correcao", "projetos", "projeto", "desafios", "livros", "progresso", "roteiro", "quarenta"];
 function curTrackId() { const r = S.route; if (r.name === "trilha") return r.id; if (r.name === "licao") return (find("lessons", r.id) || {}).track || ""; return ""; }
 function sideHTML() {
   const grp = navGroup(), ct = curTrackId(), r = S.route.name;
@@ -929,21 +937,20 @@ function sideHTML() {
   return btn("inicio", "Início", "inicio") +
     '<div class="grp">Estudar</div>' + ALL_AREAS().map(area).join("") +
     '<div class="grp">Meus projetos</div>' + btn("envase", "Linha de envase", "fabrica", envBlocks().length) +
-    '<div class="grp">Praticar</div>' + btn("lab", "Laboratório", "lab", pub("cases").length) + btn("projetos", "Projetos", "projetos", pub("projects").length) + btn("desafios", "Treino", "desafios") +
-    '<div class="grp">Consultar</div>' + (NEWS_ON ? btn("noticias", "Notícias", "noticias", pub("news").length) : "") + btn("livros", "Livros", "livros", pub("books").length) + btn("busca", "Buscar", "busca") +
-    '<div class="grp">Você</div>' + btn("progresso", "Meu progresso", "progresso") + btn("favoritos", "Salvos", "favoritos", S.prog.favorites.length || "") + btn("roteiro", "Próximas etapas", "roteiro") +
+    '<div class="grp">Simuladores</div>' + btn("simuladores", "Todos os simuladores", "lab", simList().length) +
+    '<div class="grp">Consultar</div>' + (NEWS_ON ? btn("noticias", "Notícias", "noticias", pub("news").length) : "") + btn("busca", "Buscar", "busca") + btn("favoritos", "Salvos", "favoritos", favCount() || "") +
     (S.admin ? '<div class="grp">Gestão</div>' + btn("admin", S.mode === "local" ? "Editor de conteúdo" : "Conteúdo", "admin") : "");
 }
 function renderChrome() {
   const xp = calcXP(), lv = levelFor(xp);
   $("#snav").innerHTML = sideHTML();
-  $("#sfoot").innerHTML = '<button class="prof" data-act="go" data-r="progresso" aria-label="Meu progresso: ' + esc(lv.name) + ", " + xp + ' XP"><span class="avatar">' + esc(lv.name[0]) + '</span><span class="prof-txt"><b>' + esc(lv.name) + "</b><span>" + xp + " XP · " + esc(modeText()) + "</span></span></button>";
+  $("#sfoot").innerHTML = ""; if (0) $("#sfoot").innerHTML = '<button class="prof" data-act="go" data-r="progresso" aria-label="Meu progresso: ' + esc(lv.name) + ", " + xp + ' XP"><span class="avatar">' + esc(lv.name[0]) + '</span><span class="prof-txt"><b>' + esc(lv.name) + "</b><span>" + xp + " XP · " + esc(modeText()) + "</span></span></button>";
   const q = $("#q"); if (q && document.activeElement !== q && q.value !== (S.ui.busca || "")) q.value = S.ui.busca || "";
 }
 function sideOpen(on) { const s = $("#side"); if (!s) return; s.classList.toggle("open", on); $("#scrim").hidden = !on; const b = document.querySelector('[data-act="menu"]'); if (b) b.setAttribute("aria-expanded", on); }
 function setHeader() {}
 document.addEventListener("toggle", e => { const d = e.target; if (d && d.dataset && d.dataset.sg) S.ui.side[d.dataset.sg] = d.open; }, true);
-function footHTML() { return '<footer class="foot"><div class="row" style="gap:20px"><button class="link small" data-act="go" data-r="roteiro">Próximas etapas</button><button class="link small" data-act="go" data-r="progresso">Meu progresso</button><button class="link small" data-act="go" data-r="favoritos">Salvos</button></div><span class="small dim">Volter, ' + esc(modeText().toLowerCase()) + "</span></footer>"; }
+function footHTML() { return '<footer class="foot"><div class="row" style="gap:20px"><button class="link small" data-act="go" data-r="simuladores">Simuladores</button><button class="link small" data-act="go" data-r="favoritos">Salvos</button></div><span class="small dim">Volter, ' + esc(modeText().toLowerCase()) + "</span></footer>"; }
 function dbNotice() {
   if (S.dbState === "loading") return '<div class="notice">Carregando conteúdo…</div>';
   if (S.dbState === "none") return '<div class="notice warn">O conteúdo do Volter não pôde ser carregado. No claude.ai, abra o app com a sua conta conectada. Na versão do GitHub, confira se o arquivo <code>data/conteudo.js</code> está junto do <code>index.html</code>.</div>';
@@ -1657,7 +1664,7 @@ function rail(title, tiles, o) {
 }
 const isNew = n => n.publishedAt && (Date.now() - new Date(n.publishedAt + "T12:00:00")) / 864e5 <= 14;
 const tCase = c => { const run = S.prog.runs[c.id], at = S.prog.attempts[c.id]; return tile("cases", c, { pct: run ? Math.round(run.stage / 7 * 100) : 0, badge: at ? '<span class="art-badge ok">Resolvido</span>' : "", meta: '<span class="lvl-t">' + esc(LEVEL_NAME[c.level] || "") + "</span><span>" + esc(trackOf(c.track).short) + "</span>" }); };
-const tLesson = l => tile("lessons", l, { pct: lessonPct(l.id), meta: "<span>" + (l.minutes || 5) + " min</span>" + (lessonDone(l.id) ? '<span class="ok-t">Concluída</span>' : "") });
+const tLesson = l => tile("lessons", l, { pct: lessonPct(l.id), meta: "<span>" + (l.minutes || 5) + " min</span>" + (lessonDone(l.id) ? '<span class="ok-t">Lida</span>' : "") });
 const tProj = p => tile("projects", p, { pct: projPct(p), badge: S.prog.projects[p.id] && S.prog.projects[p.id].done ? '<span class="art-badge ok">Entregue</span>' : "", meta: "<span>" + esc(p.duration) + "</span><span>" + esc(p.level) + "</span>" });
 const tNews = n => tile("news", n, { badge: isNew(n) ? '<span class="art-badge">Nova</span>' : "", meta: "<span>" + esc(fmtDate(n.publishedAt)) + "</span>" });
 const tBook = b => tile("books", b, { cls: "poster book", meta: "<span>" + esc(b.authors) + "</span>" });
@@ -1704,20 +1711,35 @@ function areaCard(a) {
 }
 function continueItems() {
   const out = [];
-  Object.keys(S.prog.runs).forEach(id => { const c = visible("cases", id); if (c) out.push(["Laboratório", c.title, "Etapa " + S.prog.runs[id].stage + " de 7", "caso", c.id, c.track]); });
-  TRACKS.forEach(t => { const ls = tracksLessons(t.id); if (ls.some(l => S.prog.lessons[l.id])) { const nx = ls.find(l => !lessonDone(l.id)); if (nx) out.push(["Próxima lição · " + t.short, nx.title, (nx.minutes || 5) + " min", "licao", nx.id, t.id]); } });
-  pub("projects").forEach(p => { const pc = projPct(p); if (pc && pc < 100) out.push(["Projeto", p.title, pc + "%", "projeto", p.id, p.track]); });
+  TRACKS.filter(trackShown).forEach(t => { const ls = tracksLessons(t.id); if (ls.some(l => S.prog.lessons[l.id])) { const nx = ls.find(l => !lessonDone(l.id)); if (nx) out.push(["Próxima lição · " + t.short, nx.title, (nx.minutes || 5) + " min", "licao", nx.id, t.id]); } });
   return out.slice(0, 6);
 }
 VIEWS.inicio = () => {
   const cont = continueItems(), f = dailyCase();
-  const blocks = [["envase", "Linha de envase", "Projeto e escopo da linha: " + envBlocks().length + " blocos"], ["lab", "Laboratório", pub("cases").length + " desafios de diagnóstico"], ["projetos", "Projetos", pub("projects").length + " projetos guiados"], ["desafios", "Treino", "Perguntas sorteadas de todas as trilhas"], ["livros", "Livros", pub("books").length + " leituras recomendadas"], ["progresso", "Meu progresso", calcXP() + " XP"], ["favoritos", "Salvos", (S.prog.favorites.length || "Nenhum") + " item(ns) salvo(s)"]];
+  const blocks = [["envase", "Linha de envase", "Projeto e escopo da linha: " + envBlocks().length + " blocos"], ["simuladores", "Simuladores", simList().length + " simuladores interativos"], ["busca", "Buscar", "Encontre qualquer lição pelo assunto"], ["favoritos", "Salvos", (favCount() || "Nenhum") + " item(ns) salvo(s)"]];
   return '<div class="stack hello" style="gap:28px">' + dbNotice() + head("Início", "Escolha um bloco para estudar ou continue de onde parou. O menu à esquerda mostra todas as áreas e etapas; use a busca para achar qualquer lição.") +
     (cont.length ? '<section><div class="sec-h"><h2>Continue de onde parou</h2></div><div class="qlist">' + cont.map(c => '<button data-act="go" data-r="' + c[3] + '" data-id="' + esc(c[4]) + '" data-t="' + esc(c[5]) + '"><span class="dot"></span><span style="min-width:0"><span class="k">' + esc(c[0]) + "</span><br><b>" + esc(c[1]) + '</b></span><span class="small dim">' + esc(c[2]) + "</span></button>").join("") + "</div></section>" : "") +
     '<section><div class="sec-h"><h2>Áreas de estudo</h2></div><div class="areas">' + ALL_AREAS().map(areaCard).join("") + "</div></section>" +
-    '<section><div class="sec-h"><h2>Praticar e consultar</h2>' + (f ? '<button class="link small" data-act="go" data-r="caso" data-id="' + esc(f.id) + '">Desafio do dia: ' + esc(f.title) + " →</button>" : "") + '</div><div class="blocks">' + blocks.map(b => '<button class="blk" data-act="go" data-r="' + b[0] + '">' + (IC[b[0]] || "") + "<b>" + b[1] + "</b><span>" + esc(b[2]) + "</span></button>").join("") + "</div></section></div>";
+    '<section><div class="sec-h"><h2>Ferramentas</h2></div><div class="blocks">' + blocks.map(b => '<button class="blk" data-act="go" data-r="' + b[0] + '">' + (IC[b[0]] || "") + "<b>" + b[1] + "</b><span>" + esc(b[2]) + "</span></button>").join("") + "</div></section></div>";
 };
 
+
+/* ===== Simuladores: todos os simuladores do Volter num só lugar ===== */
+const simName = s => { const x = s.title.replace("Simulador: ", ""); return x.charAt(0).toUpperCase() + x.slice(1); };
+const favCount = () => S.prog.favorites.filter(k => { const [t, id] = k.split(":"); const x = t === "lessons" && visible(t, id); return x && lessonShown(x); }).length;
+function simList() {
+  const les = pub("lessons").filter(lessonShown);
+  return Object.keys(SIMS).map(k => [k, SIMS[k], les.filter(l => l.sim === k).sort((a, b) => (TRACKS.findIndex(t => t.id === a.track) - TRACKS.findIndex(t => t.id === b.track)) || (a.order || 0) - (b.order || 0))])
+    .filter(([k, , ls]) => ls.length || k === "sopro");
+}
+VIEWS.simuladores = id => {
+  const L = simList(), cur = L.find(x => x[0] === id) || null;
+  const card = ([k, s, ls]) => { const t = ls[0] ? trackOf(ls[0].track) : trackOf("envase"); return '<button class="blk' + (cur && cur[0] === k ? " on" : "") + '" data-t="' + t.id + '" data-act="go" data-r="simuladores" data-id="' + k + '"><span class="chip" style="align-self:flex-start">' + esc(t.short) + "</span><b>" + esc(simName(s)) + "</b><span>" + esc(ls[0] ? ls[0].title : "Linha de envase") + "</span></button>"; };
+  const groups = []; L.forEach(x => { const t = x[2][0] ? trackOf(x[2][0].track) : trackOf("envase"); let g = groups.find(g => g[0] === t.id); if (!g) groups.push(g = [t.id, t, []]); g[2].push(x); });
+  return '<div class="stack" style="gap:24px">' + dbNotice() + head(cur ? esc(simName(cur[1])) : "Simuladores", cur ? esc(cur[1].hint) : "Todos os simuladores do Volter num só lugar. Escolha um para usar aqui ou abra a lição em que ele aparece.", "", cur ? ["simuladores", "Simuladores"] : null) +
+    (cur ? '<div data-t="' + (cur[2][0] ? cur[2][0].track : "envase") + '">' + simHTML(cur[0]) + "</div>" + (cur[2].length ? '<div class="row" style="gap:8px;flex-wrap:wrap">' + cur[2].map(l => '<button class="btn" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">Abrir a lição: ' + esc(l.title) + " →</button>").join("") + "</div>" : "") : "") +
+    groups.map(([tid, t, xs]) => '<section><div class="sec-h"><h2>' + esc(t.name) + '</h2><span class="small dim">' + xs.length + '</span></div><div class="blocks">' + xs.map(card).join("") + "</div></section>").join("") + "</div>";
+};
 /* ===== trilhas e áreas em grade de blocos ===== */
 function trackCard(t, n, label) {
   const ls = tracksLessons(t.id), pl = arr(t.plan).length, pc = trackPct(t.id);
@@ -1737,15 +1759,13 @@ const norm = s => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ
 function hl(text, q) { const t = String(text || ""), i = norm(t).indexOf(q); return i < 0 ? esc(t) : esc(t.slice(0, i)) + "<mark>" + esc(t.slice(i, i + q.length)) + "</mark>" + esc(t.slice(i + q.length)); }
 VIEWS.busca = () => {
   const raw = (S.ui.busca || "").trim(), q = norm(raw);
-  const intro = head("Buscar", "Digite no campo de busca do menu para encontrar lições, desafios, projetos, trilhas e livros.");
+  const intro = head("Buscar", "Digite no campo de busca do menu para encontrar lições, etapas e simuladores.");
   if (q.length < 2) return '<div class="stack" style="gap:20px">' + intro + emptyBox("Digite pelo menos duas letras.") + "</div>";
   const score = (title, rest) => norm(title).includes(q) ? 2 : norm(rest).includes(q) ? 1 : 0;
   const groups = [
-    ["Trilhas e etapas", TRACKS.map(t => [score(t.name, t.desc), t.name, t.desc, "trilha", t.id, t.id])],
-    ["Lições", pub("lessons").map(l => [score(l.title, l.summary + " " + arr(l.keypoints).join(" ") + " " + l.body), l.title, l.summary, "licao", l.id, l.track])],
-    ["Laboratório", pub("cases").map(c => [score(c.title, c.summary + " " + c.equipment), c.title, c.summary, "caso", c.id, c.track])],
-    ["Projetos", pub("projects").map(p => [score(p.title, p.summary + " " + arr(p.skills).join(" ")), p.title, p.summary, "projeto", p.id, p.track])],
-    ["Livros", pub("books").map(b => [score(b.title, b.authors + " " + b.why), b.title, b.authors, "livros", "", ""])]
+    ["Trilhas e etapas", TRACKS.filter(trackShown).map(t => [score(t.name, t.desc), t.name, t.desc, "trilha", t.id, t.id])],
+    ["Lições", pub("lessons").filter(lessonShown).map(l => [score(l.title, l.summary + " " + arr(l.keypoints).join(" ") + " " + l.body), l.title, l.summary, "licao", l.id, l.track])],
+    ["Simuladores", simList().map(([k, s, ls]) => [score(s.title, s.hint), simName(s), s.hint, "simuladores", k, ls[0] ? ls[0].track : ""])]
   ].map(([g, its]) => [g, its.filter(x => x[0]).sort((a, b) => b[0] - a[0])]).filter(([, its]) => its.length);
   const n = groups.reduce((s, [, its]) => s + its.length, 0);
   return '<div class="stack" style="gap:20px">' + intro + '<p class="muted">' + (n ? n + " resultado(s) para <b>" + esc(raw) + "</b>" : "Nada encontrado para <b>" + esc(raw) + "</b>. Tente outra palavra.") + '</p><div class="res">' +
@@ -1753,7 +1773,7 @@ VIEWS.busca = () => {
 };
 
 const ACT_EXTRA = {};
-IC.envase = IC.fabrica;
+IC.envase = IC.fabrica; IC.simuladores = IC.lab;
 
 /* ===== Meus projetos: linha de envase (projeto e escopo) =====
    Fica no progresso do usuário (S.prog.envase): no programa instalado vai para o arquivo de dados com cópia diária,
@@ -1943,7 +1963,7 @@ function renderModal() {
 function circ(k) { const on = isFav(k); return '<button class="circ" data-act="fav" data-k="' + esc(k) + '" aria-pressed="' + on + '" aria-label="' + (on ? "Remover dos salvos" : "Salvar") + '" title="' + (on ? "Remover dos salvos" : "Salvar") + '">' + (on ? IC.check : IC.plus) + "</button>"; }
 function planList(t) {
   const p = arr(t.plan); if (!p.length) return "";
-  return '<div class="list">' + p.map(([c, r]) => '<div><div style="min-width:0"><b>' + esc(c) + '</b><p class="small muted" style="margin-top:2px">Projeto final: ' + esc(r) + '</p></div><span class="chip">Em breve</span></div>').join("") + "</div>";
+  return '<div class="list">' + p.map(([c, r]) => '<div><div style="min-width:0"><b>' + esc(c) + '</b></div><span class="chip">Em breve</span></div>').join("") + "</div>";
 }
 function eps(trackId, curId) {
   const ls = tracksLessons(trackId);
@@ -1963,7 +1983,7 @@ function modalHTML(type, id) {
   if (type === "lessons") {
     const done = lessonDone(id);
     return hero(x.title, '<button class="btn play" data-act="go" data-r="licao" data-id="' + esc(id) + '">' + IC.play + (done ? "Revisar" : S.prog.lessons[id] ? "Continuar" : "Estudar") + "</button>" + circ("lessons:" + id)) +
-      '<div class="m-body"><div><div class="meta-row"><span>' + (x.minutes || 5) + " min</span><span>" + arr(x.questions).length + " exercícios</span>" + (done ? '<span class="ok-t">Concluída</span>' : "") + "</div><p>" + esc(x.summary) + '</p><ul class="m-list">' + arr(x.keypoints).map(t => "<li>" + inl(t) + "</li>").join("") + "</ul></div>" + side([["Trilha", tchip(x.track)], ["Para lembrar", arr(x.keypoints).length + " pontos-chave"]]) + "</div>" + eps(x.track, id);
+      '<div class="m-body"><div><div class="meta-row"><span>' + (x.minutes || 5) + " min</span>" + (done ? '<span class="ok-t">Lida</span>' : "") + "</div><p>" + esc(x.summary) + '</p><ul class="m-list">' + arr(x.keypoints).map(t => "<li>" + inl(t) + "</li>").join("") + "</ul></div>" + side([["Trilha", tchip(x.track)], ["Para lembrar", arr(x.keypoints).length + " pontos-chave"]]) + "</div>" + eps(x.track, id);
   }
   if (type === "track") {
     const ls = tracksLessons(x.id), nx = ls.find(l => !lessonDone(l.id)) || ls[0], pc = trackPct(x.id);
@@ -2122,8 +2142,8 @@ VIEWS.correcao = id => {
 /* Abas com trilhas em sequência: cada trilha é uma etapa, com os temas numerados na ordem de estudo */
 function seqPanel(t, n, label) {
   const ls = tracksLessons(t.id), plan = arr(t.plan);
-  const rows = ls.map(l => ['<button class="link" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">' + esc(l.title) + '</button><p class="small muted" style="margin-top:2px">' + esc(l.summary) + "</p>", lessonDone(l.id) ? '<span class="chip ok">Concluída</span>' : '<span class="chip go">Disponível</span>'])
-    .concat(plan.map(([c, r]) => ["<b>" + esc(c) + '</b><p class="small muted" style="margin-top:2px">Projeto final: ' + esc(r) + "</p>", '<span class="chip">Em breve</span>']));
+  const rows = ls.map(l => ['<button class="link" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">' + esc(l.title) + '</button><p class="small muted" style="margin-top:2px">' + esc(l.summary) + "</p>", lessonDone(l.id) ? '<span class="chip ok">Lida</span>' : '<span class="chip go">Disponível</span>'])
+    .concat(plan.map(([c]) => ["<b>" + esc(c) + "</b>", '<span class="chip">Em breve</span>']));
   return '<section class="panel seq" data-t="' + t.id + '"><div class="ph"><div style="min-width:0"><span class="seq-step">' + (label || "Etapa") + " " + n + '</span><h3 style="margin-top:4px">' + esc(t.name) + '</h3><p class="small muted" style="margin-top:4px">' + esc(t.desc) + '</p></div><button class="btn sm" data-act="go" data-r="trilha" data-id="' + esc(t.id) + '">Ver a trilha</button></div><div class="list">' +
     rows.map(([txt, chip], i) => '<div><span class="seq-n">' + n + "." + (i + 1) + '</span><div style="min-width:0;flex:1">' + txt + "</div>" + chip + "</div>").join("") + "</div></section>";
 }
@@ -2136,7 +2156,7 @@ VIEWS.quarenta = () => areaView("40");
 VIEWS.eletrica = () => areaView("hw");
 VIEWS.trilha = id => {
   const t = trackOf(id); const ls = tracksLessons(t.id); const firstOpen = ls.find(l => !lessonDone(l.id));
-  const projs = pub("projects").filter(p => p.track === t.id), cs = pub("cases").filter(c => c.track === t.id);
+  const projs = [], cs = [];
   return '<div data-t="' + t.id + '" class="stack" style="gap:26px"><div><button class="back" data-act="go" data-r="' + (areaOf(t) ? areaOf(t).route : "trilhas") + '">← ' + (areaOf(t) ? esc(areaOf(t).name) + "</button><br><span class=\"seq-step\">Etapa " + stepOf(t) + "</span>" : "Trilhas</button>") + '<div class="thead"' + (areaOf(t) ? ' style="margin-top:8px"' : "") + '><span class="ico">' + IC[t.ico] + '</span><div><h1>' + esc(t.name) + '</h1><p class="lead muted" style="margin-top:6px">' + esc(t.desc) + "</p></div></div></div>" +
     '<div class="split"><div class="stack" style="gap:18px">' + (ls.length ? "" : '<div class="panel"><h3>Lições</h3><p class="muted">As primeiras lições desta trilha estão em produção.</p></div>') + (ls.length ? '<div class="panel"><div class="ph"><h3>Lições</h3><span class="chip">' + ls.filter(l => lessonDone(l.id)).length + " de " + ls.length + '</span></div><div class="timeline">' +
     (ls.map((l, i) => { const p = S.prog.lessons[l.id]; const cls = p && p.done ? "done" : l === firstOpen ? "next" : ""; return '<div class="tl-item ' + cls + '"><span class="tl-dot">' + (p && p.done ? "✓" : i + 1) + '</span><div style="min-width:0"><h3><button class="link" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">' + esc(l.title) + '</button></h3><p class="small muted" style="margin-top:3px">' + esc(l.summary) + ' <span class="dim">' + (l.minutes || 5) + " min</span></p></div>" + (p && p.done ? '<span class="chip ok">' + p.score + "/" + arr(l.questions).length + "</span>" : l === firstOpen ? '<button class="btn sm primary" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">Estudar</button>' : "<span></span>") + "</div>"; }).join("") || '<p class="muted">Nenhuma lição publicada nesta trilha.</p>') +
@@ -2144,12 +2164,13 @@ VIEWS.trilha = id => {
     (cs.length ? '<div class="panel"><h3>No Laboratório</h3><div class="list">' + cs.map(c => '<div><button class="link" data-act="go" data-r="caso" data-id="' + esc(c.id) + '">' + esc(c.title) + "</button>" + (S.prog.attempts[c.id] ? '<span class="chip ok">feito</span>' : "") + "</div>").join("") + "</div></div>" : "") + "</div></div>" + seqNav(t) + "</div>";
 };
 VIEWS.licao = id => {
-  const l = visible("lessons", id); if (!l) return dbNotice() || emptyBox("Lição não encontrada.", '<button class="btn" data-act="go" data-r="trilhas">Voltar</button>');
+  const l0 = visible("lessons", id); if (l0 && !lessonShown(l0)) return emptyBox("Lição não encontrada.", '<button class="btn" data-act="go" data-r="inicio">Voltar</button>');
+  if (l0 && !lessonDone(id)) { S.prog.lessons[id] = Object.assign(S.prog.lessons[id] || { answers: {} }, { done: true, readAt: new Date().toISOString() }); saveProg(); }
+  const l = l0; if (!l) return dbNotice() || emptyBox("Lição não encontrada.", '<button class="btn" data-act="go" data-r="trilhas">Voltar</button>');
   const t = trackOf(l.track); const ls = tracksLessons(t.id), idx = ls.findIndex(x => x.id === id), next = ls[idx + 1], prev = ls[idx - 1];
   const p = S.prog.lessons[id] || { answers: {} }; const qs = arr(l.questions);
   return '<div data-t="' + t.id + '" class="stack" style="gap:26px">' + head(esc(l.title), esc(l.summary), favBtn("lessons:" + id), ["trilha", t.short, t.id], tchip(t.id) + ' <span class="small dim" style="margin-left:8px">Lição ' + (idx + 1) + " de " + ls.length + ", " + (l.minutes || 5) + " min</span>") +
     '<div class="split"><div class="stack" style="gap:20px"><div class="panel"><div class="prose">' + md(l.body) + "</div></div>" + (l.bancada ? '<div class="panel story"><span class="seq-step">Da bancada · caso real</span><div class="prose" style="margin-top:8px">' + md(l.bancada) + '</div><p class="small dim" style="margin-top:12px">Relato real de um técnico com mais de 30 anos em eletrônica, automação industrial e manutenção de equipamentos.</p></div>' : "") + (l.sim ? simHTML(l.sim) : "") +
-    '<div class="panel stack"><div class="ph" style="margin:0"><h3>Pratique</h3>' + (p.done ? '<span class="chip ok">' + p.score + " de " + qs.length + "</span>" : "") + "</div>" + qs.map((q, qi) => quizQ(q, p.answers[qi], "lq", id, qi)).join('<hr style="border:0;border-top:1px solid var(--line);margin:6px 0">') + (p.done ? '<div class="row"><span class="notice ok" style="flex:1">Lição concluída.</span><button class="btn sm" data-act="resetlesson" data-id="' + esc(id) + '">Refazer exercícios</button></div>' : "") + "</div>" +
     '<div class="row" style="justify-content:space-between">' + (prev ? '<button class="btn" data-act="go" data-r="licao" data-id="' + esc(prev.id) + '">← Anterior</button>' : "<span></span>") + (next ? '<button class="btn primary" data-act="go" data-r="licao" data-id="' + esc(next.id) + '">Próxima: ' + esc(next.title) + "</button>" : '<button class="btn primary" data-act="go" data-r="trilha" data-id="' + t.id + '">Ver projeto e desafios da trilha</button>') + "</div></div>" +
     '<div class="stack" style="gap:18px"><div class="panel"><h3>Para lembrar</h3><ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">' + arr(l.keypoints).map(k => "<li>" + inl(k) + "</li>").join("") + '</ul></div><div class="panel"><h3>Nesta trilha</h3><div class="lnav">' + ls.map((x, i) => '<button data-act="go" data-r="licao" data-id="' + esc(x.id) + '"' + (x.id === id ? ' aria-current="page"' : "") + '><span class="d' + (lessonDone(x.id) ? " ok" : "") + '">' + (lessonDone(x.id) ? "✓" : i + 1) + "</span>" + esc(x.title) + "</button>").join("") + "</div></div></div></div></div>";
 };
@@ -2251,16 +2272,16 @@ VIEWS.progresso = () => {
 
 /* ----- Salvos ----- */
 VIEWS.favoritos = () => {
-  const groups = { cases: [], lessons: [], projects: [], news: [], books: [] };
+  const groups = { lessons: [] };
   S.prog.favorites.forEach(k => { const [t, id] = k.split(":"); const x = groups[t] && visible(t, id); if (x) groups[t].push(x); });
   const any = Object.values(groups).some(g => g.length);
-  return head("Salvos", "Desafios, lições, projetos e livros que você marcou.") +
+  return head("Salvos", "As lições que você marcou para ler de novo.") +
     (any ? '<div class="projects">' + Object.entries(groups).filter(([, g]) => g.length).map(([t, g]) => '<div class="panel"><h3>' + TYPES[t].label + '</h3><div class="list">' + g.map(x => '<div><button class="link" data-act="go" data-r="' + ROUTE_OF[t] + '" data-id="' + esc(t === "news" || t === "books" ? "" : x.id) + '">' + esc(x.title) + '</button><button class="btn ghost sm" data-act="fav" data-k="' + t + ":" + esc(x.id) + '">Remover</button></div>').join("") + "</div></div>").join("") + "</div>" : emptyBox("Nada salvo ainda. Use o botão ☆ Salvar nas lições, desafios, projetos, notícias e livros."));
 };
 
 /* ----- Próximas etapas ----- */
 VIEWS.roteiro = () => {
-  const P = [["Versão 2.15", "Disponível", "ok", ["Instalações elétricas residenciais ampliada: 12 lições com tabelas, uma casa de exemplo do começo ao fim e lições novas de quadro e proteção, esquemas de ligação, eletrodutos na planta, demanda e levantamento de material"]], ["Versão 2.14", "Concluída", "ok", ["Instalações elétricas residenciais: seis lições novas (previsão de cargas, entrada e quadro, circuitos e planta, dimensionamento, DR e aterramento, eletrodutos e material), dois simuladores, um desafio e um projeto"]], ["Versão 2.13", "Concluída", "ok", ["Sopradora: lição de moldagem por estiramento e sopro com simulador animado, e o escopo da sopradora detalhado na Linha de envase"]], ["Versão 2.12", "Concluída", "ok", ["Linha de envase: área externa com os tanques de CO₂ e nitrogênio"]], ["Versão 2.11", "Concluída", "ok", ["Linha de envase no desenho real da planta: xaroparia, linha de envase, sopro, sala de máquinas, caldeira, sala de CIP e transportes com sensores e CLPs, com o mapa da planta"]], ["Versão 2.10", "Concluída", "ok", ["Cores tecnológicas (ciano e índigo) e o novo item Linha de envase, para montar o projeto e o escopo de uma linha completa com as máquinas interligadas"]], ["Versão 2.9", "Concluída", "ok", ["Layout novo: menu lateral com todas as áreas e etapas, início com blocos por área, busca em todo o conteúdo e fim do visual de streaming"]], ["Versão 2.8", "Concluída", "ok", ["Curso Programação de robôs com o Korum: 10 lições de KRL com prática no laboratório virtual Korum, um desafio no Laboratório e um projeto de célula de paletização"]], ["Versão 2.7", "Concluída", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
+  const P = [["Versão 2.16", "Disponível", "ok", ["Volter mais enxuto: saem os exercícios das lições, Laboratório, Projetos, Treino, Livros, Meu progresso, Próximas etapas e Nova Fase; entra a seção Simuladores, com todos os simuladores num só lugar"]], ["Versão 2.15", "Concluída", "ok", ["Instalações elétricas residenciais ampliada: 12 lições com tabelas, uma casa de exemplo do começo ao fim e lições novas de quadro e proteção, esquemas de ligação, eletrodutos na planta, demanda e levantamento de material"]], ["Versão 2.14", "Concluída", "ok", ["Instalações elétricas residenciais: seis lições novas (previsão de cargas, entrada e quadro, circuitos e planta, dimensionamento, DR e aterramento, eletrodutos e material), dois simuladores, um desafio e um projeto"]], ["Versão 2.13", "Concluída", "ok", ["Sopradora: lição de moldagem por estiramento e sopro com simulador animado, e o escopo da sopradora detalhado na Linha de envase"]], ["Versão 2.12", "Concluída", "ok", ["Linha de envase: área externa com os tanques de CO₂ e nitrogênio"]], ["Versão 2.11", "Concluída", "ok", ["Linha de envase no desenho real da planta: xaroparia, linha de envase, sopro, sala de máquinas, caldeira, sala de CIP e transportes com sensores e CLPs, com o mapa da planta"]], ["Versão 2.10", "Concluída", "ok", ["Cores tecnológicas (ciano e índigo) e o novo item Linha de envase, para montar o projeto e o escopo de uma linha completa com as máquinas interligadas"]], ["Versão 2.9", "Concluída", "ok", ["Layout novo: menu lateral com todas as áreas e etapas, início com blocos por área, busca em todo o conteúdo e fim do visual de streaming"]], ["Versão 2.8", "Concluída", "ok", ["Curso Programação de robôs com o Korum: 10 lições de KRL com prática no laboratório virtual Korum, um desafio no Laboratório e um projeto de célula de paletização"]], ["Versão 2.7", "Concluída", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
     ["Próxima", "Planejada", "go", ["Cursos completos da trilha IA no Trabalho", "Trilha Agentes e Automação: n8n, WhatsApp e primeiro agente", "Volter Assist também no programa instalado", "Certificado por curso concluído"]],
     ["Depois", "Planejada", "", ["Turmas fechadas e licenças para empresas", "Um curso de IA por profissão a cada etapa", "Aplicativo para celular com modo offline"]]];
   const L = S.mode === "local";

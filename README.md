@@ -19,7 +19,6 @@ Duas abas têm trilhas próprias, feitas em sequência (etapa 1, 2, 3…) e com 
 
 | Aba | Etapas |
 |---|---|
-| **Nova Fase (antes Comece aos 40+)** | 1. Primeiros passos no digital · 2. IA no dia a dia, sem jargão · 3. Ferramentas do trabalho moderno · 4. Recomeço em tecnologia |
 | **Elétrica, Eletrônica e Hardware** | 1. Fundamentos de eletricidade · 2. Instalações elétricas residenciais · 3. Eletrônica básica · 4. Hardware de computadores · 5. Microcontroladores e IoT · 6. Comandos elétricos e automação |
 
 Os cursos que ainda não têm lições aparecem no app como **Em breve**. A lista completa está em [`docs/grade-de-temas.md`](docs/grade-de-temas.md) e, no app, no campo `plan` de cada trilha (`TRACKS` no `index.html`); o campo `area` diz em qual aba a trilha fica.
@@ -32,19 +31,13 @@ A grade de temas em [`docs/grade-de-temas.md`](docs/grade-de-temas.md) define o 
 
 | Área | O que faz |
 |---|---|
-| **Início** | Blocos por área de estudo, com as etapas e o progresso de cada uma, "continue de onde parou" e atalhos para Laboratório, Projetos, Treino e Livros. Um menu lateral mostra todas as áreas e etapas, e a busca encontra qualquer lição, desafio ou projeto |
-| **Trilhas** | Lições curtas com blocos de código e exercícios |
-| **Nova Fase** | Trilhas em etapas para quem começa ou recomeça em tecnologia numa nova fase da vida |
+| **Início** | Blocos por área de estudo, com as etapas de cada uma, "continue de onde parou" e atalhos para a Linha de envase, os Simuladores, a busca e os salvos |
+| **Trilhas** | Lições curtas com blocos de código, tabelas e simuladores |
 | **Linha de envase** | Projeto e escopo de uma linha de envase completa: mapa da planta, setores, blocos de cada máquina com o seu escopo, interligações e exportação |
+| **Simuladores** | Todos os simuladores interativos num só lugar, separados por etapa |
 | **Elétrica e Hardware** | Trilhas em etapas de eletricidade, instalações, eletrônica, hardware, IoT e automação, com 27 lições de elétrica e eletrônica um curso de programação de robôs em KRL com prática no Korum e a etapa de processos da linha de envase (sopradora), e simuladores interativos (previsão de cargas, dimensionamento de circuito, moldagem por estiramento e sopro, lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, transistor com sensor, amplificador, sistema trifásico, partida de motor e paquímetro) |
-| **Laboratório** | Desafios de investigação em 7 etapas: entender, hipóteses, investigar, evidências, causa, corrigir e aprender, com correção comentada |
-| **Projetos** | Projetos guiados com passo a passo, para montar um portfólio (assistente com RAG, site no GitHub Pages, painel de gastos com pandas, estação IoT com ESP32, pisca-pisca com 555 na protoboard, alarme de porta com relé) |
-| **Treino** | Perguntas sorteadas de todas as trilhas e o desafio do dia |
-| **Livros** | Lançamentos e referências, com o motivo de cada leitura |
-| **Meu progresso** | Nível, XP, progresso por trilha, como você investiga e conquistas |
 | **Editor de conteúdo** | Formulários para criar, revisar e publicar desafios, lições, projetos e livros; cada lição pode ganhar um dos simuladores |
 
-Os desafios do Laboratório são exemplos didáticos, marcados como tal. Os livros são reais, com link para a fonte.
 
 ## Instalar no computador (Windows e Mac)
 
