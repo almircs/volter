@@ -535,6 +535,21 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .s-meters span{display:block;font-size:.76rem;color:var(--muted)}
 .s-meters b{font-family:var(--f-mono);font-size:1.08rem;font-weight:500}
 .s-cap{margin-top:8px}
+.sim-tabs-w{display:flex;flex-direction:column;gap:8px}
+.sim-tabs{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.sim-tabs-l{font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);min-width:88px}
+.sim-tabs .dim{opacity:.7;font-size:.8em}
+.sim-tabs .pill[aria-pressed="true"] .dim{color:inherit}
+.sim-lay{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}
+.sim-nav{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto;display:flex;flex-direction:column;gap:3px;background:linear-gradient(180deg,rgba(20,32,57,.55),rgba(12,20,36,.85));border:1px solid var(--line);border-radius:10px;padding:10px}
+.sim-nav-h{padding:2px 6px 8px}
+.sim-nav button{display:flex;gap:8px;align-items:baseline;text-align:left;background:transparent;border:1px solid transparent;border-radius:8px;padding:7px 8px;color:var(--muted);font-size:.84rem;line-height:1.3;cursor:pointer}
+.sim-nav button:hover{color:var(--ink);background:rgba(34,211,238,.06)}
+.sim-nav button[aria-current]{color:var(--ink);border-color:var(--cyan);background:rgba(34,211,238,.1)}
+.sim-nav .n{font-family:var(--f-mono);font-size:.74rem;opacity:.7;min-width:1.4em}
+.sim-pn{justify-content:space-between;gap:8px;flex-wrap:wrap}
+.sim-pn .btn{max-width:48%;white-space:normal;text-align:left}
+@media (max-width:900px){.sim-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}.sim-tabs .pill{flex:0 0 auto}.sim-tabs-l{min-width:0;flex:0 0 auto}.sim-lay{grid-template-columns:1fr}.sim-nav{position:static;max-height:none;flex-direction:row;overflow-x:auto;padding:8px}.sim-nav-h{display:none}.sim-nav button{flex:0 0 auto;max-width:220px}.sim-pn .btn{max-width:100%}}
 .s-read{margin-top:14px;font-size:.93rem;line-height:1.55;color:var(--ink)}
 .s-tt{border-collapse:collapse;margin-top:16px;font-family:var(--f-mono);font-size:.9rem}
 .s-tt th,.s-tt td{border:1px solid var(--line-2);padding:5px 16px;text-align:center}
@@ -911,6 +926,8 @@ function render(force) {
   catch (e) { console.error(e); html = '<div class="notice bad">Não foi possível abrir esta tela: ' + esc(e.message) + '</div><div><button class="btn" data-act="go" data-r="inicio">Voltar ao início</button></div>'; }
   const v = $("#view"); v.className = FULL.includes(S.route.name) ? "full" : ""; v.innerHTML = html + footHTML();
   simMount(v);
+  const sn = v.querySelector(".sim-nav"), sa = sn && sn.querySelector("[aria-current]"); if (sa) { if (sn.scrollWidth > sn.clientWidth + 4) sn.scrollLeft = sa.offsetLeft - sn.offsetLeft - 12; else sn.scrollTop = sa.offsetTop - sn.offsetTop - 40; }
+  v.querySelectorAll(".sim-tabs").forEach(t => { const b = t.querySelector('[aria-pressed="true"]'); if (b && t.scrollWidth > t.clientWidth + 4) t.scrollLeft = b.offsetLeft - t.offsetLeft - 60; });
   if (S.ui.modal) renderModal();
 }
 document.addEventListener("focusout", () => setTimeout(() => { if (S.pending) render(); }, 50));
@@ -1086,6 +1103,30 @@ function zigc(a, b, c, v, on, col) {
   for (let i = 0; i < n; i++) { const p = a + L * (i + .5) / n, o = (i % 2 ? -7 : 7); pts.push(v ? [c + o, p] : [p, c + o]); }
   pts.push(v ? [c, b] : [b, c]);
   return '<polyline class="w' + (on ? " on" : "") + '" points="' + pts.map(p => p.map(q => q.toFixed(1)).join(",")).join(" ") + '"' + (col ? ' style="stroke:' + col + '"' : "") + "/>";
+}
+
+// lote 4: auxiliares dos simuladores de motores, comandos, pneumática e máquinas
+const FM = "Motores e comandos", FP = "Pneumática", FQ = "Máquinas e processos";
+const sRow = h => '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + h + "</div>";
+const sCtl = h => '<div class="s-ctl">' + h + "</div>";
+const sFig = (vb, lab) => '<div class="s-fig">' + SVG(vb, '<g data-g="g"></g>', lab) + "</div>";
+// motor visto de frente, com o rotor girado de ang graus
+function motV(x, y, r, ang, on, lab) {
+  return '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="#142039" stroke="#9db0d3" stroke-width="2.5"/><g transform="rotate(' + Number(ang).toFixed(1) + " " + x + " " + y + ')"><path d="M' + x + " " + y + "L" + x + " " + (y - r * .75) + "M" + x + " " + y + "L" + (x + r * .65) + " " + (y + r * .38) + "M" + x + " " + y + "L" + (x - r * .65) + " " + (y + r * .38) + '" stroke="' + (on ? "#22d3ee" : "#6c7ea3") + '" stroke-width="' + Math.max(2, r / 8) + '" stroke-linecap="round"/></g><circle cx="' + x + '" cy="' + y + '" r="' + Math.max(2, r / 10) + '" fill="#e2e8f0"/>' + (lab ? tx(x, y + r + 14, lab, "font-size:10px", "middle") : "");
+}
+// contato de comando (escada) entre x e x+30 na linha y; bobina em (x, y)
+function ctL(x, y, closed, lab, nf) {
+  return '<path d="M' + x + " " + (y - 9) + "V" + (y + 9) + "M" + (x + 30) + " " + (y - 9) + "V" + (y + 9) + '" stroke="#e2e8f0" stroke-width="2.5"/>' + (closed ? '<path d="M' + (x - 2) + " " + y + "H" + (x + 32) + '" stroke="#22d3ee" stroke-width="3"/>' : "") + (nf ? '<path d="M' + (x + 3) + " " + (y + 11) + "L" + (x + 27) + " " + (y - 11) + '" stroke="#6c7ea3" stroke-width="1.5"/>' : "") + tx(x + 15, y - 14, lab, "font-size:9px", "middle");
+}
+const coL = (x, y, on, lab) => '<circle cx="' + x + '" cy="' + y + '" r="13" fill="' + (on ? "#22d3ee" : "#142039") + '" fill-opacity="' + (on ? .35 : 1) + '" stroke="#e2e8f0" stroke-width="2"/>' + tx(x, y + 4, lab, "font-size:10px;fill:var(--ink)", "middle");
+// cilindro pneumático deitado: corpo de x a x+L, eixo em y, altura h, avanço p (0 a 1); cA e cB colorem as câmaras de trás e da frente
+const cilTip = (x, L, p) => x + L + 6 + p * (L - 20);
+function cilH(x, y, L, h, p, c, cA, cB) {
+  const px = x + 6 + p * (L - 20), tip = cilTip(x, L, p);
+  return '<rect x="' + x + '" y="' + (y - h / 2) + '" width="' + L + '" height="' + h + '" rx="3" fill="#0c1424" stroke="#9db0d3" stroke-width="2"/>' +
+    (cA && cA !== "none" ? '<rect x="' + (x + 2) + '" y="' + (y - h / 2 + 2) + '" width="' + Math.max(0, px - x - 2).toFixed(1) + '" height="' + (h - 4) + '" fill="' + cA + '" opacity=".45"/>' : "") +
+    (cB && cB !== "none" ? '<rect x="' + (px + 8).toFixed(1) + '" y="' + (y - h / 2 + 2) + '" width="' + Math.max(0, x + L - 2 - px - 8).toFixed(1) + '" height="' + (h - 4) + '" fill="' + cB + '" opacity=".45"/>' : "") +
+    '<rect x="' + px.toFixed(1) + '" y="' + (y - h / 2 + 2) + '" width="8" height="' + (h - 4) + '" fill="#cbd5e1"/><rect x="' + (px + 8).toFixed(1) + '" y="' + (y - 4) + '" width="' + (tip - px - 8).toFixed(1) + '" height="8" fill="#e2e8f0"/>';
 }
 
 const SIMS = {
@@ -2553,6 +2594,822 @@ const SIMS = {
     tick(r, st, dt) { if (st.modo !== "crt" || RMOT) return; st.p = (st.p + dt * st.vel * .25) % 1; this.draw(r, st); }
   },
 
+  /* ===== lote 4 · motores e comandos ===== */
+  motor3f: {
+    fam: FM, title: "Simulador: motor trifásico: campo girante, polos, fechamento e Dahlander", hint: "Veja o campo girante dentro do motor e como o número de polos define a rotação. Depois feche as seis pontas na placa de bornes para a rede certa, e veja o motor Dahlander de duas velocidades.",
+    init: { modo: "campo", polos: 4, carga: 60, th: 0, rot: 0, run: 1, rede: 220, lig: "d", vel: "b" },
+    html: () => sFig("0 0 460 250", "Motor trifásico") + sRow(sSeg("motor3f", "modo", [["campo", "Campo girante e polos"], ["placa", "Fechamento das 6 pontas"], ["dahl", "Dahlander (2 velocidades)"]]) +
+      sGrp("v-campo", sSeg("motor3f", "polos", [["2", "2 polos"], ["4", "4 polos"], ["6", "6 polos"], ["8", "8 polos"]]) + sBtn("motor3f", "run", "Pausar")) +
+      sGrp("v-placa", sSeg("motor3f", "rede", [["220", "Rede 220 V"], ["380", "Rede 380 V"]]) + sSeg("motor3f", "lig", [["d", "Fechar em triângulo (Δ)"], ["y", "Fechar em estrela (Y)"]])) +
+      sGrp("v-dahl", sSeg("motor3f", "vel", [["b", "Velocidade baixa"], ["a", "Velocidade alta"]]))) + sCtl(sRange("motor3f", "carga", "Carga no eixo (%)", 0, 120, 5)) + sMeters([["a", "–"], ["b", "–"], ["c", "–"], ["d", "–"]]),
+    PC: ["#f87171", "#fbbf24", "#38bdf8"],
+    placa(st) { const VL = st.rede, Vb = st.lig === "d" ? VL : VL / Math.sqrt(3), k = Vb / 220; return { Vb, k, res: k > 1.3 ? "alta" : k < .8 ? "baixa" : "ok" }; },
+    slip(st) { return .006 + .044 * st.carga / 100; },
+    draw(r, st) {
+      const m = st.modo; sVis(r, "v-campo", m === "campo"); sVis(r, "v-placa", m === "placa"); sVis(r, "v-dahl", m === "dahl");
+      so(r, "carga", st.carga + " %"); sShow(r, "carga", m !== "dahl"); sg(r, "b-run").textContent = st.run ? "Pausar" : "Continuar";
+      let g = "";
+      if (m === "campo") {
+        const p = st.polos, cx = 120, cy = 125, phi = st.th * 2 / p, ns = 7200 / p, s = this.slip(st), n = ns * (1 - s), N = 3 * p;
+        g += '<circle cx="' + cx + '" cy="' + cy + '" r="104" fill="#142039" stroke="#6c7ea3" stroke-width="2"/><circle cx="' + cx + '" cy="' + cy + '" r="74" fill="#0c1424" stroke="#6c7ea3"/>';
+        for (let i = 0; i < N; i++) { const a = i * 2 * Math.PI / N, ph = i % 3, e = Math.sin(st.th - ph * 2 * Math.PI / 3 - (Math.floor(i / 3) % 2) * Math.PI), x = cx + 89 * Math.cos(a), y = cy + 89 * Math.sin(a); g += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="7" fill="' + this.PC[ph] + '" opacity="' + (.2 + .8 * Math.abs(e)).toFixed(2) + '"/>'; }
+        for (let k = 0; k < p; k++) { const a = phi + k * 2 * Math.PI / p - Math.PI / 2, x = cx + 62 * Math.cos(a), y = cy + 62 * Math.sin(a); g += tx(x.toFixed(1), (y + 4).toFixed(1), k % 2 ? "S" : "N", "font-size:12px;font-weight:700;fill:" + (k % 2 ? "#38bdf8" : "#f87171"), "middle"); }
+        const ra = st.rot * Math.PI / 180;
+        g += '<circle cx="' + cx + '" cy="' + cy + '" r="46" fill="#1e293b" stroke="#9db0d3" stroke-width="2"/>';
+        for (let i = 0; i < 12; i++) { const a = ra + i * Math.PI / 6; g += '<line x1="' + (cx + 30 * Math.cos(a)).toFixed(1) + '" y1="' + (cy + 30 * Math.sin(a)).toFixed(1) + '" x2="' + (cx + 44 * Math.cos(a)).toFixed(1) + '" y2="' + (cy + 44 * Math.sin(a)).toFixed(1) + '" stroke="#fbbf24" stroke-width="3"/>'; }
+        g += '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + 26 * Math.cos(ra - Math.PI / 2)).toFixed(1) + '" y2="' + (cy + 26 * Math.sin(ra - Math.PI / 2)).toFixed(1) + '" stroke="#e2e8f0" stroke-width="4" stroke-linecap="round"/><circle cx="' + cx + '" cy="' + cy + '" r="5" fill="#e2e8f0"/>' + tx(cx, 244, N + " grupos de bobinas · rotor de gaiola", "font-size:9px", "middle");
+        g += plotBox(250, 24, 200, 150) + tx(260, 44, "Rede de 60 Hz", "fill:var(--ink)");
+        [2, 4, 6, 8].forEach((q, i) => { const on = q === p, y = 70 + i * 26; g += '<rect x="256" y="' + (y - 14) + '" width="188" height="22" rx="4" fill="' + (on ? "#22d3ee" : "none") + '" fill-opacity=".15"/>' + tx(264, y + 1, q + " polos", on ? "fill:var(--ink)" : "") + tx(436, y + 1, fmtN(7200 / q, 0) + " rpm", on ? "fill:var(--ink)" : "", "end"); });
+        g += tx(250, 196, "rotação do campo = 120 × f ÷ polos", "font-size:10px") + tx(250, 214, "120 × 60 ÷ " + p + " = " + fmtN(ns, 0) + " rpm", "font-size:10px;fill:#22d3ee");
+        smet(r, "a", "Polos", String(p)); smet(r, "b", "Campo (síncrona)", fmtN(ns, 0) + " rpm"); smet(r, "c", "Eixo", fmtN(n, 0) + " rpm"); smet(r, "d", "Escorregamento", fmtN(s * 100, 1) + " %");
+        sread(r, "As três fases, defasadas de 120°, passam por bobinas espalhadas no estator. A soma dos campos delas forma um <b>campo magnético que gira</b> (as letras N e S), sem nenhuma peça se mexer. O campo arrasta o rotor de gaiola, que gira sempre um pouco <b>mais devagar</b> que o campo: essa diferença é o <b>escorregamento</b>, e é ela que induz corrente no rotor. Com mais carga, o escorregamento aumenta. Com " + p + " polos, o campo dá uma volta a cada " + p / 2 + " ciclo(s) da rede: " + fmtN(ns, 0) + " rpm, e o eixo gira a cerca de " + fmtN(n, 0) + " rpm. É por isso que a placa de um motor de 4 polos diz algo como 1.740 rpm, e não 1.800. (Animação em câmera lenta; o rotor está exagerado para o escorregamento aparecer.)");
+      } else if (m === "placa") {
+        const P = this.placa(st), col = P.res === "ok" ? "#22d3ee" : P.res === "baixa" ? "#fbbf24" : "#f87171", y = st.lig === "y";
+        const T = { 1: [300, 180], 2: [350, 180], 3: [400, 180], 6: [300, 110], 4: [350, 110], 5: [400, 110] };
+        g += '<rect x="270" y="78" width="160" height="128" rx="8" fill="#142039" stroke="#6c7ea3"/>' + tx(350, 72, "placa de bornes", "font-size:10px", "middle");
+        [["L1", 300], ["L2", 350], ["L3", 400]].forEach((l, i) => { g += wre("M" + l[1] + " 240V180", true, this.PC[i]) + tx(l[1] + 6, 236, l[0], "font-size:10px;fill:" + this.PC[i]); });
+        if (y) g += '<rect x="292" y="104" width="116" height="12" rx="3" fill="#cbd5e1"/>';
+        else[[300], [350], [400]].forEach(c => { g += '<rect x="' + (c[0] - 6) + '" y="110" width="12" height="70" rx="3" fill="#cbd5e1"/>'; });
+        Object.keys(T).forEach(k => { g += '<circle cx="' + T[k][0] + '" cy="' + T[k][1] + '" r="9" fill="#0c1424" stroke="#e2e8f0" stroke-width="2"/>' + tx(T[k][0] + 14, T[k][1] - 10, k, "font-size:10px;fill:var(--ink)"); });
+        const A = [130, 40], B = [205, 170], C = [55, 170], O = [130, 125];
+        if (y) g += resB(O[0], O[1], A[0], A[1], col) + resB(O[0], O[1], B[0], B[1], col) + resB(O[0], O[1], C[0], C[1], col) + '<circle cx="130" cy="125" r="4" fill="#e2e8f0"/>' + tx(140, 132, "4-5-6", "font-size:9px");
+        else g += resB(A[0], A[1], B[0], B[1], col) + resB(B[0], B[1], C[0], C[1], col) + resB(C[0], C[1], A[0], A[1], col);
+        [A, B, C].forEach((q, i) => { g += '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="4" fill="' + this.PC[i] + '"/>'; });
+        g += tx(130, 205, "cada bobina: " + fmtN(P.Vb, 0) + " V (feita para 220 V)", "fill:" + col, "middle") + tx(130, 222, "placa do motor: 220/380 V", "font-size:10px", "middle");
+        smet(r, "a", "Tensão em cada bobina", fmtN(P.Vb, 0) + " V"); smet(r, "b", "Conjugado", fmtN(P.k * P.k * 100, 0) + " % do normal"); smet(r, "c", "Corrente de magnetização", P.res === "alta" ? "muitas vezes maior" : P.res === "baixa" ? "menor" : "normal"); smet(r, "d", "Resultado", P.res === "ok" ? "ligação correta" : P.res === "baixa" ? "motor fraco" : "vai queimar");
+        sread(r, "O motor tem <b>três bobinas</b> com as pontas 1-4, 2-5 e 3-6 levadas à placa de bornes, e cada bobina é feita para <b>220 V</b>. No <b>triângulo</b>, as chapinhas ligam 1-6, 2-4 e 3-5 na vertical: cada bobina fica entre duas fases e recebe a tensão de linha inteira. Na <b>estrela</b>, uma chapinha une 4, 5 e 6: cada bobina recebe a tensão de linha ÷ 1,73. " +
+          (P.res === "ok" ? "Rede de " + st.rede + " V em " + (y ? "estrela" : "triângulo") + ": cada bobina fica com os 220 V para que foi feita. <b>Ligação correta.</b>" : P.res === "baixa" ? "<b>Estrela na rede de 220 V:</b> cada bobina fica com só 127 V. O conjugado cai para um terço: em vazio o motor até gira, mas com carga ele não parte ou cai de rotação, puxa corrente alta e esquenta." + (st.carga > 35 ? " Com " + st.carga + " % de carga, ele não dá conta." : "") : "<b>Triângulo na rede de 380 V:</b> cada bobina recebe 380 V, 73 % acima do que aguenta. O ferro satura, a corrente dispara e o enrolamento queima em pouco tempo, se a proteção não desligar antes. É um erro clássico ao trocar o motor de lugar."));
+      } else {
+        const hi = st.vel === "a", rpm = hi ? 3500 : 1750;
+        const T = { 1: [80, 190], 2: [160, 190], 3: [240, 190], 4: [80, 100], 5: [160, 100], 6: [240, 100] };
+        g += '<rect x="50" y="68" width="220" height="150" rx="8" fill="#142039" stroke="#6c7ea3"/>' + tx(160, hi ? 236 : 62, "placa de bornes Dahlander", "font-size:10px", "middle");
+        if (hi) { g += '<rect x="72" y="184" width="176" height="12" rx="3" fill="#cbd5e1"/>' + tx(160, 214, "1-2-3 em curto", "font-size:9px", "middle");[4, 5, 6].forEach((k, i) => { g += wre("M" + T[k][0] + " 30V" + T[k][1], true, this.PC[i]) + tx(T[k][0] + 6, 26, "L" + (i + 1), "font-size:10px;fill:" + this.PC[i]); }); }
+        else[1, 2, 3].forEach((k, i) => { g += wre("M" + T[k][0] + " 240V" + T[k][1], true, this.PC[i]) + tx(T[k][0] + 6, 236, "L" + (i + 1), "font-size:10px;fill:" + this.PC[i]); });
+        Object.keys(T).forEach(k => { g += '<circle cx="' + T[k][0] + '" cy="' + T[k][1] + '" r="9" fill="#0c1424" stroke="#e2e8f0" stroke-width="2"/>' + tx(T[k][0] + 14, T[k][1] - 10, k, "font-size:10px;fill:var(--ink)"); });
+        if (!hi) g += tx(160, 150, "4, 5 e 6 livres", "font-size:9px", "middle");
+        g += motV(370, 110, 52, st.rot, true) + tx(370, 186, hi ? "duplo estrela (YY)" : "triângulo série (Δ)", "fill:var(--ink)", "middle") + tx(370, 204, hi ? "2 polos" : "4 polos", "font-size:10px", "middle");
+        smet(r, "a", "Polos", hi ? "2" : "4"); smet(r, "b", "Rotação", "≈ " + fmtN(rpm, 0) + " rpm"); smet(r, "c", "Ligação", hi ? "YY" : "Δ"); smet(r, "d", "Rede nos bornes", hi ? "4, 5 e 6" : "1, 2 e 3");
+        sread(r, "O <b>motor Dahlander</b> tem um só enrolamento com uma derivação no meio de cada fase, e por isso também só seis pontas. Em <b>baixa</b>, a rede entra em 1, 2 e 3 e as bobinas ficam em triângulo série: 4 polos, cerca de 1.750 rpm. Em <b>alta</b>, a rede entra em 4, 5 e 6 e as pontas 1, 2 e 3 são unidas: as metades das bobinas ficam em paralelo (duplo estrela), o motor passa a ter 2 polos e gira ao dobro, cerca de 3.500 rpm. A relação é sempre 1:2. No comando, três contatores fazem essas ligações, com intertravamento para que a baixa e a alta nunca liguem juntas. É usado em ventiladores, tornos e elevadores de carga de duas velocidades.");
+      }
+      sg(r, "g").innerHTML = g;
+    },
+    act(st, a) { if (a === "run") st.run = st.run ? 0 : 1; },
+    tick(r, st, dt) {
+      if (RMOT || !st.run) return;
+      if (st.modo === "campo") { st.th += dt * 2; st.rot = (st.rot + dt * 2 * 2 / st.polos * (1 - this.slip(st) * 4) * 180 / Math.PI) % 360; }
+      else if (st.modo === "dahl") st.rot = (st.rot + dt * (st.vel === "a" ? 360 : 180)) % 360;
+      else return;
+      this.draw(r, st);
+    }
+  },
+
+  partidas: {
+    fam: FM, title: "Simulador: partidas de motor: direta, reversão, estrela-triângulo, compensadora e série-paralelo", hint: "Escolha o tipo de partida, ajuste a carga e ligue. O gráfico mostra a corrente na linha durante a partida, em múltiplos da corrente nominal. Na reversão, experimente inverter com e sem intertravamento.",
+    init: { m: "dir", inter: "sim", tap: 65, tc: 5, carga: 60, on: 0, dir: 1, w: 0, t: 0, sw: 0, hist: [], ht: 0, burn: 0, rot: 0, msg: "", I: 0, Tm: 0 },
+    html: () => sFig("0 0 460 250", "Partida de motor") + sRow(sSeg("partidas", "m", [["dir", "Direta"], ["rev", "Reversão"], ["yd", "Estrela-triângulo"], ["comp", "Compensadora"], ["sp", "Série-paralelo"]])) +
+      sRow(sGrp("v-rev", sSeg("partidas", "inter", [["sim", "Contatores com intertravamento"], ["nao", "Contatores sem intertravamento"], ["man", "Chave reversora manual"]])) + sGrp("v-comp", sSeg("partidas", "tap", [["50", "Tape de 50 %"], ["65", "65 %"], ["80", "80 %"]]))) +
+      sRow(sBtn("partidas", "liga", "Ligar", "primary") + sBtn("partidas", "desl", "Desligar") + sBtn("partidas", "inv", "Inverter o sentido") + sBtn("partidas", "fus", "Trocar os fusíveis")) +
+      sCtl(sRange("partidas", "carga", "Carga no eixo (%)", 0, 120, 5) + sRange("partidas", "tc", "Tempo do relé de comutação (s)", 1, 12, .5)) + sMeters([["I", "Corrente na linha"], ["n", "Rotação"], ["T", "Conjugado do motor"], ["e", "Etapa"]]),
+    red(st) { const m = st.m; return m === "yd" ? [1 / 3, 1 / 3] : m === "comp" ? [Math.pow(st.tap / 100, 2), Math.pow(st.tap / 100, 2)] : m === "sp" ? [.25, .25] : [1, 1]; },
+    step(st, h) {
+      const red = (st.m === "yd" || st.m === "comp" || st.m === "sp") && st.on && !st.sw ? this.red(st) : [1, 1];
+      const d = st.dir, s = Math.max(1e-4, 1 - st.w * d), sk = .22, Tk = 2 * 2.6 / (s / sk + sk / s);
+      const Tm = st.on ? d * Tk * red[0] : 0, mag = st.carga / 100 * (.5 + .5 * st.w * st.w), sw = Math.sign(st.w);
+      let acc;
+      if (Math.abs(st.w) < 1e-3 && Math.abs(Tm) <= st.carga / 100 * .5) { st.w = 0; acc = 0; }
+      else acc = (Tm - (sw || Math.sign(Tm)) * (mag + .02)) / .35;
+      const w0 = st.w; st.w += acc * h; if (!st.on && w0 * st.w < 0) st.w = 0;
+      st.Tm = Tm; st.I = st.on ? red[1] * (.3 + 6.4 * Math.pow(Math.min(s, 1), .85) + .9 * Math.max(0, s - 1)) : 0;
+    },
+    stage(st) {
+      if (st.burn) return "fusíveis queimados"; if (!st.on) return Math.abs(st.w) > .01 ? "parando" : "parado";
+      const m = st.m; if ((m === "yd" || m === "comp" || m === "sp") && !st.sw) return { yd: "estrela", comp: "tensão reduzida (" + st.tap + " %)", sp: "série" }[m];
+      return { dir: "ligado direto", rev: st.dir > 0 ? "sentido horário" : "anti-horário", yd: "triângulo", comp: "tensão plena", sp: "paralelo" }[m];
+    },
+    draw(r, st) {
+      const m = st.m; sVis(r, "v-rev", m === "rev"); sVis(r, "v-comp", m === "comp"); sShow(r, "tc", m === "yd" || m === "comp" || m === "sp"); sBtnVis(r, "inv", m === "rev"); sBtnVis(r, "fus", !!st.burn);
+      so(r, "carga", st.carga + " %"); so(r, "tc", fmtN(st.tc, 1) + " s");
+      const red = !st.sw && st.on, PC = ["#f87171", "#fbbf24", "#38bdf8"];
+      const K = { dir: [["K1", "linha", st.on]], rev: st.inter === "man" ? [["chave", st.on ? (st.dir > 0 ? "posição 1" : "posição 2") : "posição 0", st.on]] : [["K1", "horário", st.on && st.dir > 0], ["K2", "anti-horário", st.on && st.dir < 0]],
+        yd: [["K1", "linha", st.on], ["K3", "estrela", st.on && red], ["K2", "triângulo", st.on && !red]], comp: [["K3", "estrela do auto", st.on && red], ["K2", "autotrafo", st.on && red], ["K1", "direto", st.on && !red]], sp: [["K1", "linha", st.on], ["K2", "série", st.on && red], ["K3", "paralelo", st.on && !red]] }[m];
+      let g = "";
+      [0, 1, 2].forEach(i => { g += wre("M20 " + (24 + i * 12) + "H230", !st.burn, PC[i]) + tx(8, 28 + i * 12, "L" + (i + 1), "font-size:8px;fill:" + PC[i]); });
+      K.forEach((k, i) => { const x = 18 + i * 72; g += wre("M" + (x + 30) + " 48V74", !st.burn) + '<rect x="' + x + '" y="74" width="62" height="40" rx="4" fill="' + (k[2] ? "#22d3ee" : "#142039") + '" fill-opacity="' + (k[2] ? .3 : 1) + '" stroke="' + (k[2] ? "#22d3ee" : "#6c7ea3") + '" stroke-width="2"/>' + tx(x + 31, 92, k[0], "fill:var(--ink)", "middle") + tx(x + 31, 106, k[1], "font-size:8px", "middle") + wre("M" + (x + 30) + " 114V140H120V150", k[2]); });
+      if (st.burn) g += tx(120, 62, "fusíveis queimados", "fill:#f87171", "middle");
+      g += motV(120, 190, 38, st.rot, st.on, "") + (Math.abs(st.w) > .02 ? '<path d="M' + (st.w > 0 ? "150 160a42 42 0 0 1 10 22" : "90 160a42 42 0 0 0 -10 22") + '" fill="none" stroke="#fbbf24" stroke-width="2"/>' + tx(120, 244, st.w > 0 ? "horário" : "anti-horário", "font-size:9px;fill:#fbbf24", "middle") : "");
+      const X0 = 250, Y0 = 210, W = 200, Hh = 180, yI = v => Y0 - Math.min(v, 9) / 9 * Hh;
+      g += plotBox(X0, Y0 - Hh, W, Hh) + '<line x1="' + X0 + '" x2="' + (X0 + W) + '" y1="' + yI(1) + '" y2="' + yI(1) + '" stroke="#34d399" stroke-dasharray="4 3"/>' + tx(X0 + W - 4, yI(1) - 4, "nominal", "font-size:9px;fill:#34d399", "end");
+      [3, 6, 9].forEach(v => { g += tx(X0 - 4, yI(v) + 4, v + "×", "font-size:9px", "end"); });
+      if (st.hist.length > 1) g += '<path d="' + st.hist.map((v, i) => (i ? "L" : "M") + (X0 + i / 120 * W).toFixed(1) + " " + yI(v).toFixed(1)).join("") + '" fill="none" stroke="#fbbf24" stroke-width="2"/>';
+      g += tx(X0 + 4, Y0 - Hh + 14, "corrente na linha (× nominal)", "font-size:9px") + tx(X0 + W, Y0 + 14, "últimos 12 s", "font-size:9px", "end");
+      sg(r, "g").innerHTML = g;
+      so(r, "I", fmtN(st.I, 1) + " × In (" + fmtN(st.I * 10, 0) + " A)"); so(r, "n", fmtN(Math.abs(st.w) * 1750, 0) + " rpm"); so(r, "T", fmtN(Math.abs(st.Tm) * 100, 0) + " % do nominal"); so(r, "e", this.stage(st));
+      const base = {
+        dir: "Na <b>partida direta</b>, o motor recebe a tensão plena de uma vez: a corrente de partida chega a 6 a 8 vezes a nominal e o conjugado é o maior possível. É a mais simples e barata, e é permitida pela concessionária para motores pequenos (em geral até 5 cv em baixa tensão).",
+        rev: "Para inverter o sentido de um motor trifásico, basta <b>trocar duas fases</b> entre si. K1 liga L1-L2-L3 e K2 liga L3-L2-L1. " + { sim: "Com <b>intertravamento</b>, um contato NF de K1 fica em série com a bobina de K2 e vice-versa: enquanto um estiver ligado, o outro não liga. É preciso desligar antes de inverter.", nao: "<b>Sem intertravamento</b>, nada impede os dois contatores de fecharem juntos, e isso é um <b>curto-circuito entre duas fases</b>.", man: "A <b>chave reversora manual</b> (chave de tambor) tem três posições: 1, 0 e 2. Passar direto de 1 para 2 com o motor girando inverte o campo de uma vez: é uma frenagem por contracorrente, com corrente muito alta." }[st.inter],
+        yd: "Na <b>estrela-triângulo</b>, o motor parte em estrela, com cada bobina recebendo 1/√3 da tensão: a corrente e o conjugado caem para <b>um terço</b>. Quando ele se aproxima da rotação, o relé de tempo comuta para triângulo. O motor precisa ter seis pontas e ser de 220/380 V ligado na rede de 220 V. Funciona bem com a máquina em vazio ou com carga leve.",
+        comp: "Na <b>chave compensadora</b>, um autotransformador alimenta o motor com " + st.tap + " % da tensão na partida. O conjugado e a corrente na linha caem para " + fmtN(Math.pow(st.tap / 100, 2) * 100, 0) + " % (o quadrado do tape). Serve para motores com três pontas e permite escolher o tape conforme a carga, mas o autotransformador é grande e caro.",
+        sp: "Na <b>série-paralelo</b>, o motor tem 12 pontas, com duas meias bobinas por fase. Na partida elas ficam <b>em série</b> (cada meia bobina com metade da tensão): conjugado e corrente caem para um quarto. Depois o comando passa para <b>paralelo</b>, a ligação normal de trabalho, para motores 220/440 V ligados em 220 V."
+      }[m];
+      let x = st.msg;
+      if (!x) {
+        if (st.burn) x = "<b>Os fusíveis queimaram.</b> Troque-os antes de ligar de novo.";
+        else if (st.on && st.t > 3 && Math.abs(st.w) < .05) x = "<b>O motor não parte:</b> o conjugado de partida é menor que o conjugado da carga. Ele fica parado puxando corrente alta, e o relé térmico vai desligar. Diminua a carga ou escolha uma partida com mais conjugado.";
+        else if (st.on && (m === "yd" || m === "comp" || m === "sp") && st.sw && st.t - st.tc < 1.2 && st.t >= st.tc && st.I > 3) x = "<b>Comutação com o motor ainda lento:</b> veja o segundo pico de corrente no gráfico. O relé de tempo comutou antes de o motor chegar perto da rotação, e a vantagem da partida com tensão reduzida se perdeu. Aumente o tempo do relé ou diminua a carga.";
+      }
+      sread(r, base + (x ? " " + x : ""));
+    },
+    input(st, f) { if (f === "m" || f === "inter") { st.on = 0; st.msg = ""; st.dir = 1; } },
+    act(st, a) {
+      st.msg = "";
+      if (a === "fus") { st.burn = 0; return; }
+      if (st.burn) return;
+      if (a === "liga" && !st.on) { st.on = 1; st.t = 0; st.sw = 0; }
+      if (a === "desl") st.on = 0;
+      if (a === "inv") {
+        if (!st.on) { st.dir = -st.dir; st.msg = "Sentido trocado com o motor parado: ao ligar, ele gira " + (st.dir > 0 ? "no horário." : "no anti-horário."); }
+        else if (st.inter === "sim") st.msg = "<b>Nada aconteceu:</b> o contato NF de K1 está aberto e impede a bobina de K2 de ligar. Desligue primeiro, espere o motor parar e então inverta.";
+        else if (st.inter === "nao") { st.burn = 1; st.on = 0; st.msg = "<b>Curto-circuito!</b> K2 fechou com K1 ainda fechado: duas fases se encontraram nos contatos. Os fusíveis queimaram e os contatos dos contatores podem ter colado. É por isso que o intertravamento é obrigatório."; }
+        else { st.dir = -st.dir; st.t = 0; st.msg = "<b>Contracorrente:</b> o campo inverteu com o motor girando. A corrente sobe muito acima da de partida, o motor freia com força e logo gira no outro sentido. Isso castiga o motor e a máquina; na prática, passe pela posição 0 e espere parar."; }
+      }
+    },
+    tick(r, st, dt) {
+      const busy = st.on || Math.abs(st.w) > 1e-3 || st.hist.length;
+      if (!busy) return;
+      for (let i = 0; i < 10; i++) {
+        if (st.on) { st.t += dt / 10; if (!st.sw && (st.m === "yd" || st.m === "comp" || st.m === "sp") && st.t >= st.tc) st.sw = 1; }
+        this.step(st, dt / 10);
+      }
+      st.ht += dt; if (st.ht >= .1) { st.ht = 0; st.hist.push(Number(st.I.toFixed(2))); if (st.hist.length > 120) st.hist.shift(); if (!st.on && Math.abs(st.w) < 1e-3 && st.hist.every(v => v === 0)) st.hist = []; }
+      if (!RMOT) st.rot = (st.rot + st.w * dt * 400) % 360;
+      this.draw(r, st);
+    }
+  },
+
+  protmot: {
+    fam: FM, title: "Simulador: frenagem, partidas consecutivas e protetor térmico", hint: "Três situações do dia a dia com motores: como frear (livre, contracorrente, injeção de corrente contínua e freio eletromagnético), quantas partidas por hora o motor aguenta e o protetor térmico que religa sozinho. O tempo é acelerado nos dois últimos.",
+    init: { modo: "freio", fr: "livre", J: 2, tcc: 3, on: 0, w: 0, brk: 0, tb: 0, tstop: 0, hist: [], ht: 0, I: 0, T: 40, clock: 0, starts: [], run: 0, trip: 0, Th: [], ct: "auto", falha: 1, Tb: [], Tbm: 30, onc: 0, cyc: 0 },
+    html: () => sFig("0 0 460 240", "Proteção e frenagem") + sRow(sSeg("protmot", "modo", [["freio", "Frenagem"], ["consec", "Partidas consecutivas"], ["cicl", "Protetor térmico cíclico"]])) +
+      sRow(sGrp("v-freio", sSeg("protmot", "fr", [["livre", "Parada livre"], ["contra", "Contracorrente"], ["cc", "Injeção de CC"], ["mag", "Freio eletromagnético"]])) + sGrp("v-cicl", sSeg("protmot", "ct", [["auto", "Rearme automático"], ["man", "Rearme manual"]]) + sSeg("protmot", "falha", [["1", "Eixo travado"], ["0", "Motor normal"]]))) +
+      sRow(sBtn("protmot", "liga", "Ligar", "primary") + sBtn("protmot", "frear", "Desligar e frear") + sBtn("protmot", "part", "Dar uma partida", "primary") + sBtn("protmot", "rearm", "Rearmar")) +
+      sCtl(sRange("protmot", "J", "Inércia da máquina (× a do motor)", 1, 8, .5) + sRange("protmot", "tcc", "Tempo do relé de frenagem (s)", .5, 8, .5)) + sMeters([["a", "–"], ["b", "–"], ["c", "–"], ["d", "–"]]),
+    draw(r, st) {
+      const m = st.modo; sVis(r, "v-freio", m === "freio"); sVis(r, "v-cicl", m === "cicl"); sShow(r, "J", m !== "cicl"); sShow(r, "tcc", m === "freio" && (st.fr === "contra" || st.fr === "cc"));
+      sBtnVis(r, "liga", m !== "consec"); sBtnVis(r, "frear", m === "freio"); sBtnVis(r, "part", m === "consec"); sBtnVis(r, "rearm", m === "cicl" && st.ct === "man" || m === "consec");
+      so(r, "J", fmtN(st.J, 1) + "×"); so(r, "tcc", fmtN(st.tcc, 1) + " s");
+      let g = "";
+      const plot = (arr, n, f, col, lab, lo, hi, lines) => { const X0 = 40, Y0 = 220, W = 410, H = 180, y = v => Y0 - (v - lo) / (hi - lo) * H; let s = plotBox(X0, Y0 - H, W, H) + (lines || []).map(l => '<line x1="' + X0 + '" x2="' + (X0 + W) + '" y1="' + y(l[0]).toFixed(1) + '" y2="' + y(l[0]).toFixed(1) + '" stroke="' + l[2] + '" stroke-dasharray="4 3"/>' + tx(X0 + W - 4, y(l[0]) - 4, l[1], "font-size:9px;fill:" + l[2], "end")).join(""); arr.forEach((a, k) => { if (a.length > 1) s += '<path d="' + a.map((v, i) => (i ? "L" : "M") + (X0 + i / n * W).toFixed(1) + " " + y(f(v)).toFixed(1)).join("") + '" fill="none" stroke="' + col[k] + '" stroke-width="2"/>'; }); return s + tx(X0 + 4, Y0 - H + 14, lab, "font-size:9px") + tx(X0 - 4, Y0 - H + 4, String(hi), "font-size:9px", "end") + tx(X0 - 4, Y0 + 4, String(lo), "font-size:9px", "end"); };
+      if (m === "freio") {
+        g += plot([st.hist], 150, v => v * 1750, ["#22d3ee"], "rotação (rpm) nos últimos 15 s", -1800, 1800, [[0, "parado", "#6c7ea3"]]);
+        const nm = { livre: "parada livre", contra: "contracorrente", cc: "injeção de CC", mag: "freio de mola" }[st.fr];
+        smet(r, "a", "Rotação", fmtN(st.w * 1750, 0) + " rpm"); smet(r, "b", "Frenagem", st.brk ? nm + " em ação" : st.on ? "motor ligado" : "–"); smet(r, "c", "Corrente na frenagem", st.brk && st.I ? fmtN(st.I, 1) + " × In" : "0"); smet(r, "d", "Tempo de parada", st.tstop ? fmtN(st.tstop, 1) + " s" : st.brk ? "medindo…" : "–");
+        let t = { livre: "Na <b>parada livre</b>, o motor é só desligado e a máquina para pelo atrito. Com muita inércia (um volante, uma serra, uma centrífuga), isso demora muito, e o operador pode querer mexer na máquina ainda girando.", contra: "Na <b>contracorrente</b>, o comando inverte duas fases com o motor girando: o campo passa a girar ao contrário e freia o rotor com força, com corrente muito alta. Um relé de tempo ou um sensor de rotação (relé de velocidade nula) precisa desligar <b>exatamente</b> quando o motor para; se demorar, o motor começa a girar ao contrário. Aqui o relé está em " + fmtN(st.tcc, 1) + " s.", cc: "Na <b>injeção de corrente contínua</b>, o motor é desligado da rede e recebe corrente contínua em duas fases. O campo fica parado e o rotor girando dentro dele é freado (como um freio de correntes parasitas). A frenagem é suave e o motor não inverte, mas perde força perto do zero, e a energia vira calor no rotor.", mag: "No <b>freio eletromagnético</b>, molas apertam um disco de lona contra o motor. Enquanto o motor está ligado, um eletroímã puxa o disco e libera o eixo. Desligou, a mola freia na hora. Também segura a carga parada, e por isso é usado em pontes rolantes, talhas e elevadores, e para no caso de falta de energia." }[st.fr];
+        if (st.fr === "contra" && st.brk && st.w < -.02) t += " <b>O relé demorou demais:</b> o motor já está girando ao contrário.";
+        sread(r, t);
+      } else if (m === "consec") {
+        g += plot([st.Th], 60, v => v, ["#fb923c"], "temperatura do enrolamento (°C) na última hora", 20, 180, [[155, "limite da classe F (155 °C)", "#f87171"], [130, "classe B (130 °C)", "#fbbf24"]]);
+        const nh = st.starts.length;
+        smet(r, "a", "Enrolamento", fmtN(st.T, 0) + " °C"); smet(r, "b", "Partidas na última hora", String(nh)); smet(r, "c", "Relógio", fmtN(st.clock, 0) + " min"); smet(r, "d", "Situação", st.trip ? "protetor desligou" : st.run ? "partindo" : "parado");
+        sread(r, "Cada partida joga no enrolamento o calor da corrente de partida (6 a 8 vezes a nominal) durante o tempo de acelerar a máquina. Quanto <b>maior a inércia</b>, mais longa a partida e mais calor. Entre uma partida e outra o motor esfria, mas devagar. Por isso os fabricantes dão um limite de <b>partidas por hora</b> (para motores pequenos, algo entre 6 e 30, menos com carga pesada). " + (st.trip ? "<b>O protetor térmico (sensor PTC no enrolamento) desligou o motor</b> antes de o isolamento passar do limite. Espere esfriar e clique em Rearmar." : "Dê partidas seguidas e veja a temperatura subir em degraus. (1 segundo aqui = 1 minuto.)"));
+      } else {
+        g += plot([st.Th, st.Tb.length ? st.Tb : []], 90, v => v, ["#fb923c", "#a78bfa"], "enrolamento (laranja) e bimetal do protetor (lilás), °C", 20, 180, [[155, "limite do enrolamento", "#f87171"], [100, "bimetal abre", "#a78bfa"]]);
+        smet(r, "a", "Enrolamento", fmtN(st.T, 0) + " °C"); smet(r, "b", "Protetor", st.trip ? "aberto" : "fechado"); smet(r, "c", "Religamentos", String(st.cyc)); smet(r, "d", "Corrente", st.onc && !st.trip ? (st.falha ? "6 × In (travado)" : "1 × In") : "0");
+        sread(r, st.falha ? "Com o <b>eixo travado</b>, o motor puxa a corrente de partida o tempo todo. O protetor bimetálico esquenta mais rápido que o enrolamento e abre. " + (st.ct === "auto" ? "Com <b>rearme automático</b>, quando o bimetal esfria ele fecha de novo, o motor tenta partir, esquenta e desarma outra vez, num ciclo sem fim. A cada ciclo o enrolamento fica mais quente, porque não dá tempo de esfriar: é assim que um motor de bomba ou de ventilador queima mesmo tendo protetor. Serve em equipamentos simples, mas nunca onde o religamento sozinho põe alguém em risco (uma máquina que volta a funcionar com a mão do operador dentro)." : "Com <b>rearme manual</b>, o protetor abre e fica aberto até alguém apertar o botão. O motor esfria de verdade e a pessoa é obrigada a procurar a causa antes de religar.") : "Com o motor normal, a corrente é a nominal: o enrolamento estabiliza numa temperatura segura e o protetor não atua. Coloque o eixo travado para ver o protetor trabalhar.");
+      }
+      sg(r, "g").innerHTML = g;
+    },
+    input(st, f) { if (f === "modo") Object.assign(st, { on: 0, w: 0, brk: 0, hist: [], tstop: 0, Th: [], Tb: [], T: 40, trip: 0, starts: [], clock: 0, run: 0, onc: 0, cyc: 0, Tbm: 30 }); },
+    act(st, a) {
+      if (a === "liga") { if (st.modo === "freio") { st.on = 1; st.brk = 0; st.tstop = 0; } else { st.onc = 1; } }
+      if (a === "frear" && st.on) { st.on = 0; st.brk = 1; st.tb = 0; st.tstop = 0; }
+      if (a === "part" && !st.trip) { st.run = 2; st.T += 9 * st.J; st.starts.push(st.clock); }
+      if (a === "rearm") { if (st.modo === "consec") { if (st.T < 120) st.trip = 0; } else if (st.Tbm < 60) st.trip = 0; }
+    },
+    tick(r, st, dt) {
+      const m = st.modo;
+      if (m === "freio") {
+        if (!st.on && !st.brk) return;
+        const h = dt / 10; st.I = 0;
+        for (let i = 0; i < 10; i++) {
+          let acc;
+          if (st.on) acc = (1 - st.w) * 3.5 / st.J;
+          else if (st.brk) {
+            st.tb += h; const f = st.fr, sg2 = Math.sign(st.w) || 1;
+            if (f === "livre") acc = -(.08 + .25 * st.w * st.w) * sg2 / st.J;
+            else if (f === "contra" && st.tb < st.tcc) { acc = (-2.2 - .05) / st.J; st.I = 7 + 2 * Math.min(1, Math.abs(st.w)); }
+            else if (f === "cc" && st.tb < st.tcc) { acc = -(1.1 * st.w / (Math.abs(st.w) + .08) + .05 * sg2) / st.J; st.I = 2.5; }
+            else if (f === "mag") acc = -3.5 * sg2 / st.J;
+            else acc = -(.08 + .25 * st.w * st.w) * sg2 / st.J;
+            const w0 = st.w; st.w += acc * h;
+            if (!(f === "contra" && st.tb < st.tcc) && w0 * st.w <= 0) st.w = 0; if (st.w < -.97) st.w = -.97;
+            if (!st.tstop && Math.abs(st.w) < .004 && st.tb > .05) { st.tstop = st.tb; }
+            if (st.w === 0 && !(f === "contra" && st.tb < st.tcc)) { st.brk = 0; if (!st.tstop) st.tstop = st.tb; }
+            continue;
+          } else acc = 0;
+          st.w += acc * h;
+        }
+        st.ht += dt; if (st.ht >= .1) { st.ht = 0; st.hist.push(Number(st.w.toFixed(3))); if (st.hist.length > 150) st.hist.shift(); }
+      } else if (m === "consec") {
+        st.clock += dt; if (st.run > 0) { st.run -= dt; st.T += dt * (70 - st.T) * .02; } else st.T += (40 - st.T) * dt * .06;
+        if (st.T >= 150) { st.trip = 1; st.run = 0; }
+        st.starts = st.starts.filter(c => st.clock - c <= 60);
+        st.ht += dt; if (st.ht >= 1) { st.ht = 0; st.Th.push(Number(st.T.toFixed(1))); if (st.Th.length > 60) st.Th.shift(); }
+      } else {
+        if (st.Tbm == null) st.Tbm = 30;
+        const pw = st.onc && !st.trip ? (st.falha ? 36 : 1) : 0;
+        st.T += dt * (pw * 1.2 - (st.T - 40) * .05); st.Tbm += dt * (pw * 2.6 - (st.Tbm - 30) * .18);
+        if (!st.trip && st.Tbm >= 100) { st.trip = 1; }
+        if (st.trip && st.ct === "auto" && st.Tbm <= 60) { st.trip = 0; st.cyc++; }
+        st.T = Math.min(st.T, 260);
+        st.ht += dt; if (st.ht >= .5) { st.ht = 0; st.Th.push(Number(st.T.toFixed(1))); st.Tb.push(Number(st.Tbm.toFixed(1))); if (st.Th.length > 90) { st.Th.shift(); st.Tb.shift(); } }
+      }
+      this.draw(r, st);
+    }
+  },
+
+  nivel: {
+    fam: FM, title: "Simulador: bombeamento com chave de boia e golpe de aríete", hint: "Uma bomba leva água da cisterna para a caixa de cima, comandada por duas boias. Mude o consumo e a entrada de água e veja a bomba ligar e desligar sozinha. Depois feche uma válvula de repente e veja o golpe de aríete.",
+    init: { modo: "boia", cons: 20, ent: 25, hs: 40, hc: 60, pump: 0, trav: 0, nst: 0, seca: 0, fl: 0, v: 2, L: 300, tf: .3, mat: "aco", tt: -1, hist: [] },
+    html: () => sFig("0 0 460 250", "Bombeamento") + sRow(sSeg("nivel", "modo", [["boia", "Chave de boia"], ["ariete", "Golpe de aríete"]]) + sGrp("v-boia", sSeg("nivel", "trav", [["0", "Boias boas"], ["1", "Boia da cisterna travada em cima"]])) + sGrp("v-ar", sSeg("nivel", "mat", [["aco", "Tubo de aço"], ["pvc", "Tubo de PVC"]]) + sBtn("nivel", "fecha", "Fechar a válvula", "primary"))) +
+      sCtl(sRange("nivel", "cons", "Consumo da casa (L/min)", 0, 60, 1) + sRange("nivel", "ent", "Água da rua entrando na cisterna (L/min)", 0, 60, 1) + sRange("nivel", "v", "Velocidade da água no tubo (m/s)", .5, 3, .1) + sRange("nivel", "L", "Comprimento do tubo (m)", 20, 1000, 10) + sRange("nivel", "tf", "Tempo para fechar a válvula (s)", .1, 10, .1)) + sMeters([["a", "–"], ["b", "–"], ["c", "–"], ["d", "–"]]),
+    ar(st) { const a = st.mat === "aco" ? 1200 : 400, dp = 1000 * a * st.v / 1e5, tc = 2 * st.L / a, ef = st.tf <= tc ? dp : dp * tc / st.tf; return { a, dp, tc, ef }; },
+    pv(st, t) { const A = this.ar(st), P0 = 3; if (t < 0) return P0; const T4 = 2 * A.tc, ramp = Math.min(1, t / Math.min(st.tf, A.tc)), k = Math.floor(t / A.tc), sgn = k % 2 ? -1 : 1; return Math.max(-1, P0 + sgn * A.ef * ramp * Math.exp(-t / (6 * T4))); },
+    draw(r, st) {
+      const m = st.modo, b = m === "boia"; sVis(r, "v-boia", b); sVis(r, "v-ar", !b);["cons", "ent"].forEach(f => sShow(r, f, b));["v", "L", "tf"].forEach(f => sShow(r, f, !b));
+      so(r, "cons", st.cons + " L/min"); so(r, "ent", st.ent + " L/min"); so(r, "v", fmtN(st.v, 1) + " m/s"); so(r, "L", st.L + " m"); so(r, "tf", fmtN(st.tf, 1) + " s");
+      let g = "";
+      if (b) {
+        const lvl = (x, y, w, h, p, lab) => '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="#0c1424" stroke="#9db0d3" stroke-width="2"/><rect x="' + (x + 2) + '" y="' + (y + h - (h - 4) * p / 100 - 2).toFixed(1) + '" width="' + (w - 4) + '" height="' + ((h - 4) * p / 100).toFixed(1) + '" fill="#38bdf8" opacity=".55"/>' + tx(x + w / 2, y + h + 14, lab, "font-size:10px", "middle");
+        g += lvl(300, 24, 130, 86, st.hs, "caixa de cima (1.000 L)") + lvl(30, 140, 150, 80, st.hc, "cisterna (2.000 L)");
+        const ys = 24 + 86 - 82 * st.hs / 100 - 4, yc = 140 + 80 - 76 * st.hc / 100 - 4;
+        g += '<path d="M330 24V' + (ys - 6).toFixed(1) + '" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2 2"/><circle cx="330" cy="' + ys.toFixed(1) + '" r="7" fill="#fbbf24"/>' + tx(338, 18, "boia de cima", "font-size:9px");
+        const yb = st.trav ? 150 : yc; g += '<path d="M60 140V' + (yb - 6).toFixed(1) + '" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2 2"/><circle cx="60" cy="' + yb.toFixed(1) + '" r="7" fill="' + (st.trav ? "#f87171" : "#fbbf24") + '"/>' + tx(70, 134, st.trav ? "boia travada" : "boia da cisterna", "font-size:9px;fill:" + (st.trav ? "#f87171" : "var(--muted)"));
+        g += wre("M140 200H200", st.pump, "#38bdf8") + wre("M224 200H260V60H300", st.pump && !st.seca, "#38bdf8") + '<circle cx="212" cy="200" r="14" fill="' + (st.pump ? (st.seca ? "#f87171" : "#22d3ee") : "#142039") + '" fill-opacity=".5" stroke="#e2e8f0" stroke-width="2"/>' + tx(212, 228, "bomba", "font-size:10px", "middle") +
+          wre("M430 96H450V240", st.cons > 0, "#38bdf8") + tx(446, 236, "casa", "font-size:9px", "end") + wre("M10 150H30", st.ent > 0, "#38bdf8") + tx(10, 144, "rua", "font-size:9px");
+        g += '<rect x="150" y="20" width="96" height="74" rx="6" fill="#142039" stroke="#6c7ea3"/>' + tx(198, 36, "comando", "font-size:9px;fill:var(--ink)", "middle") + tx(158, 54, "boia de cima: " + (st.hs < 95 && (st.pump || st.hs < 30) ? "fechada" : "aberta"), "font-size:8px") + tx(158, 70, "boia cisterna: " + (st.trav || st.hc > 15 ? "fechada" : "aberta"), "font-size:8px") + tx(158, 86, "contator: " + (st.pump ? "ligado" : "desligado"), "font-size:8px;fill:" + (st.pump ? "#22d3ee" : "var(--muted)"));
+        smet(r, "a", "Caixa de cima", fmtN(st.hs, 0) + " %"); smet(r, "b", "Cisterna", fmtN(st.hc, 0) + " %"); smet(r, "c", "Bomba", st.pump ? (st.seca ? "girando a seco!" : "bombeando 60 L/min") : "desligada"); smet(r, "d", "Partidas da bomba", String(st.nst));
+        sread(r, "A <b>boia de cima</b> fecha o contato quando a caixa baixa (aqui, a 30 %) e só abre quando ela enche (95 %). Essa diferença entre ligar e desligar evita que a bomba fique ligando e desligando sem parar. A <b>boia da cisterna</b>, em série no comando, só deixa a bomba ligar se houver água embaixo: é a proteção contra trabalhar a seco. " + (st.seca ? "<b>A bomba está girando sem água.</b> " + (st.trav ? "A boia da cisterna travou em cima e continua dizendo que tem água: o selo mecânico esquenta e se destrói em minutos. Por isso a boia precisa de limpeza e de cabo livre." : "") : st.ent < st.cons && st.hc < 20 ? "A cisterna está acabando: a rua não dá conta do consumo." : "") + " (Tempo acelerado: 1 segundo aqui = 1 minuto.)");
+      } else {
+        const A = this.ar(st), t = st.tt, P = this.pv(st, t), cs = Math.min(1, t < 0 ? 0 : t / st.tf), pos = t < 0 ? -1 : (t % (2 * A.tc)) / (2 * A.tc);
+        g += '<rect x="20" y="30" width="70" height="80" fill="#0c1424" stroke="#9db0d3" stroke-width="2"/><rect x="22" y="44" width="66" height="64" fill="#38bdf8" opacity=".5"/>' + tx(55, 124, "reservatório", "font-size:9px", "middle");
+        g += '<rect x="90" y="92" width="300" height="12" fill="#38bdf8" opacity="' + (t < 0 || cs < 1 ? .55 : .3) + '"/><rect x="90" y="92" width="300" height="12" fill="none" stroke="#9db0d3"/>';
+        if (t >= 0 && pos >= 0) { const xw = pos < .5 ? 390 - pos * 2 * 300 : 90 + (pos - .5) * 2 * 300, hi = Math.floor(t / A.tc) % 2 === 0; g += '<rect x="' + Math.min(xw, 390).toFixed(1) + '" y="88" width="' + (390 - Math.min(xw, 390)).toFixed(1) + '" height="20" fill="' + (hi ? "#f87171" : "#a78bfa") + '" opacity=".45"/>'; }
+        g += '<path d="M390 84L410 112V84L390 112Z" fill="#142039" stroke="#e2e8f0" stroke-width="2"/><rect x="398" y="' + (70 + 14 * (1 - cs)).toFixed(1) + '" width="4" height="' + (14 + 14 * cs).toFixed(1) + '" fill="#e2e8f0"/>' + tx(400, 64, "válvula", "font-size:9px", "middle") + tx(240, 80, st.L + " m de tubo", "font-size:9px", "middle");
+        const X0 = 40, Y0 = 232, W = 410, H = 100, pmax = Math.max(30, A.ef + 5), y = v => Y0 - (v + 1) / (pmax + 1) * H;
+        g += plotBox(X0, Y0 - H, W, H) + '<line x1="' + X0 + '" x2="' + (X0 + W) + '" y1="' + y(3).toFixed(1) + '" y2="' + y(3).toFixed(1) + '" stroke="#34d399" stroke-dasharray="4 3"/>' + tx(X0 + 4, Y0 - H + 12, "pressão na válvula (bar)", "font-size:9px") + tx(X0 - 4, Y0 - H + 4, fmtN(pmax, 0), "font-size:9px", "end") + tx(X0 + W - 4, y(3) - 4, "pressão normal (3 bar)", "font-size:9px;fill:#34d399", "end");
+        if (st.hist.length > 1) g += '<path d="' + st.hist.map((v, i) => (i ? "L" : "M") + (X0 + i / 300 * W).toFixed(1) + " " + y(v).toFixed(1)).join("") + '" fill="none" stroke="#fbbf24" stroke-width="2"/>';
+        smet(r, "a", "Velocidade da onda (celeridade)", fmtN(A.a, 0) + " m/s"); smet(r, "b", "Tempo crítico 2L/a", fmtN(A.tc, 2) + " s"); smet(r, "c", "Sobrepressão", "+" + fmtN(A.ef, 1) + " bar"); smet(r, "d", "Pressão na válvula agora", fmtN(P, 1) + " bar");
+        sread(r, "A água em movimento tem muita energia. Quando a válvula fecha de repente, a coluna de água bate nela e para: a pressão sobe de uma vez e essa <b>onda de pressão</b> corre pelo tubo até o reservatório e volta, " + (st.mat === "aco" ? "a cerca de 1.200 m/s no aço" : "a cerca de 400 m/s no PVC, que é mais elástico") + ". A sobrepressão máxima é ρ × a × v (fórmula de Joukowsky): " + fmtN(A.dp, 1) + " bar para " + fmtN(st.v, 1) + " m/s. " + (st.tf <= A.tc ? "Fechando em " + fmtN(st.tf, 1) + " s, mais rápido que o tempo de ida e volta da onda (" + fmtN(A.tc, 2) + " s), o golpe vem <b>inteiro</b>: é a batida que se ouve nos canos, e pode estourar tubos, juntas e a própria bomba." : "Fechando em " + fmtN(st.tf, 1) + " s, mais devagar que a ida e volta da onda, o golpe cai para " + fmtN(A.ef, 1) + " bar. Por isso válvulas de bombas grandes fecham devagar.") + " Na volta, a pressão fica abaixo da normal e pode até separar a coluna de água (cavitação). Proteções: fechar devagar, velocidade baixa na tubulação, válvula de retenção de fechamento suave, válvula de alívio e tanque hidropneumático.");
+      }
+      sg(r, "g").innerHTML = g;
+    },
+    input(st, f) { if (f !== "modo" && f !== "trav" && f !== "cons" && f !== "ent") { st.tt = -1; st.hist = []; } },
+    act(st, a) { if (a === "fecha") { st.tt = 0; st.hist = []; } },
+    tick(r, st, dt) {
+      if (st.modo === "boia") {
+        const mdt = dt; st.hc = Math.min(100, st.hc + st.ent * mdt / 20); st.hs = Math.max(0, st.hs - st.cons * mdt / 10);
+        const okC = st.trav || st.hc > 15, was = st.pump;
+        if (!st.pump && st.hs < 30 && (st.trav || st.hc > 25)) st.pump = 1; else if (st.pump && (st.hs >= 95 || !okC)) st.pump = 0;
+        if (st.pump && !was) st.nst++;
+        st.seca = st.pump && st.hc <= .5 ? 1 : 0;
+        if (st.pump && !st.seca) { const q = Math.min(60, st.hc * 20 / mdt) * mdt; st.hc = Math.max(0, st.hc - q / 20); st.hs = Math.min(100, st.hs + q / 10); }
+        this.draw(r, st); return;
+      }
+      if (st.tt < 0) return; const A = this.ar(st), Ttot = 6 * 2 * A.tc + st.tf, k = Ttot / 6;
+      st.tt += dt * k; st.hist.push(Number(this.pv(st, st.tt).toFixed(2))); if (st.hist.length > 300) st.hist.shift();
+      if (st.tt > Ttot) st.tt = -2;
+      this.draw(r, st); if (st.tt === -2) st.tt = -1;
+    }
+  },
+
+  ladder: {
+    fam: FM, title: "Simulador: circuito de comando: intertravamento, temporizador e automação sequencial", hint: "Diagramas de comando em escada (ladder). Aperte os botões e acompanhe por onde passa a corrente. Na sequência de esteiras, veja por que a ordem de partida e de parada importa.",
+    init: { modo: "inter", s0u: 0, s1u: 0, s2u: 0, k1: 0, k2: 0, tk: 0, tT: 4, ord: "certa", ph: "parado", pt: 0, M: [0, 0, 0], pos: 0, pile: [0, 0], emg: 0 },
+    html: () => sFig("0 0 460 250", "Diagrama de comando") + sRow(sSeg("ladder", "modo", [["inter", "Reversão com intertravamento"], ["temp", "Temporizador"], ["seq", "Sequência de esteiras"]]) + sGrp("v-seq", sSeg("ladder", "ord", [["certa", "Ordem certa"], ["errada", "Ordem errada"]]))) +
+      sRow(sBtn("ladder", "s1", "S1", "primary") + sBtn("ladder", "s2", "S2") + sBtn("ladder", "s0", "S0 (desliga)") + sBtn("ladder", "emg", "Emergência") + sBtn("ladder", "dest", "Destravar a emergência")) + sCtl(sRange("ladder", "tT", "Tempo do temporizador (s)", 1, 10, .5)) + sMeters([["a", "–"], ["b", "–"], ["c", "–"], ["d", "–"]]),
+    logic(st) {
+      const n = nowS(), s0 = n < st.s0u, s1 = n < st.s1u, s2 = n < st.s2u;
+      if (st.modo === "inter") { st.k1 = !s0 && (s1 || st.k1) && !st.k2 ? 1 : 0; st.k2 = !s0 && (s2 || st.k2) && !st.k1 ? 1 : 0; }
+      if (st.modo === "temp") { st.k1 = !s0 && (s1 || st.k1) ? 1 : 0; if (!st.k1) st.tk = 0; }
+      return { s0, s1, s2 };
+    },
+    draw(r, st) {
+      const m = st.modo, L = this.logic(st); sVis(r, "v-seq", m === "seq"); sShow(r, "tT", m !== "inter"); so(r, "tT", fmtN(st.tT, 1) + " s");
+      sBtnVis(r, "s2", m === "inter"); sBtnVis(r, "emg", m === "seq"); sBtnVis(r, "dest", m === "seq" && st.emg);
+      sg(r, "b-s1").textContent = m === "inter" ? "S1 (frente)" : "S1 (liga)"; sg(r, "b-s2").textContent = "S2 (ré)";
+      let g = m === "seq" ? "" : '<path d="M24 20V238M436 20V238" stroke="#6c7ea3" stroke-width="3"/>' + tx(14, 16, "L", "fill:#f87171;font-size:10px") + tx(432, 16, "N", "fill:#38bdf8;font-size:10px");
+      const W = (d, on) => wre(d, on);
+      if (m === "inter") {
+        [[50, st.k1, st.k2, L.s1, "S1", "K1", "frente"], [150, st.k2, st.k1, L.s2, "S2", "K2", "ré"]].forEach(R => {
+          const y = R[0], a = !L.s0, b = a && (R[3] || R[1]), c = b && !R[2];
+          g += W("M24 " + y + "H60", true) + ctL(60, y, !L.s0, "S0", 1) + W("M90 " + y + "H130", a) + ctL(130, y, R[3], R[4]) + W("M110 " + y + "V" + (y + 42) + "H130M160 " + (y + 42) + "H180V" + y, a) + ctL(130, y + 42, R[1], R[5] + " (selo)") +
+            W("M160 " + y + "H230", b) + ctL(230, y, !R[2], (R[5] === "K1" ? "K2" : "K1") + " NF", 1) + W("M260 " + y + "H337", c) + coL(350, y, R[1], R[5]) + W("M363 " + y + "H436", false) + tx(390, y + 22, R[6], "font-size:10px", "middle");
+        });
+        smet(r, "a", "K1 (frente)", st.k1 ? "ligado" : "desligado"); smet(r, "b", "K2 (ré)", st.k2 ? "ligado" : "desligado"); smet(r, "c", "Motor", st.k1 ? "girando para frente" : st.k2 ? "girando para trás" : "parado"); smet(r, "d", "Intertravamento", st.k1 ? "bloqueando K2" : st.k2 ? "bloqueando K1" : "livre");
+        sread(r, "Cada contator tem o seu <b>selo</b> (o contato NA dele mesmo em paralelo com o botão) e, em série com a bobina, um contato <b>NF do outro contator</b>: é o intertravamento elétrico. " + (st.k1 && L.s2 ? "<b>Você apertou S2 com K1 ligado e nada aconteceu:</b> o NF de K1 está aberto e não deixa a corrente chegar à bobina de K2. " : st.k2 && L.s1 ? "<b>Você apertou S1 com K2 ligado e nada aconteceu:</b> o NF de K2 bloqueia K1. " : "") + "Para inverter, aperte S0, espere o motor parar e aperte o outro botão. Em máquinas reais também se usa intertravamento mecânico (uma peça entre os dois contatores) e, às vezes, intertravamento pelos botões (botões conjugados NA + NF).");
+      } else if (m === "temp") {
+        const a = !L.s0, b = a && (L.s1 || st.k1), kt = st.k1 && st.tk >= st.tT;
+        g += W("M24 50H60", true) + ctL(60, 50, !L.s0, "S0", 1) + W("M90 50H130", a) + ctL(130, 50, L.s1, "S1") + W("M110 50V92H130M160 92H180V50", a) + ctL(130, 92, st.k1, "K1 (selo)") + W("M160 50H337", b) + coL(350, 50, st.k1, "K1") + W("M363 50H436", false) + tx(392, 74, "bomba de óleo", "font-size:9px", "middle");
+        g += W("M24 140H130", true) + ctL(130, 140, st.k1, "K1") + W("M160 140H337", st.k1) + coL(350, 140, st.k1, "KT") + W("M363 140H436", false) + tx(392, 164, "relé de tempo", "font-size:9px", "middle");
+        g += W("M24 210H130", true) + ctL(130, 210, kt, "KT 15-18") + '<circle cx="145" cy="226" r="7" fill="none" stroke="#e2e8f0"/><path d="M145 222v4l3 2" stroke="#e2e8f0" fill="none"/>' + W("M160 210H337", kt) + coL(350, 210, kt, "K2") + W("M363 210H436", false) + tx(392, 234, "motor principal", "font-size:9px", "middle");
+        const pc = st.k1 ? Math.min(1, st.tk / st.tT) : 0; g += '<rect x="200" y="160" width="100" height="8" rx="4" fill="#142039" stroke="#6c7ea3"/><rect x="200" y="160" width="' + (100 * pc).toFixed(1) + '" height="8" rx="4" fill="#fbbf24"/>';
+        smet(r, "a", "K1 (bomba de óleo)", st.k1 ? "ligado" : "desligado"); smet(r, "b", "Tempo contado", fmtN(Math.min(st.tk, st.tT), 1) + " de " + fmtN(st.tT, 1) + " s"); smet(r, "c", "Contato do KT", kt ? "fechado" : "aberto"); smet(r, "d", "K2 (motor principal)", kt ? "ligado" : "desligado");
+        sread(r, "O <b>relé de tempo com retardo na energização</b> começa a contar quando a bobina dele recebe tensão e só fecha o contato temporizado (15-18) depois do tempo ajustado. Aqui ele garante que a máquina só gira depois que a bomba de óleo já lubrificou os mancais. Se S0 for apertado, K1 cai, o relé de tempo zera e K2 cai junto. O mesmo recurso aparece na estrela-triângulo, em partidas de compressores e em exaustores que precisam rodar antes de um queimador acender.");
+      } else {
+        const E = [[40, 60, "M1 alimentação"], [170, 120, "M2 transporte"], [300, 180, "M3 descarga"]];
+        E.forEach((e, i) => { const on = st.M[i]; g += '<rect x="' + e[0] + '" y="' + e[1] + '" width="130" height="14" rx="7" fill="#142039" stroke="' + (on ? "#22d3ee" : "#6c7ea3") + '" stroke-width="2"/>' + motV(e[0] + 7, e[1] + 7, 6, on ? st.pos * 20 : 0, on) + tx(e[0] + 65, e[1] + 30, e[2] + (on ? " · ligada" : ""), "font-size:9px;fill:" + (on ? "#22d3ee" : "var(--muted)"), "middle");
+          for (let j = 0; j < 4; j++) { const x = e[0] + 14 + ((j * 30 + (on ? st.pos * 10 : 0)) % 110); g += '<rect x="' + x.toFixed(1) + '" y="' + (e[1] - 9) + '" width="10" height="9" fill="#fbbf24" opacity=".85"/>'; }
+          if (i < 2 && st.pile[i] > .1) { const h = Math.min(40, st.pile[i] * 4); g += '<path d="M' + (e[0] + 110) + " " + e[1] + "l15 -" + h.toFixed(1) + "l15 " + h.toFixed(1) + 'z" fill="#fbbf24" opacity=".8"/>' + tx(e[0] + 125, e[1] - h - 4, "acumulando!", "font-size:9px;fill:#f87171", "middle"); } });
+        const steps = st.ord === "certa" ? ["Partida: M3, depois M2, depois M1", "Parada: M1, depois M2, depois M3"] : ["Partida: M1, depois M2, depois M3", "Parada: M3, depois M2, depois M1"];
+        g += tx(40, 222, steps[0], "font-size:10px;fill:" + (st.ph === "partindo" ? "#22d3ee" : "var(--muted)")) + tx(40, 238, steps[1], "font-size:10px;fill:" + (st.ph === "parando" ? "#22d3ee" : "var(--muted)"));
+        if (st.emg) g += '<rect x="330" y="24" width="110" height="30" rx="6" fill="#f87171" opacity=".25" stroke="#f87171"/>' + tx(385, 44, "EMERGÊNCIA", "fill:#f87171", "middle");
+        smet(r, "a", "Etapa", st.emg ? "emergência" : st.ph); smet(r, "b", "Esteiras ligadas", st.M.map((v, i) => v ? "M" + (i + 1) : "").filter(Boolean).join(", ") || "nenhuma"); smet(r, "c", "Material acumulado", fmtN(st.pile[0] + st.pile[1], 1) + " caixas"); smet(r, "d", "Intervalo", fmtN(st.tT, 1) + " s");
+        sread(r, (st.ord === "certa" ? "Na <b>ordem certa</b>, a partida começa pela esteira do <b>fim da linha</b> (M3) e vai voltando até a alimentação; a parada começa pela <b>alimentação</b> (M1), e cada esteira espera a anterior esvaziar. Assim nada se acumula em esteira parada." : "Na <b>ordem errada</b>, a alimentação liga primeiro e despeja material numa esteira ainda parada, e na parada a descarga para antes das outras. Veja o material se acumular nas transferências: na fábrica, isso é engasgo, derramamento e motor partindo com carga.") + " Este é um exemplo de <b>automação sequencial</b>: o CLP percorre etapas, cada uma com uma condição para passar à seguinte (aqui, o tempo). A <b>emergência</b> é diferente: corta tudo de uma vez, por um circuito de segurança separado, e só se destrava de propósito.");
+      }
+      sg(r, "g").innerHTML = g;
+    },
+    input(st, f) { if (f === "modo" || f === "ord") Object.assign(st, { k1: 0, k2: 0, tk: 0, ph: "parado", M: [0, 0, 0], pile: [0, 0], emg: 0 }); },
+    act(st, a) {
+      const n = nowS();
+      if (st.modo !== "seq") { if (a === "s1") st.s1u = n + .7; if (a === "s2") st.s2u = n + .7; if (a === "s0") st.s0u = n + .7; return; }
+      if (a === "emg") { st.emg = 1; st.M = [0, 0, 0]; st.ph = "parado"; }
+      if (a === "dest") st.emg = 0;
+      if (st.emg) return;
+      if (a === "s1" && st.ph !== "rodando") { st.ph = "partindo"; st.pt = 0; }
+      if (a === "s0" && st.ph !== "parado") { st.ph = "parando"; st.pt = 0; }
+    },
+    tick(r, st, dt) {
+      if (st.modo === "temp" && st.k1) st.tk += dt;
+      if (st.modo === "seq") {
+        const ord = st.ord === "certa" ? [2, 1, 0] : [0, 1, 2], stp = st.ord === "certa" ? [0, 1, 2] : [2, 1, 0];
+        if (st.ph === "partindo") { st.pt += dt; const k = Math.min(3, 1 + Math.floor(st.pt / st.tT)); ord.forEach((e, i) => { st.M[e] = i < k ? 1 : 0; }); if (k === 3) st.ph = "rodando"; }
+        if (st.ph === "parando") { st.pt += dt; const k = Math.min(3, 1 + Math.floor(st.pt / st.tT)); stp.forEach((e, i) => { if (i < k) st.M[e] = 0; }); if (k === 3) st.ph = "parado"; }
+        for (let i = 0; i < 2; i++) { if (st.M[i] && !st.M[i + 1]) st.pile[i] += dt * 1.5; else if (st.M[i + 1] && st.pile[i] > 0) st.pile[i] = Math.max(0, st.pile[i] - dt * 1.5); }
+        if (!RMOT) st.pos = (st.pos + dt * 3) % 1000;
+      }
+      this.draw(r, st);
+    }
+  },
+
+  sensprox: {
+    fam: FM, title: "Simulador: sensores de proximidade: indutivo, capacitivo, magnético e óptico reflexivo", hint: "Escolha o sensor e o material do alvo e aproxime o alvo. Cada sensor enxerga coisas diferentes, e o alcance muda com o material. Veja também a saída PNP ou NPN ligada a uma entrada de CLP.",
+    init: { tipo: "ind", mat: "aco", d: 5, saida: "pnp" },
+    SN: { ind: 8, cap: 15, mag: 20, opt: 300 },
+    F: { ind: { aco: 1, ino: .75, alu: .4, plast: 0, mad: 0, agua: 0, ima: .9, preto: 0 }, cap: { aco: 1, ino: 1, alu: 1, plast: .45, mad: .55, agua: .9, ima: 1, preto: .35 }, mag: { aco: 0, ino: 0, alu: 0, plast: 0, mad: 0, agua: 0, ima: 1, preto: 0 }, opt: { aco: 1.3, ino: 1.2, alu: 1.3, plast: 1, mad: .75, agua: .15, ima: .6, preto: .12 } },
+    MAT: { aco: ["Aço", "#94a3b8"], ino: ["Inox", "#cbd5e1"], alu: ["Alumínio", "#e2e8f0"], plast: ["Plástico branco", "#f8fafc"], mad: ["Madeira", "#b45309"], agua: ["Água em garrafa", "#38bdf8"], ima: ["Ímã", "#f87171"], preto: ["Borracha preta", "#1f2937"] },
+    html: () => sFig("0 0 460 240", "Sensor de proximidade") + sRow(sSeg("sensprox", "tipo", [["ind", "Indutivo"], ["cap", "Capacitivo"], ["mag", "Magnético (reed)"], ["opt", "Óptico reflexivo"]])) +
+      sRow(sSeg("sensprox", "mat", [["aco", "Aço"], ["ino", "Inox"], ["alu", "Alumínio"], ["plast", "Plástico"], ["mad", "Madeira"], ["agua", "Água"], ["ima", "Ímã"], ["preto", "Borracha preta"]])) + sRow(sSeg("sensprox", "saida", [["pnp", "Saída PNP"], ["npn", "Saída NPN"]])) +
+      sCtl(sRange("sensprox", "d", "Distância do alvo", 0, 40, .5)) + sMeters([["sn", "Alcance nominal"], ["sr", "Alcance com este material"], ["dd", "Distância"], ["out", "Saída (fio preto)"]]),
+    draw(r, st) {
+      const t = st.tipo, opt = t === "opt", sc = opt ? .6 : 6, mm = opt ? st.d * 10 : st.d, Sn = this.SN[t], f = this.F[t][st.mat], Sr = Sn * f, det = f > 0 && mm <= Sr, pnp = st.saida === "pnp";
+      so(r, "d", fmtN(mm, opt ? 0 : 1) + " mm");
+      const fx = 150, cy = 90, M = this.MAT[st.mat];
+      let g = '<rect x="40" y="' + (cy - 20) + '" width="110" height="40" rx="4" fill="#142039" stroke="#9db0d3" stroke-width="2"/>';
+      for (let x = 50; x < 140; x += 7) g += '<line x1="' + x + '" y1="' + (cy - 20) + '" x2="' + (x + 4) + '" y2="' + (cy + 20) + '" stroke="#2a3b62"/>';
+      g += '<rect x="' + fx + '" y="' + (cy - 18) + '" width="6" height="36" fill="' + (t === "cap" ? "#a78bfa" : t === "opt" ? "#0c1424" : "#fbbf24") + '"/><circle cx="34" cy="' + cy + '" r="6" fill="' + (det ? "#fbbf24" : "#3d4a63") + '"/>' + tx(34, cy + 30, "LED", "font-size:9px", "middle");
+      if (Sr > 0) { const w = Math.min(290, Sr * sc); g += opt ? '<path d="M' + (fx + 6) + " " + (cy - 6) + "L" + (fx + 6 + w) + " " + (cy - 16) + "L" + (fx + 6 + w) + " " + (cy + 16) + "L" + (fx + 6) + " " + (cy + 6) + 'Z" fill="#f87171" opacity=".12"/>' : '<path d="M' + (fx + 6) + " " + (cy - 18) + "Q" + (fx + 6 + w * 1.25) + " " + cy + " " + (fx + 6) + " " + (cy + 18) + 'Z" fill="' + (t === "cap" ? "#a78bfa" : "#fbbf24") + '" opacity=".15"/>'; g += '<line x1="' + (fx + 6 + w).toFixed(1) + '" x2="' + (fx + 6 + w).toFixed(1) + '" y1="' + (cy - 34) + '" y2="' + (cy + 34) + '" stroke="#6c7ea3" stroke-dasharray="3 3"/>' + tx(fx + 6 + w, cy - 38, "alcance", "font-size:9px", "middle"); }
+      const xt = fx + 6 + mm * sc; g += '<rect x="' + Math.min(xt, 420).toFixed(1) + '" y="' + (cy - 30) + '" width="30" height="60" rx="3" fill="' + M[1] + '" opacity="' + (st.mat === "agua" ? .5 : .9) + '" stroke="#e2e8f0"/>' + tx(Math.min(xt, 420) + 15, cy + 44, M[0], "font-size:9px", "middle");
+      if (opt) g += '<line x1="' + (fx + 6) + '" y1="' + (cy - 4) + '" x2="' + Math.min(xt, 420).toFixed(1) + '" y2="' + (cy - 4) + '" stroke="#f87171" stroke-width="1.5"/>' + (det ? '<line x1="' + Math.min(xt, 420).toFixed(1) + '" y1="' + (cy + 4) + '" x2="' + (fx + 6) + '" y2="' + (cy + 4) + '" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4 3"/>' : "");
+      if (t === "ind" || t === "mag") g += tx(fx - 50, cy - 26, t === "ind" ? "bobina + oscilador" : "ampola reed", "font-size:9px", "middle");
+      const Vo = pnp ? (det ? 24 : 0) : (det ? 0 : 24), y0 = 170;
+      g += wre("M40 " + y0 + "H120", true, "#b45309") + tx(40, y0 - 6, "marrom +24 V", "font-size:9px") + wre("M40 " + (y0 + 50) + "H400", false, "#38bdf8") + tx(40, y0 + 64, "azul 0 V", "font-size:9px") + wre("M40 " + (y0 + 25) + "H300", det, "#e2e8f0") + tx(40, y0 + 19, "preto (saída)", "font-size:9px");
+      g += '<rect x="120" y="' + (y0 - 6) + '" width="80" height="62" rx="4" fill="#142039" stroke="#6c7ea3"/>' + tx(160, y0 + 30, pnp ? "PNP" : "NPN", "fill:var(--ink)", "middle") + (pnp ? wre("M200 " + y0 + "H210V" + (y0 + 25), det) : wre("M200 " + (y0 + 50) + "H210V" + (y0 + 25), det));
+      g += '<rect x="300" y="' + (y0 + 12) + '" width="60" height="26" rx="3" fill="' + ((pnp ? Vo > 12 : Vo < 12) ? "#22d3ee" : "#142039") + '" fill-opacity=".4" stroke="#e2e8f0"/>' + tx(330, y0 + 29, "entrada", "font-size:9px;fill:var(--ink)", "middle") + (pnp ? wre("M360 " + (y0 + 25) + "H400V" + (y0 + 50), false, "#38bdf8") : wre("M360 " + (y0 + 25) + "H410V" + y0 + "H120", false, "#b45309")) + tx(330, y0 - 2, pnp ? "carga para o 0 V" : "carga para o +24 V", "font-size:9px", "middle");
+      sg(r, "g").innerHTML = g;
+      so(r, "sn", Sn + " mm"); so(r, "sr", f ? fmtN(Sr, opt ? 0 : 1) + " mm (× " + fmtN(f, 2) + ")" : "não detecta"); so(r, "dd", fmtN(mm, opt ? 0 : 1) + " mm"); so(r, "out", fmtN(Vo, 0) + " V " + (det ? "(detectou)" : "(nada)"));
+      const T = { ind: "O sensor <b>indutivo</b> tem uma bobina que cria um campo magnético alternado na frente. Metal dentro desse campo absorve energia (correntes parasitas), o oscilador enfraquece e a saída comuta. Só vê <b>metal</b>, e o alcance nominal vale para o aço; alumínio e latão reduzem bastante. Não enxerga plástico, madeira nem água.", cap: "O sensor <b>capacitivo</b> forma um capacitor com o ambiente à frente. Qualquer material que mude a capacitância (metal, água, grãos, plástico, madeira) é detectado, uns mais, outros menos. Tem um parafuso de sensibilidade e é usado para nível de líquido e de grãos, até através da parede do recipiente.", mag: "O sensor <b>magnético</b> (reed) tem duas lâminas dentro de uma ampola de vidro que se encostam na presença de um <b>ímã</b>. É o sensor dos cilindros pneumáticos (o êmbolo tem um anel magnético) e de portas e janelas de alarme. Ferro sem ímã não aciona.", opt: "O sensor <b>óptico reflexivo (difuso)</b> emite luz infravermelha e recebe a que volta refletida pelo objeto. Alcança muito mais longe, mas depende da cor e do acabamento: superfícies claras e brilhantes refletem bem; preto fosco e materiais transparentes quase não devolvem luz." }[t];
+      sread(r, T + " " + (det ? "<b>Alvo detectado.</b> " : f ? "Alvo fora do alcance. " : "<b>Este sensor não vê esse material.</b> ") + (pnp ? "Na saída <b>PNP</b>, o fio preto fornece +24 V quando detecta: a carga fica entre o preto e o 0 V. É o padrão no Brasil e na Europa." : "Na saída <b>NPN</b>, o fio preto liga a carga ao 0 V quando detecta: a carga fica entre o +24 V e o preto. Usar NPN numa entrada de CLP que espera PNP é um erro clássico: o sensor acende o LED e o CLP não vê nada."));
+    }
+  },
+
+  /* ===== lote 4 · pneumática ===== */
+  arcomp: {
+    fam: FP, title: "Simulador: propriedades do ar, água no ar comprimido e geração de vácuo", hint: "Três experiências com o ar: comprimir um volume fechado (pressão, volume e temperatura), calcular quanta água o compressor tira do ar e gerar vácuo com um ejetor para segurar uma peça com ventosa.",
+    init: { modo: "boyle", V: 100, Tc: 20, fad: 2, ur: 70, tin: 30, P: 7, tout: 35, sec: "nao", pa: 5, dv: 40, mkg: 3, ori: "h" },
+    html: () => sFig("0 0 460 240", "Ar comprimido") + sRow(sSeg("arcomp", "modo", [["boyle", "Pressão, volume e temperatura"], ["umid", "Água no ar comprimido"], ["vac", "Geração de vácuo"]]) + sGrp("v-umid", sSeg("arcomp", "sec", [["nao", "Sem secador"], ["ref", "Com secador por refrigeração"]])) + sGrp("v-vac", sSeg("arcomp", "ori", [["h", "Peça deitada (levantar)"], ["v", "Peça em pé (ventosa de lado)"]]))) +
+      sCtl(sRange("arcomp", "V", "Volume (% do inicial)", 20, 100, 1) + sRange("arcomp", "Tc", "Temperatura do ar (°C)", -20, 100, 1) + sRange("arcomp", "fad", "Ar aspirado (m³/min)", .2, 10, .1) + sRange("arcomp", "ur", "Umidade relativa do ar (%)", 20, 100, 1) + sRange("arcomp", "tin", "Temperatura do ar aspirado (°C)", 10, 40, 1) + sRange("arcomp", "P", "Pressão de trabalho (bar)", 4, 12, .5) + sRange("arcomp", "tout", "Temperatura no reservatório (°C)", 20, 50, 1) +
+        sRange("arcomp", "pa", "Pressão de alimentação do ejetor (bar)", 1, 7, .5) + sRange("arcomp", "dv", "Diâmetro da ventosa (mm)", 10, 120, 5) + sRange("arcomp", "mkg", "Massa da peça (kg)", .1, 40, .1)) + sMeters([["a", "–"], ["b", "–"], ["c", "–"], ["d", "–"]]),
+    rs(T) { const e = 6.112 * Math.exp(17.62 * T / (243.12 + T)); return 216.7 * e / (T + 273.15); },
+    vac(pa) { return pa <= 1 ? 30 * pa : Math.min(88, 30 + 58 * (1 - Math.exp(-(pa - 1) / 1.6))) - Math.max(0, pa - 6) * 4; },
+    draw(r, st) {
+      const m = st.modo, F = { boyle: ["V", "Tc"], umid: ["fad", "ur", "tin", "P", "tout"], vac: ["pa", "dv", "mkg"] };
+      Object.keys(F).forEach(k => F[k].forEach(f => sShow(r, f, k === m))); sVis(r, "v-umid", m === "umid"); sVis(r, "v-vac", m === "vac");
+      so(r, "V", st.V + " %"); so(r, "Tc", st.Tc + " °C"); so(r, "fad", fmtN(st.fad, 1)); so(r, "ur", st.ur + " %"); so(r, "tin", st.tin + " °C"); so(r, "P", fmtN(st.P, 1) + " bar"); so(r, "tout", st.tout + " °C"); so(r, "pa", fmtN(st.pa, 1) + " bar"); so(r, "dv", st.dv + " mm"); so(r, "mkg", fmtN(st.mkg, 1) + " kg");
+      let g = "";
+      if (m === "boyle") {
+        const pabs = 1.013 * (100 / st.V) * ((st.Tc + 273.15) / 293.15), pm = pabs - 1.013, xp = 60 + 300 * st.V / 100;
+        g += '<rect x="56" y="60" width="' + (xp - 56).toFixed(1) + '" height="100" fill="' + hot((st.Tc + 20) / 120) + '" opacity=".18"/><path d="M380 56H56V164H380" fill="none" stroke="#9db0d3" stroke-width="3"/>';
+        let s = 7; for (let i = 0; i < 60; i++) { s = (s * 9301 + 49297) % 233280; const u = s / 233280; s = (s * 9301 + 49297) % 233280; const v = s / 233280; g += '<circle cx="' + (62 + u * (xp - 70)).toFixed(1) + '" cy="' + (66 + v * 88).toFixed(1) + '" r="2.4" fill="#e2e8f0" opacity=".8"/>'; }
+        g += '<rect x="' + xp.toFixed(1) + '" y="62" width="14" height="96" fill="#9db0d3"/><rect x="' + (xp + 14).toFixed(1) + '" y="104" width="' + (440 - xp - 14).toFixed(1) + '" height="12" fill="#6c7ea3"/>';
+        const a = Math.PI * (1.25 - 1.5 * Math.min(1, Math.max(0, pm) / 10)); g += '<circle cx="110" cy="210" r="24" fill="#0c1424" stroke="#9db0d3" stroke-width="2"/><line x1="110" y1="210" x2="' + (110 + 18 * Math.cos(a)).toFixed(1) + '" y2="' + (210 - 18 * Math.sin(a)).toFixed(1) + '" stroke="#f87171" stroke-width="2.5"/>' + wre("M110 186V164", true, "#38bdf8") + tx(146, 214, "manômetro: " + fmtN(pm, 2) + " bar", "font-size:10px;fill:var(--ink)");
+        smet(r, "a", "Pressão absoluta", fmtN(pabs, 2) + " bar"); smet(r, "b", "Pressão no manômetro", fmtN(pm, 2) + " bar"); smet(r, "c", "Volume", st.V + " % (de 1 litro)"); smet(r, "d", "Temperatura", st.Tc + " °C");
+        sread(r, "O ar é <b>compressível</b>: com a temperatura constante, reduzir o volume à metade dobra a pressão absoluta (lei de Boyle: p × V = constante). Aquecido num volume fechado, a pressão sobe junto com a temperatura absoluta (em kelvin). O manômetro mostra a pressão <b>acima da atmosfera</b> (manométrica), por isso marca zero com 1 bar absoluto. Essa compressibilidade é o que torna a pneumática macia e rápida, mas também é por que um cilindro pneumático não para com precisão no meio do curso, ao contrário da hidráulica (o óleo quase não se comprime). E é por que o ar sai quente do compressor.");
+      } else if (m === "umid") {
+        const win = st.fad * st.ur / 100 * this.rs(st.tin), vr = (1.013 / (st.P + 1.013)) * ((st.tout + 273.15) / (st.tin + 273.15)), cap = st.fad * vr * this.rs(st.tout), c1 = Math.max(0, win - cap);
+        const left = Math.min(win, cap), td = st.sec === "ref" ? 3 : null, cap2 = td != null ? st.fad * (1.013 / (st.P + 1.013)) * ((td + 273.15) / (st.tin + 273.15)) * this.rs(td) : null, c2 = td != null ? Math.max(0, left - cap2) : 0, rest = left - c2;
+        const cap3 = st.fad * (1.013 / (st.P + 1.013)) * (293.15 / (st.tin + 273.15)) * this.rs(20), c3 = Math.max(0, rest - cap3), L = v => fmtN(v * 60 * 8 / 1000, 1) + " L";
+        g += '<rect x="20" y="60" width="70" height="60" rx="6" fill="#142039" stroke="#9db0d3"/>' + tx(55, 94, "compressor", "font-size:9px;fill:var(--ink)", "middle") + wre("M90 90H130", true, "#f87171") + '<rect x="130" y="40" width="60" height="120" rx="28" fill="#142039" stroke="#9db0d3"/>' + tx(160, 104, "reserva-", "font-size:9px;fill:var(--ink)", "middle") + tx(160, 116, "tório", "font-size:9px;fill:var(--ink)", "middle") +
+          '<rect x="134" y="' + (154 - Math.min(40, c1 * 3)).toFixed(1) + '" width="52" height="' + Math.min(40, c1 * 3).toFixed(1) + '" fill="#38bdf8" opacity=".5"/>' + wre("M160 160V190", true, "#38bdf8") + tx(160, 204, "dreno: " + L(c1) + " por dia", "font-size:9px;fill:#38bdf8", "middle");
+        g += wre("M190 90H240", true, "#a78bfa") + (td != null ? '<rect x="240" y="66" width="70" height="48" rx="6" fill="#142039" stroke="#9db0d3"/>' + tx(275, 88, "secador", "font-size:9px;fill:var(--ink)", "middle") + tx(275, 102, "orvalho 3 °C", "font-size:8px", "middle") + wre("M275 114V150", true, "#38bdf8") + tx(275, 164, L(c2) + "/dia", "font-size:9px;fill:#38bdf8", "middle") + wre("M310 90H350", true, "#a78bfa") : wre("M240 90H350", true, "#a78bfa"));
+        g += '<path d="M350 90H440V170" fill="none" stroke="#9db0d3" stroke-width="6"/>' + tx(395, 82, "rede a 20 °C", "font-size:9px", "middle") + (c3 > 0 ? '<circle cx="440" cy="180" r="5" fill="#38bdf8"/>' + tx(436, 202, "condensa na rede:", "font-size:9px;fill:#f87171", "end") + tx(436, 216, L(c3) + "/dia", "font-size:9px;fill:#f87171", "end") : tx(436, 202, "rede seca", "font-size:9px;fill:#34d399", "end"));
+        smet(r, "a", "Água que entra com o ar", L(win) + " por dia"); smet(r, "b", "Sai no dreno do reservatório", L(c1)); smet(r, "c", td != null ? "Sai no secador" : "Segue com o ar (vapor)", td != null ? L(c2) : L(rest)); smet(r, "d", "Condensa na tubulação", L(c3));
+        sread(r, "O ar aspirado traz vapor de água. Comprimido a " + fmtN(st.P, 1) + " bar, o mesmo vapor fica num volume " + fmtN(1 / vr, 1) + " vezes menor e, ao esfriar no reservatório, passa do ponto de saturação: vira <b>água líquida</b>. Num turno de 8 horas, com " + fmtN(st.fad, 1) + " m³/min de ar a " + st.tin + " °C e " + st.ur + " % de umidade, entram cerca de <b>" + L(win) + "</b> de água. Por isso o reservatório precisa de dreno (de preferência automático) e as linhas têm caimento e purgadores. " + (td != null ? "O <b>secador por refrigeração</b> resfria o ar a cerca de 3 °C, retira mais água e depois reaquece o ar: na rede, que é mais quente que 3 °C, nada condensa." : "Sem secador, o ar sai saturado do reservatório e, ao esfriar na rede, condensa mais água: ela chega às válvulas e cilindros, lava a lubrificação e enferruja os componentes."));
+      } else {
+        const vk = this.vac(st.pa), A = Math.PI * Math.pow(st.dv / 2000, 2), Fv = vk * 1000 * A, S = st.ori === "h" ? 2 : 4, Fr = st.ori === "h" ? st.mkg * 9.81 * S : st.mkg * 9.81 / .5 * 2, ok = Fv >= Fr, cons = 25 + 12 * st.pa;
+        g += '<path d="M20 70H150L210 82H230L300 62H420" fill="none" stroke="#9db0d3" stroke-width="2"/><path d="M20 110H150L210 98H230L300 118H420" fill="none" stroke="#9db0d3" stroke-width="2"/>' + flow("M20 90H420", "#38bdf8", 1, 4) + tx(26, 62, "ar comprimido " + fmtN(st.pa, 1) + " bar", "font-size:9px") + tx(414, 134, "escape (silenciador)", "font-size:9px", "end") +
+          wre("M220 98V170", true, "#a78bfa") + tx(228, 140, "sucção", "font-size:9px;fill:#a78bfa");
+        const cw = Math.max(16, st.dv * .9); g += '<path d="M' + (220 - cw / 2).toFixed(1) + " 190L" + (220 - cw / 4).toFixed(1) + " 170H" + (220 + cw / 4).toFixed(1) + "L" + (220 + cw / 2).toFixed(1) + ' 190Z" fill="#1e293b" stroke="#e2e8f0" stroke-width="2"/>' +
+          '<rect x="130" y="' + (ok ? 190 : 206) + '" width="180" height="22" rx="3" fill="#94a3b8" opacity=".8"/>' + tx(220, ok ? 205 : 221, fmtN(st.mkg, 1) + " kg", "font-size:10px;fill:#0c1424", "middle") + (ok ? "" : tx(320, 224, "caiu!", "fill:#f87171"));
+        smet(r, "a", "Vácuo gerado", "−" + fmtN(vk, 0) + " kPa (" + fmtN(vk / 101.3 * 100, 0) + " %)"); smet(r, "b", "Força da ventosa", fmtN(Fv, 0) + " N"); smet(r, "c", "Força necessária (com segurança)", fmtN(Fr, 0) + " N"); smet(r, "d", "Consumo de ar", "≈ " + fmtN(cons, 0) + " L/min");
+        sread(r, "O <b>ejetor</b> (gerador de vácuo por efeito Venturi) faz o ar comprimido passar por um bocal estreito: a velocidade sobe, a pressão cai abaixo da atmosfera e a porta lateral passa a <b>sugar</b>. Não tem peça móvel, mas gasta ar o tempo todo. O vácuo cresce com a pressão até uns 5 a 6 bar; acima disso quase não melhora (e pode piorar). A força da ventosa é a diferença de pressão vezes a área: dobrar o diâmetro quadruplica a força. Usa-se fator de segurança de 2 para levantar peças deitadas e de 4 ou mais quando a ventosa pega a peça de lado (o que segura é o atrito). " + (ok ? "<b>A peça está segura.</b>" : "<b>A ventosa não segura essa peça:</b> aumente o diâmetro, use mais ventosas ou ajuste a pressão."));
+      }
+      sg(r, "g").innerHTML = g;
+    }
+  },
+
+  pneuval: {
+    fam: FP, title: "Simulador: válvulas distribuidoras, cilindros e levantamento de carga", hint: "Monte o circuito: escolha a válvula (3/2, 5/2 ou 5/3) e o acionamento, ajuste a pressão, o diâmetro do cilindro e a válvula reguladora de fluxo. Coloque o cilindro em pé para levantar uma carga.",
+    init: { v: "v52", ac: "bot", P: 6, D: 40, fl: 70, mkg: 20, ori: "h", p: 0, hold: 0, mem: "b", y1: 0, y2: 0 },
+    html: () => sFig("0 0 460 250", "Circuito pneumático") + sRow(sSeg("pneuval", "v", [["v32", "3/2 + cilindro de simples ação"], ["v52", "5/2 + cilindro de dupla ação"], ["v53", "5/3 centro fechado"]])) + sRow(sGrp("v-ac", sSeg("pneuval", "ac", [["bot", "Botão com retorno por mola"], ["sol", "Duplo solenoide (memória)"]])) + sSeg("pneuval", "ori", [["h", "Cilindro deitado"], ["v", "Cilindro em pé levantando carga"]])) +
+      sRow(sBtn("pneuval", "hold", "Apertar e segurar o botão", "primary") + sBtn("pneuval", "y1", "Y1: avançar", "primary") + sBtn("pneuval", "y2", "Y2: recuar")) +
+      sCtl(sRange("pneuval", "P", "Pressão (bar)", 1, 10, .5) + sRange("pneuval", "D", "Diâmetro do cilindro (mm)", 16, 100, 2) + sRange("pneuval", "fl", "Reguladora de fluxo (abertura %)", 5, 100, 5) + sRange("pneuval", "mkg", "Carga a levantar (kg)", 0, 300, 5)) + sMeters([["fa", "Força de avanço"], ["fr", "Força de recuo"], ["pos", "Posição da haste"], ["st", "Situação"]]),
+    pos(st) { if (st.v === "v53") return st.y1 ? "a" : st.y2 ? "b" : "0"; if (st.v === "v52" && st.ac === "sol") return st.mem; return st.hold ? "a" : "b"; },
+    forces(st) { const A = Math.PI * st.D * st.D / 4, Ar = A - Math.PI * Math.pow(st.D * .4, 2) / 4, sa = st.v === "v32", Fa = st.P * .1 * A * .9 - (sa ? .1 * st.P * .1 * A : 0), Fr = sa ? .08 * st.P * .1 * A + 15 : st.P * .1 * Ar * .9, W = st.ori === "v" ? st.mkg * 9.81 : 0; return { Fa, Fr, W }; },
+    draw(r, st) {
+      const ps = this.pos(st), F = this.forces(st), sa = st.v === "v32", vt = st.ori === "v", c3 = st.v === "v53";
+      sVis(r, "v-ac", st.v === "v52"); sBtnVis(r, "hold", !c3 && !(st.v === "v52" && st.ac === "sol")); sBtnVis(r, "y1", c3 || (st.v === "v52" && st.ac === "sol")); sBtnVis(r, "y2", c3 || (st.v === "v52" && st.ac === "sol")); sShow(r, "mkg", vt);
+      sg(r, "b-hold").textContent = st.hold ? "Soltar o botão" : "Apertar e segurar o botão"; sg(r, "b-y1").textContent = c3 ? (st.y1 ? "Soltar Y1" : "Segurar Y1: avançar") : "Pulso em Y1: avançar"; sg(r, "b-y2").textContent = c3 ? (st.y2 ? "Soltar Y2" : "Segurar Y2: recuar") : "Pulso em Y2: recuar";
+      so(r, "P", fmtN(st.P, 1) + " bar"); so(r, "D", st.D + " mm"); so(r, "fl", st.fl + " %"); so(r, "mkg", st.mkg + " kg");
+      const AIR = "#38bdf8", EX = "#3d4a63", pa = ps === "a", pb = ps === "b";
+      let g = '<rect x="20" y="200" width="60" height="34" rx="6" fill="#142039" stroke="#9db0d3"/>' + tx(50, 221, "P " + fmtN(st.P, 1) + " bar", "font-size:9px;fill:var(--ink)", "middle") + wre("M80 217H150V196", true, AIR);
+      const nb = c3 ? 3 : 2, bw = 44, x0 = 150 - (c3 ? bw : 0), act = c3 ? (pa ? 0 : ps === "0" ? 1 : 2) : (pa ? 0 : 1);
+      const vx = 150 - act * bw;
+      for (let i = 0; i < nb; i++) { const x = vx + i * bw, on = i === act; g += '<rect x="' + x + '" y="152" width="' + bw + '" height="44" fill="' + (on ? "#22d3ee" : "#142039") + '" fill-opacity="' + (on ? .18 : 1) + '" stroke="' + (on ? "#22d3ee" : "#9db0d3") + '" stroke-width="2"/>';
+        const k = c3 ? ["a", "0", "b"][i] : ["a", "b"][i], cx = x + bw / 2;
+        if (k === "0") g += '<path d="M' + (x + 10) + " 156v10M" + (x + 6) + " 166h8M" + (x + 34) + " 156v10M" + (x + 30) + " 166h8M" + (x + 10) + " 192v-10M" + (x + 6) + " 182h8M" + (x + 34) + " 192v-10M" + (x + 30) + ' 182h8" stroke="#e2e8f0" stroke-width="1.5"/>';
+        else if (sa) g += k === "a" ? '<path d="M' + cx + " 192V160M" + (cx - 4) + " 166l4 -6l4 6" + '" stroke="#e2e8f0" stroke-width="1.5" fill="none"/>' : '<path d="M' + (x + 10) + " 158L" + (x + 34) + " 190M" + (x + 30) + " 184l4 6l-7 0" + '" stroke="#e2e8f0" stroke-width="1.5" fill="none"/>';
+        else g += k === "a" ? '<path d="M' + (x + 12) + " 192L" + (x + 12) + " 160M" + (x + 8) + " 166l4 -6l4 6M" + (x + 32) + " 160L" + (x + 32) + " 192M" + (x + 28) + " 186l4 6l4 -6" + '" stroke="#e2e8f0" stroke-width="1.5" fill="none"/>' : '<path d="M' + (x + 12) + " 192L" + (x + 32) + " 160M" + (x + 28) + " 164l4 -4l-1 6M" + (x + 32) + " 192L" + (x + 12) + " 160M" + (x + 14) + " 166l-2 -6l6 2" + '" stroke="#e2e8f0" stroke-width="1.5" fill="none"/>';
+      }
+      g += tx(150 + bw / 2, 146, "válvula " + st.v[1] + "/" + st.v[2], "font-size:9px", "middle") + (st.v === "v52" && st.ac === "sol" || c3 ? tx(vx - 6, 178, "Y1", "font-size:9px", "end") + tx(vx + nb * bw + 4, 178, "Y2", "font-size:9px") : '<path d="M' + (vx + nb * bw) + " 174h12l3 -6l4 12l4 -12l4 12l3 -6" + '" stroke="#e2e8f0" fill="none"/>' + tx(vx - 6, 178, "botão", "font-size:9px", "end"));
+      const lA = sa ? (pa ? AIR : EX) : (pa ? AIR : ps === "0" ? "#a78bfa" : EX), lB = sa ? null : (pb ? AIR : ps === "0" ? "#a78bfa" : EX);
+      const cx0 = vt ? 340 : 120, cy0 = vt ? 175 : 70, L = vt ? 90 : 160, h = 36, dp = st.p;
+      if (vt) {
+        g += '<g transform="rotate(-90 ' + cx0 + " " + cy0 + ')">' + cilH(cx0 - L / 2, cy0, L, h, dp, L - 20, lA, lB || "none") + "</g>";
+        const tip = cy0 - (L / 2 + 6 + dp * (L - 20)); g += '<rect x="' + (cx0 - 30) + '" y="' + (tip - 30).toFixed(1) + '" width="60" height="22" fill="#94a3b8"/>' + tx(cx0, (tip - 15).toFixed(1), st.mkg + " kg", "font-size:9px;fill:#0c1424", "middle");
+        g += (lB ? wre("M" + (150 + bw / 2 + 10) + " 152V100H" + (cx0 + 34) + "V" + (cy0 - L / 2 + 10) + "H" + (cx0 + 15), true, lB) : "") + wre("M" + (150 + bw / 2 - 10) + " 152V120H" + (cx0 - 34) + "V" + (cy0 + L / 2 - 10) + "H" + (cx0 - 15), true, lA);
+      } else {
+        g += cilH(cx0, cy0, L, h, dp, L - 20, lA, lB || "none"); const tip = cilTip(cx0, L, dp);
+        g += '<rect x="' + tip.toFixed(1) + '" y="' + (cy0 - 16) + '" width="8" height="32" fill="#e2e8f0"/>';
+        g += wre("M" + (150 + bw / 2 - 10) + " 152V120H" + (cx0 + 10) + "V" + (cy0 + h / 2), true, lA) + (lB ? wre("M" + (150 + bw / 2 + 10) + " 152V128H" + (cx0 + L - 10) + "V" + (cy0 + h / 2), true, lB) : "");
+      }
+      if (sa) g += tx(vt ? cx0 + 26 : cx0 + L - 30, vt ? cy0 - 50 : cy0 - 24, "mola", "font-size:9px");
+      g += '<path d="M' + (150 + bw / 2 - 18) + " 128h16" + '" stroke="#fbbf24" stroke-width="2"/>' + tx(150 + bw / 2 - 10, 112 + (vt ? 14 : 0), "reguladora " + st.fl + " %", "font-size:8px;fill:#fbbf24", "middle");
+      sg(r, "g").innerHTML = g;
+      const kgf = n => fmtN(n, 0) + " N (≈ " + fmtN(n / 9.81, 0) + " kgf)";
+      so(r, "fa", kgf(F.Fa)); so(r, "fr", sa ? "só a mola" : kgf(F.Fr)); so(r, "pos", fmtN(st.p * 100, 0) + " %");
+      const stall = vt && pa && F.Fa <= F.W;
+      so(r, "st", stall ? "não levanta" : ps === "0" ? "parado no centro" : pa ? (st.p >= .999 ? "avançado" : "avançando") : (st.p <= .001 ? "recuado" : "recuando"));
+      const T = sa ? "Na <b>válvula 3/2</b> (3 vias, 2 posições), o botão manda ar para o cilindro de <b>simples ação</b>, que avança; ao soltar, a válvula descarrega o ar para a atmosfera e a <b>mola</b> recolhe a haste. A força de avanço perde um pouco para a mola." : c3 ? "Na <b>válvula 5/3 de centro fechado</b>, com nenhum solenoide ligado as molas centralizam o carretel e todas as vias ficam fechadas: o ar fica preso nas duas câmaras e o cilindro <b>para onde estiver</b> (mas, como o ar é compressível, a posição não fica exata). Segure Y1 ou Y2 para mover." : "Na <b>válvula 5/2</b>, numa posição o ar vai para a câmara de trás e a da frente descarrega: o cilindro de <b>dupla ação</b> avança. Na outra posição, o contrário. " + (st.ac === "sol" ? "Com <b>duplo solenoide</b>, a válvula é <b>memória</b>: um pulso em Y1 basta, e ela fica na posição até receber um pulso em Y2." : "Com <b>botão e mola</b>, a válvula só fica na posição de avanço enquanto o botão está apertado.");
+      sread(r, T + " Força = pressão × área: com " + fmtN(st.P, 1) + " bar e êmbolo de " + st.D + " mm, cerca de " + kgf(F.Fa) + "." + (sa ? "" : " No recuo, a área é menor (a haste ocupa parte do êmbolo), e a força também.") + " A <b>reguladora de fluxo</b> (de preferência estrangulando o ar que <b>sai</b>) controla a velocidade." + (vt ? (stall ? " <b>A carga de " + st.mkg + " kg pesa " + fmtN(F.W, 0) + " N, mais que a força do cilindro:</b> aumente a pressão ou o diâmetro." : " Levantando " + st.mkg + " kg (" + fmtN(F.W, 0) + " N), sobra " + fmtN(F.Fa - F.W, 0) + " N para acelerar; " + (F.W > .7 * F.Fa ? "é carga demais para um movimento firme (use até uns 70 % da força)." : "dimensionamento folgado.")) : ""));
+    },
+    act(st, a) { if (a === "hold") st.hold = st.hold ? 0 : 1; if (st.v === "v53") { if (a === "y1") { st.y1 = st.y1 ? 0 : 1; st.y2 = 0; } if (a === "y2") { st.y2 = st.y2 ? 0 : 1; st.y1 = 0; } } else { if (a === "y1") st.mem = "a"; if (a === "y2") st.mem = "b"; } },
+    input(st, f) { if (f === "v" || f === "ac") { st.hold = 0; st.y1 = 0; st.y2 = 0; st.mem = "b"; } },
+    tick(r, st, dt) {
+      const ps = this.pos(st), F = this.forces(st), k = .9 * st.fl / 100 * 60 / Math.max(30, st.D);
+      let v = 0;
+      if (ps === "a") { const net = F.Fa - F.W; v = net > 0 ? k * Math.sqrt(Math.min(1, net / F.Fa)) : 0; }
+      else if (ps === "b") { const net = F.Fr + F.W; v = -(st.v === "v32" ? Math.max(.35, k) : k) * Math.sqrt(Math.min(1, net / Math.max(F.Fr, 1))); }
+      const p0 = st.p; st.p = Math.max(0, Math.min(1, st.p + v * dt));
+      if (st.p !== p0 || !st._d) { st._d = 1; this.draw(r, st); }
+    }
+  },
+
+  pneuapl: {
+    fam: FP, title: "Simulador: aplicações pneumáticas: registro, punção, serra, guilhotina e porta", hint: "Cinco máquinas movidas a ar comprimido. Na punção e na guilhotina, o comando é bimanual: segure os dois botões com no máximo meio segundo de diferença. Experimente também os dispositivos de segurança.",
+    init: { modo: "puncao", bE: 0, bD: 0, tE: 0, tD: 0, p: 0, go: 0, lock: 0, obst: 0, cnt: 0, cmd: 0, ar: 1, ph: "", saw: 0, msg: "" },
+    html: () => sFig("0 0 460 240", "Aplicações pneumáticas") + sRow(sSeg("pneuapl", "modo", [["registro", "Comando de registro"], ["puncao", "Punção"], ["serra", "Serra"], ["guilh", "Guilhotina"], ["porta", "Porta"]])) +
+      sRow(sBtn("pneuapl", "bE", "Segurar botão esquerdo", "primary") + sBtn("pneuapl", "bD", "Segurar botão direito", "primary") + sBtn("pneuapl", "cmd", "Abrir") + sBtn("pneuapl", "fecha", "Fechar") + sBtn("pneuapl", "ini", "Iniciar o corte", "primary") + sBtn("pneuapl", "obst", "Colocar a mão / um obstáculo") + sBtn("pneuapl", "ar", "Cortar o ar")) + sMeters([["a", "–"], ["b", "–"], ["c", "–"]]),
+    bim(st) { return st.bE && st.bD && Math.abs(st.tE - st.tD) <= .5 && !st.lock; },
+    draw(r, st) {
+      const m = st.modo, bi = m === "puncao" || m === "guilh";
+      sBtnVis(r, "bE", bi); sBtnVis(r, "bD", bi); sBtnVis(r, "cmd", m === "registro" || m === "porta"); sBtnVis(r, "fecha", m === "registro" || m === "porta"); sBtnVis(r, "ini", m === "serra"); sBtnVis(r, "obst", m === "guilh" || m === "porta"); sBtnVis(r, "ar", m === "registro");
+      sg(r, "b-bE").textContent = st.bE ? "Soltar botão esquerdo" : "Segurar botão esquerdo"; sg(r, "b-bD").textContent = st.bD ? "Soltar botão direito" : "Segurar botão direito"; sg(r, "b-obst").textContent = st.obst ? "Tirar a mão / o obstáculo" : m === "porta" ? "Colocar um obstáculo na porta" : "Colocar a mão na área"; sg(r, "b-ar").textContent = st.ar ? "Cortar o ar" : "Religar o ar";
+      let g = "", A = "", B = "", C = "", T = "";
+      const cyl = (x, y, L, p, on) => '<g transform="rotate(90 ' + x + " " + y + ')">' + cilH(x - L / 2, y, L, 30, p, L - 20, on ? "#38bdf8" : "#3d4a63", on ? "#3d4a63" : "#38bdf8") + "</g>";
+      const btns = '<circle cx="60" cy="214" r="14" fill="' + (st.bE ? "#22d3ee" : "#142039") + '" stroke="#e2e8f0" stroke-width="2"/><circle cx="400" cy="214" r="14" fill="' + (st.bD ? "#22d3ee" : "#142039") + '" stroke="#e2e8f0" stroke-width="2"/>' + tx(60, 238, "esquerdo", "font-size:9px", "middle") + tx(400, 238, "direito", "font-size:9px", "middle");
+      if (m === "registro") {
+        const ang = st.p * 90, open = st.p > .98, cl = st.p < .02;
+        g += '<rect x="30" y="150" width="400" height="30" fill="#0c1424" stroke="#9db0d3"/>' + (st.p > .05 ? flow("M30 165H430", "#38bdf8", 1, 10 * st.p) : '<rect x="32" y="152" width="188" height="26" fill="#38bdf8" opacity=".3"/>') + '<circle cx="230" cy="165" r="26" fill="#142039" stroke="#e2e8f0" stroke-width="2"/><g transform="rotate(' + (90 - ang).toFixed(1) + ' 230 165)"><rect x="216" y="158" width="28" height="14" rx="3" fill="#0c1424" stroke="#e2e8f0"/></g>' +
+          '<rect x="190" y="40" width="80" height="60" rx="6" fill="#142039" stroke="#9db0d3" stroke-width="2"/><line x1="230" y1="100" x2="230" y2="139" stroke="#9db0d3" stroke-width="6"/><g transform="rotate(' + (-ang).toFixed(1) + ' 230 70)"><line x1="230" y1="70" x2="256" y2="70" stroke="#fbbf24" stroke-width="4"/></g>' + tx(230, 32, "atuador (cremalheira e pinhão)", "font-size:9px", "middle") + wre("M120 70H190", st.ar && st.cmd, "#38bdf8") + tx(118, 66, st.ar ? "ar" : "sem ar", "font-size:9px", "end") +
+          '<circle cx="290" cy="56" r="5" fill="' + (open ? "#34d399" : "#3d4a63") + '"/><circle cx="290" cy="84" r="5" fill="' + (cl ? "#f87171" : "#3d4a63") + '"/>' + tx(300, 60, "fim de curso aberto", "font-size:9px") + tx(300, 88, "fim de curso fechado", "font-size:9px");
+        A = ["Registro", open ? "aberto" : cl ? "fechado" : "girando (" + fmtN(ang, 0) + "°)"]; B = ["Comando", st.cmd ? "abrir" : "fechar"]; C = ["Ar comprimido", st.ar ? "presente" : "cortado"];
+        T = "Um <b>atuador pneumático</b> transforma o movimento linear dos êmbolos em giro de 90° por cremalheira e pinhão, e abre ou fecha um registro de esfera à distância (água, vapor, produtos). Duas chaves de <b>fim de curso</b> avisam ao CLP se ele está aberto ou fechado. Este atuador tem <b>retorno por mola</b>: se faltar ar, a mola fecha o registro sozinha. Isso se chama \"falha fecha\" e é escolhido quando fechar é a posição segura." + (!st.ar ? " <b>O ar foi cortado:</b> a mola fechou o registro." : "");
+      } else if (m === "puncao" || m === "guilh") {
+        const gh = m === "guilh", y = 56 + st.p * 54;
+        g += btns + '<rect x="120" y="150" width="220" height="16" fill="#475569"/>' + tx(230, 184, gh ? "chapa" : "peça", "font-size:9px", "middle") + cyl(230, 40, 50, st.p * .9, st.go) + '<line x1="230" y1="65" x2="230" y2="' + (y + 26).toFixed(1) + '" stroke="#e2e8f0" stroke-width="6"/>';
+        g += gh ? '<path d="M150 ' + (y + 30).toFixed(1) + "H310L310 " + (y + 48).toFixed(1) + "L150 " + (y + 62).toFixed(1) + 'Z" fill="#cbd5e1" stroke="#e2e8f0"/>' : '<rect x="222" y="' + (y + 24).toFixed(1) + '" width="16" height="' + (40).toFixed(1) + '" fill="#cbd5e1"/>';
+        for (let i = 0; i < Math.min(st.cnt, 8); i++) g += gh ? '<line x1="' + (130 + i * 6) + '" y1="150" x2="' + (130 + i * 6) + '" y2="166" stroke="#0c1424" stroke-width="1.5"/>' : '<circle cx="' + (140 + i * 22) + '" cy="158" r="4" fill="#0c1424"/>';
+        if (gh) g += '<line x1="120" y1="132" x2="340" y2="132" stroke="#f87171" stroke-width="1" stroke-dasharray="3 4" opacity=".7"/>' + tx(344, 128, "cortina de luz", "font-size:9px;fill:#f87171") + (st.obst ? '<path d="M380 140h-50l-10 -6m10 6l-10 4m10 -4l-8 8" stroke="#fbbf24" stroke-width="5" fill="none" stroke-linecap="round"/>' : "");
+        A = ["Comando bimanual", this.bim(st) ? "liberado" : st.lock ? "solte os dois botões" : st.bE && st.bD ? "fora do tempo (> 0,5 s)" : "aguardando"]; B = [gh ? "Lâmina" : "Punção", st.p > .98 ? "embaixo" : st.p < .02 ? "em cima" : st.go ? "descendo" : "subindo"]; C = [gh ? "Cortes" : "Furos", String(st.cnt)];
+        T = "O <b>comando bimanual</b> obriga o operador a usar as duas mãos para acionar a máquina, então nenhuma delas pode estar sob a ferramenta. Pela NR-12, os dois botões precisam ser apertados com no máximo <b>0,5 s</b> de diferença, soltar qualquer um faz a ferramenta voltar, e para um novo ciclo é preciso soltar os dois (isso impede que alguém prenda um botão com fita). " + (gh ? "Na guilhotina, uma <b>cortina de luz</b> protege quem está do outro lado ou ajudando: se alguém põe a mão na área, a lâmina volta na hora. " + (st.obst && st.msg ? "<b>A cortina de luz detectou a mão e a lâmina subiu.</b>" : "") : "") + (st.msg && st.msg !== "x" ? " " + st.msg : "");
+      } else if (m === "serra") {
+        const x = 70 + st.p * 260, cut = Math.max(0, x - 150);
+        g += '<rect x="150" y="130" width="160" height="40" fill="#b45309" opacity=".8"/>' + (cut > 0 ? '<rect x="150" y="146" width="' + Math.min(160, cut).toFixed(1) + '" height="6" fill="#0c1424"/>' : "");
+        g += '<path d="M20 70H' + (x - 60).toFixed(1) + '" stroke="#9db0d3" stroke-width="6"/>' + '<rect x="20" y="58" width="120" height="24" rx="3" fill="#142039" stroke="#9db0d3"/>' + tx(80, 50, "cilindro de avanço", "font-size:9px", "middle") + '<line x1="' + (x - 60).toFixed(1) + '" y1="70" x2="' + x.toFixed(1) + '" y2="149" stroke="#9db0d3" stroke-width="4"/>';
+        g += '<g transform="rotate(' + (st.saw % 360).toFixed(1) + " " + x.toFixed(1) + ' 149)"><circle cx="' + x.toFixed(1) + '" cy="149" r="26" fill="#cbd5e1" opacity=".85"/>' + Array.from({ length: 12 }, (_, i) => { const a = i * Math.PI / 6; return '<path d="M' + (x + 26 * Math.cos(a)).toFixed(1) + " " + (149 + 26 * Math.sin(a)).toFixed(1) + "l" + (6 * Math.cos(a + .5)).toFixed(1) + " " + (6 * Math.sin(a + .5)).toFixed(1) + '" stroke="#cbd5e1" stroke-width="3"/>'; }).join("") + '</g><circle cx="' + x.toFixed(1) + '" cy="149" r="4" fill="#0c1424"/>';
+        g += '<rect x="340" y="190" width="10" height="20" fill="' + (st.p > .98 ? "#34d399" : "#3d4a63") + '"/>' + tx(345, 224, "fim de curso", "font-size:9px", "middle");
+        A = ["Etapa", st.ph || "parada"]; B = ["Avanço", fmtN(st.p * 100, 0) + " %"]; C = ["Cortes", String(st.cnt)];
+        T = "A <b>serra pneumática</b> avança devagar durante o corte e recua rápido. A velocidade de avanço é controlada por uma <b>válvula reguladora de fluxo</b> na saída do ar (ou, quando o corte precisa ser bem constante, por um amortecedor hidráulico em paralelo, já que o ar é compressível e o cilindro tenderia a dar trancos). Ao tocar o <b>fim de curso</b>, a válvula inverte e a serra volta.";
+      } else {
+        const w = 70 * (1 - st.p);
+        g += '<rect x="80" y="40" width="300" height="170" fill="none" stroke="#6c7ea3" stroke-width="2"/>' + '<rect x="' + (160 - w).toFixed(1) + '" y="44" width="70" height="162" fill="#142039" stroke="#e2e8f0" stroke-width="2"/><rect x="' + (230 + w).toFixed(1) + '" y="44" width="70" height="162" fill="#142039" stroke="#e2e8f0" stroke-width="2"/>' +
+          '<path d="M' + (230 - 4).toFixed(1) + ' 44V206" stroke="#f87171" stroke-width="2" opacity="' + (st.p > .02 ? .9 : .2) + '"/>' + tx(230, 222, "borda sensível", "font-size:9px;fill:#f87171", "middle") + (st.obst ? '<rect x="220" y="140" width="20" height="40" rx="4" fill="#fbbf24" opacity=".8"/>' : "") + tx(230, 32, "porta de duas folhas acionada por cilindros", "font-size:9px", "middle");
+        A = ["Porta", st.p > .98 ? "fechada" : st.p < .02 ? "aberta" : st.cmd ? "fechando" : "abrindo"]; B = ["Comando", st.cmd ? "fechar" : "abrir"]; C = ["Obstáculo", st.obst ? "sim" : "não"];
+        T = "As portas de ônibus e de muitas máquinas usam <b>cilindros pneumáticos</b>: o movimento é rápido mas macio, e se algo travar a porta o ar simplesmente se comprime, sem forçar como um motor faria. A <b>borda sensível</b> (uma borracha com um contato ou um sensor de pressão por dentro) detecta quem está no caminho e faz a porta <b>reabrir</b>. A força de fechamento também é limitada pela pressão, regulada baixa de propósito." + (st.obst && st.msg ? " <b>Obstáculo detectado: a porta reabriu.</b>" : "");
+      }
+      sg(r, "g").innerHTML = g; smet(r, "a", A[0], A[1]); smet(r, "b", B[0], B[1]); smet(r, "c", C[0], C[1]); sread(r, T);
+    },
+    input(st, f) { if (f === "modo") Object.assign(st, { bE: 0, bD: 0, p: 0, go: 0, lock: 0, obst: 0, cmd: 0, ar: 1, ph: "", msg: "" }); },
+    act(st, a) {
+      const n = nowS(); st.msg = "";
+      if (a === "bE") { st.bE = st.bE ? 0 : 1; st.tE = n; } if (a === "bD") { st.bD = st.bD ? 0 : 1; st.tD = n; }
+      if ((a === "bE" || a === "bD") && !st.bE && !st.bD) st.lock = 0;
+      if (a === "cmd") st.cmd = st.modo === "porta" ? 0 : 1; if (a === "fecha") st.cmd = st.modo === "porta" ? 1 : 0;
+      if (a === "obst") st.obst = st.obst ? 0 : 1; if (a === "ar") st.ar = st.ar ? 0 : 1;
+      if (a === "ini" && !st.ph) st.ph = "cortando";
+      if ((a === "bE" || a === "bD") && st.bE && st.bD && Math.abs(st.tE - st.tD) > .5) st.msg = "Os botões foram apertados com mais de 0,5 s de diferença: o comando não libera. Solte os dois e tente de novo.";
+    },
+    tick(r, st, dt) {
+      const m = st.modo; let tgt = st.p, sp = 1.2;
+      if (m === "registro") { tgt = st.ar && st.cmd ? 1 : 0; sp = st.ar ? .7 : 1.5; }
+      if (m === "puncao" || m === "guilh") {
+        st.go = this.bim(st) && !(m === "guilh" && st.obst) ? 1 : 0; if (m === "guilh" && st.obst && st.p > .02) st.msg = "x";
+        tgt = st.go ? 1 : 0; sp = st.go ? 2 : 2.5;
+        if (st.go && st.p >= 1) { st.cnt++; st.lock = 1; st.go = 0; st.p = .999; }
+      }
+      if (m === "serra") { if (st.ph === "cortando") { tgt = 1; sp = .18; if (st.p >= 1) { st.ph = "recuando"; st.cnt++; } } else if (st.ph === "recuando") { tgt = 0; sp = 1.2; if (st.p <= 0) st.ph = ""; } if (!RMOT && st.ph) st.saw += dt * 900; }
+      if (m === "porta") { tgt = st.cmd ? 1 : 0; sp = .8; if (st.cmd && st.obst && st.p > .6) { st.cmd = 0; st.msg = "x"; } }
+      const d = tgt - st.p; st.p = Math.abs(d) < sp * dt ? tgt : st.p + Math.sign(d) * sp * dt;
+      this.draw(r, st);
+    }
+  },
+
+  /* ===== lote 4 · máquinas e processos ===== */
+  injetora: {
+    fam: FQ, title: "Simulador: injetora de plástico", hint: "Acompanhe o ciclo da injetora: fechamento, injeção, recalque, resfriamento com dosagem, abertura e extração. Mude a temperatura, a pressão, os tempos e a força de fechamento e veja a qualidade da peça.",
+    init: { Tc: 220, Pi: 900, tr: 3, tres: 10, Ff: 80, run: 0, t: 0, n: 0, boas: 0, last: "" },
+    PH: [["Fechamento", 1], ["Injeção", 1.5], ["Recalque", 0], ["Resfriar e dosar", 0], ["Abertura", 1], ["Extração", .8]],
+    html: () => sFig("0 0 460 240", "Injetora de plástico") + sRow(sBtn("injetora", "run", "Iniciar o ciclo automático", "primary") + sBtn("injetora", "um", "Um ciclo")) +
+      sCtl(sRange("injetora", "Tc", "Temperatura do cilindro (°C)", 160, 300, 5) + sRange("injetora", "Pi", "Pressão de injeção (bar)", 300, 1600, 50) + sRange("injetora", "tr", "Tempo de recalque (s)", 0, 8, .5) + sRange("injetora", "tres", "Tempo de resfriamento (s)", 2, 20, 1) + sRange("injetora", "Ff", "Força de fechamento (t)", 30, 150, 5)) + sMeters([["ph", "Fase"], ["req", "Força necessária"], ["ct", "Tempo de ciclo"], ["q", "Última peça"]]),
+    dur(st, i) { return i === 2 ? st.tr : i === 3 ? st.tres : this.PH[i][1]; },
+    total(st) { let s = 0; for (let i = 0; i < 6; i++) s += this.dur(st, i); return s; },
+    phase(st) { let t = st.t; for (let i = 0; i < 6; i++) { const d = this.dur(st, i); if (t < d) return [i, d ? t / d : 1]; t -= d; } return [5, 1]; },
+    req(st) { return st.Pi * .4 * 1e5 * .015 / 9810; },
+    q(st) {
+      if (st.Tc < 195) return ["incompleta", "material frio e viscoso não preencheu o molde"]; if (st.Pi < 600) return ["incompleta", "pressão baixa: a frente de material parou antes do fim"];
+      if (this.req(st) > st.Ff) return ["com rebarba", "a pressão abriu o molde: plástico vazou na linha de fechamento"]; if (st.Tc > 265) return ["queimada", "material degradado: manchas, bolhas e cheiro de queimado"];
+      if (st.tr < 2) return ["com rechupe", "faltou recalque: o plástico contraiu ao esfriar e afundou nas partes grossas"]; if (st.tres < 6) return ["empenada", "extraída quente demais: deformou fora do molde"]; return ["boa", "dimensões e acabamento dentro do esperado"];
+    },
+    draw(r, st) {
+      ["Tc", "Pi", "tr", "tres", "Ff"].forEach(f => so(r, f, fmtN(st[f], f === "tr" ? 1 : 0) + { Tc: " °C", Pi: " bar", tr: " s", tres: " s", Ff: " t" }[f]));
+      sg(r, "b-run").textContent = st.run === 2 ? "Parar o ciclo automático" : "Iniciar o ciclo automático";
+      const on = st.run > 0, [i, f] = on ? this.phase(st) : [-1, 0], Q = this.q(st);
+      const mo = i === 0 ? 1 - f : i === 4 ? f : i === 5 ? 1 : i < 0 ? 1 : 0, gap = 40 * mo;
+      const fill = i === 1 ? f * (Q[0] === "incompleta" ? .65 : 1) : i >= 2 && i <= 3 ? (Q[0] === "incompleta" ? .65 : 1) : 0, scr = i === 1 ? 1 - f : i === 2 ? 0 : i === 3 ? Math.min(1, f * 1.6) : i < 0 ? 1 : 1;
+      let g = '<rect x="30" y="60" width="16" height="130" fill="#475569"/><rect x="46" y="90" width="' + (24 + 0).toFixed(1) + '" height="70" fill="#6c7ea3"/>' +
+        '<rect x="' + (70 - gap).toFixed(1) + '" y="80" width="40" height="90" fill="#94a3b8" stroke="#e2e8f0"/><rect x="110" y="80" width="40" height="90" fill="#94a3b8" stroke="#e2e8f0"/>' + tx(110, 72, "molde", "font-size:9px", "middle");
+      g += '<rect x="' + (100 - gap).toFixed(1) + '" y="100" width="20" height="50" fill="#0c1424"/>' + (fill > 0 ? '<rect x="' + (100 - gap).toFixed(1) + '" y="' + (150 - 50 * fill).toFixed(1) + '" width="20" height="' + (50 * fill).toFixed(1) + '" fill="' + hot((st.Tc - 160) / 140) + '"/>' : "");
+      if (i === 5) g += '<rect x="' + (60 + 30 * f).toFixed(1) + '" y="' + (100 + 80 * f).toFixed(1) + '" width="20" height="50" fill="' + (Q[0] === "boa" ? "#34d399" : "#f87171") + '" opacity=".8"/>';
+      if (Q[0] === "com rebarba" && i >= 1 && i <= 3) g += '<path d="M110 96v-10M110 154v10" stroke="#fbbf24" stroke-width="3"/>';
+      g += '<rect x="150" y="116" width="14" height="18" fill="#6c7ea3"/><rect x="164" y="104" width="240" height="42" rx="4" fill="#142039" stroke="#9db0d3" stroke-width="2"/>';
+      for (let k = 0; k < 4; k++) g += '<rect x="' + (180 + k * 54) + '" y="98" width="38" height="54" rx="3" fill="' + hot((st.Tc - 160) / 140) + '" opacity=".35"/>';
+      const sx = 172 + 60 * (1 - scr); g += '<rect x="' + sx.toFixed(1) + '" y="118" width="210" height="14" fill="#cbd5e1"/>'; for (let k = 0; k < 14; k++) g += '<line x1="' + (sx + 6 + k * 15).toFixed(1) + '" y1="116" x2="' + (sx + 14 + k * 15).toFixed(1) + '" y2="134" stroke="#475569" stroke-width="2"/>';
+      g += '<path d="M330 104l-20 -50h60l-20 50z" fill="#142039" stroke="#9db0d3"/>' + tx(340, 48, "funil (PP)", "font-size:9px", "middle") + '<rect x="404" y="110" width="40" height="30" fill="#475569"/>' + tx(424, 160, "motor da rosca", "font-size:8px", "middle") + tx(284, 172, "cilindro aquecido · rosca", "font-size:9px", "middle");
+      this.PH.forEach((p, k) => { g += tx(20 + (k % 3) * 150, 206 + Math.floor(k / 3) * 18, (k + 1) + ". " + p[0], "font-size:10px;fill:" + (k === i ? "#22d3ee" : "var(--muted)")); });
+      sg(r, "g").innerHTML = g;
+      so(r, "ph", i < 0 ? "parada" : this.PH[i][0]); so(r, "req", fmtN(this.req(st), 0) + " t de " + st.Ff + " t"); so(r, "ct", fmtN(this.total(st), 1) + " s (" + fmtN(3600 / this.total(st), 0) + " peças/h)"); so(r, "q", st.last ? st.last : "–");
+      sread(r, "No <b>fechamento</b> o molde fecha e trava. Na <b>injeção</b>, a rosca avança como um pistão e empurra o plástico derretido para dentro da cavidade. No <b>recalque</b>, ela continua empurrando com pressão menor para compensar a contração do material que esfria. Durante o <b>resfriamento</b>, a rosca gira e recua, preparando (dosando) o material do próximo ciclo. Depois o molde <b>abre</b> e os pinos <b>extraem</b> a peça. A força de fechamento precisa vencer a pressão dentro da cavidade vezes a área da peça (aqui, 150 cm²). Com os ajustes atuais, a peça sai <b>" + Q[0] + "</b>: " + Q[1] + ". O resfriamento costuma ser a maior parte do ciclo, e é onde mais se ganha produtividade, sem deixar a peça sair quente.");
+    },
+    act(st, a) { if (a === "run") { st.run = st.run === 2 ? 0 : 2; st.t = 0; } if (a === "um" && !st.run) { st.run = 1; st.t = 0; } },
+    tick(r, st, dt) {
+      if (!st.run) return; st.t += dt * 1.5;
+      if (st.t >= this.total(st)) { const Q = this.q(st); st.n++; st.last = Q[0]; st.t = 0; if (st.run === 1) st.run = 0; }
+      this.draw(r, st);
+    }
+  },
+
+  prensa: {
+    fam: FQ, title: "Simulador: prensa excêntrica com embreagem e freio", hint: "O motor mantém o volante girando; a embreagem acopla o volante ao eixo excêntrico só quando o comando libera. Use o comando bimanual, escolha golpe único ou contínuo e teste a cortina de luz.",
+    init: { modo: "unico", bim: 0, mao: 0, cort: 1, th: 0, vol: 0, emb: 0, lock: 0, n: 0, msg: "" },
+    html: () => sFig("0 0 460 250", "Prensa excêntrica") + sRow(sSeg("prensa", "modo", [["unico", "Golpe único"], ["cont", "Contínuo"]]) + sSeg("prensa", "cort", [["1", "Com cortina de luz"], ["0", "Sem cortina de luz"]])) +
+      sRow(sBtn("prensa", "bim", "Segurar o comando bimanual", "primary") + sBtn("prensa", "mao", "Pôr a mão na área de prensagem")) + sMeters([["a", "Ângulo do eixo"], ["b", "Martelo"], ["c", "Embreagem"], ["d", "Golpes"]]),
+    ys(th) { const a = th * Math.PI / 180, R = 30, L = 90; return R * (1 - Math.cos(a)) + L - Math.sqrt(L * L - Math.pow(R * Math.sin(a), 2)); },
+    draw(r, st) {
+      sg(r, "b-bim").textContent = st.bim ? "Soltar o comando bimanual" : "Segurar o comando bimanual"; sg(r, "b-mao").textContent = st.mao ? "Tirar a mão" : "Pôr a mão na área de prensagem";
+      const a = st.th * Math.PI / 180, cx = 160, cy = 60, px = cx + 30 * Math.sin(a), py = cy - 30 * Math.cos(a), ys = 130 + this.ys(st.th);
+      let g = '<circle cx="330" cy="60" r="44" fill="#142039" stroke="#9db0d3" stroke-width="3"/><g transform="rotate(' + st.vol.toFixed(1) + ' 330 60)"><path d="M330 20V100M290 60H370" stroke="#6c7ea3" stroke-width="5"/></g>' + tx(330, 120, "volante (sempre girando)", "font-size:9px", "middle") + '<rect x="196" y="50" width="90" height="20" fill="' + (st.emb ? "#22d3ee" : "#142039") + '" fill-opacity="' + (st.emb ? .4 : 1) + '" stroke="#9db0d3"/>' + tx(241, 44, "embreagem e freio", "font-size:9px", "middle");
+      g += '<circle cx="' + cx + '" cy="' + cy + '" r="36" fill="none" stroke="#6c7ea3" stroke-dasharray="3 3"/><circle cx="' + cx + '" cy="' + cy + '" r="8" fill="#9db0d3"/><circle cx="' + px.toFixed(1) + '" cy="' + py.toFixed(1) + '" r="7" fill="#fbbf24"/><line x1="' + px.toFixed(1) + '" y1="' + py.toFixed(1) + '" x2="' + cx + '" y2="' + ys.toFixed(1) + '" stroke="#cbd5e1" stroke-width="8" stroke-linecap="round"/>' + tx(cx - 44, cy + 4, "excêntrico", "font-size:9px", "end");
+      g += '<rect x="' + (cx - 50) + '" y="' + ys.toFixed(1) + '" width="100" height="36" fill="#94a3b8" stroke="#e2e8f0"/><rect x="' + (cx - 14) + '" y="' + (ys + 36).toFixed(1) + '" width="28" height="12" fill="#e2e8f0"/>' + tx(cx + 56, ys + 22, "martelo", "font-size:9px");
+      g += '<rect x="' + (cx - 60) + '" y="226" width="120" height="16" fill="#475569"/><rect x="' + (cx - 40) + '" y="218" width="80" height="8" fill="#cbd5e1"/>' + tx(cx + 66, 240, "matriz", "font-size:9px");
+      if (st.cort === 1) g += '<line x1="' + (cx - 80) + '" y1="150" x2="' + (cx - 80) + '" y2="226" stroke="#f87171" stroke-dasharray="3 4"/><line x1="' + (cx + 80) + '" y1="150" x2="' + (cx + 80) + '" y2="226" stroke="#f87171" stroke-dasharray="3 4"/>';
+      if (st.mao) g += '<path d="M' + (cx + 140) + " 214H" + (cx + 20) + "l-10 -6m10 6l-10 4m10 -4l-8 8" + '" stroke="#fbbf24" stroke-width="6" fill="none" stroke-linecap="round"/>';
+      g += '<circle cx="400" cy="210" r="13" fill="' + (st.bim ? "#22d3ee" : "#142039") + '" stroke="#e2e8f0" stroke-width="2"/><circle cx="436" cy="210" r="13" fill="' + (st.bim ? "#22d3ee" : "#142039") + '" stroke="#e2e8f0" stroke-width="2"/>' + tx(418, 238, "bimanual", "font-size:9px", "middle");
+      const pmi = Math.abs(((st.th % 360) + 360) % 360 - 180) < 25;
+      sg(r, "g").innerHTML = g;
+      so(r, "a", fmtN(((st.th % 360) + 360) % 360, 0) + "°"); so(r, "b", pmi ? "perto do ponto morto inferior" : ((st.th % 360) < 180 ? "descendo" : "subindo")); so(r, "c", st.emb ? "acoplada" : "solta (freio atuado)"); so(r, "d", String(st.n));
+      sread(r, "O motor mantém o <b>volante</b> girando e acumulando energia. Ao liberar o comando, a <b>embreagem</b> acopla o volante ao <b>eixo excêntrico</b>, e a biela transforma o giro em sobe e desce do martelo. A força máxima aparece perto do <b>ponto morto inferior</b> (180°), onde a biela fica quase em linha com o martelo: é ali que a chapa deve ser cortada ou estampada. Em <b>golpe único</b>, o freio para o eixo no ponto morto superior depois de uma volta, e é preciso soltar e apertar de novo o bimanual. " + (st.msg || (st.modo === "cont" ? "Em <b>contínuo</b>, a prensa golpeia sem parar enquanto o comando estiver liberado: só se usa com alimentação automática e com a área toda protegida." : "")) + " Pela NR-12, prensas precisam de embreagem e freio com monitoramento, comando bimanual ou cortina de luz e proteções fixas nas laterais; prensas de engate por chaveta (que não param no meio do golpe) não podem mais ser usadas sem essas adequações.");
+    },
+    act(st, a) { if (a === "bim") { st.bim = st.bim ? 0 : 1; if (!st.bim) st.lock = 0; } if (a === "mao") st.mao = st.mao ? 0 : 1; st.msg = ""; },
+    tick(r, st, dt) {
+      if (!RMOT) st.vol = (st.vol + dt * 400) % 360;
+      const desc = (((st.th % 360) + 360) % 360) < 200, risk = st.mao && desc;
+      if (st.emb && st.mao && st.cort === 1) { st.emb = 0; st.msg = "<b>A cortina de luz detectou a mão e o freio parou o martelo</b> no meio do curso. A prensa só volta a funcionar com a área livre e um novo comando."; st.lock = 1; }
+      else if (st.emb && risk && st.cort === 0 && Math.abs(((st.th % 360) + 360) % 360 - 180) < 30) st.msg = "<b>Sem cortina de luz, nada impediu o martelo de descer sobre a mão.</b> Este é o acidente mais grave nas prensas. O bimanual protege quem aperta os botões, mas não quem está do outro lado ou põe a mão depois.";
+      if (!st.emb && st.bim && !st.lock && !(st.mao && st.cort === 1)) { st.emb = 1; }
+      if (st.emb && !st.bim && desc) { st.emb = 0; st.msg = st.msg || "Você soltou o bimanual durante a descida: o freio parou o martelo. Solte e aperte de novo para continuar."; }
+      if (st.emb) {
+        const t0 = st.th; st.th += dt * 300;
+        if (Math.floor(t0 / 360) !== Math.floor(st.th / 360)) { st.n++; if (st.modo === "unico") { st.th = Math.floor(st.th / 360) * 360; st.emb = 0; st.lock = 1; } }
+      }
+      this.draw(r, st);
+    }
+  },
+
+  lavadora: {
+    fam: FQ, title: "Simulador: máquina de lavar roupa", hint: "Ligue a máquina e acompanhe o programa: encher, lavar, drenar, enxaguar e centrifugar, com a válvula de entrada, o pressostato, o motor e a bomba. Depois coloque um defeito e veja o sintoma.",
+    init: { nivel: "m", falha: "ok", on: 0, step: 0, t: 0, agua: 0, ang: 0, msg: "" },
+    ST: [["Encher", "fill"], ["Lavar (agitar)", 8], ["Drenar", "drain"], ["Encher", "fill"], ["Enxaguar", 5], ["Drenar", "drain"], ["Centrifugar", 6], ["Fim", 0]],
+    html: () => sFig("0 0 460 240", "Máquina de lavar") + sRow(sSeg("lavadora", "nivel", [["b", "Nível baixo"], ["m", "Médio"], ["a", "Alto"]]) + sSeg("lavadora", "falha", [["ok", "Sem defeito"], ["press", "Mangueira do pressostato furada"], ["bomba", "Bomba entupida"], ["trava", "Trava da tampa com defeito"], ["cap", "Capacitor do motor aberto"]])) + sRow(sBtn("lavadora", "liga", "Iniciar", "primary") + sBtn("lavadora", "desl", "Cancelar")) + sMeters([["a", "Etapa"], ["b", "Válvula de entrada"], ["c", "Motor"], ["d", "Bomba"]]),
+    alvo(st) { return { b: .4, m: .6, a: .85 }[st.nivel]; },
+    draw(r, st) {
+      const S = this.ST[st.step] || this.ST[7], k = S[1], on = st.on, fill = on && k === "fill", drain = on && k === "drain", agit = on && typeof k === "number" && k > 0 && st.step < 6, cent = on && st.step === 6;
+      const mot = (agit || cent) && st.falha !== "cap" && !(cent && st.falha === "trava");
+      let g = '<rect x="40" y="20" width="200" height="210" rx="10" fill="#142039" stroke="#9db0d3" stroke-width="2"/><rect x="60" y="50" width="160" height="150" rx="8" fill="#0c1424" stroke="#6c7ea3"/>' +
+        '<rect x="62" y="' + (198 - 146 * Math.min(1.05, st.agua)).toFixed(1) + '" width="156" height="' + (146 * Math.min(1.05, st.agua)).toFixed(1) + '" fill="#38bdf8" opacity=".45"/>' + (st.agua > 1 ? tx(140, 44, "transbordando!", "fill:#f87171", "middle") : "");
+      g += '<g transform="rotate(' + st.ang.toFixed(1) + ' 140 150)"><rect x="132" y="90" width="16" height="110" fill="#cbd5e1"/><path d="M118 180h44M122 160h36M126 140h28" stroke="#cbd5e1" stroke-width="5"/></g>';
+      g += wre("M260 40H240", fill, "#38bdf8") + '<rect x="260" y="30" width="44" height="20" rx="3" fill="' + (fill ? "#22d3ee" : "#142039") + '" fill-opacity=".5" stroke="#9db0d3"/>' + tx(282, 64, "válvula", "font-size:9px", "middle") +
+        '<rect x="260" y="90" width="44" height="20" rx="3" fill="#142039" stroke="' + (st.falha === "press" ? "#f87171" : "#9db0d3") + '"/>' + tx(282, 124, "pressostato", "font-size:9px", "middle") + wre("M240 190H250V100H260", true, st.falha === "press" ? "#f87171" : "#6c7ea3") +
+        '<circle cx="140" cy="216" r="10" fill="' + (mot ? "#22d3ee" : (agit || cent) ? "#f87171" : "#142039") + '" fill-opacity=".6" stroke="#e2e8f0"/>' + tx(140, 236, "motor", "font-size:9px", "middle") + '<circle cx="270" cy="200" r="10" fill="' + (drain ? (st.falha === "bomba" ? "#f87171" : "#22d3ee") : "#142039") + '" fill-opacity=".6" stroke="#e2e8f0"/>' + wre("M240 200H260", drain, "#38bdf8") + wre("M280 200H300V160", drain && st.falha !== "bomba", "#38bdf8") + tx(270, 224, "bomba", "font-size:9px", "middle");
+      g += '<rect x="40" y="16" width="200" height="8" rx="3" fill="' + (cent ? (st.falha === "trava" ? "#f87171" : "#34d399") : "#475569") + '"/>';
+      this.ST.forEach((s, i) => { g += tx(330, 34 + i * 26, (i + 1) + ". " + s[0], "font-size:11px;fill:" + (on && i === st.step ? "#22d3ee" : i < st.step && on ? "var(--ink)" : "var(--muted)")); });
+      sg(r, "g").innerHTML = g;
+      so(r, "a", on ? S[0] : "parada"); so(r, "b", fill ? "aberta" : "fechada"); so(r, "c", cent ? (mot ? "centrifugando" : st.falha === "trava" ? "bloqueado pela trava" : "ronca e não gira") : agit ? (mot ? "agitando (vai e volta)" : "ronca e não gira") : "parado"); so(r, "d", drain ? (st.falha === "bomba" ? "ligada, sem vazão" : "drenando") : "desligada");
+      const T = { ok: "", press: " <b>Defeito: mangueira do pressostato furada.</b> O pressostato mede o nível pela pressão do ar preso na mangueira. Com ela furada, ele nunca percebe que encheu: a válvula fica aberta e a água sai pelo ladrão ou transborda.", bomba: " <b>Defeito: bomba entupida</b> (moeda, grampo, fiapos). A bomba zumbe mas a água não sai; o programa não avança e muitas máquinas mostram um código de erro de drenagem. Limpe o filtro da bomba.", trava: " <b>Defeito: trava da tampa.</b> Por segurança, a centrifugação só começa com a tampa travada. Se a trava não fecha, a máquina lava, mas não centrifuga.", cap: " <b>Defeito: capacitor do motor aberto.</b> O motor monofásico precisa do capacitor para criar o campo girante e partir: sem ele, ronca, esquenta e não gira. A roupa não é agitada." }[st.falha];
+      sread(r, "O <b>programador</b> (temporizador ou placa eletrônica) comanda a sequência. Para encher, abre a <b>válvula solenoide</b> de entrada até o <b>pressostato</b> sinalizar o nível. Para lavar, o <b>motor</b> gira o agitador para um lado e para o outro. Para drenar, liga a <b>bomba</b>. Na centrifugação, o motor gira num só sentido e em alta rotação, com a tampa travada." + T + (st.msg ? " " + st.msg : ""));
+    },
+    input(st) { st.on = 0; st.step = 0; st.t = 0; st.agua = 0; st.msg = ""; },
+    act(st, a) { if (a === "liga") { st.on = 1; st.step = 0; st.t = 0; st.agua = 0; st.msg = ""; } if (a === "desl") { st.on = 0; st.msg = ""; } },
+    tick(r, st, dt) {
+      if (!st.on) { if (st.agua > 0) { st.agua = Math.max(0, st.agua - dt * .3); this.draw(r, st); } return; }
+      const k = this.ST[st.step][1]; st.t += dt;
+      if (k === "fill") { st.agua += dt * .2; if (st.falha !== "press" && st.agua >= this.alvo(st)) { st.step++; st.t = 0; } if (st.agua > 1.05) st.agua = 1.05; }
+      else if (k === "drain") { if (st.falha !== "bomba") st.agua = Math.max(0, st.agua - dt * .25); if (st.agua <= 0) { st.step++; st.t = 0; } else if (st.t > 12) { st.on = 0; st.msg = "A máquina parou com <b>erro de drenagem</b>: a água não baixou no tempo esperado."; } }
+      else if (k > 0) { const sp = st.step === 6; const mov = st.falha !== "cap" && !(sp && st.falha === "trava"); if (mov && !RMOT) st.ang = sp ? (st.ang + dt * 900) % 360 : 40 * Math.sin(st.t * 5); if (st.t >= k) { st.step++; st.t = 0; if (sp && st.falha === "trava") st.msg = "Terminou sem centrifugar: a roupa saiu encharcada."; } }
+      else st.on = st.step < 7 ? 1 : 0;
+      if (st.step >= 7) st.on = 0;
+      this.draw(r, st);
+    }
+  },
+
+  vending: {
+    fam: FQ, title: "Simulador: máquina de venda automática (vending machine)", hint: "Coloque moedas, escolha um produto e acompanhe a máquina de estados: crédito, liberação pela espiral, confirmação pelo sensor de queda e troco. Experimente também um produto que enrosca.",
+    init: { cred: 0, est: [4, 4, 4, 4], estado: "aguardando", sel: -1, t: 0, tent: 0, troco: 0, falha: 0, sp: 0, msg: "" },
+    P: [["Água", 2.5], ["Suco", 4], ["Barra de cereal", 3.5], ["Biscoito", 3]],
+    html: () => sFig("0 0 460 250", "Vending machine") + sRow(sBtn("vending", "m25", "Moeda R$ 0,25") + sBtn("vending", "m50", "R$ 0,50") + sBtn("vending", "m100", "R$ 1,00") + sBtn("vending", "n2", "Nota de R$ 2,00") + sBtn("vending", "dev", "Devolver")) +
+      sRow(sBtn("vending", "p0", "A1 Água", "primary") + sBtn("vending", "p1", "A2 Suco", "primary") + sBtn("vending", "p2", "A3 Barra", "primary") + sBtn("vending", "p3", "A4 Biscoito", "primary") + sBtn("vending", "rep", "Repor produtos")) + sRow(sSeg("vending", "falha", [["0", "Tudo bem"], ["1", "Produto enroscando na espiral"]])) + sMeters([["a", "Crédito"], ["b", "Estado"], ["c", "Troco"]]),
+    brl: v => "R$ " + Number(v).toFixed(2).replace(".", ","),
+    draw(r, st) {
+      const B = this.brl; let g = '<rect x="20" y="10" width="280" height="230" rx="8" fill="#142039" stroke="#9db0d3" stroke-width="2"/>';
+      this.P.forEach((p, i) => { const x = 36 + i * 64, rot = st.sel === i && st.estado === "liberando" ? st.sp : 0; g += '<rect x="' + x + '" y="30" width="52" height="120" fill="#0c1424" stroke="#2a3b62"/>'; for (let j = 0; j < st.est[i]; j++) { const y = 40 + j * 26 + (st.sel === i && st.estado === "liberando" ? rot / 360 * 26 * (st.falha && st.tent ? .3 : 1) : 0); g += '<rect x="' + (x + 8) + '" y="' + y.toFixed(1) + '" width="36" height="20" rx="3" fill="' + ["#38bdf8", "#fb923c", "#a78bfa", "#fbbf24"][i] + '" opacity=".75"/>'; } g += '<path d="M' + x + " 150" + Array.from({ length: 5 }, (_, j) => "q13 " + (j % 2 ? 6 : -6) + " 13 0").join("") + '" transform="translate(0 ' + (Math.sin(rot * Math.PI / 180) * 2).toFixed(1) + ')" stroke="#cbd5e1" fill="none" stroke-width="2"/>' + tx(x + 26, 168, "A" + (i + 1) + " " + B(p[1]), "font-size:9px", "middle"); });
+      g += '<line x1="30" y1="186" x2="290" y2="186" stroke="#f87171" stroke-dasharray="2 3" opacity="' + (st.estado === "liberando" ? 1 : .4) + '"/>' + tx(160, 182, "sensor de queda (feixe de luz)", "font-size:8px;fill:#f87171", "middle") + '<rect x="100" y="200" width="120" height="30" rx="4" fill="#0c1424" stroke="#6c7ea3"/>' + tx(160, 220, st.estado === "entregue" ? "retire o produto" : "gaveta", "font-size:9px;fill:" + (st.estado === "entregue" ? "#34d399" : "var(--muted)"), "middle");
+      g += '<rect x="320" y="20" width="120" height="40" rx="4" fill="#0c1424" stroke="#34d399"/>' + tx(380, 46, B(st.cred), "font-size:14px;fill:#34d399", "middle") + tx(380, 76, "validador de moedas e notas", "font-size:8px", "middle");
+      const E = ["aguardando", "com crédito", "liberando", "entregue"]; E.forEach((e, i) => { const y = 100 + i * 34, on = st.estado === e || (e === "liberando" && st.estado === "falha"); g += '<rect x="320" y="' + y + '" width="120" height="24" rx="12" fill="' + (on ? "#22d3ee" : "none") + '" fill-opacity=".2" stroke="' + (on ? "#22d3ee" : "#6c7ea3") + '"/>' + tx(380, y + 16, st.estado === "falha" && e === "liberando" ? "falha" : e, "font-size:10px;fill:" + (on ? "var(--ink)" : "var(--muted)"), "middle") + (i < 3 ? '<path d="M380 ' + (y + 24) + "v10" + '" stroke="#6c7ea3"/>' : ""); });
+      sg(r, "g").innerHTML = g;
+      so(r, "a", B(st.cred)); so(r, "b", st.estado); so(r, "c", st.troco ? B(st.troco) : "–");
+      sread(r, "A máquina é uma <b>máquina de estados</b>: cada evento (moeda, botão, sensor) muda o estado e define o que acontece em seguida. O validador mede o diâmetro, a espessura e o metal de cada moeda e soma o crédito. Escolhido o produto e havendo crédito, o motor gira a <b>espiral</b> uma volta e o produto cai na frente do <b>sensor de queda</b>. Só então a venda é confirmada e o troco é calculado e devolvido pelos tubos de moedas. " + (st.msg || "") + " É o mesmo raciocínio de um programa de CLP ou de um app: estados, eventos e transições.");
+    },
+    act(st, a) {
+      const v = { m25: .25, m50: .5, m100: 1, n2: 2 }[a]; st.msg = "";
+      if (a === "rep") { st.est = [4, 4, 4, 4]; return; }
+      if (st.estado === "liberando") return;
+      if (v) { st.cred = Math.round((st.cred + v) * 100) / 100; st.troco = 0; st.estado = "com crédito"; }
+      if (a === "dev") { st.troco = st.cred; st.cred = 0; st.estado = "aguardando"; st.msg = st.troco ? "Crédito devolvido." : ""; }
+      if (/^p\d$/.test(a)) { const i = Number(a[1]), p = this.P[i];
+        if (!st.est[i]) st.msg = "<b>Produto esgotado.</b> A máquina sabe pelo contador (ou por um sensor) e não cobra.";
+        else if (st.cred < p[1]) st.msg = "<b>Crédito insuficiente:</b> faltam " + this.brl(p[1] - st.cred) + ".";
+        else { st.sel = i; st.estado = "liberando"; st.t = 0; st.tent = 0; st.sp = 0; }
+      }
+    },
+    tick(r, st, dt) {
+      if (st.estado === "liberando") {
+        st.t += dt; st.sp = Math.min(360, st.t / 1.5 * 360);
+        if (st.t >= 1.5) {
+          if (st.falha && st.tent < 1) { st.tent++; st.t = 0; st.sp = 0; st.msg = "O sensor de queda não viu nada: a máquina gira a espiral mais uma volta."; }
+          else if (st.falha) { st.estado = "falha"; st.msg = "<b>O produto ficou preso.</b> Depois de duas voltas sem o sensor confirmar a queda, a máquina desiste, <b>não cobra</b> e mantém o crédito para outra escolha ou devolução. Sem o sensor de queda, o cliente pagaria sem levar."; setTimeout(() => { if (st.estado === "falha") st.estado = st.cred ? "com crédito" : "aguardando"; }, 1500); }
+          else { const p = this.P[st.sel]; st.est[st.sel]--; st.troco = Math.round((st.cred - p[1]) * 100) / 100; st.cred = 0; st.estado = "entregue"; st.t = 0; st.msg = "Venda confirmada pelo sensor de queda." + (st.troco ? " Troco calculado e devolvido." : ""); }
+        }
+        this.draw(r, st);
+      } else if (st.estado === "entregue") { st.t += dt; if (st.t > 3) { st.estado = "aguardando"; this.draw(r, st); } }
+      else if (st.estado === "falha") this.draw(r, st);
+    }
+  },
+
+  ignicao: {
+    fam: FQ, title: "Simulador: ignição convencional (platinado, bobina e condensador)", hint: "O came abre e fecha o platinado; enquanto ele está fechado, a corrente cresce na bobina; quando abre, a bobina gera a alta tensão da vela. Mude a rotação e o ângulo de permanência e coloque defeitos. A animação está em câmera lenta.",
+    init: { rpm: 1500, dw: 54, falha: "ok", th: 0 },
+    html: () => sFig("0 0 460 250", "Ignição convencional") + sRow(sSeg("ignicao", "falha", [["ok", "Sem defeito"], ["pla", "Platinado com folga grande"], ["cond", "Condensador aberto"], ["cc", "Condensador em curto"]])) + sCtl(sRange("ignicao", "rpm", "Rotação do motor (rpm)", 600, 6500, 100) + sRange("ignicao", "dw", "Ângulo de permanência (graus do came)", 30, 70, 1)) + sMeters([["a", "Tempo fechado"], ["b", "Corrente no primário"], ["c", "Tensão disponível"], ["d", "Faísca"]]),
+    calc(st) { const dwe = st.falha === "pla" ? st.dw - 16 : st.dw, Tp = 60 / (st.rpm * 2), td = Tp * dwe / 90, I = st.falha === "cc" ? 0 : 4 * (1 - Math.exp(-td / .0027)), V = st.falha === "cc" ? 0 : 30 * I / 4 * (st.falha === "cond" ? .35 : 1); return { dwe, Tp, td, I, V, ok: V >= 15 }; },
+    draw(r, st) {
+      so(r, "rpm", fmtN(st.rpm, 0) + " rpm"); so(r, "dw", st.dw + "°");
+      const C = this.calc(st), a = st.th % 90, closed = a < C.dwe, cx = 80, cy = 80, ang = st.th;
+      let g = '<g transform="rotate(' + ang.toFixed(1) + " " + cx + " " + cy + ')"><path d="' + Array.from({ length: 73 }, (_, i) => { const t = i * 5 * Math.PI / 180, rr = 24 + 9 * Math.pow(Math.max(0, Math.cos(4 * t)), 2); return (i ? "L" : "M") + (cx + rr * Math.cos(t)).toFixed(1) + " " + (cy + rr * Math.sin(t)).toFixed(1); }).join("") + 'Z" fill="#142039" stroke="#e2e8f0" stroke-width="2"/></g>' + tx(cx, cy + 50, "came (4 ressaltos)", "font-size:9px", "middle");
+      g += '<line x1="122" y1="60" x2="170" y2="' + (closed ? 60 : 50) + '" stroke="#cbd5e1" stroke-width="4"/><circle cx="170" cy="60" r="4" fill="#cbd5e1"/>' + tx(150, 44, "platinado " + (closed ? "fechado" : "aberto"), "font-size:9px;fill:" + (closed ? "#22d3ee" : "#fbbf24"), "middle") + (!closed && st.falha === "cond" ? '<path d="M166 52l4 4l-2 2l5 4" stroke="#fbbf24" stroke-width="2" fill="none"/>' : "");
+      g += '<rect x="196" y="40" width="54" height="70" rx="6" fill="#142039" stroke="#9db0d3"/>' + tx(223, 72, "bobina", "font-size:9px;fill:var(--ink)", "middle") + tx(223, 86, "12 V → kV", "font-size:8px", "middle") + wre("M174 60H196", closed && st.falha !== "cc") + '<path d="M180 70v20M174 90h12M174 96h12M180 96v12" stroke="' + (st.falha === "cond" ? "#f87171" : st.falha === "cc" ? "#f87171" : "#e2e8f0") + '" stroke-width="2" fill="none"/>' + tx(186, 120, "condensador", "font-size:8px", "middle");
+      const dcx = 300, dcy = 70, cyl = Math.floor((st.th % 360) / 90), ra = (st.th * 1) % 360;
+      g += '<circle cx="' + dcx + '" cy="' + dcy + '" r="30" fill="#142039" stroke="#9db0d3"/><g transform="rotate(' + ra.toFixed(1) + " " + dcx + " " + dcy + ')"><line x1="' + dcx + '" y1="' + dcy + '" x2="' + (dcx + 24) + '" y2="' + dcy + '" stroke="#fbbf24" stroke-width="4"/></g>' + wre("M250 70H270", !closed && C.ok) + tx(dcx, 114, "distribuidor", "font-size:9px", "middle");
+      [0, 1, 2, 3].forEach(k => { const a2 = k * Math.PI / 2, x = dcx + 46 * Math.cos(a2), y = dcy + 46 * Math.sin(a2), sp = !closed && a - C.dwe < 12 && cyl === k && C.ok; g += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="6" fill="' + (sp ? "#fde68a" : "#142039") + '" stroke="#e2e8f0"/>' + (sp ? '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="12" fill="#fde68a" opacity=".35"/>' : ""); });
+      g += tx(400, 46, "velas", "font-size:9px", "middle");
+      const X0 = 30, W = 420, Y1 = 220, H = 60, n = 2, f = t => { const ph = (t * n * 90) % 90; return ph < C.dwe; };
+      let d1 = "", d2 = ""; for (let i = 0; i <= 240; i++) { const t = i / 240, ph = (t * n * 90) % 90, ti = ph < C.dwe ? ph / 90 * C.Tp : 0, I = st.falha === "cc" ? 0 : ph < C.dwe ? 4 * (1 - Math.exp(-ti / .0027)) : 0, x = X0 + t * W; d1 += (i ? "L" : "M") + x.toFixed(1) + " " + (Y1 - I / 4 * H).toFixed(1); }
+      g += plotBox(X0, Y1 - H - 10, W, H + 20) + '<path d="' + d1 + '" fill="none" stroke="#22d3ee" stroke-width="2"/>';
+      for (let k = 0; k < n; k++) { const x = X0 + (k + C.dwe / 90) / n * W; if (C.V > 0) d2 += '<line x1="' + x.toFixed(1) + '" x2="' + x.toFixed(1) + '" y1="' + Y1 + '" y2="' + (Y1 - Math.min(1.2, C.V / 30) * H).toFixed(1) + '" stroke="' + (C.ok ? "#fbbf24" : "#f87171") + '" stroke-width="3"/>'; }
+      g += d2 + '<line x1="' + X0 + '" x2="' + (X0 + W) + '" y1="' + (Y1 - .5 * H).toFixed(1) + '" y2="' + (Y1 - .5 * H).toFixed(1) + '" stroke="#f87171" stroke-dasharray="3 4" opacity=".6"/>' + tx(X0 + 4, Y1 - H + 2, "corrente no primário (ciano) e pulsos de alta tensão (amarelo)", "font-size:9px") + tx(X0 + W - 4, Y1 - .5 * H - 4, "15 kV necessários", "font-size:9px;fill:#f87171", "end");
+      sg(r, "g").innerHTML = g;
+      so(r, "a", fmtN(C.td * 1000, 1) + " ms"); so(r, "b", fmtN(C.I, 1) + " A"); so(r, "c", fmtN(C.V, 0) + " kV"); so(r, "d", C.ok ? "forte" : C.V > 0 ? "fraca ou falhando" : "nenhuma");
+      const T = { ok: "", pla: " <b>Platinado com folga grande:</b> ele abre cedo e fecha tarde, o ângulo de permanência cai e a bobina tem menos tempo para carregar. O motor falha em alta rotação. Regule a folga (ou o ângulo, com o aparelho de dwell).", cond: " <b>Condensador aberto:</b> sem ele, a corrente pula em arco entre os contatos do platinado na abertura. A queda de corrente fica lenta, a alta tensão sai fraca e os contatos se queimam e ficam pretos.", cc: " <b>Condensador em curto:</b> o platinado fica sempre em curto. A corrente nunca é interrompida e não há faísca: o motor não pega." }[st.falha];
+      sread(r, "Com o <b>platinado fechado</b>, a bateria faz a corrente subir no enrolamento primário da bobina (é preciso tempo: alguns milissegundos). Quando o came <b>abre</b> o platinado, a corrente é cortada de repente, o campo magnético desaba e o secundário, com milhares de espiras, gera de 15 a 30 mil volts, que o distribuidor manda à vela do cilindro certo. O <b>condensador</b> absorve o pico no platinado e faz o corte ser rápido. Num motor de 4 cilindros, são 2 faíscas por volta: a " + fmtN(st.rpm, 0) + " rpm, o platinado fica fechado só " + fmtN(C.td * 1000, 1) + " ms. Em alta rotação a corrente não chega ao máximo, e a faísca enfraquece: é o limite da ignição convencional, resolvido pela ignição eletrônica, que trocou o platinado por um sensor e um transistor." + T);
+    },
+    tick(r, st, dt) { if (RMOT) return; st.th = (st.th + dt * 60) % 360; this.draw(r, st); }
+  },
+
+  divisor: {
+    fam: FQ, title: "Simulador: cabeçote divisor universal", hint: "O cabeçote divisor gira a peça na fresadora em partes iguais. A coroa tem 40 dentes: 40 voltas da manivela dão uma volta na peça. Escolha o número de divisões ou o ângulo e veja as voltas e os furos do disco.",
+    init: { modo: "div", N: 24, ang: 35, k: 0 },
+    DISC: [15, 16, 17, 18, 19, 20, 21, 23, 27, 29, 31, 33, 37, 39, 41, 43, 47, 49],
+    html: () => sFig("0 0 460 240", "Cabeçote divisor") + sRow(sSeg("divisor", "modo", [["div", "Número de divisões"], ["ang", "Ângulo"]]) + sBtn("divisor", "go", "Fazer a próxima divisão", "primary") + sBtn("divisor", "zero", "Voltar ao zero")) + sCtl(sRange("divisor", "N", "Número de divisões", 2, 120, 1) + sRange("divisor", "ang", "Ângulo de cada divisão (graus)", .5, 180, .5)) + sMeters([["a", "Voltas inteiras"], ["b", "Fração da volta"], ["c", "Disco e furos"], ["d", "Peça girou"]]),
+    gcd(a, b) { return b ? this.gcd(b, a % b) : a; },
+    calc(st) {
+      let num, den, whole;
+      if (st.modo === "div") { whole = Math.floor(40 / st.N); num = 40 % st.N; den = st.N; } else { const h = Math.round(st.ang * 2); whole = Math.floor(h / 18); num = h % 18; den = 18; }
+      const g = num ? this.gcd(num, den) : 1; num /= g; den /= g;
+      const hc = num ? this.DISC.find(h => h % den === 0) : null;
+      return { whole, num, den, hc, holes: hc ? hc / den * num : 0, step: st.modo === "div" ? 360 / st.N : st.ang };
+    },
+    draw(r, st) {
+      sShow(r, "N", st.modo === "div"); sShow(r, "ang", st.modo === "ang"); so(r, "N", String(st.N)); so(r, "ang", fmtN(st.ang, 1) + "°");
+      const C = this.calc(st), cx = 120, cy = 120, hc = C.hc || 24, rot = st.k * C.step;
+      let g = '<circle cx="' + cx + '" cy="' + cy + '" r="92" fill="#142039" stroke="#9db0d3" stroke-width="2"/>';
+      for (let i = 0; i < hc; i++) { const a = -Math.PI / 2 + i * 2 * Math.PI / hc, inS = C.hc && i <= C.holes; g += '<circle cx="' + (cx + 76 * Math.cos(a)).toFixed(1) + '" cy="' + (cy + 76 * Math.sin(a)).toFixed(1) + '" r="3.2" fill="' + (inS ? "#fbbf24" : "#0c1424") + '" stroke="#6c7ea3"/>'; }
+      if (C.hc) { const a2 = -Math.PI / 2 + C.holes * 2 * Math.PI / hc; g += '<line x1="' + cx + '" y1="' + cy + '" x2="' + cx + '" y2="' + (cy - 88) + '" stroke="#fbbf24" stroke-width="2"/><line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + 88 * Math.cos(a2)).toFixed(1) + '" y2="' + (cy + 88 * Math.sin(a2)).toFixed(1) + '" stroke="#fbbf24" stroke-width="2"/>' + tx(cx, cy + 112, "setor abrange " + C.holes + " espaços", "font-size:9px;fill:#fbbf24", "middle"); }
+      g += '<line x1="' + cx + '" y1="' + cy + '" x2="' + cx + '" y2="' + (cy - 60) + '" stroke="#e2e8f0" stroke-width="6" stroke-linecap="round"/><circle cx="' + cx + '" cy="' + (cy - 76) + '" r="5" fill="#22d3ee"/><circle cx="' + cx + '" cy="' + cy + '" r="8" fill="#9db0d3"/>' + tx(cx, 18, "disco de " + (C.hc ? C.hc + " furos" : "furos (não precisa)"), "font-size:10px;fill:var(--ink)", "middle");
+      const px = 340, py = 120, n = st.modo === "div" ? st.N : Math.min(720, Math.round(360 / st.ang));
+      g += '<circle cx="' + px + '" cy="' + py + '" r="70" fill="#1e293b" stroke="#9db0d3" stroke-width="2"/><g transform="rotate(' + rot.toFixed(2) + " " + px + " " + py + ')">';
+      for (let i = 0; i < Math.min(n, 120); i++) { const a = -Math.PI / 2 + i * C.step * Math.PI / 180; g += '<line x1="' + (px + 58 * Math.cos(a)).toFixed(1) + '" y1="' + (py + 58 * Math.sin(a)).toFixed(1) + '" x2="' + (px + 70 * Math.cos(a)).toFixed(1) + '" y2="' + (py + 70 * Math.sin(a)).toFixed(1) + '" stroke="' + (i === 0 ? "#f87171" : "#cbd5e1") + '" stroke-width="' + (i === 0 ? 3 : 1.5) + '"/>'; }
+      g += '</g><path d="M' + px + " " + (py - 82) + "l-6 -10h12z" + '" fill="#22d3ee"/>' + tx(px, py + 92, "peça na fresadora", "font-size:9px", "middle") + tx(px, 18, "fresa ↓", "font-size:10px;fill:#22d3ee", "middle");
+      sg(r, "g").innerHTML = g;
+      so(r, "a", String(C.whole)); so(r, "b", C.num ? C.num + "/" + C.den : "nenhuma"); so(r, "c", C.num ? (C.hc ? C.holes + " furos no círculo de " + C.hc : "sem disco que sirva") : "–"); so(r, "d", fmtN(rot % 360, 2) + "° (divisão " + st.k + ")");
+      const q = st.modo === "div" ? "Voltas da manivela = 40 ÷ " + st.N + " = " + (C.whole ? C.whole + " " : "") + (C.num ? C.num + "/" + C.den : "") + "." : "Uma volta da manivela gira a peça 360 ÷ 40 = 9°. Voltas = " + fmtN(st.ang, 1) + " ÷ 9 = " + (C.whole ? C.whole + " " : "") + (C.num ? C.num + "/" + C.den : "") + ".";
+      sread(r, "No <b>cabeçote divisor</b>, a manivela gira um parafuso sem fim que engrena numa coroa de <b>40 dentes</b> presa à árvore da peça. " + q + " A fração é feita no <b>disco divisor</b>: escolhe-se um círculo de furos que seja múltiplo do denominador" + (C.hc ? " (aqui, " + C.hc + " furos: " + C.num + "/" + C.den + " = " + C.holes + "/" + C.hc + ")" : "") + " e o <b>setor</b> (as duas hastes amarelas) é ajustado para abraçar esse número de espaços, para não precisar contar furos a cada divisão. " + (C.num && !C.hc ? "<b>Nenhum disco comum serve para esse número.</b> É preciso a divisão diferencial (com engrenagens que giram o disco) ou outro jogo de discos." : "") + " É assim que se fresam engrenagens, faces de porcas, rasgos de chaveta e entalhes em partes iguais.");
+    },
+    input(st) { st.k = 0; },
+    act(st, a) { if (a === "go") st.k++; if (a === "zero") st.k = 0; }
+  },
+
+  solda: {
+    fam: FQ, title: "Simulador: soldagem oxiacetilênica e termofusão de polietileno", hint: "Na solda oxiacetilênica, regule a mistura de oxigênio e acetileno e veja os três tipos de chama. Na termofusão de tubos de polietileno, ajuste a temperatura e os tempos e execute a solda.",
+    init: { modo: "oxi", rz: 1.05, pt: 220, ta: 100, tt: 4, tr: 15, ph: -1, t: 0 },
+    html: () => sFig("0 0 460 240", "Soldagem") + sRow(sSeg("solda", "modo", [["oxi", "Oxiacetilênica"], ["pe", "Termofusão de polietileno"]]) + sBtn("solda", "exe", "Executar a solda", "primary")) + sCtl(sRange("solda", "rz", "Oxigênio ÷ acetileno", .7, 1.6, .01) + sRange("solda", "pt", "Temperatura da placa (°C)", 180, 260, 1) + sRange("solda", "ta", "Tempo de aquecimento (s)", 30, 200, 5) + sRange("solda", "tt", "Tempo de troca (s)", 1, 20, 1) + sRange("solda", "tr", "Resfriamento sob pressão (min)", 2, 25, 1)) + sMeters([["a", "–"], ["b", "–"], ["c", "–"]]),
+    pe(st) { const p = []; if (st.pt < 210) p.push("placa fria: o material não amolece o suficiente (falta de fusão)"); if (st.pt > 230) p.push("placa quente demais: o polietileno degrada e gruda na placa"); if (st.ta < 85) p.push("aquecimento curto: zona fundida rasa"); if (st.ta > 130) p.push("aquecimento longo: cordão exagerado e material degradado"); if (st.tt > 6) p.push("troca lenta: as faces esfriaram antes da união (solda fria)"); if (st.tr < 13) p.push("resfriamento curto: o tubo foi mexido antes de a junta firmar"); return p; },
+    draw(r, st) {
+      const m = st.modo, oxi = m === "oxi";["rz"].forEach(f => sShow(r, f, oxi));["pt", "ta", "tt", "tr"].forEach(f => sShow(r, f, !oxi)); sBtnVis(r, "exe", !oxi);
+      so(r, "rz", fmtN(st.rz, 2)); so(r, "pt", st.pt + " °C"); so(r, "ta", st.ta + " s"); so(r, "tt", st.tt + " s"); so(r, "tr", st.tr + " min");
+      let g = "";
+      if (oxi) {
+        const tp = st.rz < .95 ? "red" : st.rz <= 1.15 ? "neu" : "oxi", cone = tp === "oxi" ? 16 : tp === "neu" ? 24 : 26, fe = tp === "red" ? 30 + (1 - st.rz) * 200 : 0;
+        g += '<path d="M20 112H120L140 116V124L120 128H20Z" fill="#94a3b8" stroke="#e2e8f0"/>' + tx(70, 104, "maçarico", "font-size:9px", "middle") + '<path d="M140 120Q260 ' + (tp === "oxi" ? 96 : 84) + " " + (tp === "oxi" ? 360 : 400) + " 120Q260 " + (tp === "oxi" ? 144 : 156) + ' 140 120Z" fill="#60a5fa" opacity=".35"/>';
+        if (fe) g += '<path d="M140 120Q' + (150 + fe) + " 104 " + (148 + cone + fe).toFixed(1) + " 120Q" + (150 + fe) + ' 136 140 120Z" fill="#e2e8f0" opacity=".45"/>';
+        g += '<path d="M140 120Q' + (140 + cone * .6) + " 112 " + (140 + cone) + " 120Q" + (140 + cone * .6) + ' 128 140 120Z" fill="#e0f2fe"/>' + tx(140 + cone + 4, 150, "dardo", "font-size:9px") + (fe ? tx(150 + cone + fe, 96, "pena (excesso de acetileno)", "font-size:9px", "middle") : "") + tx(300, 80, "envoltório", "font-size:9px");
+        const N = { red: ["Carburante (redutora)", "≈ 2.900 °C", "solda de alumínio, chumbo, revestimento duro e brasagem; deixa carbono no aço"], neu: ["Neutra", "≈ 3.100 °C", "a chama normal para soldar aço carbono e cobre: não oxida nem carbonata o metal"], oxi: ["Oxidante", "≈ 3.200 °C", "latão e bronze (o óxido segura o zinco); no aço queima o metal e deixa a solda porosa"] }[tp];
+        g += plotBox(30, 170, 400, 26); const x = 30 + (st.rz - .7) / .9 * 400; g += '<rect x="' + (30 + .25 / .9 * 400).toFixed(1) + '" y="170" width="' + (.2 / .9 * 400).toFixed(1) + '" height="26" fill="#34d399" opacity=".25"/><line x1="' + x.toFixed(1) + '" x2="' + x.toFixed(1) + '" y1="166" y2="200" stroke="#fbbf24" stroke-width="3"/>' + tx(36, 214, "mais acetileno", "font-size:9px") + tx(424, 214, "mais oxigênio", "font-size:9px", "end") + tx(230, 214, "neutra", "font-size:9px;fill:#34d399", "middle");
+        smet(r, "a", "Chama", N[0]); smet(r, "b", "Temperatura no dardo", N[1]); smet(r, "c", "Relação O₂ ÷ C₂H₂", fmtN(st.rz, 2));
+        sread(r, "A chama do maçarico tem um <b>dardo</b> (cone branco brilhante, onde está o ponto mais quente, logo à frente da ponta) e um <b>envoltório</b> azulado. Na chama <b>neutra</b> (oxigênio e acetileno na proporção de cerca de 1 para 1), o dardo é bem definido e arredondado. Com excesso de acetileno, aparece uma <b>pena</b> esbranquiçada entre o dardo e o envoltório. Com excesso de oxigênio, o dardo fica curto e pontudo e a chama chia. Esta é a chama <b>" + N[0].toLowerCase() + "</b>: " + N[2] + ". Segurança: válvulas corta-chama e antirretrocesso nos dois cilindros e no maçarico, cilindros presos em pé, mangueiras sem emenda e nunca graxa ou óleo em contato com oxigênio.");
+      } else {
+        const P = this.pe(st), ph = st.ph, gap = ph < 0 ? 60 : ph === 0 ? 60 - 30 * Math.min(1, st.t) : ph === 1 ? 30 : ph === 2 ? 30 + 30 * Math.min(1, st.t) : 0, hot2 = ph >= 1 && ph <= 3;
+        g += '<rect x="20" y="90" width="' + (190 - gap).toFixed(1) + '" height="60" fill="#1f2937" stroke="#6c7ea3"/><rect x="' + (250 + gap).toFixed(1) + '" y="90" width="' + (190 - gap).toFixed(1) + '" height="60" fill="#1f2937" stroke="#6c7ea3"/>' + tx(110, 84, "tubo PEAD 110 mm, parede 10 mm", "font-size:9px", "middle");
+        if (hot2) g += '<rect x="' + (210 - gap).toFixed(1) + '" y="90" width="6" height="60" fill="' + hot((st.pt - 180) / 80) + '"/><rect x="' + (244 + gap).toFixed(1) + '" y="90" width="6" height="60" fill="' + hot((st.pt - 180) / 80) + '"/>';
+        if (ph === 1) g += '<rect x="224" y="70" width="12" height="100" fill="' + hot((st.pt - 180) / 80) + '" stroke="#e2e8f0"/>' + tx(230, 64, "placa " + st.pt + " °C", "font-size:9px", "middle");
+        if (ph >= 3) { const b = P.length ? (st.pt < 210 || st.ta < 85 ? 3 : 9) : 6; g += '<ellipse cx="230" cy="88" rx="' + (b * 1.6) + '" ry="' + b + '" fill="#1f2937" stroke="#e2e8f0"/><ellipse cx="230" cy="152" rx="' + (b * 1.6) + '" ry="' + b + '" fill="#1f2937" stroke="#e2e8f0"/>' + tx(230, 190, "cordão duplo", "font-size:9px", "middle"); }
+        const nm = ["Faceamento", "Aquecimento", "Troca", "União e resfriamento", "Pronta"]; nm.forEach((s, i) => { g += tx([20, 100, 186, 240, 390][i], 226, s, "font-size:9px;fill:" + (i === ph ? "#22d3ee" : "var(--muted)")); });
+        smet(r, "a", "Etapa", ph < 0 ? "pronta para começar" : nm[ph]); smet(r, "b", "Ajustes", P.length ? P.length + " problema(s)" : "dentro da norma"); smet(r, "c", "Resultado", ph === 4 ? (P.length ? "junta reprovada" : "junta aprovada") : "–");
+        sread(r, "Na <b>termofusão</b> (solda de topo), as pontas dos tubos são <b>faceadas</b>, encostadas numa <b>placa aquecida</b> a cerca de 220 °C até formar um pequeno cordão e amolecer (o tempo cresce com a espessura: uns 10 s por milímetro de parede), a placa é retirada rapidamente (<b>troca</b> em poucos segundos), e as pontas são unidas sob pressão e mantidas paradas até <b>esfriar</b> (mais de 10 minutos). A junta bem feita é tão forte quanto o próprio tubo e mostra um cordão duplo uniforme. " + (P.length ? "<b>Com os ajustes atuais:</b> " + P.join("; ") + "." : "Os ajustes atuais estão corretos.") + " Para tubos menores ou reparos usa-se a <b>eletrofusão</b>: uma luva com resistência embutida, ligada a uma máquina que controla o tempo e a energia.");
+      }
+      sg(r, "g").innerHTML = g;
+    },
+    input(st) { st.ph = -1; st.t = 0; },
+    act(st, a) { if (a === "exe") { st.ph = 0; st.t = 0; } },
+    tick(r, st, dt) { if (st.modo !== "pe" || st.ph < 0 || st.ph >= 4) return; st.t += dt; const D = [1.2, 2, 1.2, 2.5]; if (st.t >= D[st.ph]) { st.ph++; st.t = 0; } this.draw(r, st); }
+  },
+
   carga: {
     title: "Simulador: previsão de cargas de um cômodo", hint: "Escolha o tipo de cômodo e as medidas. O simulador aplica as regras mínimas da NBR 5410 para iluminação e tomadas de uso geral e desenha onde elas podem ficar.",
     init: { tipo: "sala", a: 3.6, b: 4.2 },
@@ -3243,14 +4100,30 @@ function simList() {
   return Object.keys(SIMS).map(k => [k, SIMS[k], les.filter(l => l.sim === k).sort((a, b) => (TRACKS.findIndex(t => t.id === a.track) - TRACKS.findIndex(t => t.id === b.track)) || (a.order || 0) - (b.order || 0))])
     .filter(([k, s, ls]) => ls.length || k === "sopro" || s.fam);
 }
-VIEWS.simuladores = id => {
-  const L = simList(), cur = L.find(x => x[0] === id) || null;
-  const card = ([k, s, ls]) => { const t = s.fam ? { id: "eletricidade", short: s.fam } : ls[0] ? trackOf(ls[0].track) : trackOf("envase"); return '<button class="blk' + (cur && cur[0] === k ? " on" : "") + '" data-t="' + t.id + '" data-act="go" data-r="simuladores" data-id="' + k + '"><span class="chip" style="align-self:flex-start">' + esc(t.short) + "</span><b>" + esc(simName(s)) + "</b><span>" + esc(ls[0] ? ls[0].title : s.fam ? s.hint.split(". ")[0] + "." : "Linha de envase") + "</span></button>"; };
-  const groups = []; L.forEach(x => { const t = x[1].fam ? { id: "fam-" + x[1].fam, name: x[1].fam, short: x[1].fam } : x[2][0] ? trackOf(x[2][0].track) : trackOf("envase"); let g = groups.find(g => g[0] === t.id); if (!g) groups.push(g = [t.id, t, []]); g[2].push(x); });
+function simGroups() {
+  const groups = []; simList().forEach(x => { const t = x[1].fam ? { id: "fam-" + x[1].fam, name: x[1].fam, short: x[1].fam } : x[2][0] ? trackOf(x[2][0].track) : trackOf("envase"); let g = groups.find(g => g[0] === t.id); if (!g) groups.push(g = [t.id, t, []]); g[2].push(x); });
   groups.sort((a, b) => (b[0].startsWith("fam-") ? 1 : 0) - (a[0].startsWith("fam-") ? 1 : 0));
-  return '<div class="stack" style="gap:24px">' + dbNotice() + head(cur ? esc(simName(cur[1])) : "Simuladores", cur ? esc(cur[1].hint) : "Todos os simuladores do Volter num só lugar. Escolha um para usar aqui ou abra a lição em que ele aparece.", "", cur ? ["simuladores", "Simuladores"] : null) +
-    (cur ? '<div data-t="' + (cur[2][0] ? cur[2][0].track : "envase") + '">' + simHTML(cur[0]) + "</div>" + (cur[2].length ? '<div class="row" style="gap:8px;flex-wrap:wrap">' + cur[2].map(l => '<button class="btn" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">Abrir a lição: ' + esc(l.title) + " →</button>").join("") + "</div>" : "") : "") +
-    groups.map(([tid, t, xs]) => '<section><div class="sec-h"><h2>' + esc(t.name) + '</h2><span class="small dim">' + xs.length + '</span></div><div class="blocks">' + xs.map(card).join("") + "</div></section>").join("") + "</div>";
+  return groups;
+}
+VIEWS.simuladores = id => {
+  const groups = simGroups(), all = groups.flatMap(g => g[2]), cur = all.find(x => x[0] === id) || null;
+  let gi = cur ? groups.findIndex(g => g[2].includes(cur)) : groups.findIndex(g => g[0] === S.ui.simGrp);
+  if (gi < 0) gi = 0; const grp = groups[gi]; if (grp) S.ui.simGrp = grp[0];
+  const tag = x => x[1].fam ? { id: "eletricidade", short: x[1].fam } : x[2][0] ? trackOf(x[2][0].track) : trackOf("envase");
+  const card = x => { const t = tag(x), s = x[1], ls = x[2]; return '<button class="blk" data-t="' + t.id + '" data-act="go" data-r="simuladores" data-id="' + x[0] + '"><b>' + esc(simName(s)) + "</b><span>" + esc(ls[0] ? ls[0].title : s.fam ? s.hint.split(". ")[0].replace(/\.$/, "") + "." : "Linha de envase") + "</span></button>"; };
+  const pill = ([gid, t, xs]) => '<button class="pill" data-act="simgrp" data-v="' + esc(gid) + '" aria-pressed="' + (grp && gid === grp[0]) + '">' + esc(t.name) + ' <span class="dim">' + xs.length + "</span></button>";
+  const fams = groups.filter(g => g[0].startsWith("fam-")), outros = groups.filter(g => !g[0].startsWith("fam-"));
+  const tabs = '<div class="sim-tabs-w">' + [["Por tema", fams], ["Das lições", outros]].filter(x => x[1].length).map(([lab, gs]) => '<div class="sim-tabs" role="group" aria-label="' + lab + '"><span class="sim-tabs-l">' + lab + "</span>" + gs.map(pill).join("") + "</div>").join("") + "</div>";
+  if (!grp) return '<div class="stack" style="gap:20px">' + dbNotice() + head("Simuladores", "") + emptyBox("Nenhum simulador disponível.") + "</div>";
+  const xs = grp[2];
+  if (!cur) return '<div class="stack" style="gap:20px">' + dbNotice() + head("Simuladores", "Todos os simuladores do Volter num só lugar, separados por grupo. Escolha o grupo e depois o simulador; a lista do grupo fica ao lado enquanto você usa.") + tabs +
+    '<section><div class="sec-h"><h2>' + esc(grp[1].name) + '</h2><span class="small dim">' + xs.length + ' simuladores</span></div><div class="blocks">' + xs.map(card).join("") + "</div></section></div>";
+  const i = xs.indexOf(cur), prev = xs[i - 1], next = xs[i + 1];
+  const nav = '<nav class="sim-nav" aria-label="Simuladores do grupo ' + esc(grp[1].name) + '"><div class="small dim sim-nav-h">' + esc(grp[1].name) + " · " + (i + 1) + " de " + xs.length + "</div>" + xs.map((x, k) => '<button data-act="go" data-r="simuladores" data-id="' + x[0] + '"' + (x === cur ? ' aria-current="true"' : "") + '><span class="n">' + (k + 1) + "</span>" + esc(simName(x[1])) + "</button>").join("") + "</nav>";
+  const pn = '<div class="row sim-pn">' + (prev ? '<button class="btn" data-act="go" data-r="simuladores" data-id="' + prev[0] + '">← ' + esc(simName(prev[1])) + "</button>" : "<span></span>") + (next ? '<button class="btn" data-act="go" data-r="simuladores" data-id="' + next[0] + '">' + esc(simName(next[1])) + " →</button>" : "<span></span>") + "</div>";
+  const les = cur[2].length ? '<div class="row" style="gap:8px;flex-wrap:wrap">' + cur[2].map(l => '<button class="btn" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">Abrir a lição: ' + esc(l.title) + " →</button>").join("") + "</div>" : "";
+  return '<div class="stack" style="gap:18px">' + dbNotice() + '<div class="row sim-top"><button class="btn sm" data-act="simgrp" data-v="' + esc(grp[0]) + '">← Todos de ' + esc(grp[1].name) + "</button></div>" + tabs +
+    '<div class="sim-lay">' + nav + '<div class="stack" style="gap:14px;min-width:0" id="sim-main"><div data-t="' + (cur[2][0] ? cur[2][0].track : tag(cur).id) + '">' + simHTML(cur[0]) + "</div>" + pn + les + "</div></div></div>";
 };
 /* ===== trilhas e áreas em grade de blocos ===== */
 function trackCard(t, n, label) {
@@ -3449,6 +4322,7 @@ function envDownload(name, text, type) {
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); toast("Arquivo gerado");
 }
 Object.assign(ACT_EXTRA, {
+  simgrp: el => { S.ui.simGrp = el.dataset.v; go("simuladores"); },
   envtab: el => { S.ui.envTab = el.dataset.k; render(true); },
   envsel: el => { S.ui.envSel = el.dataset.id; S.ui.envDel = null; S.ui.envTab = "linha"; render(true); const e = $("#env-ed"); if (e && e.scrollIntoView) e.scrollIntoView({ behavior: "smooth", block: "start" }); },
   envadd: el => { const E = envP(); E.seq = (E.seq || E.blocks.length) + 1; const b = { id: "b" + E.seq, area: el.dataset.a, nome: "Novo bloco", status: "ideia" }; const last = E.blocks.map(x => x.area).lastIndexOf(el.dataset.a); E.blocks.splice(last + 1, 0, b); S.ui.envSel = b.id; envSave(); render(true); },

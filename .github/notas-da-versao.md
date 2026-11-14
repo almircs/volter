@@ -15,6 +15,13 @@ Isso só é preciso na primeira vez.
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.20.0: simuladores de motores, comandos, pneumática e máquinas
+- **Tela Simuladores reorganizada:** os grupos ficam em abas (por tema e das lições). Ao abrir um simulador, a lista do grupo fica ao lado, com botões de anterior e próximo, e você continua no mesmo grupo para testar os outros
+- **Dezesseis simuladores novos**, montados a partir dos temas das animações didáticas, em três famílias:
+  - **Motores e comandos:** motor trifásico (campo girante, número de polos, fechamento das 6 pontas em estrela e triângulo e motor Dahlander); partidas direta, reversão (com e sem intertravamento e chave reversora manual), estrela-triângulo, compensadora e série-paralelo, com o gráfico da corrente; frenagens (livre, contracorrente, injeção de CC e freio eletromagnético), partidas consecutivas e protetor térmico cíclico; bombeamento com chave de boia e golpe de aríete; circuito de comando com intertravamento, temporizador e sequência de esteiras; sensores indutivo, capacitivo, magnético e óptico, com saída PNP e NPN
+  - **Pneumática:** propriedades do ar, água no ar comprimido e geração de vácuo com ventosa; válvulas 3/2, 5/2 e 5/3, cilindros de simples e dupla ação e levantamento de carga; aplicações: comando de registro, punção e guilhotina com bimanual, serra e porta com borda sensível
+  - **Máquinas e processos:** injetora de plástico, prensa excêntrica com cortina de luz, máquina de lavar com defeitos, vending machine, ignição convencional, cabeçote divisor universal e soldagem oxiacetilênica e de polietileno
+
 ## Versão 2.19.0: simuladores de eletricidade e eletrônica
 - **Dezesseis simuladores novos na família Eletricidade e eletrônica**, montados a partir dos temas das animações didáticas:
   - estrutura do átomo (camada de valência, condutor, semicondutor e isolante) e resistividade do fio (material, comprimento e bitola)
