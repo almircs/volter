@@ -5036,9 +5036,20 @@ async function boot() {
     }
     if (!S.prog.projects) S.prog.projects = {};
     render();
+    if (S.admin) importSeed(db);
   }
   const [assets, sample] = await Promise.all([S.admin ? use("assets") : null, use("sample")]);
   S.assets = assets; S.sample = sample; render();
+}
+/* Na versão do claude.ai, conteúdos novos vindos do repositório (window.VOLTER_IMPORT) entram no banco
+   na primeira vez que o dono abre o app. Itens que já existem no banco nunca são sobrescritos. */
+async function importSeed(db) {
+  const imp = window.VOLTER_IMPORT; if (!imp) return;
+  let n = 0;
+  for (const t of Object.keys(imp)) for (const id of Object.keys(imp[t])) {
+    try { const snap = await db.doc(t + "/" + id).get(); if (!snap.exists) { await db.doc(t + "/" + id).set(imp[t][id]); n++; } } catch (e) {}
+  }
+  if (n) toast(n + (n === 1 ? " item novo importado" : " itens novos importados"));
 }
 boot();
 </script>

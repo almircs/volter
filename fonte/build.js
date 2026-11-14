@@ -6,7 +6,10 @@ const path = require("path");
 const src = fs.readFileSync(path.join(__dirname, "src/volter.html"), "utf8");
 
 fs.mkdirSync(path.join(__dirname, "dist"), { recursive: true });
-fs.writeFileSync(path.join(__dirname, "dist/artifact.html"), src.replace("<!--SEED-->\n", ""));
+// Conteúdo novo do repositório que a versão do claude.ai grava no banco quando o dono abre o app.
+const impFile = path.join(__dirname, "importar-claude.json");
+const imp = fs.existsSync(impFile) ? "<script>window.VOLTER_IMPORT = " + fs.readFileSync(impFile, "utf8").replace(/</g, "\\u003c") + ";</script>\n" : "";
+fs.writeFileSync(path.join(__dirname, "dist/artifact.html"), src.replace("<!--SEED-->\n", imp));
 
 const cut = src.indexOf('<header class="mbar"');
 if (cut < 0) throw new Error("marcador do cabeçalho não encontrado");
