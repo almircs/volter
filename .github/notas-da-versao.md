@@ -15,6 +15,25 @@ Isso só é preciso na primeira vez.
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.19.0: simuladores de eletricidade e eletrônica
+- **Dezesseis simuladores novos na família Eletricidade e eletrônica**, montados a partir dos temas das animações didáticas:
+  - estrutura do átomo (camada de valência, condutor, semicondutor e isolante) e resistividade do fio (material, comprimento e bitola)
+  - circuitos de iluminação: interruptor simples, pulsador (campainha), paralelo (three-way) e intermediário (four-way), com o caminho energizado
+  - lâmpada fluorescente com reator e starter, etapa por etapa, reator eletrônico e os defeitos de starter e lâmpada no fim da vida
+  - lei de Ohm no chuveiro: resistência escalonada (verão e inverno), chuveiro na tensão errada e fusível que queima
+  - ponte de Wheatstone para medir um resistor e como sensor de balança (extensômetro)
+  - tipos de corrente, gerador trifásico, defasagem e fator de potência, ligações estrela e triângulo
+  - diodo (curva, polarização, LED e Zener) e retificadores de meia onda, center tap e ponte
+  - capacitor: construção, rigidez dielétrica e associação em série e paralelo
+  - fonte chaveada com ciclo de trabalho e defeitos (capacitor estufado, realimentação aberta, capacitor de entrada seco)
+  - transistor unijunção no oscilador de relaxação
+  - sensores LDR, NTC, PTC e varistor (VDR)
+  - elemento lógico, flip-flop SR e D, contador binário e memória RAM e Flash
+  - bateria: células em série e paralelo, carga e descarga
+  - aterramento e DR: quem desarma e quanta corrente passaria por uma pessoa
+  - alta tensão do micro-ondas (dobrador, magnétron e o perigo do capacitor carregado)
+  - geração de imagem: varredura do tubo, pixels RGB e resolução
+
 ## Versão 2.18.0: simuladores de refrigeração e calor
 - **Onze simuladores novos na família Refrigeração e calor**, montados a partir dos temas das animações didáticas:
   - calor sensível em caloria, BTU e joule, zero absoluto (lei de Charles) e a dilatação da água perto de 4 °C

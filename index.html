@@ -1056,6 +1056,38 @@ const sShow = (r, f, on) => { const i = r.querySelector('[data-f="' + f + '"]');
 const hot = t => { t = Math.max(0, Math.min(1, t)); const A = [56, 189, 248], B = [251, 191, 36], C = [248, 113, 113], u = t < .5 ? t * 2 : (t - .5) * 2, P = t < .5 ? A : B, Q = t < .5 ? B : C; return "rgb(" + P.map((v, i) => Math.round(v + (Q[i] - v) * u)).join(",") + ")"; };
 const legRef = '<p class="small muted s-cap" style="display:flex;flex-wrap:wrap;gap:4px 14px"><span><b style="color:#f87171">●</b> gás quente de alta</span><span><b style="color:#fb923c">●</b> condensando</span><span><b style="color:#fbbf24">●</b> líquido de alta</span><span><b style="color:#38bdf8">●</b> mistura fria evaporando</span><span><b style="color:#a78bfa">●</b> vapor de baixa</span></p>';
 
+// lote 3: auxiliares de desenho dos simuladores de eletricidade e eletrônica
+const FE = "Eletricidade e eletrônica";
+const wre = (d, on, c) => '<path class="w' + (on ? " on" : "") + '" d="' + d + '"' + (c ? ' style="stroke:' + c + '"' : "") + "/>";
+const sGrp = (g, h) => '<div data-g="' + g + '" style="display:contents">' + h + "</div>";
+const sVis = (r, g, on) => { const e = sg(r, g); if (e) e.style.display = on ? "contents" : "none"; };
+const sBtnVis = (r, a, on) => { const e = sg(r, "b-" + a); if (e) e.style.display = on ? "" : "none"; };
+const plotBox = (x, y, w, h) => '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="#0c1424" stroke="#2a3b62"/>';
+const tx = (x, y, t, st, anc) => '<text x="' + x + '" y="' + y + '"' + (anc ? ' text-anchor="' + anc + '"' : "") + (st ? ' style="' + st + '"' : "") + ">" + t + "</text>";
+function lampS(x, y, on, lab) {
+  return (on ? '<circle cx="' + x + '" cy="' + y + '" r="28" fill="#fde68a" opacity=".22"/>' : "") + '<circle cx="' + x + '" cy="' + y + '" r="15" fill="' + (on ? "#fde68a" : "#1e293b") + '" stroke="#9db0d3" stroke-width="2"/><path d="M' + (x - 10) + " " + (y - 10) + "L" + (x + 10) + " " + (y + 10) + "M" + (x + 10) + " " + (y - 10) + "L" + (x - 10) + " " + (y + 10) + '" stroke="' + (on ? "#92400e" : "#6c7ea3") + '" stroke-width="2"/>' + (lab ? tx(x, y + 32, lab, "font-size:10px", "middle") : "");
+}
+// diodo com o anodo antes e o catodo depois, girado de a graus
+function dio(x, y, a, on, c) {
+  return '<g transform="translate(' + x + " " + y + ") rotate(" + a + ')"><path d="M-9 -8L7 0L-9 8Z" fill="' + (on ? (c || "#22d3ee") : "#1e293b") + '" stroke="#9db0d3" stroke-width="1.5"/><line x1="7" y1="-9" x2="7" y2="9" stroke="#9db0d3" stroke-width="2.5"/></g>';
+}
+// resistor em caixa entre dois pontos
+function resB(x1, y1, x2, y2, c) {
+  const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, a = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+  return '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="#6c7ea3" stroke-width="3"/><g transform="translate(' + mx + " " + my + ") rotate(" + a + ')"><rect x="-18" y="-7" width="36" height="14" rx="2" fill="#142039" stroke="' + (c || "#9db0d3") + '" stroke-width="2"/></g>';
+}
+// curva y = f(t) com t de 0 a 1, em n pontos
+function fpath(n, X, Y, f) { let d = ""; for (let i = 0; i <= n; i++) { const t = i / n; d += (i ? "L" : "M") + X(t).toFixed(1) + " " + Y(f(t)).toFixed(1); } return d; }
+const lerpT = (tab, x) => { if (x <= tab[0][0]) return tab[0][1]; for (let i = 1; i < tab.length; i++) if (x <= tab[i][0]) { const a = tab[i - 1], b = tab[i]; return a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0]); } return tab[tab.length - 1][1]; };
+const fmtR = v => v >= 1e6 ? fmtN(v / 1e6, 2) + " MΩ" : v >= 1e3 ? fmtN(v / 1e3, v >= 1e5 ? 0 : 2) + " kΩ" : fmtN(v, v >= 100 ? 0 : 2) + " Ω";
+// resistor em zigue-zague com estado (aceso ou não) e cor opcional
+function zigc(a, b, c, v, on, col) {
+  const n = 6, L = b - a, pts = [v ? [c, a] : [a, c]];
+  for (let i = 0; i < n; i++) { const p = a + L * (i + .5) / n, o = (i % 2 ? -7 : 7); pts.push(v ? [c + o, p] : [p, c + o]); }
+  pts.push(v ? [c, b] : [b, c]);
+  return '<polyline class="w' + (on ? " on" : "") + '" points="' + pts.map(p => p.map(q => q.toFixed(1)).join(",")).join(" ") + '"' + (col ? ' style="stroke:' + col + '"' : "") + "/>";
+}
+
 const SIMS = {
   /* ===================== LOTE 1: MEDIÇÃO ===================== */
   regua: {
@@ -1770,6 +1802,757 @@ const SIMS = {
   },
 
   /* ---- previsão de cargas de um cômodo (NBR 5410) ---- */
+  /* ===================== LOTE 3: ELETRICIDADE E ELETRÔNICA ===================== */
+  atomo: {
+    fam: FE, title: "Simulador: estrutura do átomo, condutores e resistividade", hint: "Escolha um elemento e veja os elétrons em cada camada: os da última camada decidem se o material conduz. Depois, no fio, troque o material, o comprimento e a bitola e veja a resistência.",
+    init: { modo: "at", el: "cu", mat: "cu", L: 20, S: 2.5, ph: 0 },
+    EL: {
+      cu: ["Cobre", "Cu", 29, [2, 8, 18, 1], "Condutor", "Com <b>1 elétron</b> na última camada, preso fracamente ao núcleo. Esse elétron se solta e passa de átomo em átomo: é um <b>elétron livre</b>. Num fio de cobre há bilhões deles, prontos para formar a corrente."],
+      al: ["Alumínio", "Al", 13, [2, 8, 3], "Condutor", "Com <b>3 elétrons</b> na última camada, o alumínio também tem elétrons livres e conduz bem, um pouco menos que o cobre. É mais leve e mais barato: por isso é usado nas linhas de transmissão."],
+      si: ["Silício", "Si", 14, [2, 8, 4], "Semicondutor", "Com <b>4 elétrons</b> na última camada, cada átomo de silício se liga a quatro vizinhos e quase não sobra elétron livre. Puro, conduz muito pouco; com impurezas (dopagem) vira o material dos diodos, transistores e chips."],
+      ge: ["Germânio", "Ge", 32, [2, 8, 18, 4], "Semicondutor", "Também tem <b>4 elétrons</b> na última camada. Foi o material dos primeiros transistores; hoje o silício domina, porque aguenta mais temperatura."],
+      s: ["Enxofre", "S", 16, [2, 8, 6], "Isolante", "Com <b>6 elétrons</b> na última camada, o átomo tende a <b>receber</b> elétrons, não a soltar. Sem elétrons livres não há corrente: é um isolante."],
+      ne: ["Neônio", "Ne", 10, [2, 8], "Gás nobre (isolante)", "A última camada está <b>completa</b>, com 8 elétrons. O átomo é estável e não troca elétrons. Só conduz quando uma tensão alta arranca elétrons à força, e aí brilha: é a luz da lâmpada neon e do starter da fluorescente."],
+      h: ["Hidrogênio", "H", 1, [1], "Gás", "O átomo mais simples: 1 próton e 1 elétron. Apesar de ter um só elétron, forma um gás de moléculas H₂ e não conduz em condições normais."]
+    },
+    MAT: { cu: ["Cobre", .0172, "#f59e0b"], al: ["Alumínio", .0282, "#cbd5e1"], fe: ["Ferro", .1, "#94a3b8"], nicr: ["Níquel-cromo", 1.1, "#a78bfa"] },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 240", '<g data-g="g"></g>', "Átomo e fio condutor") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("atomo", "modo", [["at", "Átomo"], ["fio", "Resistência do fio"]]) +
+      sGrp("v-at", sSeg("atomo", "el", [["cu", "Cobre"], ["al", "Alumínio"], ["si", "Silício"], ["ge", "Germânio"], ["s", "Enxofre"], ["ne", "Neônio"], ["h", "Hidrogênio"]])) +
+      sGrp("v-fio", sSeg("atomo", "mat", [["cu", "Cobre"], ["al", "Alumínio"], ["fe", "Ferro"], ["nicr", "Níquel-cromo"]])) + '</div><div class="s-ctl">' + sRange("atomo", "L", "Comprimento do fio (m)", 1, 100, 1) + sRange("atomo", "S", "Seção do fio (mm²)", .5, 10, .5) + "</div>" + sMeters([["a", "–"], ["b", "–"], ["c", "–"], ["d", "–"]]),
+    draw(r, st) {
+      const at = st.modo === "at"; sVis(r, "v-at", at); sVis(r, "v-fio", !at); sShow(r, "L", !at); sShow(r, "S", !at);
+      so(r, "L", st.L + " m"); so(r, "S", fmtN(st.S, 1) + " mm²");
+      let g = "";
+      if (at) {
+        const e = this.EL[st.el], sh = e[3], cx = 130, cy = 120, nv = sh[sh.length - 1];
+        g += '<circle cx="' + cx + '" cy="' + cy + '" r="17" fill="#f87171" opacity=".85"/>' + tx(cx, cy + 4, e[1], "fill:#0c1424;font-size:12px;font-weight:600", "middle");
+        sh.forEach((n, k) => {
+          const R = 30 + k * 24, last = k === sh.length - 1, w = RMOT ? 0 : st.ph * (1.2 / (k + 1));
+          g += '<circle cx="' + cx + '" cy="' + cy + '" r="' + R + '" fill="none" stroke="#2a3b62" stroke-width="1.5"/>';
+          for (let i = 0; i < n; i++) { const a = w + i * 2 * Math.PI / n + k * .4; g += '<circle cx="' + (cx + R * Math.cos(a)).toFixed(1) + '" cy="' + (cy + R * Math.sin(a)).toFixed(1) + '" r="' + (last ? 4.5 : 3.2) + '" fill="' + (last ? "#fbbf24" : "#38bdf8") + '"/>'; }
+        });
+        g += tx(262, 40, e[0] + " (" + e[1] + ")", "fill:var(--ink);font-size:14px") + tx(262, 64, e[2] + " prótons no núcleo") + tx(262, 82, e[2] + " elétrons em volta") + tx(262, 100, "Camadas: " + sh.join(" · ")) +
+          tx(262, 128, "Última camada: " + nv + " elétron" + (nv > 1 ? "s" : ""), "fill:#fbbf24") + tx(262, 154, e[4], "fill:var(--ink);font-size:13px") +
+          '<circle cx="264" cy="196" r="3.2" fill="#38bdf8"/>' + tx(274, 200, "camadas internas", "font-size:10px") + '<circle cx="264" cy="214" r="4.5" fill="#fbbf24"/>' + tx(274, 218, "camada de valência", "font-size:10px");
+        smet(r, "a", "Prótons", String(e[2])); smet(r, "b", "Elétrons", String(e[2])); smet(r, "c", "Camadas", String(sh.length)); smet(r, "d", "Na última camada", String(nv));
+        sread(r, e[5] + " O que decide se um material conduz não é o número total de elétrons, e sim os da <b>última camada</b> (camada de valência): até 3, condutor; 4, semicondutor; de 5 a 8, isolante.");
+      } else {
+        const m = this.MAT[st.mat], R = m[1] * st.L / st.S, dv = R * 10, h = 8 + st.S * 4, v = 40 / st.S;
+        g += '<rect x="40" y="' + (110 - h / 2) + '" width="380" height="' + h + '" rx="' + (h / 2) + '" fill="' + m[2] + '" opacity=".45" stroke="' + m[2] + '"/>';
+        for (let i = 0; i < 34; i++) { const x = 44 + ((i * 47 - (RMOT ? 0 : st.ph * v)) % 372 + 372) % 372, y = 110 + (((i * 53) % 100) / 100 - .5) * (h - 6); g += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="2.4" fill="#e2e8f0"/>'; }
+        const ya = 110 - h / 2 - 16;
+        g += '<path d="M60 ' + ya + 'h60" stroke="#e2e8f0" stroke-width="1.5"/><path d="M60 ' + ya + 'l7 -4v8z" fill="#e2e8f0"/>' + tx(126, ya + 4, "elétrons livres andando no fio (10 A)", "font-size:10px") +
+          '<line x1="40" x2="420" y1="186" y2="186" stroke="#6c7ea3"/><line x1="40" x2="40" y1="180" y2="192" stroke="#6c7ea3"/><line x1="420" x2="420" y1="180" y2="192" stroke="#6c7ea3"/>' + tx(230, 204, "L = " + st.L + " m   ·   S = " + fmtN(st.S, 1) + " mm²", "", "middle") +
+          tx(230, 30, m[0] + ": ρ = " + fmtN(m[1], 4) + " Ω·mm²/m", "fill:var(--ink)", "middle") + tx(230, 228, "R = ρ × L ÷ S = " + fmtN(m[1], 4) + " × " + st.L + " ÷ " + fmtN(st.S, 1) + " = " + fmtR(R), "fill:#22d3ee", "middle");
+        smet(r, "a", "Resistência", fmtR(R)); smet(r, "b", "Queda com 10 A", fmtN(dv, 2) + " V"); smet(r, "c", "Queda num circuito de 127 V", fmtN(dv / 127 * 100, 1) + "%"); smet(r, "d", "Calor no fio (10 A)", fmtN(R * 100, 1) + " W");
+        sread(r, "A resistência de um fio cresce com o <b>comprimento</b> e com a <b>resistividade</b> do material, e cai quando a <b>seção</b> (bitola) aumenta: R = ρ × L ÷ S. Com 10 A passando, este fio perde " + fmtN(dv, 2) + " V e esquenta com " + fmtN(R * 100, 1) + " W. " +
+          (st.mat === "nicr" ? "O <b>níquel-cromo</b> tem resistividade 64 vezes maior que a do cobre: é o fio das resistências de chuveiro, ferro de passar e aquecedor, feito justamente para esquentar." : st.mat === "fe" ? "O ferro conduz cerca de 6 vezes pior que o cobre; por isso não é usado em fiação." : st.mat === "al" ? "O alumínio precisa de uma seção cerca de 1,6 vez maior que a do cobre para ter a mesma resistência." : "O cobre é o padrão das instalações por ter resistividade baixa.") +
+          (dv / 127 > .04 ? " <b>Queda acima de 4%:</b> numa instalação, seria preciso um fio mais grosso." : "") + " Repare que os elétrons andam mais devagar no fio grosso: a mesma corrente se espalha por uma área maior.");
+      }
+      sg(r, "g").innerHTML = g;
+    },
+    tick(r, st, dt) { if (RMOT) return; st.ph = (st.ph + dt * 1.5) % 1e4; this.draw(r, st); }
+  },
+
+  interr: {
+    fam: FE, title: "Simulador: circuitos de iluminação: interruptor simples, pulsador, paralelo e intermediário", hint: "Escolha o tipo de comando e acione os interruptores. O trecho colorido está energizado. No paralelo e no intermediário, a mesma lâmpada é comandada de dois ou mais lugares.",
+    init: { modo: "simp", s1: 0, s2: 0, si: 0, p: 0, pt: 0 },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 230", '<g data-g="g"></g>', "Circuito de iluminação") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("interr", "modo", [["simp", "Interruptor simples"], ["puls", "Pulsador (campainha)"], ["par", "Paralelo (three-way)"], ["int", "Intermediário (four-way)"]]) + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:10px">' + sBtn("interr", "s1", "Acionar S1", "primary") + sBtn("interr", "si", "Acionar o intermediário") + sBtn("interr", "s2", "Acionar S2") + "</div>" + sMeters([["a", "Lâmpada"], ["b", "Fios entre os pontos"]]),
+    sw(x, y, x2, y2) { return '<line x1="' + x + '" y1="' + y + '" x2="' + x2 + '" y2="' + y2 + '" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/><circle cx="' + x + '" cy="' + y + '" r="4" fill="#e2e8f0"/>'; },
+    draw(r, st) {
+      const m = st.modo, dot = (x, y) => '<circle cx="' + x + '" cy="' + y + '" r="3.5" fill="#9db0d3"/>';
+      sBtnVis(r, "si", m === "int"); sBtnVis(r, "s2", m === "par" || m === "int");
+      sg(r, "b-s1").textContent = m === "simp" ? "Acionar o interruptor" : m === "puls" ? "Apertar o botão" : "Acionar S1";
+      let g = tx(10, 114, "F", "fill:#f87171;font-size:12px") + tx(10, 204, "N", "fill:#38bdf8;font-size:12px") + wre("M420 128V200H24", false, "#38bdf8"), on, txt, fios;
+      if (m === "simp" || m === "puls") {
+        on = m === "simp" ? !!st.s1 : !!st.p;
+        g += wre("M24 110H170", true) + dot(170, 110) + dot(230, 110) + wre("M230 110H300V60H420V" + (m === "simp" ? 92 : 104), on);
+        if (m === "simp") g += this.sw(170, 110, st.s1 ? 228 : 222, st.s1 ? 110 : 82) + tx(200, 140, "interruptor", "font-size:10px", "middle") + lampS(420, 110, on, "lâmpada");
+        else {
+          const y = st.p ? 104 : 90;
+          g += '<line x1="166" y1="' + y + '" x2="234" y2="' + y + '" stroke="#e2e8f0" stroke-width="4"/><line x1="200" y1="' + y + '" x2="200" y2="' + (y - 16) + '" stroke="#e2e8f0" stroke-width="3"/><rect x="188" y="' + (y - 26) + '" width="24" height="10" rx="3" fill="#fbbf24"/>' + tx(200, 140, "botão pulsador (NA)", "font-size:10px", "middle") +
+            '<path d="M402 126a18 20 0 0 1 36 0z" fill="' + (on ? "#fbbf24" : "#1e293b") + '" stroke="#9db0d3" stroke-width="2"/><circle cx="420" cy="130" r="4" fill="#9db0d3"/>' + wre("M420 134V200", false, "#38bdf8") + (on ? '<path d="M446 100q8 10 0 20M454 94q12 16 0 32" stroke="#fbbf24" fill="none" stroke-width="2"/>' : "") + tx(420, 154, "campainha", "font-size:10px", "middle");
+        }
+        fios = "fase e retorno";
+        txt = m === "simp" ? "O interruptor abre e fecha só a <b>fase</b>. O fio que sai dele para a lâmpada é o <b>retorno</b>; o neutro vai direto à lâmpada. Assim, com o interruptor desligado, o soquete fica sem tensão e a troca da lâmpada é mais segura. " + (on ? "Interruptor fechado: a corrente passa e a lâmpada acende." : "Interruptor aberto: o circuito está interrompido.")
+          : "O <b>pulsador</b> é um interruptor momentâneo: o contato só fecha enquanto o botão está apertado, e uma mola o devolve. É o botão da campainha e o comando de minuteria (que mantém a luz da escada acesa por um tempo) e de relé de impulso (cada toque liga ou desliga). " + (on ? "Botão apertado: a campainha toca." : "Botão solto: contato aberto.");
+      } else {
+        const t1 = st.s1 ? 1 : 0, t2 = m === "int" && st.si ? 1 - t1 : t1, Yt = k => k ? 170 : 60; on = t2 === (st.s2 ? 1 : 0);
+        g += wre("M24 110H100", true) + dot(100, 110) + this.sw(100, 110, 138, Yt(t1)) + dot(140, 60) + dot(140, 170);
+        if (m === "par") g += wre("M140 60H320", t1 === 0) + wre("M140 170H320", t1 === 1);
+        else g += wre("M140 60H200", t1 === 0) + wre("M140 170H200", t1 === 1) + wre("M260 60H320", t2 === 0) + wre("M260 170H320", t2 === 1) + '<rect x="192" y="44" width="76" height="142" rx="6" fill="none" stroke="#6c7ea3" stroke-dasharray="4 3"/>' + dot(200, 60) + dot(200, 170) + dot(260, 60) + dot(260, 170) +
+          (st.si ? this.sw(200, 60, 258, 168) + this.sw(200, 170, 258, 62) : this.sw(200, 60, 258, 60) + this.sw(200, 170, 258, 170)) + tx(230, 36, "intermediário " + (st.si ? "(cruzado)" : "(direto)"), "font-size:10px", "middle");
+        g += dot(320, 60) + dot(320, 170) + dot(360, 110) + this.sw(360, 110, 322, Yt(st.s2 ? 1 : 0)) + wre("M360 110H380V40H420V92", on) + lampS(420, 110, on) +
+          tx(96, 140, "S1", "fill:var(--ink)", "middle") + tx(364, 140, "S2", "fill:var(--ink)", "middle") + tx(146, 74, "retorno 1", "font-size:9px") + tx(146, 186, "retorno 2", "font-size:9px");
+        fios = m === "par" ? "2 retornos" : "2 retornos de cada lado";
+        txt = (m === "par" ? "No <b>paralelo</b> (three-way), cada interruptor tem um contato comum e dois de saída. Entre S1 e S2 correm <b>dois retornos</b>. A lâmpada acende quando os dois interruptores escolhem o mesmo retorno; mudar qualquer um deles inverte o estado. É o comando de escada e de corredor."
+          : "O <b>intermediário</b> (four-way) fica no meio dos retornos e só tem duas posições: direto ou cruzado. Cruzar troca os dois retornos, e isso inverte o estado da lâmpada. Com S1, S2 e quantos intermediários forem precisos, a luz é comandada de três ou mais lugares: os das pontas são sempre paralelos (three-way), e os do meio são intermediários.") +
+          (on ? " Agora o caminho da fase chega até a lâmpada: acesa." : " Agora o caminho está interrompido: apagada.");
+      }
+      sg(r, "g").innerHTML = g; smet(r, "a", m === "puls" ? "Campainha" : "Lâmpada", m === "puls" ? (on ? "tocando" : "parada") : on ? "acesa" : "apagada"); so(r, "b", fios); sread(r, txt);
+    },
+    act(st, a) { if (a === "s1") { if (st.modo === "puls") { st.p = 1; st.pt = .9; } else st.s1 = st.s1 ? 0 : 1; } if (a === "s2") st.s2 = st.s2 ? 0 : 1; if (a === "si") st.si = st.si ? 0 : 1; },
+    tick(r, st, dt) { if (!st.p) return; st.pt -= dt; if (st.pt <= 0) { st.p = 0; this.draw(r, st); } }
+  },
+
+  fluor: {
+    fam: FE, title: "Simulador: lâmpada fluorescente com reator e starter", hint: "Ligue a lâmpada e acompanhe a partida: o brilho do starter, o aquecimento dos filamentos, o pico de tensão do reator e o acendimento. Depois coloque um defeito e veja o sintoma.",
+    init: { tipo: "conv", falha: "ok", on: 0, t: 0 },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 230", '<g data-g="g"></g>', "Lâmpada fluorescente") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("fluor", "tipo", [["conv", "Reator convencional e starter"], ["ele", "Reator eletrônico"]]) + sSeg("fluor", "falha", [["ok", "Tudo bom"], ["stc", "Starter em curto"], ["sta", "Starter aberto"], ["gasta", "Lâmpada no fim da vida"]]) + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:10px">' + sBtn("fluor", "liga", "Ligar o interruptor", "primary") + sBtn("fluor", "desl", "Desligar") + "</div>" + sMeters([["et", "Etapa"], ["vt", "Tensão no tubo"], ["it", "Corrente"]]),
+    stage(st) {
+      if (!st.on) return "off";
+      const t = st.t, f = st.falha;
+      if (st.tipo === "ele") { if (t < .5) return "pre"; if (f === "gasta") return t < 3 ? "pisca" : "prot"; return "arc"; }
+      if (f === "sta") return "nada";
+      if (f === "stc") return "fil";
+      if (t < 1) return "neon"; if (t < 2.2) return "fil"; if (t < 2.35) return "pico";
+      return f === "gasta" ? "pisca" : "arc";
+    },
+    draw(r, st) {
+      const s = this.stage(st), ele = st.tipo === "ele", on = !!st.on, L = s === "arc" ? 1 : s === "pisca" ? (Math.sin(st.t * 37) > .2 ? .7 : .08) : 0;
+      const fc = s === "fil" || s === "pre" ? "#fb923c" : L > .5 ? "#fbbf24" : "#6c7ea3", stl = s === "neon" || s === "fil" || s === "pico";
+      const fil = x => '<polyline points="' + x + ',72 ' + (x + 6) + ',76 ' + (x - 6) + ',80 ' + (x + 6) + ',84 ' + (x - 6) + ',88 ' + x + ',92" fill="none" stroke="' + fc + '" stroke-width="2.5"/>';
+      let g = tx(10, 44, "F", "fill:#f87171;font-size:12px") + tx(10, 204, "N", "fill:#38bdf8;font-size:12px") +
+        '<rect x="110" y="58" width="260" height="48" rx="22" fill="' + (L ? "#e0f2fe" : "#1e293b") + '" opacity="' + (L ? .25 + .7 * L : 1) + '" stroke="#9db0d3"/>' + (L ? '<rect x="96" y="40" width="288" height="84" rx="40" fill="#e0f2fe" opacity="' + (.12 * L) + '"/>' : "") + fil(124) + fil(356) + tx(240, 86, "tubo com vapor de mercúrio", "font-size:10px;fill:" + (L ? "#0c1424" : "#9db0d3"), "middle");
+      if (!ele) {
+        let c = "M40 40"; for (let i = 0; i < 4; i++) c += "a6 8 0 0 1 12 0";
+        g += wre("M24 40H40", on) + '<path class="w' + (on ? " on" : "") + '" d="' + c + '"/>' + '<rect x="36" y="22" width="56" height="26" rx="4" fill="none" stroke="#6c7ea3" stroke-dasharray="3 3"/>' + tx(64, 18, "reator", "font-size:10px", "middle") +
+          wre("M88 40H96V72H110", on) + '<line x1="110" y1="72" x2="124" y2="72" stroke="#9db0d3" stroke-width="2"/><line x1="110" y1="92" x2="124" y2="92" stroke="#9db0d3" stroke-width="2"/><line x1="356" y1="72" x2="370" y2="72" stroke="#9db0d3" stroke-width="2"/><line x1="356" y1="92" x2="370" y2="92" stroke="#9db0d3" stroke-width="2"/>' +
+          wre("M110 92H96V150H222", stl) + wre("M258 150H384V92H370", stl) + wre("M370 72H384V40H440V200H24", false, "#38bdf8") +
+          '<circle cx="240" cy="150" r="18" fill="' + (s === "neon" ? "#fb923c" : "#142039") + '" opacity="' + (s === "neon" ? .85 : 1) + '" stroke="#9db0d3" stroke-width="2"/><path d="M230 150h6M244 150h6" stroke="#e2e8f0" stroke-width="2.5"/>' + (s === "fil" ? '<path d="M236 150h8" stroke="#e2e8f0" stroke-width="2.5"/>' : "") + tx(240, 184, "starter", "font-size:10px", "middle") +
+          (s === "pico" ? '<path d="M226 22l-12 18h10l-8 16 20-22h-10l8-12z" fill="#fbbf24"/>' + tx(252, 36, "pico de ≈ 800 V", "fill:#fbbf24;font-size:12px") : "");
+      } else {
+        g += wre("M24 40H60V166H160", on) + wre("M24 200H60V186H160", false, "#38bdf8") + '<rect x="160" y="150" width="160" height="50" rx="6" fill="#142039" stroke="#9db0d3"/>' + tx(240, 172, "reator eletrônico", "fill:var(--ink)", "middle") + tx(240, 188, s === "prot" ? "em proteção" : on ? "≈ 40 kHz" : "", "font-size:10px", "middle") +
+          wre("M180 150V122H90V72H124", on && s !== "prot") + wre("M200 150V130H102V92H124", on && s !== "prot") + wre("M300 150V122H390V72H356", on && s !== "prot") + wre("M280 150V130H378V92H356", on && s !== "prot");
+      }
+      sg(r, "g").innerHTML = g;
+      const V = { off: ["desligada", "0 V", "0 A"], nada: ["nada acontece", "0 V", "0 A"], neon: ["starter brilhando", "0 V (127 V no starter)", "poucos mA"], fil: [st.falha === "stc" ? "filamentos sempre ligados" : "filamentos aquecendo", "≈ 10 V", "≈ 0,5 A"], pico: ["pico do reator", "≈ 800 V", "–"], pisca: ["tubo falhando", "oscilando", "instável"], arc: ["acesa", ele ? "≈ 100 V a 40 kHz" : "≈ 100 V", ele ? "≈ 0,35 A" : "≈ 0,43 A"], pre: ["pré-aquecimento", "≈ 10 V a 40 kHz", "≈ 0,4 A"], prot: ["reator em proteção", "0 V", "0 A"] }[s];
+      so(r, "et", V[0]); so(r, "vt", V[1]); so(r, "it", V[2]);
+      const T = {
+        off: ele ? "O reator eletrônico substitui o reator e o starter: um circuito que retifica a tensão da rede e a transforma em alta frequência. Ligue para ver a partida." : "O <b>reator</b> é uma bobina em série com o tubo; o <b>starter</b> é um pequeno bulbo com gás neon e uma lâmina bimetálica, ligado entre os dois filamentos. Ligue para ver a partida.",
+        nada: "<b>Starter aberto:</b> o starter não brilha e os filamentos não aquecem. O tubo fica apagado, com os 127 V parados nos terminais do starter. Troque o starter (é a peça mais barata e a primeira a testar).",
+        neon: "<b>1. O starter brilha.</b> O tubo frio não conduz, então toda a tensão da rede fica sobre o starter. O gás neon dentro dele acende e esquenta a lâmina bimetálica, que se curva.",
+        fil: st.falha === "stc" ? "<b>Starter em curto:</b> o contato ficou colado e a corrente passa sempre pelos filamentos. As <b>pontas do tubo ficam acesas</b>, mas o tubo não acende, porque o starter nunca abre para o reator dar o pico. Os filamentos se gastam rápido. Troque o starter." : "<b>2. Filamentos aquecendo.</b> A lâmina encostou no outro eletrodo e fechou o circuito: a corrente passa pelo reator e pelos dois filamentos, que esquentam e soltam elétrons. Com o contato fechado, o neon apaga e a lâmina esfria.",
+        pico: "<b>3. O pico de tensão.</b> A lâmina esfriou e abriu o contato de repente. A bobina do reator não aceita que a corrente pare de uma vez e gera um pico de centenas de volts, que <b>dispara o arco</b> dentro do tubo.",
+        pisca: ele ? "<b>Lâmpada no fim da vida:</b> os filamentos perderam o material que solta elétrons e o tubo não sustenta o arco. O reator eletrônico tenta algumas vezes e entra em proteção, desligando." : "<b>Lâmpada no fim da vida:</b> o tubo acende e apaga, e o starter tenta de novo e de novo. As pontas ficam pretas (o material dos filamentos se depositou no vidro). Troque a lâmpada; se continuar piscando, troque o starter também.",
+        arc: ele ? "<b>Acesa.</b> O reator eletrônico pré-aquece os filamentos por um instante e acende o tubo em alta frequência (dezenas de kHz): partida rápida, sem cintilação e sem o zumbido do reator convencional, com menos perdas." : "<b>4. Acesa.</b> Com o arco formado, o vapor de mercúrio emite luz ultravioleta, e o pó branco (fósforo) da parede a transforma em luz visível. Agora a tensão no tubo é baixa (≈ 100 V) e não basta para o starter brilhar de novo. O reator continua em série, <b>limitando a corrente</b>: sem ele, o tubo puxaria corrente sem parar e queimaria.",
+        pre: "<b>Pré-aquecimento.</b> O reator eletrônico passa corrente pelos filamentos por meio segundo antes de aplicar a tensão de partida. Isso aumenta a vida da lâmpada.",
+        prot: "<b>Reator em proteção.</b> Depois de algumas tentativas, o reator eletrônico desliga a saída para não se danificar. Troque a lâmpada e religue."
+      };
+      sread(r, T[s] + (ele && (st.falha === "stc" || st.falha === "sta") ? " (No reator eletrônico não existe starter: esse defeito não se aplica.)" : ""));
+    },
+    act(st, a) { if (a === "liga") { st.on = 1; st.t = 0; } if (a === "desl") { st.on = 0; st.t = 0; } },
+    input(st) { st.t = 0; },
+    tick(r, st, dt) { if (!st.on) return; st.t = Math.min(100, st.t + dt); if (st.tipo === "conv" && st.falha === "gasta" && st.t > 2.95) st.t = 0; this.draw(r, st); }
+  },
+
+  chuveiro: {
+    fam: FE, title: "Simulador: lei de Ohm no chuveiro: resistência escalonada e fusível", hint: "Escolha a rede, o chuveiro e a posição da chave. No inverno a chave usa só um pedaço da resistência: menos ohms, mais corrente e mais potência. Teste também um fusível pequeno demais (o tempo é acelerado).",
+    init: { V: 220, mod: 220, pos: "inv", In: 40, vaz: 4, tin: 20, h: 0, qu: 0 },
+    MOD: { 220: [14.2, 7.1], 127: [7.33, 3.67] },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 230", '<g data-g="g"></g>', "Chuveiro e fusível") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("chuveiro", "V", [["127", "Rede de 127 V"], ["220", "Rede de 220 V"]]) + sSeg("chuveiro", "mod", [["127", "Chuveiro de 127 V"], ["220", "Chuveiro de 220 V"]]) + sSeg("chuveiro", "pos", [["off", "Desligado"], ["ver", "Verão"], ["inv", "Inverno"]]) + sSeg("chuveiro", "In", [["20", "Fusível de 20 A"], ["25", "25 A"], ["32", "32 A"], ["40", "40 A"], ["50", "50 A"]]) + sBtn("chuveiro", "troca", "Trocar o fusível") + '</div><div class="s-ctl">' + sRange("chuveiro", "vaz", "Vazão de água (L/min)", 2, 8, .5) + sRange("chuveiro", "tin", "Água que chega (°C)", 10, 30, 1) + "</div>" + sMeters([["R", "Resistência ligada"], ["I", "Corrente"], ["P", "Potência"], ["T", "Água saindo"]]),
+    calc(st) { const R = st.pos === "off" ? 0 : this.MOD[st.mod][st.pos === "ver" ? 0 : 1], fl = st.pos !== "off" && !st.qu, I = fl ? st.V / R : 0, P = st.V * I; return { R, fl, I, P, T: st.tin + P / (st.vaz / 60 * 4186) }; },
+    draw(r, st) {
+      const c = this.calc(st), ver = st.pos === "ver", inv = st.pos === "inv", e = c.fl;
+      let g = tx(10, 44, "F", "fill:#f87171;font-size:12px") + tx(10, 204, "N", "fill:#38bdf8;font-size:12px") + wre("M24 40H60", true) +
+        '<rect x="60" y="30" width="60" height="20" rx="4" fill="#142039" stroke="#9db0d3"/>' + (st.qu ? '<path d="M64 40h18M98 40h18" stroke="#6c7ea3" stroke-width="2.5"/><path d="M84 36l4 8M92 36l-4 8" stroke="#f87171" stroke-width="1.5"/>' : '<path d="M64 40H116" stroke="' + (st.h > .05 ? hot(.5 + st.h / 2) : "#9db0d3") + '" stroke-width="2.5"/>') + tx(90, 66, "fusível " + st.In + " A", "font-size:10px", "middle") +
+        wre("M120 40H200V90", e) + zigc(200, 280, 90, false, e) + zigc(280, 360, 90, false, e && ver) + wre("M280 90V130", e && inv) + wre("M360 90V130", e && ver) +
+        '<circle cx="200" cy="90" r="4" fill="#9db0d3"/><circle cx="280" cy="90" r="4" fill="#9db0d3"/><circle cx="360" cy="90" r="4" fill="#9db0d3"/><circle cx="280" cy="130" r="4" fill="#9db0d3"/><circle cx="360" cy="130" r="4" fill="#9db0d3"/><circle cx="320" cy="168" r="4" fill="#e2e8f0"/>' +
+        '<line x1="320" y1="168" x2="' + (ver ? 357 : inv ? 283 : 320) + '" y2="' + (st.pos === "off" ? 140 : 133) + '" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/>' + wre("M320 168V200H24", false, "#38bdf8") +
+        '<rect x="180" y="60" width="200" height="124" rx="8" fill="none" stroke="#6c7ea3" stroke-dasharray="4 3"/>' + tx(190, 178, "chuveiro de " + st.mod + " V", "font-size:10px") + tx(240, 80, "metade 1", "font-size:9px", "middle") + tx(320, 80, "metade 2", "font-size:9px", "middle") + tx(334, 160, "chave", "font-size:9px");
+      const wc = e ? hot((c.T - 15) / 35) : "#38bdf8";
+      g += '<path d="M400 40h40v10h-40z" fill="#9db0d3"/>'; for (let i = 0; i < 5; i++) g += '<line x1="' + (404 + i * 8) + '" y1="56" x2="' + (398 + i * 10) + '" y2="190" stroke="' + wc + '" stroke-width="2" stroke-dasharray="6 6" opacity=".8"/>';
+      g += tx(420, 210, fmtN(e ? c.T : st.tin, 0) + " °C", "fill:var(--ink)", "middle");
+      sg(r, "g").innerHTML = g;
+      so(r, "vaz", fmtN(st.vaz, 1) + " L/min"); so(r, "tin", st.tin + " °C");
+      so(r, "R", st.pos === "off" ? "circuito aberto" : fmtN(c.R, 2) + " Ω"); so(r, "I", fmtN(c.I, 1) + " A"); so(r, "P", fmtN(c.P, 0) + " W"); so(r, "T", fmtN(e ? c.T : st.tin, 1) + " °C");
+      const Iq = st.V / (st.pos === "off" ? 1e9 : c.R), bit = Iq <= 24 ? "2,5" : Iq <= 32 ? "4" : Iq <= 41 ? "6" : Iq <= 57 ? "10" : "16";
+      let t = "";
+      if (st.pos === "off") t = "Chave desligada: o circuito está aberto e não passa corrente. ";
+      else t = "Lei de Ohm: I = V ÷ R = " + st.V + " ÷ " + fmtN(c.R, 2) + " = <b>" + fmtN(Iq, 1) + " A</b>, e a potência é P = V × I = " + fmtN(st.V * Iq, 0) + " W. " + (inv ? "Na posição <b>inverno</b>, a chave liga o neutro no meio da resistência: só metade dos ohms fica no circuito, a corrente dobra e a potência também dobra (P = V² ÷ R). " : "Na posição <b>verão</b>, a corrente passa pela resistência inteira: mais ohms, menos corrente e menos calor. ");
+      if (st.mod !== st.V && st.pos !== "off") t += st.V > st.mod ? "<b>Chuveiro de 127 V ligado em 220 V:</b> a corrente quase dobra e a potência fica 3 vezes maior. A resistência queima em pouco tempo, e o fio do circuito sofre. " : "<b>Chuveiro de 220 V ligado em 127 V:</b> não estraga nada, mas a potência cai para um terço e a água sai quase fria. ";
+      if (st.qu) t += "<b>O fusível queimou.</b> A corrente ficou acima do valor dele por tempo demais e o elo fundiu, abrindo o circuito. Ele está ali para proteger o <b>fio</b>: um fusível maior que a capacidade do fio deixa o fio esquentar sem desligar. Corrija a causa e só então troque o fusível (pelo mesmo valor, nunca maior).";
+      else if (c.fl && c.I > st.In * 1.05) t += "<b>Corrente acima do fusível (" + st.In + " A):</b> o elo está esquentando e vai queimar. Quanto maior a sobrecarga, mais rápido.";
+      else if (c.fl) t += "O circuito deste chuveiro pede fio de pelo menos <b>" + bit + " mm²</b> e um fusível ou disjuntor que não passe da capacidade do fio. A água esquenta " + fmtN(c.T - st.tin, 1) + " °C com " + fmtN(st.vaz, 1) + " L/min: menos vazão, água mais quente.";
+      sread(r, t);
+    },
+    act(st, a) { if (a === "troca") { st.qu = 0; st.h = 0; } },
+    tick(r, st, dt) { const c = this.calc(st); if (!(c.I > 0) && st.h <= 0) return; const k = c.I / st.In; if (k > 1.05) st.h += dt * (k * k - 1) * .25; else st.h = Math.max(0, st.h - dt * .15); if (st.h >= 1) { st.qu = 1; st.h = .99; } this.draw(r, st); }
+  },
+
+  ponte: {
+    fam: FE, title: "Simulador: ponte de Wheatstone", hint: "Ajuste R3 até o galvanômetro marcar zero: a ponte está equilibrada e o resistor desconhecido Rx sai de uma conta simples. No modo balança, um extensômetro muda poucos décimos de ohm com o peso, e a ponte percebe.",
+    init: { modo: "med", k: 1, R3: 1000, Rx: 3300, peso: 0, ver: 0 },
+    LIST: [120, 150, 220, 270, 330, 390, 470, 560, 680, 820, 1000, 1200, 1500, 1800, 2200, 2700, 3300, 3900, 4700, 5600, 6800, 8200],
+    html: () => '<div class="s-fig">' + SVG("0 0 460 240", '<g data-g="g"></g>', "Ponte de Wheatstone") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("ponte", "modo", [["med", "Medir um resistor"], ["bal", "Sensor de balança"]]) +
+      sGrp("v-med", sSeg("ponte", "k", [["0.1", "R1 ÷ R2 = 0,1"], ["1", "R1 ÷ R2 = 1"], ["10", "R1 ÷ R2 = 10"]]) + sBtn("ponte", "sort", "Sortear Rx", "primary") + sBtn("ponte", "ver", "Mostrar Rx")) + '</div><div class="s-ctl">' + sRange("ponte", "R3", "R3 (resistor de ajuste)", 0, 10000, 1) + sRange("ponte", "peso", "Peso sobre a balança (kg)", 0, 20, .1) + "</div>" + sMeters([["a", "–"], ["b", "–"], ["c", "–"], ["d", "–"]]),
+    calc(st) {
+      const md = st.modo === "med", R1 = md ? st.k * 1000 : 350, R2 = md ? 1000 : 350, R3 = md ? st.R3 : 350, Rx = md ? st.Rx : 350 * (1 + 2 * st.peso * 5e-5);
+      const Va = 10 * R2 / (R1 + R2), Vb = 10 * Rx / (R3 + Rx); return { R1, R2, R3, Rx, Vg: Va - Vb };
+    },
+    draw(r, st) {
+      const md = st.modo === "med", c = this.calc(st); sVis(r, "v-med", md); sShow(r, "R3", md); sShow(r, "peso", !md);
+      so(r, "R3", fmtR(st.R3)); so(r, "peso", fmtN(st.peso, 1) + " kg");
+      const ang = 70 * Math.tanh(c.Vg / (md ? .2 : .002)), a = ang * Math.PI / 180, eq = md ? Math.abs(c.Vg) < .0005 : false;
+      let g = wre("M230 30V14H40V96", true) + '<line x1="24" y1="96" x2="56" y2="96" stroke="#e2e8f0" stroke-width="3"/><line x1="32" y1="106" x2="48" y2="106" stroke="#e2e8f0" stroke-width="3"/>' + wre("M40 106V226H230V210", false) + tx(62, 104, "10 V") +
+        resB(230, 30, 150, 120) + resB(150, 120, 230, 210) + resB(230, 30, 310, 120) + resB(310, 120, 230, 210, "#fbbf24") +
+        tx(150, 64, "R1 " + fmtR(c.R1), "font-size:10px", "end") + tx(150, 186, "R2 " + fmtR(c.R2), "font-size:10px", "end") + tx(312, 64, "R3 " + fmtR(c.R3), "font-size:10px") + tx(312, 186, md ? "Rx = " + (st.ver ? fmtR(c.Rx) : "?") : "Rx extensômetro " + fmtN(c.Rx, 2) + " Ω", "font-size:10px;fill:#fbbf24") +
+        wre("M150 120H206", false) + wre("M254 120H310", false) + '<circle cx="230" cy="120" r="24" fill="#0c1424" stroke="' + (eq ? "#34d399" : "#9db0d3") + '" stroke-width="2"/><path d="M212 112a20 20 0 0 1 36 0" fill="none" stroke="#2a3b62"/>' +
+        '<line x1="230" y1="134" x2="' + (230 + 22 * Math.sin(a)).toFixed(1) + '" y2="' + (134 - 22 * Math.cos(a)).toFixed(1) + '" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>' + tx(230, 160, "G", "fill:var(--ink)", "middle") +
+        '<circle cx="150" cy="120" r="4" fill="#9db0d3"/><circle cx="310" cy="120" r="4" fill="#9db0d3"/>' + tx(140, 140, "a", "", "end") + tx(320, 140, "b");
+      if (!md) g += '<rect x="360" y="70" width="80" height="12" fill="#9db0d3"/><rect x="360" y="82" width="10" height="70" fill="#6c7ea3"/><rect x="' + (395 - st.peso) + '" y="' + (70 - 8 - st.peso * 1.5) + '" width="' + (10 + st.peso * 2) + '" height="' + (8 + st.peso * 1.5) + '" fill="#fbbf24"/><rect x="386" y="84" width="20" height="6" fill="#fbbf24"/>' + tx(400, 170, "célula de carga", "font-size:9px", "middle");
+      sg(r, "g").innerHTML = g;
+      if (md) {
+        const est = st.R3 / st.k;
+        smet(r, "a", "R3", fmtR(st.R3)); smet(r, "b", "Galvanômetro", fmtN(c.Vg * 1000, 1) + " mV"); smet(r, "c", "Rx = R3 ÷ (R1 ÷ R2)", fmtR(est)); smet(r, "d", "Rx real", st.ver ? fmtR(c.Rx) : "escondido");
+        sread(r, (eq ? "<b>Ponte equilibrada:</b> o galvanômetro marca zero. " : "<b>Ponte desequilibrada:</b> há " + fmtN(c.Vg * 1000, 1) + " mV entre a e b. Ajuste R3 até zerar. ") +
+          "A ponte são dois divisores de tensão lado a lado. Quando as proporções são iguais (R1 ÷ R2 = R3 ÷ Rx), os pontos a e b ficam na mesma tensão e não passa corrente pelo galvanômetro. Daí sai Rx = R3 × R2 ÷ R1" + (eq ? " = <b>" + fmtR(est) + "</b>." : ".") +
+          (st.k * st.Rx > 10000 ? " Com essa razão, R3 precisaria passar de 10 kΩ: escolha R1 ÷ R2 menor." : "") + " A medida não depende da tensão da bateria nem da precisão do galvanômetro, só dos resistores de referência: por isso a ponte mede com precisão.");
+      } else {
+        const out = -c.Vg * 1000;
+        smet(r, "a", "Extensômetro", fmtN(c.Rx, 3) + " Ω"); smet(r, "b", "Entre a e b", fmtN(-c.Vg * 1000, 3) + " mV"); smet(r, "c", "Amplificado ×1000", fmtN(out, 2) + " V"); smet(r, "d", "Peso indicado", fmtN(out * 4, 1) + " kg");
+        sread(r, "Na balança, o <b>extensômetro</b> (strain gauge) é um fio finíssimo colado na barra de metal. Com o peso, a barra se deforma um pouco, o fio estica e sua resistência sobe: de 350 Ω para " + fmtN(c.Rx, 3) + " Ω, menos de 1 ohm. Medir essa diferença direto seria quase impossível. Na ponte, partindo do equilíbrio, ela vira alguns milivolts entre a e b, que um amplificador transforma em volts e o indicador converte em quilos. É o princípio das balanças eletrônicas e dos sensores de força e pressão.");
+      }
+    },
+    act(st, a) { if (a === "sort") { let v; do v = this.LIST[Math.floor(Math.random() * this.LIST.length)]; while (v === st.Rx); st.Rx = v; st.ver = 0; } if (a === "ver") st.ver = st.ver ? 0 : 1; }
+  },
+
+  ca: {
+    fam: FE, title: "Simulador: tipos de corrente, geração trifásica, defasagem e sistema trifásico", hint: "Quatro experiências com corrente alternada: contínua × alternada, o gerador de três fases, a defasagem entre tensão e corrente (fator de potência) e as ligações estrela e triângulo. O movimento está em câmera lenta.",
+    init: { modo: "tipos", tipo: "ca", ang: 0, d: 0, run: 1, carga: "rl", phi: 37, lig: "y", rede: 380 },
+    PC: ["#f87171", "#fbbf24", "#38bdf8"],
+    html: () => '<div class="s-fig">' + SVG("0 0 460 250", '<g data-g="g"></g>', "Corrente alternada") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("ca", "modo", [["tipos", "Tipos de corrente"], ["ger", "Geração trifásica"], ["def", "Defasagem"], ["sist", "Estrela e triângulo"]]) +
+      sGrp("v-tipos", sSeg("ca", "tipo", [["cc", "Contínua"], ["pul", "Contínua pulsante"], ["ca", "Alternada"]])) + sGrp("v-def", sSeg("ca", "carga", [["r", "Resistiva"], ["l", "Indutiva pura"], ["c", "Capacitiva pura"], ["rl", "Motor (R + L)"]])) +
+      sGrp("v-sist", sSeg("ca", "lig", [["y", "Estrela (Y)"], ["d", "Triângulo (Δ)"]]) + sSeg("ca", "rede", [["220", "Rede 220/127 V"], ["380", "Rede 380/220 V"]])) + sBtn("ca", "run", "Pausar") + '</div><div class="s-ctl">' + sRange("ca", "phi", "Ângulo do motor (graus)", 0, 80, 1) + "</div>" + sMeters([["a", "–"], ["b", "–"], ["c", "–"], ["d", "–"]]),
+    draw(r, st) {
+      const m = st.modo, th = st.ang, P2 = 2 * Math.PI; sVis(r, "v-tipos", m === "tipos"); sVis(r, "v-def", m === "def"); sVis(r, "v-sist", m === "sist"); sShow(r, "phi", m === "def" && st.carga === "rl"); sBtnVis(r, "run", m === "tipos" || m === "ger");
+      sg(r, "b-run").textContent = st.run ? "Pausar" : "Continuar"; so(r, "phi", st.phi + "°");
+      let g = "";
+      if (m === "tipos") {
+        const f = { cc: () => 1, pul: t => Math.abs(Math.sin(t)), ca: t => Math.sin(t) }[st.tipo], v = f(th);
+        g += '<rect x="30" y="40" width="400" height="30" rx="15" fill="#f59e0b" opacity=".3" stroke="#f59e0b"/>';
+        for (let i = 0; i < 26; i++) { const x = 36 + (((i * 31 - st.d) % 388) + 388) % 388, y = 55 + ((i * 7) % 3 - 1) * 7; g += '<circle cx="' + x.toFixed(1) + '" cy="' + y + '" r="2.6" fill="#e2e8f0"/>'; }
+        if (Math.abs(v) > .05) { const L = 50 * Math.abs(v), x0 = 230 + (v > 0 ? L / 2 : -L / 2), x1 = 230 - (v > 0 ? L / 2 : -L / 2); g += '<line x1="' + x0 + '" y1="24" x2="' + x1 + '" y2="24" stroke="#e2e8f0" stroke-width="2"/><path d="M' + x1 + " 24l" + (v > 0 ? 8 : -8) + ' -5v10z" fill="#e2e8f0"/>'; }
+        g += tx(230, 90, "sentido dos elétrons no fio", "font-size:10px", "middle") + plotBox(30, 104, 400, 130) + '<line x1="30" x2="430" y1="169" y2="169" stroke="#2a3b62"/>' +
+          '<path d="' + fpath(240, t => 30 + t * 400, y => 169 - 52 * y, t => f(t * 4 * Math.PI)) + '" fill="none" stroke="#22d3ee" stroke-width="2.5"/>' +
+          '<line x1="' + (30 + (th % (2 * P2)) / (2 * P2) * 400).toFixed(1) + '" x2="' + (30 + (th % (2 * P2)) / (2 * P2) * 400).toFixed(1) + '" y1="104" y2="234" stroke="#fbbf24" stroke-dasharray="3 3"/>' + tx(36, 120, "+", "fill:var(--ink)") + tx(36, 228, "−", "fill:var(--ink)") + tx(424, 228, "tempo →", "font-size:10px", "end");
+        const D = { cc: ["Agora", "12,0 V", "Sentido", "sempre o mesmo", "Frequência", "0 Hz", "Eficaz", "12 V"], pul: ["Agora", fmtN(311 * v, 0) + " V", "Sentido", "o mesmo, varia", "Pulsos", "120 por segundo", "Eficaz", "220 V"], ca: ["Agora", fmtN(311 * v, 0) + " V", "Sentido", v >= 0 ? "ida" : "volta", "Frequência", "60 Hz", "Eficaz", "220 V (pico 311 V)"] }[st.tipo];
+        smet(r, "a", D[0], D[1]); smet(r, "b", D[2], D[3]); smet(r, "c", D[4], D[5]); smet(r, "d", D[6], D[7]);
+        sread(r, { cc: "Na <b>corrente contínua</b> (pilha, bateria, fonte de celular) a tensão tem sempre a mesma polaridade e os elétrons andam sempre no mesmo sentido, do polo negativo para o positivo. O sentido <b>convencional</b> da corrente, usado nos esquemas, é o contrário: do + para o −.", pul: "A <b>contínua pulsante</b> é o que sai de um retificador sem filtro: a corrente não muda de sentido, mas sobe e desce 120 vezes por segundo. Um capacitor de filtro alisa esses pulsos e a transforma em contínua quase pura.", ca: "Na <b>corrente alternada</b> (a da tomada) a tensão sobe, desce, inverte e volta, seguindo uma senoide. No Brasil são 60 ciclos por segundo (60 Hz): os elétrons vão e voltam no lugar, sem viajar pelo fio. O valor <b>eficaz</b> (220 V) é o que produz o mesmo calor que 220 V contínuos; o pico chega a 311 V (eficaz × 1,414). A alternada é usada nas redes porque o transformador consegue subir e baixar a tensão com facilidade." }[st.tipo]);
+      } else if (m === "ger") {
+        const cx = 110, cy = 125, e = [0, 1, 2].map(k => Math.sin(th - k * P2 / 3));
+        g += '<circle cx="' + cx + '" cy="' + cy + '" r="92" fill="none" stroke="#6c7ea3" stroke-width="10" opacity=".5"/>';
+        [0, 1, 2].forEach(k => { const a = -90 + k * 120; g += '<g transform="translate(' + cx + " " + cy + ") rotate(" + (a + 90) + ')"><rect x="-16" y="-92" width="32" height="20" rx="3" fill="' + this.PC[k] + '" opacity="' + (.25 + .75 * Math.abs(e[k])).toFixed(2) + '"/></g>' + tx((cx + 70 * Math.cos(a * Math.PI / 180)).toFixed(1), (cy + 70 * Math.sin(a * Math.PI / 180) + 4).toFixed(1), "RST"[k], "fill:var(--ink)", "middle"); });
+        g += '<g transform="translate(' + cx + " " + cy + ") rotate(" + (th * 180 / Math.PI - 180).toFixed(1) + ')"><rect x="-12" y="-50" width="24" height="50" fill="#f87171"/><rect x="-12" y="0" width="24" height="50" fill="#38bdf8"/>' + tx(0, -34, "N", "fill:#0c1424;font-size:12px", "middle") + tx(0, 44, "S", "fill:#0c1424;font-size:12px", "middle") + '</g><circle cx="' + cx + '" cy="' + cy + '" r="4" fill="#e2e8f0"/>' +
+          plotBox(230, 30, 220, 190) + '<line x1="230" x2="450" y1="125" y2="125" stroke="#2a3b62"/>';
+        [0, 1, 2].forEach(k => { g += '<path d="' + fpath(120, t => 230 + t * 220, y => 125 - 70 * y, t => Math.sin(t * P2 - k * P2 / 3)) + '" fill="none" stroke="' + this.PC[k] + '" stroke-width="2"/>'; });
+        const cxp = 230 + (th % P2) / P2 * 220; g += '<line x1="' + cxp.toFixed(1) + '" x2="' + cxp.toFixed(1) + '" y1="30" y2="220" stroke="#e2e8f0" stroke-dasharray="3 3"/>';
+        [0, 1, 2].forEach(k => { g += '<circle cx="' + cxp.toFixed(1) + '" cy="' + (125 - 70 * e[k]).toFixed(1) + '" r="4" fill="' + this.PC[k] + '"/>'; });
+        g += tx(236, 46, "uma volta do ímã = um ciclo", "font-size:10px") + tx(110, 240, "gerador com 3 bobinas a 120°", "font-size:10px", "middle");
+        smet(r, "a", "Fase R", fmtN(311 * e[0], 0) + " V"); smet(r, "b", "Fase S", fmtN(311 * e[1], 0) + " V"); smet(r, "c", "Fase T", fmtN(311 * e[2], 0) + " V"); smet(r, "d", "Soma das três", fmtN(Math.abs(311 * (e[0] + e[1] + e[2])) < .5 ? 0 : 311 * (e[0] + e[1] + e[2]), 0) + " V");
+        sread(r, "O ímã girando faz o campo magnético variar dentro de cada bobina, e isso <b>induz uma tensão</b> nela. Como as três bobinas estão a 120° uma da outra, cada uma chega ao máximo em um momento diferente: são três tensões iguais, <b>defasadas de 120°</b>. A cada instante a soma das três é zero, por isso, numa carga trifásica equilibrada, o neutro quase não leva corrente. Nas usinas, quem gira o ímã (o rotor) é a turbina; numa rede de 60 Hz, um gerador de 2 polos gira a 3.600 rpm.");
+      } else if (m === "def") {
+        const phi = { r: 0, l: 90, c: -90, rl: st.phi }[st.carga], pr = phi * Math.PI / 180, ox = 80, oy = 125;
+        g += '<line x1="20" x2="150" y1="' + oy + '" y2="' + oy + '" stroke="#2a3b62"/><line x1="' + ox + '" x2="' + ox + '" y1="50" y2="200" stroke="#2a3b62"/>' +
+          '<line x1="' + ox + '" y1="' + oy + '" x2="' + (ox + 66) + '" y2="' + oy + '" stroke="#22d3ee" stroke-width="3"/><path d="M' + (ox + 66) + " " + oy + 'l-9 -5v10z" fill="#22d3ee"/>' + tx(ox + 66, oy - 8, "V", "fill:#22d3ee", "end");
+        const ix = ox + 50 * Math.cos(pr), iy = oy + 50 * Math.sin(pr);
+        g += '<line x1="' + ox + '" y1="' + oy + '" x2="' + ix.toFixed(1) + '" y2="' + iy.toFixed(1) + '" stroke="#fbbf24" stroke-width="3"/><circle cx="' + ix.toFixed(1) + '" cy="' + iy.toFixed(1) + '" r="4" fill="#fbbf24"/>' + tx((ix + 6).toFixed(1), (iy + (phi >= 0 ? 14 : -6)).toFixed(1), "I", "fill:#fbbf24") +
+          (phi ? '<path d="M' + (ox + 30) + " " + oy + "A30 30 0 0 " + (phi > 0 ? 1 : 0) + " " + (ox + 30 * Math.cos(pr)).toFixed(1) + " " + (oy + 30 * Math.sin(pr)).toFixed(1) + '" fill="none" stroke="#e2e8f0"/>' + tx(ox + 36, oy + (phi > 0 ? 24 : -16), "φ = " + Math.abs(phi) + "°", "font-size:10px") : "") + tx(80, 40, "fasores", "font-size:10px", "middle") +
+          plotBox(170, 30, 280, 190) + '<line x1="170" x2="450" y1="125" y2="125" stroke="#2a3b62"/>' +
+          '<path d="' + fpath(160, t => 170 + t * 280, y => 125 - 75 * y, t => Math.sin(t * 2 * P2)) + '" fill="none" stroke="#22d3ee" stroke-width="2.5"/>' +
+          '<path d="' + fpath(160, t => 170 + t * 280, y => 125 - 55 * y, t => Math.sin(t * 2 * P2 - pr)) + '" fill="none" stroke="#fbbf24" stroke-width="2.5"/>' + tx(176, 46, "tensão", "fill:#22d3ee;font-size:10px") + tx(226, 46, "corrente", "fill:#fbbf24;font-size:10px");
+        const fp = Math.cos(pr), P = 2200 * fp, Q = 2200 * Math.sin(Math.abs(pr));
+        smet(r, "a", "Ângulo φ", Math.abs(phi) + "°"); smet(r, "b", "Fator de potência", fmtN(fp, 2) + (phi > 0 ? " indutivo" : phi < 0 ? " capacitivo" : "")); smet(r, "c", "Potência ativa (220 V, 10 A)", fmtN(P, 0) + " W"); smet(r, "d", "Potência reativa", fmtN(Q, 0) + " var");
+        sread(r, { r: "Numa carga <b>resistiva</b> (chuveiro, lâmpada incandescente, resistência), a corrente sobe e desce junto com a tensão: estão <b>em fase</b>. Toda a potência vira calor ou trabalho: 220 V × 10 A = 2.200 W, fator de potência 1.", l: "Numa <b>indutância pura</b> (bobina ideal), a corrente fica <b>atrasada 90°</b> em relação à tensão: a bobina guarda energia no campo magnético num quarto de ciclo e devolve no seguinte. A corrente circula, mas a potência média é zero: é toda <b>reativa</b>.", c: "Num <b>capacitor puro</b>, a corrente fica <b>adiantada 90°</b>: o capacitor carrega e descarrega a cada ciclo. Também não consome potência média. Por isso capacitores são usados para compensar a potência reativa dos motores.", rl: "Um <b>motor</b> é resistência e indutância juntas: a corrente atrasa um ângulo φ (" + st.phi + "°). Dos 2.200 VA que a rede entrega, só " + fmtN(P, 0) + " W viram trabalho (potência <b>ativa</b>); o restante vai e volta entre o motor e a rede (potência <b>reativa</b>), mas mesmo assim esquenta os fios. O <b>fator de potência</b> é cos φ = " + fmtN(fp, 2) + ". Indústrias com fator abaixo de 0,92 pagam multa na conta de energia e corrigem instalando bancos de capacitores." }[st.carga]);
+      } else {
+        const VL = st.rede, y = st.lig === "y", R = 22, VF = y ? VL / Math.sqrt(3) : VL, IF = VF / R, IL = y ? IF : IF * Math.sqrt(3), P = 3 * VF * IF, A = [330, 50], B = [410, 180], C = [250, 180], N = [330, 135];
+        g += tx(14, 44, "L1", "fill:" + this.PC[0]) + tx(14, 74, "L2", "fill:" + this.PC[1]) + tx(14, 104, "L3", "fill:" + this.PC[2]) +
+          wre("M36 40H330V50", true, this.PC[0]) + wre("M36 70H440V180H410", true, this.PC[1]) + wre("M36 100H220V180H250", true, this.PC[2]);
+        if (y) g += resB(N[0], N[1], A[0], A[1]) + resB(N[0], N[1], B[0], B[1]) + resB(N[0], N[1], C[0], C[1]) + '<circle cx="' + N[0] + '" cy="' + N[1] + '" r="4" fill="#e2e8f0"/>' + tx(342, 140, "centro da estrela", "font-size:9px");
+        else g += resB(A[0], A[1], B[0], B[1]) + resB(B[0], B[1], C[0], C[1]) + resB(C[0], C[1], A[0], A[1]);
+        [A, B, C].forEach(p => { g += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="4" fill="#e2e8f0"/>'; });
+        g += '<path d="M120 40V70" stroke="#e2e8f0" stroke-dasharray="2 3"/>' + tx(126, 60, "VL = " + VL + " V", "font-size:10px;fill:var(--ink)") + tx(330, 214, "cada resistor: 22 Ω com " + fmtN(VF, 0) + " V", "fill:var(--ink)", "middle") + tx(36, 140, y ? "Estrela: cada resistor fica" : "Triângulo: cada resistor fica", "font-size:10px") + tx(36, 156, y ? "entre uma fase e o centro" : "entre duas fases", "font-size:10px");
+        smet(r, "a", "Tensão de linha", VL + " V"); smet(r, "b", "Tensão em cada resistor", fmtN(VF, 0) + " V"); smet(r, "c", "Corrente de linha", fmtN(IL, 1) + " A"); smet(r, "d", "Potência total", fmtN(P / 1000, 2) + " kW");
+        sread(r, (y ? "Na <b>estrela</b>, cada carga fica entre uma fase e o ponto central, e recebe a tensão de linha dividida por √3 (1,73): " + VL + " ÷ 1,73 = " + fmtN(VF, 0) + " V. A corrente na linha é a mesma da carga." : "No <b>triângulo</b>, cada carga fica entre duas fases e recebe a tensão de linha inteira (" + VL + " V). A corrente na linha é a soma de duas correntes de carga defasadas: √3 vezes a corrente de cada carga.") +
+          " Com as mesmas três cargas, o triângulo dá <b>3 vezes mais potência</b> que a estrela. É por isso que um motor de placa 220/380 V é ligado em triângulo na rede de 220 V e em estrela na de 380 V: assim cada bobina recebe sempre 220 V. A partida estrela-triângulo usa essa diferença para reduzir a corrente na partida.");
+      }
+      sg(r, "g").innerHTML = g;
+    },
+    act(st, a) { if (a === "run") st.run = st.run ? 0 : 1; },
+    tick(r, st, dt) {
+      if ((st.modo !== "tipos" && st.modo !== "ger") || !st.run || RMOT) return;
+      st.ang = (st.ang + dt * Math.PI) % (8 * Math.PI);
+      const v = st.tipo === "cc" ? 1 : st.tipo === "pul" ? Math.abs(Math.sin(st.ang)) : Math.sin(st.ang); st.d = (st.d + v * dt * 70) % 1e5;
+      this.draw(r, st);
+    }
+  },
+
+  diodo: {
+    fam: FE, title: "Simulador: diodo: curva, sentido da corrente e retificadores", hint: "Mude a tensão da fonte e veja o diodo conduzir num sentido e bloquear no outro, com o ponto de trabalho na curva. Depois veja quais diodos conduzem em cada meio ciclo nos retificadores.",
+    init: { modo: "curva", tipo: "si", vs: 3, ang: 0, run: 1 },
+    DT: { si: ["silício", 1e-8, 2], ge: ["germânio", 1e-6, 1.5], led: ["LED vermelho", 1e-18, 2], zn: ["Zener de 5,1 V", 1e-8, 2] },
+    Id(t, v) { const p = this.DT[t]; let i = p[1] * (Math.exp(Math.min(60, v / (p[2] * .02585))) - 1); if (t === "ge" && v < 0) i += v * 2e-6; if (t === "zn" && v < 0) i -= 1e-3 * Math.exp(Math.min(60, (-v - 5.1) / .06)); return i; },
+    op(st) { let a = -30, b = 5; for (let k = 0; k < 80; k++) { const m = (a + b) / 2; if (m + this.Id(st.tipo, m) * 220 - st.vs > 0) b = m; else a = m; } const v = (a + b) / 2; return [v, this.Id(st.tipo, v)]; },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 300", '<g data-g="g"></g>', "Diodo e retificadores") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("diodo", "modo", [["curva", "Curva e polarização"], ["meia", "Meia onda"], ["cent", "Onda completa (center tap)"], ["ponte", "Ponte retificadora"]]) +
+      sGrp("v-curva", sSeg("diodo", "tipo", [["si", "Silício"], ["ge", "Germânio"], ["led", "LED vermelho"], ["zn", "Zener 5,1 V"]])) + sBtn("diodo", "run", "Pausar") + '</div><div class="s-ctl">' + sRange("diodo", "vs", "Tensão da fonte (V)", -12, 12, .1) + "</div>" + sMeters([["a", "–"], ["b", "–"], ["c", "–"], ["d", "–"]]),
+    coil(x, y1, y2, s) { let d = "M" + x + " " + y1; const n = Math.round((y2 - y1) / 16), h = (y2 - y1) / n; for (let i = 0; i < n; i++) d += "a7 " + (h / 2).toFixed(1) + " 0 0 " + s + " 0 " + h.toFixed(1); return '<path d="' + d + '" fill="none" stroke="#9db0d3" stroke-width="2.5"/>'; },
+    draw(r, st) {
+      const m = st.modo, cv = m === "curva"; sVis(r, "v-curva", cv); sShow(r, "vs", cv); sBtnVis(r, "run", !cv); sg(r, "b-run").textContent = st.run ? "Pausar" : "Continuar";
+      so(r, "vs", fmtN(st.vs, 1) + " V");
+      let g = "";
+      if (cv) {
+        const [vd, id] = this.op(st), mA = id * 1000, X = v => 210 + (v + 6) / 8.5 * 240, Y = i => 155 - Math.max(-60, Math.min(60, i)) * 2.2, pos = st.vs >= 0, led = st.tipo === "led" && mA > .5;
+        g += wre("M30 92V40H80", Math.abs(mA) > .05) + resB(80, 40, 140, 40) + wre("M140 40H170V82", Math.abs(mA) > .05) + dio(170, 100, 90, mA > .05, st.tipo === "led" ? "#f87171" : null) + (led ? '<circle cx="170" cy="100" r="22" fill="#f87171" opacity="' + Math.min(.6, mA / 30).toFixed(2) + '"/>' : "") +
+          wre("M170 118V170H30V108", Math.abs(mA) > .05) + '<line x1="14" y1="' + (pos ? 92 : 108) + '" x2="46" y2="' + (pos ? 92 : 108) + '" stroke="#e2e8f0" stroke-width="3"/><line x1="22" y1="' + (pos ? 108 : 92) + '" x2="38" y2="' + (pos ? 108 : 92) + '" stroke="#e2e8f0" stroke-width="3"/>' +
+          tx(50, 88, pos ? "+" : "−", "fill:var(--ink)") + tx(50, 118, pos ? "−" : "+", "fill:var(--ink)") + tx(110, 30, "220 Ω", "font-size:10px", "middle") + tx(186, 92, "A", "font-size:10px") + tx(186, 116, "K", "font-size:10px") + tx(30, 200, "fonte: " + fmtN(st.vs, 1) + " V", "font-size:10px");
+        if (Math.abs(mA) > .05) { const right = mA > 0; g += '<path d="M' + (right ? 92 : 128) + " 24h" + (right ? 26 : -26) + '" stroke="#fbbf24" stroke-width="2"/><path d="M' + (right ? 124 : 96) + " 24l" + (right ? -8 : 8) + ' -5v10z" fill="#fbbf24"/>' + tx(110, 222, "corrente convencional", "font-size:9px;fill:#fbbf24", "middle"); }
+        g += plotBox(210, 20, 240, 270) + '<line x1="210" x2="450" y1="155" y2="155" stroke="#2a3b62"/><line x1="' + X(0) + '" x2="' + X(0) + '" y1="20" y2="290" stroke="#2a3b62"/>' +
+          '<path d="' + fpath(240, t => X(-6 + 8.5 * t), Y, t => this.Id(st.tipo, -6 + 8.5 * t) * 1000) + '" fill="none" stroke="#22d3ee" stroke-width="2.5"/><circle cx="' + X(Math.max(-6, vd)).toFixed(1) + '" cy="' + Y(mA).toFixed(1) + '" r="6" fill="#fbbf24"/>' +
+          tx(446, 150, "V", "", "end") + tx(X(0) + 6, 34, "mA") + tx(214, 150, "−6 V", "font-size:9px") + tx(X(0) + 4, 168, "0", "font-size:9px") + tx(X(1) - 4, 168, "1 V", "font-size:9px") + tx(216, 36, "reversa", "font-size:10px") + tx(444, 284, "direta", "font-size:10px", "end");
+        const est = vd > 0 ? (mA > 1 ? "conduzindo" : "abaixo do joelho") : st.tipo === "zn" && mA < -.5 ? "ruptura Zener" : "bloqueando";
+        smet(r, "a", "Tensão no diodo", fmtN(vd, 2) + " V"); smet(r, "b", "Corrente", Math.abs(mA) < .001 ? fmtN(id * 1e6, 2) + " µA" : fmtN(mA, 1) + " mA"); smet(r, "c", "Situação", est); smet(r, "d", "Potência no diodo", fmtN(Math.abs(vd * id) * 1000, 1) + " mW");
+        const jo = { si: "0,6 a 0,7 V", ge: "0,2 a 0,3 V", led: "1,8 a 2 V", zn: "0,6 a 0,7 V" }[st.tipo];
+        sread(r, (est === "conduzindo" ? "<b>Polarização direta:</b> o + da fonte chega ao anodo (A) e o − ao catodo (K). Passada a tensão de joelho (" + jo + " no " + this.DT[st.tipo][0] + "), o diodo conduz e a tensão sobre ele quase não sobe mais: o resto fica no resistor, que limita a corrente." + (st.tipo === "led" ? " O LED acende; quanto mais corrente, mais brilho, até o limite de uns 20 mA." : "")
+          : est === "abaixo do joelho" ? "<b>Polarização direta, mas abaixo do joelho</b> (" + jo + "): a tensão ainda não vence a barreira da junção e quase não passa corrente."
+          : est === "ruptura Zener" ? "<b>Ruptura Zener:</b> em polarização reversa, o Zener conduz quando a tensão chega a 5,1 V e <b>segura essa tensão</b>, mesmo que a fonte suba. É usado como regulador e referência de tensão; o resistor em série limita a corrente."
+          : "<b>Polarização reversa:</b> o − da fonte está no anodo. A junção fica sem portadores e o diodo <b>bloqueia</b>: só passa uma corrente de fuga mínima" + (st.tipo === "ge" ? " (maior no germânio)." : ".") + " Toda a tensão fica sobre o diodo.") + " O diodo funciona como uma válvula de mão única para a corrente: a seta do símbolo aponta o sentido em que ela passa.");
+      } else {
+        const th = st.ang, sn = Math.sin(th), Vp = 17, p = sn > .06, n = sn < -.06, X = t => 20 + t * 430, Yw = v => 251 - v * 2;
+        const out = t => { const s = Math.sin(t) * Vp; return m === "meia" ? Math.max(0, s - .7) : m === "cent" ? Math.max(0, Math.abs(s) - .7) : Math.max(0, Math.abs(s) - 1.4); };
+        const on = out(th) > .05, cond = m === "meia" ? (p ? "D1" : "nenhum") : m === "cent" ? (p ? "D1" : n ? "D2" : "nenhum") : (p ? "D1 e D4" : n ? "D2 e D3" : "nenhum");
+        g += this.coil(30, 50, 130, 1) + '<line x1="45" x2="45" y1="44" y2="136" stroke="#6c7ea3" stroke-width="2"/><line x1="49" x2="49" y1="44" y2="136" stroke="#6c7ea3" stroke-width="2"/>' + tx(14, 94, "~", "fill:var(--ink);font-size:16px") + tx(40, 152, "rede", "font-size:9px", "middle");
+        if (m === "meia") {
+          g += this.coil(64, 50, 130, 0) + wre("M64 50H141", p) + dio(150, 50, 0, p) + wre("M158 50H300V70", on) + zigc(70, 120, 300, true, on) + wre("M300 120V130H64", on) + tx(150, 34, "D1", "font-size:10px", "middle");
+        } else if (m === "cent") {
+          g += this.coil(64, 30, 150, 0) + '<circle cx="64" cy="90" r="3" fill="#9db0d3"/>' + wre("M64 30H141", p) + dio(150, 30, 0, p) + wre("M158 30H240V90", p) + wre("M64 150H141", n) + dio(150, 150, 0, n) + wre("M158 150H240V90", n) + '<circle cx="240" cy="90" r="4" fill="#9db0d3"/>' +
+            wre("M240 90H320V100", on) + zigc(100, 150, 320, true, on) + wre("M320 150V185H96V90H64", on) + tx(150, 18, "D1", "font-size:10px", "middle") + tx(150, 172, "D2", "font-size:10px", "middle") + tx(70, 84, "CT", "font-size:9px");
+        } else {
+          const T = [180, 30], R = [240, 90], B = [180, 150], L = [120, 90];
+          g += this.coil(64, 50, 130, 0) + wre("M64 50V20H180V30", p || n) + wre("M64 130V170H180V150", p || n) +
+            [[T, R, p], [B, R, n], [L, T, n], [L, B, p]].map(([a, b, c]) => '<line x1="' + a[0] + '" y1="' + a[1] + '" x2="' + b[0] + '" y2="' + b[1] + '" class="w' + (c ? " on" : "") + '"/>').join("") +
+            dio(210, 60, 45, p) + dio(210, 120, -45, n) + dio(150, 60, -45, n) + dio(150, 120, 45, p) + tx(222, 52, "D1", "font-size:10px") + tx(222, 136, "D2", "font-size:10px") + tx(126, 52, "D3", "font-size:10px") + tx(126, 136, "D4", "font-size:10px") +
+            wre("M240 90H320V100", on) + zigc(100, 150, 320, true, on) + wre("M320 150V195H100V90H120", on) + tx(248, 84, "+", "fill:var(--ink)") + tx(106, 84, "−", "fill:var(--ink)");
+        }
+        g += tx(m === "meia" ? 312 : 332, 128, "carga", "font-size:10px") + (on ? '<path d="M' + (m === "meia" ? 290 : 310) + ' 80v22" stroke="#fbbf24" stroke-width="2"/><path d="M' + (m === "meia" ? 290 : 310) + ' 106l-5 -8h10z" fill="#fbbf24"/>' : "") +
+          plotBox(20, 210, 430, 84) + '<line x1="20" x2="450" y1="251" y2="251" stroke="#2a3b62"/><path d="' + fpath(200, X, Yw, t => Vp * Math.sin(t * 4 * Math.PI)) + '" fill="none" stroke="#6c7ea3" stroke-width="1.5" stroke-dasharray="4 3"/>' +
+          '<path d="' + fpath(300, X, Yw, t => out(t * 4 * Math.PI)) + '" fill="none" stroke="#22d3ee" stroke-width="2.5"/><line x1="' + X((th % (4 * Math.PI)) / (4 * Math.PI)).toFixed(1) + '" x2="' + X((th % (4 * Math.PI)) / (4 * Math.PI)).toFixed(1) + '" y1="210" y2="294" stroke="#fbbf24" stroke-dasharray="3 3"/>' + tx(26, 224, "entrada", "font-size:9px;fill:#9db0d3") + tx(84, 224, "saída na carga", "font-size:9px;fill:#22d3ee");
+        const med = m === "meia" ? (Vp - .7) / Math.PI : m === "cent" ? 2 * (Vp - .7) / Math.PI : 2 * (Vp - 1.4) / Math.PI;
+        smet(r, "a", "Entrada (pico)", "17 V (12 V eficazes)"); smet(r, "b", "Média na carga", fmtN(med, 1) + " V"); smet(r, "c", "Ondulação", m === "meia" ? "60 Hz" : "120 Hz"); smet(r, "d", "Conduzindo agora", cond);
+        sread(r, (m === "meia" ? "No <b>meia onda</b>, um diodo só deixa passar os semiciclos positivos; os negativos são bloqueados. A carga recebe pulsos de 60 Hz com média baixa (" + fmtN(med, 1) + " V): é o retificador mais simples e o menos eficiente."
+          : m === "cent" ? "No <b>onda completa com center tap</b>, o transformador tem uma derivação central (CT). Em cada semiciclo, um dos diodos conduz pela sua metade do enrolamento, e a corrente passa pela carga <b>sempre no mesmo sentido</b>. São dois diodos, mas o transformador precisa do dobro de espiras."
+          : "Na <b>ponte retificadora</b>, quatro diodos aproveitam os dois semiciclos com um transformador comum. No semiciclo positivo conduzem D1 e D4; no negativo, D2 e D3. A corrente sempre entra na carga pelo +. Cada caminho passa por dois diodos, então a perda é de cerca de 1,4 V.") +
+          " Agora conduz: " + cond + ". Para virar contínua lisa, falta o capacitor de filtro, que se carrega nos picos e alimenta a carga entre eles.");
+      }
+      sg(r, "g").innerHTML = g;
+    },
+    act(st, a) { if (a === "run") st.run = st.run ? 0 : 1; },
+    tick(r, st, dt) { if (st.modo === "curva" || !st.run || RMOT) return; st.ang = (st.ang + dt * Math.PI * .6) % (4 * Math.PI); this.draw(r, st); }
+  },
+
+  capac: {
+    fam: FE, title: "Simulador: capacitor: construção, rigidez dielétrica e associação", hint: "Mude a área das placas, a distância entre elas e o isolante, e veja a capacitância e a carga guardada. Passe da tensão que o isolante aguenta e ele rompe. Depois associe dois capacitores em série e em paralelo.",
+    init: { modo: "cons", A: 200, dist: .5, die: "papel", V: 100, c1: 10, c2: 22, as: "s" },
+    DIE: { ar: ["Ar", 1, 3, "#0c1424"], papel: ["Papel", 3.5, 16, "#d6c7a1"], poli: ["Poliéster", 3.3, 60, "#93c5fd"], mica: ["Mica", 6, 100, "#c4b5fd"], cer: ["Cerâmica", 1000, 10, "#fca5a5"] },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 240", '<g data-g="g"></g>', "Capacitor") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("capac", "modo", [["cons", "Construção"], ["assoc", "Série e paralelo"]]) +
+      sGrp("v-cons", sSeg("capac", "die", [["ar", "Ar"], ["papel", "Papel"], ["poli", "Poliéster"], ["mica", "Mica"], ["cer", "Cerâmica"]])) + sGrp("v-assoc", sSeg("capac", "as", [["s", "Em série"], ["p", "Em paralelo"]])) +
+      '</div><div class="s-ctl">' + sRange("capac", "A", "Área de cada placa (cm²)", 10, 1000, 10) + sRange("capac", "dist", "Distância entre as placas (mm)", .05, 5, .05) + sRange("capac", "V", "Tensão aplicada (V)", 0, 2000, 10) + sRange("capac", "c1", "C1 (µF)", 1, 100, 1) + sRange("capac", "c2", "C2 (µF)", 1, 100, 1) + "</div>" + sMeters([["a", "–"], ["b", "–"], ["c", "–"], ["d", "–"]]),
+    capH(x, y) { return '<rect x="' + (x - 6) + '" y="' + (y - 16) + '" width="12" height="32" fill="#0b0b0c"/><line x1="' + (x - 5) + '" x2="' + (x - 5) + '" y1="' + (y - 16) + '" y2="' + (y + 16) + '" stroke="#e2e8f0" stroke-width="3"/><line x1="' + (x + 5) + '" x2="' + (x + 5) + '" y1="' + (y - 16) + '" y2="' + (y + 16) + '" stroke="#e2e8f0" stroke-width="3"/>'; },
+    capV(x, y) { return '<rect x="' + (x - 16) + '" y="' + (y - 6) + '" width="32" height="12" fill="#0b0b0c"/><line x1="' + (x - 16) + '" x2="' + (x + 16) + '" y1="' + (y - 5) + '" y2="' + (y - 5) + '" stroke="#e2e8f0" stroke-width="3"/><line x1="' + (x - 16) + '" x2="' + (x + 16) + '" y1="' + (y + 5) + '" y2="' + (y + 5) + '" stroke="#e2e8f0" stroke-width="3"/>'; },
+    draw(r, st) {
+      const cs = st.modo === "cons"; sVis(r, "v-cons", cs); sVis(r, "v-assoc", !cs); ["A", "dist", "V"].forEach(f => sShow(r, f, cs)); ["c1", "c2"].forEach(f => sShow(r, f, !cs));
+      so(r, "A", st.A + " cm²"); so(r, "dist", fmtN(st.dist, 2) + " mm"); so(r, "V", st.V + " V"); so(r, "c1", st.c1 + " µF"); so(r, "c2", st.c2 + " µF");
+      let g = "";
+      const bat = '<line x1="44" y1="104" x2="76" y2="104" stroke="#e2e8f0" stroke-width="3"/><line x1="52" y1="116" x2="68" y2="116" stroke="#e2e8f0" stroke-width="3"/>';
+      if (cs) {
+        const D = this.DIE[st.die], C = 8.854e-12 * D[1] * st.A * 1e-4 / (st.dist * 1e-3), Vr = D[2] * st.dist * 1000, rp = st.V > Vr, Q = rp ? 0 : C * st.V, W = C * st.V * st.V / 2;
+        const gap = 10 + st.dist * 24, hp = 30 + Math.sqrt(st.A) * 4.5, xl = 220, xr = xl + gap, y0 = 120 - hp / 2, n = Q > 0 ? Math.max(1, Math.min(12, Math.round(2 + Math.log10(Q / 1e-12) * 1.4))) : 0;
+        g += bat + wre("M60 104V40H150V120H" + (xl - 3), st.V > 0) + wre("M" + (xr + 3) + " 120H" + (xr + 40) + "V210H60V116", st.V > 0) + tx(84, 100, "+", "fill:var(--ink)") + tx(84, 128, "−", "fill:var(--ink)") + tx(30, 160, st.V + " V") +
+          (st.die !== "ar" ? '<rect x="' + xl + '" y="' + (y0 + 4) + '" width="' + gap + '" height="' + (hp - 8) + '" fill="' + D[3] + '" opacity=".45"/>' : "") +
+          '<rect x="' + (xl - 6) + '" y="' + y0 + '" width="6" height="' + hp + '" fill="#cbd5e1"/><rect x="' + xr + '" y="' + y0 + '" width="6" height="' + hp + '" fill="#cbd5e1"/>';
+        for (let i = 0; i < n; i++) { const y = y0 + (i + .5) * hp / n; g += tx(xl - 16, y + 4, "+", "fill:#f87171;font-size:13px", "middle") + tx(xr + 18, y + 4, "−", "fill:#38bdf8;font-size:13px", "middle"); }
+        if (rp) g += '<path d="M' + xl + " " + (120 - 14) + "l" + gap * .4 + " 10l-" + gap * .1 + " 6l" + gap * .7 + ' 10" fill="none" stroke="#fbbf24" stroke-width="3"/>' + tx(xl + gap / 2, y0 - 10, "rompeu!", "fill:#f87171;font-size:13px", "middle");
+        else if (st.V > 0) for (let i = 1; i < 4; i++) { const y = y0 + i * hp / 4; g += '<line x1="' + (xl + 3) + '" x2="' + (xr - 6) + '" y1="' + y + '" y2="' + y + '" stroke="#e2e8f0" stroke-width="1" opacity=".6"/><path d="M' + (xr - 3) + " " + y + 'l-6 -3v6z" fill="#e2e8f0" opacity=".6"/>'; }
+        g += tx(xl + gap / 2, y0 + hp + 18, D[0], "font-size:10px", "middle");
+        smet(r, "a", "Capacitância", fmtU(C, "F")); smet(r, "b", "Carga guardada", rp ? "curto" : fmtU(Q, "C")); smet(r, "c", "Energia", rp ? "–" : fmtU(W, "J")); smet(r, "d", "O isolante aguenta", fmtN(Vr, 0) + " V");
+        sread(r, "O capacitor são duas placas condutoras separadas por um isolante (o <b>dielétrico</b>). Ligado à fonte, uma placa fica com falta de elétrons (+) e a outra com excesso (−), e o campo elétrico entre elas guarda energia. A capacitância cresce com a <b>área</b> das placas e com a constante do isolante (" + D[0].toLowerCase() + ": " + fmtN(D[1], 1) + " vezes a do ar), e cai quando a <b>distância</b> aumenta: C = ε × A ÷ d. " +
+          (rp ? "<b>A tensão passou do que o isolante aguenta</b> (" + fmtN(Vr, 0) + " V para " + fmtN(st.dist, 2) + " mm de " + D[0].toLowerCase() + "): saltou uma faísca e o dielétrico rompeu, virando um curto. É por isso que todo capacitor traz a <b>tensão máxima</b> no corpo; use sempre um com folga acima da tensão do circuito." : "Diminuir a distância aumenta a capacitância, mas o isolante fica mais fino e aguenta menos tensão: esse é o compromisso de todo projeto de capacitor. Os eletrolíticos usam uma camada de óxido finíssima para conseguir capacitâncias altas em tamanho pequeno."));
+      } else {
+        const s = st.as === "s", c1 = st.c1, c2 = st.c2, Ce = s ? c1 * c2 / (c1 + c2) : c1 + c2, V = 12, Q = Ce * V, V1 = s ? Q / c1 : V, V2 = s ? Q / c2 : V;
+        g += bat + tx(84, 100, "+", "fill:var(--ink)") + tx(84, 128, "−", "fill:var(--ink)") + tx(30, 152, "12 V");
+        if (s) g += wre("M60 104V40H380V200H60V116", true) + this.capH(180, 40) + this.capH(280, 40) + tx(180, 24, "C1 = " + c1 + " µF", "font-size:10px", "middle") + tx(280, 24, "C2 = " + c2 + " µF", "font-size:10px", "middle") + tx(180, 72, fmtN(V1, 2) + " V", "fill:#22d3ee", "middle") + tx(280, 72, fmtN(V2, 2) + " V", "fill:#22d3ee", "middle");
+        else g += wre("M60 104V40H380V200H60V116", true) + wre("M200 40V200", true) + wre("M300 40V200", true) + this.capV(200, 120) + this.capV(300, 120) + tx(180, 118, "C1 = " + c1 + " µF", "font-size:10px", "end") + tx(280, 118, "C2 = " + c2 + " µF", "font-size:10px", "end") + tx(180, 134, "12 V", "fill:#22d3ee;font-size:10px", "end") + tx(280, 134, "12 V", "fill:#22d3ee;font-size:10px", "end");
+        g += tx(230, 226, "capacitância equivalente: " + fmtN(Ce, 2) + " µF", "fill:var(--ink)", "middle");
+        smet(r, "a", "Equivalente", fmtN(Ce, 2) + " µF"); smet(r, "b", "Tensão em C1", fmtN(V1, 2) + " V"); smet(r, "c", "Tensão em C2", fmtN(V2, 2) + " V"); smet(r, "d", "Carga total", fmtN(Q, 1) + " µC");
+        sread(r, s ? "Em <b>série</b>, é como afastar as placas: a capacitância equivalente fica <b>menor que a menor</b> delas, 1 ÷ Ce = 1 ÷ C1 + 1 ÷ C2 (a mesma conta dos resistores em paralelo). Os dois guardam a mesma carga, e a tensão se divide ao contrário do valor: o capacitor <b>menor</b> fica com a <b>maior</b> tensão. Serve para aguentar tensões maiores, mas cuidado com o desequilíbrio."
+          : "Em <b>paralelo</b>, é como aumentar a área das placas: as capacitâncias <b>se somam</b> (Ce = C1 + C2), e os dois ficam com a mesma tensão. É o jeito de conseguir mais capacitância, por exemplo no filtro de uma fonte. A tensão máxima do conjunto é a do capacitor mais fraco.");
+      }
+      sg(r, "g").innerHTML = g;
+    }
+  },
+
+  fchav: {
+    fam: FE, title: "Simulador: fonte chaveada", hint: "A fonte chaveada retifica a rede, liga e desliga um transistor dezenas de milhares de vezes por segundo e usa um transformador pequeno de ferrite. Mude a tensão da rede e a carga e veja o ciclo de trabalho se ajustar. Depois coloque um defeito.",
+    init: { vr: 220, I: 2, def: "ok" },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 270", '<g data-g="g"></g>', "Fonte chaveada") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("fchav", "def", [["ok", "Tudo bom"], ["cap", "Capacitor de saída estufado"], ["opto", "Realimentação aberta"], ["cin", "Capacitor de entrada seco"]]) + '</div><div class="s-ctl">' + sRange("fchav", "vr", "Tensão da rede (V)", 70, 260, 1) + sRange("fchav", "I", "Corrente na saída (A)", 0, 5, .1) + "</div>" + sMeters([["vb", "Barramento (capacitor de entrada)"], ["D", "Ciclo de trabalho"], ["vo", "Saída"], ["rp", "Ondulação na saída"], ["pin", "Potência da rede"]]),
+    calc(st) {
+      let Vb = st.vr * 1.414 - 2; if (st.def === "cin") Vb *= .82; const on = Vb >= 100, Dt = 96 / (Vb + 96) * (1 + .03 * st.I), D = !on ? 0 : st.def === "opto" ? .45 : Math.min(.45, Dt);
+      const Vo = !on ? 0 : st.def === "opto" ? null : Dt > .45 ? 12 * .45 / Dt : 12, rp = !on ? 0 : st.def === "cap" ? .1 + .25 * st.I : st.def === "cin" ? .02 + .06 * st.I : .02 + .01 * st.I, ef = st.I < .1 ? .5 : .86 - .01 * st.I;
+      return { Vb, on, D, Vo, rp, pin: !on ? 0 : st.def === "opto" ? 3 : .3 + 12 * st.I / ef };
+    },
+    draw(r, st) {
+      const c = this.calc(st), d = st.def;
+      const B = (x, y, w, h, t1, t2, bad) => '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="5" fill="#142039" stroke="' + (bad ? "#f87171" : c.on ? "#22d3ee" : "#2a3b62") + '" stroke-width="' + (bad ? 2.5 : 1.5) + '"/>' + tx(x + w / 2, y + h / 2 - 2, t1, "fill:var(--ink);font-size:10px", "middle") + (t2 ? tx(x + w / 2, y + h / 2 + 12, t2, "font-size:9px", "middle") : "");
+      const A = (dd) => '<path d="' + dd + '" fill="none" stroke="#6c7ea3" stroke-width="2" marker-end="url(#fcA)"/>';
+      let g = '<defs><marker id="fcA" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="#6c7ea3"/></marker></defs>' +
+        B(6, 20, 60, 46, "Rede", st.vr + " V ~") + A("M66 43H78") + B(80, 20, 62, 46, "Filtro", "EMI") + A("M142 43H150") + B(152, 20, 92, 46, "Ponte e filtro", fmtN(c.Vb, 0) + " V cont.", d === "cin") + A("M244 43H252") +
+        B(254, 20, 72, 46, "MOSFET", c.on ? "chaveia" : "parado") + A("M326 43H334") + B(336, 20, 110, 46, "Transformador", "de ferrite") + A("M391 66V102") +
+        B(336, 104, 110, 46, "Diodo rápido", "+ capacitor", d === "cap") + A("M336 127H328") + B(254, 104, 72, 46, "Saída", c.Vo == null ? "pisca" : fmtN(c.Vo, 1) + " V") +
+        B(152, 104, 92, 46, "Controlador", "PWM") + B(190, 184, 140, 38, "TL431 + optoacoplador", "mede a saída", d === "opto") + A("M290 150V182") + A("M190 203H180V152") + A("M198 104V84H290V68") +
+        '<line x1="330" x2="330" y1="16" y2="230" stroke="#f87171" stroke-dasharray="3 4" opacity=".5"/>' + tx(334, 12, "isolação", "font-size:9px;fill:#f87171");
+      const px = 20, pw = 200, py = 240; let pd = "";
+      for (let k = 0; k < 5; k++) { const x0 = px + k * pw / 5, xh = x0 + c.D * pw / 5; pd += (k ? "L" : "M") + x0 + " " + (py + 26) + "V" + py + "H" + xh.toFixed(1) + "V" + (py + 26) + "H" + (x0 + pw / 5); }
+      g += '<path d="' + pd + '" fill="none" stroke="#fbbf24" stroke-width="1.8"/>' + tx(px, py - 4, "comando do MOSFET (≈ 65 kHz)", "font-size:9px");
+      const yv = c.Vo == null ? 0 : c.Vo, sc = 1.3, ya = 266 - yv * sc;
+      g += '<path d="' + fpath(120, t => 250 + t * 196, y => y, t => c.Vo == null ? (266 - 18 * sc * Math.max(0, Math.sin(t * 9))) : ya - Math.sin(t * 40) * Math.min(10, c.rp * 6)) + '" fill="none" stroke="#22d3ee" stroke-width="1.8"/>' + tx(250, py - 4, "tensão de saída", "font-size:9px");
+      sg(r, "g").innerHTML = g;
+      so(r, "vr", st.vr + " V"); so(r, "I", fmtN(st.I, 1) + " A");
+      so(r, "vb", c.on ? fmtN(c.Vb, 0) + " V" : fmtN(c.Vb, 0) + " V (baixo)"); so(r, "D", fmtN(c.D * 100, 0) + "%"); so(r, "vo", c.Vo == null ? "0 a 18 V, piscando" : fmtN(c.Vo, 1) + " V"); so(r, "rp", c.on ? fmtN(c.rp * 1000, 0) + " mV" : "–"); so(r, "pin", fmtN(c.pin, 1) + " W");
+      let t = "";
+      if (!c.on) t = "<b>Rede baixa demais:</b> o barramento ficou abaixo do mínimo e o controlador não parte (proteção de subtensão). A saída fica em zero.";
+      else if (d === "opto") t = "<b>Realimentação aberta:</b> o controlador não recebe a informação da saída e acha que ela está baixa. Ele abre o ciclo de trabalho ao máximo, a saída sobe além de 12 V e a proteção de sobretensão desliga a fonte; depois ela tenta de novo. A fonte fica <b>piscando</b> (ou, sem proteção, queima o que estiver ligado). Teste o optoacoplador e o TL431.";
+      else t = "A fonte transforma " + st.vr + " V alternados em " + fmtN(c.Vb, 0) + " V contínuos e, com o MOSFET ligando e desligando a cerca de 65 kHz, entrega pulsos ao transformador. Em alta frequência o transformador pode ser <b>pequeno e leve</b>. O controlador ajusta o <b>ciclo de trabalho</b> (" + fmtN(c.D * 100, 0) + "% agora) olhando a saída pelo optoacoplador: rede mais alta, pulso mais curto; mais carga, pulso mais longo. Assim a saída fica em 12 V de 90 a 240 V de entrada, com rendimento perto de 85%. " +
+        (d === "cap" ? "<b>Capacitor de saída estufado:</b> ele perdeu capacitância e não segura a tensão entre os pulsos. A ondulação subiu para " + fmtN(c.rp * 1000, 0) + " mV: aparelhos reiniciam, a imagem do monitor treme e a fonte chia. É o defeito mais comum em fontes chaveadas; o capacitor costuma estar com o topo estufado." : d === "cin" ? "<b>Capacitor de entrada seco:</b> o barramento caiu e ficou com muita ondulação de 120 Hz. O controlador compensa enquanto pode, mas com rede baixa e carga alta a fonte desliga. Perto dele costuma haver sinais de calor." : st.I < .1 ? " Sem carga, a fonte quase não consome, mas o rendimento cai." : "");
+      sread(r, t);
+    }
+  },
+
+  ujt: {
+    fam: FE, title: "Simulador: transistor unijunção (oscilador de relaxação)", hint: "O capacitor carrega pelo resistor até a tensão de disparo do UJT; aí o UJT conduz, descarrega o capacitor de uma vez e solta um pulso. Mude R, C e a razão intrínseca e veja a frequência mudar.",
+    init: { R: 100, C: 10, eta: .6, Vc: 0, f: 0, vb: 0, hist: [], acc: 0, run: 1 },
+    k(P) { const T = P.ok ? P.T : P.tau; return T / Math.max(.5, Math.min(2.5, T)); },
+    p(st) { const Vp = st.eta * 12 + .6, tau = st.R * 1e3 * st.C * 1e-6, ok = (12 - Vp) / (st.R * 1e3) >= 5e-6; return { Vp, tau, ok, T: tau * Math.log(10 / (12 - Vp)) }; },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 240", '<g data-g="g"></g>', "Oscilador com UJT") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("ujt", "C", [["1", "C = 1 µF"], ["10", "10 µF"], ["47", "47 µF"], ["100", "100 µF"]]) + sBtn("ujt", "run", "Pausar") + '</div><div class="s-ctl">' + sRange("ujt", "R", "R (kΩ)", 10, 1000, 10) + sRange("ujt", "eta", "Razão intrínseca η", .5, .8, .01) + "</div>" + sMeters([["vp", "Tensão de disparo"], ["T", "Período"], ["f", "Frequência"], ["k", "Velocidade do desenho"]]),
+    draw(r, st) {
+      const P = this.p(st), H = st.hist, X = i => 222 + i * 226 / 329, Yc = v => 120 - v * 7, Yb = v => 222 - v * 8;
+      let pc = "", pb = ""; H.forEach((h, i) => { pc += (i ? "L" : "M") + X(i).toFixed(1) + " " + Yc(h[0]).toFixed(1); pb += (i ? "L" : "M") + X(i).toFixed(1) + " " + Yb(h[1]).toFixed(1); });
+      let g = '<line x1="30" x2="170" y1="30" y2="30" stroke="#f87171" stroke-width="3"/>' + tx(30, 22, "+12 V", "font-size:10px") + zigc(30, 106, 60, true, true) + tx(72, 70, "R " + st.R + " kΩ", "font-size:10px") +
+        wre("M60 106V146", true) + '<line x1="42" x2="78" y1="146" y2="146" stroke="#e2e8f0" stroke-width="3"/><line x1="42" x2="78" y1="156" y2="156" stroke="#e2e8f0" stroke-width="3"/>' + tx(84, 156, "C " + st.C + " µF", "font-size:10px") + wre("M60 156V210", false) +
+        '<circle cx="60" cy="120" r="3.5" fill="#9db0d3"/>' + wre("M60 120H128", true) + '<path d="M128 120l-8 -5v10z" fill="#9db0d3"/>' +
+        '<line x1="136" x2="136" y1="86" y2="150" stroke="#e2e8f0" stroke-width="6"/>' + tx(144, 90, "B2", "font-size:9px") + tx(144, 152, "B1", "font-size:9px") + tx(94, 112, "E", "font-size:9px") + tx(102, 142, "UJT", "fill:var(--ink);font-size:10px", "middle") +
+        zigc(30, 86, 150, true, true) + '<path d="M150 86H136" class="w on"/>' + '<path d="M136 150H150" class="w' + (st.f ? " on" : "") + '"/>' + zigc(150, 196, 150, true, !!st.f) + tx(160, 66, "470 Ω", "font-size:9px") + tx(160, 180, "47 Ω", "font-size:9px") +
+        '<line x1="40" x2="170" y1="210" y2="210" stroke="#6c7ea3" stroke-width="3"/>' + wre("M150 196V210", false) + tx(30, 226, "0 V", "font-size:10px") + '<circle cx="150" cy="150" r="3.5" fill="#9db0d3"/>' + wre("M150 150H200", !!st.f) + tx(170, 144, "saída", "font-size:9px") +
+        plotBox(220, 20, 230, 210) + '<line x1="220" x2="450" y1="' + Yc(P.Vp).toFixed(1) + '" y2="' + Yc(P.Vp).toFixed(1) + '" stroke="#fbbf24" stroke-dasharray="4 4"/>' + tx(446, Yc(P.Vp) - 4, "disparo " + fmtN(P.Vp, 1) + " V", "font-size:9px;fill:#fbbf24", "end") +
+        '<path d="' + pc + '" fill="none" stroke="#22d3ee" stroke-width="2"/><path d="' + pb + '" fill="none" stroke="#f87171" stroke-width="2"/>' + tx(226, 34, "tensão no capacitor", "font-size:9px;fill:#22d3ee") + tx(226, 150, "pulsos em B1", "font-size:9px;fill:#f87171") + '<line x1="220" x2="450" y1="140" y2="140" stroke="#2a3b62"/>';
+      sg(r, "g").innerHTML = g; sg(r, "b-run").textContent = st.run ? "Pausar" : "Continuar";
+      const k = this.k(P);
+      so(r, "R", st.R + " kΩ"); so(r, "eta", fmtN(st.eta, 2)); so(r, "vp", fmtN(P.Vp, 2) + " V"); so(r, "T", P.ok ? fmtU(P.T, "s") : "não oscila"); so(r, "f", P.ok ? fmtN(1 / P.T, 1 / P.T < 10 ? 2 : 0) + " Hz" : "–"); so(r, "k", k < .98 ? fmtN(1 / k, 0) + " vezes mais lento" : k > 1.02 ? fmtN(k, 0) + " vezes mais rápido" : "tempo real");
+      sread(r, P.ok ? "O capacitor carrega pelo resistor (constante de tempo R × C = " + fmtU(P.tau, "s") + "). O UJT fica cortado até a tensão no emissor chegar a η × 12 V + 0,6 V = <b>" + fmtN(P.Vp, 1) + " V</b>. Nesse ponto a região entre o emissor e B1 conduz de repente, o capacitor se descarrega por B1 e aparece um pulso no resistor de 47 Ω. Com o capacitor vazio, o UJT volta a cortar e tudo recomeça. O período é T = R × C × ln(10 ÷ (12 − Vp)) = " + fmtU(P.T, "s") + ". Esse circuito, o <b>oscilador de relaxação</b>, era usado para gerar os pulsos que disparam SCRs e TRIACs em controles de potência, pisca-piscas e temporizadores; hoje o 555 e os microcontroladores fazem esse papel."
+        : "<b>Resistor grande demais:</b> com " + st.R + " kΩ a corrente que chega ao emissor na tensão de disparo fica abaixo da corrente mínima de pico do UJT (alguns microampères). O capacitor chega perto de " + fmtN(P.Vp, 1) + " V, mas o UJT nunca dispara: o circuito não oscila. Diminua R.");
+    },
+    act(st, a) { if (a === "run") st.run = st.run ? 0 : 1; },
+    input(st, f) { if (f === "C" || f === "R" || f === "eta") { st.Vc = 0; st.f = 0; st.hist = []; } },
+    tick(r, st, dt) {
+      if (!st.run || RMOT) return; const P = this.p(st), k = this.k(P), n = 40, h = dt * k / n, td = P.T * .06;
+      for (let i = 0; i < n; i++) {
+        if (!st.f) { st.Vc += (12 - st.Vc) * Math.min(1, h / P.tau); if (!P.ok) st.Vc = Math.min(st.Vc, P.Vp - .05); else if (st.Vc >= P.Vp) st.f = 1; }
+        else { st.Vc -= st.Vc * Math.min(1, h / td); if (st.Vc <= 2) st.f = 0; }
+      }
+      st.vb = st.f ? Math.max(0, (st.Vc - 1) * .7) : .05;
+      st.acc += dt; while (st.acc >= 1 / 60) { st.acc -= 1 / 60; st.hist.push([st.Vc, st.vb]); if (st.hist.length > 330) st.hist.shift(); }
+      this.draw(r, st);
+    }
+  },
+
+  sensres: {
+    fam: FE, title: "Simulador: sensores resistivos: LDR, termistores NTC e PTC e varistor (VDR)", hint: "Escolha o componente e mude o que ele sente: luz, temperatura ou tensão. A resistência aparece na curva, em escala logarítmica (cada divisão é 10 vezes a anterior).",
+    init: { tipo: "ldr", lp: 50, t: 25, v: 220 },
+    Rx(T, x) { if (T === "ldr") return Math.min(2e6, 1e6 * Math.pow(Math.max(1, x), -.75)); if (T === "ntc") return 1e4 * Math.exp(3950 * (1 / (x + 273.15) - 1 / 298.15)); if (T === "ptc") return 100 + 1e5 / (1 + Math.exp(-(x - 90) / 4)); return x <= 0 ? 1e12 : Math.min(1e12, x / (1e-3 * Math.pow(x / 430, 30))); },
+    xv(st) { return st.tipo === "ldr" ? Math.pow(10, st.lp / 25) : st.tipo === "vdr" ? st.v : st.t; },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 240", '<g data-g="g"></g>', "Sensor resistivo") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("sensres", "tipo", [["ldr", "LDR (luz)"], ["ntc", "NTC"], ["ptc", "PTC"], ["vdr", "Varistor (VDR)"]]) + '</div><div class="s-ctl">' + sRange("sensres", "lp", "Luz sobre o LDR", 0, 100, 1) + sRange("sensres", "t", "Temperatura (°C)", -20, 150, 1) + sRange("sensres", "v", "Tensão sobre o varistor (V)", 0, 800, 5) + "</div>" + sMeters([["a", "–"], ["b", "Resistência"], ["c", "–"], ["d", "Uso típico"]]),
+    draw(r, st) {
+      const T = st.tipo, x = this.xv(st), R = this.Rx(T, x); sShow(r, "lp", T === "ldr"); sShow(r, "t", T === "ntc" || T === "ptc"); sShow(r, "v", T === "vdr");
+      const lux = Math.pow(10, st.lp / 25); so(r, "lp", fmtN(lux, lux < 10 ? 1 : 0) + " lux"); so(r, "t", st.t + " °C"); so(r, "v", st.v + " V");
+      const Y0 = { ldr: [2, 7], ntc: [1, 6.5], ptc: [1.5, 5.5], vdr: [2, 12] }[T], Xr = { ldr: [0, 4], ntc: [-20, 150], ptc: [-20, 150], vdr: [0, 800] }[T];
+      const px = v => 220 + (v - Xr[0]) / (Xr[1] - Xr[0]) * 230, py = R0 => 220 - (Math.log10(Math.max(1, R0)) - Y0[0]) / (Y0[1] - Y0[0]) * 200, xof = T === "ldr" ? Math.log10(lux) : x;
+      let g = plotBox(220, 20, 230, 200) + '<path d="' + fpath(200, t => px(Xr[0] + t * (Xr[1] - Xr[0])), y => Math.max(20, Math.min(220, y)), t => { const u = Xr[0] + t * (Xr[1] - Xr[0]); return py(this.Rx(T, T === "ldr" ? Math.pow(10, u) : u)); }) + '" fill="none" stroke="#22d3ee" stroke-width="2.5"/>' +
+        '<circle cx="' + px(xof).toFixed(1) + '" cy="' + Math.max(20, Math.min(220, py(R))).toFixed(1) + '" r="6" fill="#fbbf24"/>';
+      for (let k = Math.ceil(Y0[0]); k <= Y0[1]; k += T === "vdr" ? 2 : 1) g += '<line x1="220" x2="450" y1="' + py(Math.pow(10, k)).toFixed(1) + '" y2="' + py(Math.pow(10, k)).toFixed(1) + '" stroke="#2a3b62" stroke-dasharray="2 4"/>' + tx(446, py(Math.pow(10, k)) - 2, k >= 9 ? fmtN(Math.pow(10, k - 9), 0) + " GΩ" : fmtR(Math.pow(10, k)), "font-size:8px", "end");
+      g += tx(335, 236, T === "ldr" ? "luz (lux, escala log) →" : T === "vdr" ? "tensão (V) →" : "temperatura (°C) →", "font-size:9px", "middle");
+      const box = '<rect x="70" y="70" width="70" height="26" rx="3" fill="#142039" stroke="#9db0d3" stroke-width="2"/><line x1="30" x2="70" y1="83" y2="83" stroke="#9db0d3" stroke-width="3"/><line x1="140" x2="180" y1="83" y2="83" stroke="#9db0d3" stroke-width="3"/>';
+      if (T === "ldr") { const b = Math.min(1, st.lp / 100); g += box + '<circle cx="105" cy="83" r="30" fill="none" stroke="#9db0d3" stroke-width="1.5"/>' + '<circle cx="60" cy="30" r="14" fill="#fde68a" opacity="' + (.15 + .85 * b).toFixed(2) + '"/><path d="M70 40l14 16M78 34l16 16" stroke="#fde68a" stroke-width="2" opacity="' + (.2 + .8 * b).toFixed(2) + '"/>'; }
+      else if (T === "vdr") g += box + '<path d="M66 106h14l50 -46h14" fill="none" stroke="#fbbf24" stroke-width="2"/>' + tx(150, 62, "U", "fill:#fbbf24");
+      else g += box + '<path d="M66 106h14l50 -46" fill="none" stroke="#fbbf24" stroke-width="2"/>' + tx(150, 62, (T === "ntc" ? "−" : "+") + "t°", "fill:#fbbf24") + '<rect x="40" y="150" width="130" height="14" rx="7" fill="#1e293b" stroke="#6c7ea3"/><rect x="40" y="150" width="' + (130 * Math.max(.04, (st.t + 20) / 170)).toFixed(1) + '" height="14" rx="7" fill="' + hot((st.t + 20) / 170) + '"/>' + tx(105, 182, st.t + " °C", "", "middle");
+      g += tx(105, 130, fmtR(R), "fill:var(--ink);font-size:16px", "middle");
+      if (T === "vdr") g += tx(105, 210, st.v > 430 ? "conduzindo: segura o surto" : "praticamente isolante", "font-size:10px;fill:" + (st.v > 430 ? "#fbbf24" : "#9db0d3"), "middle");
+      sg(r, "g").innerHTML = g;
+      const vo = 5 * R / (1e4 + R);
+      if (T === "vdr") { const I = st.v / R; smet(r, "a", "Tensão", st.v + " V"); smet(r, "c", "Corrente no varistor", I < 1e-3 ? fmtN(I * 1e6, 2) + " µA" : I < 1 ? fmtN(I * 1000, 1) + " mA" : fmtN(I, 1) + " A"); }
+      else { smet(r, "a", T === "ldr" ? "Luz" : "Temperatura", T === "ldr" ? fmtN(lux, lux < 10 ? 1 : 0) + " lux" : st.t + " °C"); smet(r, "c", "Divisor: 10 kΩ + sensor em 5 V", fmtN(vo, 2) + " V"); }
+      so(r, "b", fmtR(R)); so(r, "d", { ldr: "relé fotoelétrico, sensor de luz", ntc: "medir temperatura", ptc: "proteção e partida (relé PTC)", vdr: "proteção contra surtos (DPS)" }[T]);
+      sread(r, { ldr: "O <b>LDR</b> (resistor dependente de luz) é feito de um semicondutor que libera elétrons quando recebe luz: quanto mais luz, <b>menor</b> a resistência. No escuro passa de 1 MΩ; ao sol, cai para centenas de ohms. Num divisor com 10 kΩ ele vira uma tensão que um transistor ou microcontrolador lê: é o relé fotoelétrico que acende a luz do poste ao anoitecer. É lento (décimos de segundo) e por isso não serve para sinais rápidos.",
+        ntc: "O <b>NTC</b> (coeficiente negativo de temperatura) tem resistência que <b>cai</b> quando a temperatura sobe: 10 kΩ a 25 °C, cerca de 3,3 kΩ a 50 °C e 680 Ω a 100 °C. A curva não é uma reta, por isso o programa usa uma fórmula (o parâmetro B) ou uma tabela para converter em graus. Está nos termômetros digitais, nos sensores de geladeira e ar-condicionado, nos carregadores de bateria e nas fontes, para limitar a corrente de partida.",
+        ptc: "O <b>PTC</b> (coeficiente positivo) faz o contrário: a resistência é baixa até uma temperatura de transição e então <b>sobe de repente</b>, centenas de vezes. Ele se protege sozinho: se a corrente esquenta demais, ele quase abre o circuito. É o fusível rearmável, o relé de partida das geladeiras e o elemento de aquecimento autorregulado de secadores e aquecedores. Acima de " + fmtN(90, 0) + " °C, este já está aberto.",
+        vdr: "O <b>varistor</b> (VDR, resistor dependente de tensão) fica ligado entre fase e neutro ou fase e terra. Na tensão normal da rede ele quase não conduz (resistência de megaohms). Quando chega um <b>surto</b> (raio, manobra da concessionária) e a tensão passa de uns 430 V, a resistência despenca e ele desvia a corrente do surto, segurando a tensão para o aparelho. Cada surto o desgasta; um varistor estourado é sinal de que trabalhou. É o componente principal dos DPS e das réguas de proteção." }[T]);
+    }
+  },
+
+  ffmem: {
+    fam: FE, title: "Simulador: elemento lógico, flip-flop e memória", hint: "Do elemento de memória feito com duas portas lógicas até uma pequena memória: veja um bit ser guardado, o flip-flop D obedecer ao clock, um contador binário e a escrita e a leitura numa memória de 4 endereços.",
+    init: { modo: "sr", S: 0, R: 0, Q: 0, D: 1, qd: 0, hd: [], cnt: 0, run: 0, acc: 0, addr: 0, b: [1, 0, 1, 0], m: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], out: null, mem: "ram", msg: "" },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 240", '<g data-g="g"></g>', "Flip-flop e memória") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("ffmem", "modo", [["sr", "Elemento de memória (SR)"], ["d", "Flip-flop D"], ["cont", "Contador"], ["mem", "Memória 4 × 4 bits"]]) + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:10px">' +
+      sGrp("v-sr", sSeg("ffmem", "S", [["0", "S = 0"], ["1", "S = 1"]]) + sSeg("ffmem", "R", [["0", "R = 0"], ["1", "R = 1"]])) +
+      sGrp("v-d", sSeg("ffmem", "D", [["0", "D = 0"], ["1", "D = 1"]]) + sBtn("ffmem", "clk", "Pulso de clock", "primary")) +
+      sGrp("v-cont", sBtn("ffmem", "clk2", "Pulso de clock", "primary") + sBtn("ffmem", "auto", "Contar sozinho") + sBtn("ffmem", "zera", "Zerar")) +
+      sGrp("v-mem", sSeg("ffmem", "addr", [["0", "Endereço 00"], ["1", "01"], ["2", "10"], ["3", "11"]]) + sBtn("ffmem", "b0", "D0") + sBtn("ffmem", "b1", "D1") + sBtn("ffmem", "b2", "D2") + sBtn("ffmem", "b3", "D3") + sBtn("ffmem", "grava", "Gravar", "primary") + sBtn("ffmem", "le", "Ler") + sSeg("ffmem", "mem", [["ram", "RAM"], ["flash", "Flash"]]) + sBtn("ffmem", "off", "Desligar e religar")) +
+      "</div>" + sMeters([["a", "–"], ["b", "–"], ["c", "–"], ["d", "–"]]),
+    nor(x, y) { return '<path d="M' + x + " " + y + "Q" + (x + 18) + " " + (y + 25) + " " + x + " " + (y + 50) + "Q" + (x + 44) + " " + (y + 50) + " " + (x + 60) + " " + (y + 25) + "Q" + (x + 44) + " " + y + " " + x + " " + y + 'Z" fill="#142039" stroke="#9db0d3" stroke-width="2"/><circle cx="' + (x + 64) + '" cy="' + (y + 25) + '" r="4" fill="#142039" stroke="#9db0d3" stroke-width="2"/>'; },
+    led(x, y, on, lab) { return '<circle cx="' + x + '" cy="' + y + '" r="9" fill="' + (on ? "#34d399" : "#1e293b") + '" stroke="#9db0d3"/>' + (lab ? tx(x + 14, y + 4, lab, "fill:var(--ink)") : ""); },
+    draw(r, st) {
+      const m = st.modo, C = b => b ? "#22d3ee" : "#3d4a63", L = (d, b) => '<path d="' + d + '" fill="none" stroke="' + C(b) + '" stroke-width="3"/>';
+      ["sr", "d", "cont", "mem"].forEach(k => sVis(r, "v-" + k, m === k));
+      let g = "";
+      if (m === "sr") {
+        const inv = st.S && st.R, Q = inv ? 0 : st.Q, Qn = inv ? 0 : 1 - st.Q;
+        g += tx(14, 56, "R", "fill:var(--ink)") + tx(14, 192, "S", "fill:var(--ink)") + L("M30 52H184", st.R) + L("M30 188H184", st.S) + L("M248 65H322", Q) + L("M270 65V140H150V162H184", Q) + L("M248 175H322", Qn) + L("M290 175V100H160V78H184", Qn) +
+          this.nor(180, 40) + this.nor(180, 150) + this.led(334, 65, Q, "Q") + this.led(334, 175, Qn, "Q̄") + tx(210, 30, "NOR", "font-size:9px", "middle") + tx(210, 140, "NOR", "font-size:9px", "middle");
+        const rows = [["0", "0", "mantém"], ["1", "0", "Q = 1"], ["0", "1", "Q = 0"], ["1", "1", "proibido"]], cur = st.S && st.R ? 3 : st.S ? 1 : st.R ? 2 : 0;
+        g += tx(372, 112, "S R → Q", "font-size:10px"); rows.forEach((w, i) => { g += (i === cur ? '<rect x="366" y="' + (118 + i * 16) + '" width="88" height="15" fill="#22d3ee" opacity=".2"/>' : "") + tx(372, 130 + i * 16, w[0] + " " + w[1] + "  " + w[2], "font-size:10px" + (i === cur ? ";fill:var(--ink)" : "")); });
+        smet(r, "a", "S (set)", String(st.S)); smet(r, "b", "R (reset)", String(st.R)); smet(r, "c", "Q", inv ? "0 (inválido)" : String(Q)); smet(r, "d", "Q̄", inv ? "0 (inválido)" : String(Qn));
+        sread(r, "Duas portas <b>NOR</b> ligadas em cruz, a saída de uma entrando na outra, formam o elemento de memória mais simples: o <b>latch SR</b>. Um pulso em S (set) põe Q em 1; um pulso em R (reset) põe Q em 0. Com S e R em 0, o circuito <b>mantém</b> o último estado, porque cada porta segura a outra: ele lembra um bit. " + (inv ? "<b>S e R juntos em 1 é proibido:</b> as duas saídas vão a 0 e, quando as entradas voltam a 0, não dá para saber em que estado ele fica." : "Faça S = 1 e depois volte a 0: o Q continua 1. É a mesma ideia da autorretenção de um contator, só que com portas lógicas."));
+      } else if (m === "d") {
+        g += '<rect x="170" y="50" width="100" height="120" rx="6" fill="#142039" stroke="#9db0d3" stroke-width="2"/>' + tx(220, 44, "flip-flop D", "font-size:10px", "middle") + tx(180, 84, "D", "fill:var(--ink)") + tx(258, 84, "Q", "fill:var(--ink)", "end") + tx(258, 144, "Q̄", "fill:var(--ink)", "end") +
+          '<path d="M170 132l12 8-12 8" fill="none" stroke="#9db0d3" stroke-width="2"/>' + tx(186, 144, "CLK", "font-size:9px") + L("M40 80H170", st.D) + L("M40 140H170", 0) + L("M270 80H330", st.qd) + L("M270 140H330", 1 - st.qd) + this.led(345, 80, st.qd, "Q") + this.led(345, 140, 1 - st.qd, "Q̄") + tx(30, 84, "D", "fill:var(--ink)", "end") + tx(30, 144, "↑", "fill:var(--ink)", "end");
+        g += tx(20, 196, "clock", "font-size:9px") + tx(20, 212, "D", "font-size:9px") + tx(20, 228, "Q depois", "font-size:9px");
+        st.hd.slice(-10).forEach((h, i) => { const x = 74 + i * 36; g += tx(x + 14, 196, String(st.hd.length - Math.min(10, st.hd.length) + i + 1), "font-size:9px", "middle") + '<rect x="' + x + '" y="202" width="28" height="12" fill="' + C(h[0]) + '"/><rect x="' + x + '" y="218" width="28" height="12" fill="' + C(h[1]) + '"/>'; });
+        smet(r, "a", "D (dado)", String(st.D)); smet(r, "b", "Q", String(st.qd)); smet(r, "c", "Pulsos de clock", String(st.hd.length)); smet(r, "d", "Função", "guardar 1 bit");
+        sread(r, "O <b>flip-flop D</b> só olha a entrada D no instante do <b>pulso de clock</b> (na subida). Mude D à vontade: o Q não muda. Dê um pulso de clock e o Q copia o D daquele instante, e guarda até o próximo pulso. É a peça básica dos registradores dentro de um processador: todos os flip-flops recebem o mesmo clock e mudam juntos, no ritmo dele (os GHz do processador).");
+      } else if (m === "cont") {
+        const bits = [0, 1, 2, 3].map(i => (st.cnt >> i) & 1);
+        g += tx(14, 60, "clock", "font-size:10px") + '<path d="M14 84H40" stroke="#fbbf24" stroke-width="2"/><path d="M40 84l-8 -4v8z" fill="#fbbf24"/>';
+        for (let i = 0; i < 4; i++) { const x = 42 + i * 102; g += '<rect x="' + x + '" y="56" width="74" height="60" rx="6" fill="#142039" stroke="#9db0d3" stroke-width="2"/>' + tx(x + 37, 82, "FF" + i, "fill:var(--ink)", "middle") + tx(x + 37, 98, "T", "font-size:9px", "middle") + this.led(x + 37, 148, bits[i]) + tx(x + 37, 174, "×" + (1 << i), "font-size:10px", "middle") + '<line x1="' + (x + 37) + '" x2="' + (x + 37) + '" y1="116" y2="139" stroke="' + C(bits[i]) + '" stroke-width="2"/>' + (i < 3 ? '<path d="M' + (x + 74) + " 86H" + (x + 102) + '" stroke="#6c7ea3" stroke-width="2"/><path d="M' + (x + 102) + ' 86l-7 -4v8z" fill="#6c7ea3"/>' : ""); }
+        g += tx(230, 214, "Q3 Q2 Q1 Q0 = " + bits.slice().reverse().join(" ") + "   →   " + st.cnt, "fill:var(--ink);font-size:15px", "middle");
+        sg(r, "b-auto").textContent = st.run ? "Parar" : "Contar sozinho";
+        smet(r, "a", "Binário", bits.slice().reverse().join("")); smet(r, "b", "Decimal", String(st.cnt)); smet(r, "c", "Hexadecimal", st.cnt.toString(16).toUpperCase()); smet(r, "d", "Próximo", String((st.cnt + 1) % 16));
+        sread(r, "Cada flip-flop aqui está ligado como <b>T</b> (toggle): a cada pulso no clock ele inverte a saída. O primeiro (FF0) inverte a cada pulso; o segundo inverte quando o primeiro volta de 1 para 0; e assim por diante. Cada um divide a frequência por 2, e juntos eles <b>contam em binário</b> de 0 a 15 e voltam a 0. Os LEDs valem 1, 2, 4 e 8: some os acesos para ter o número. É assim que relógios, temporizadores e o contador de programa do processador contam.");
+      } else {
+        const sel = st.addr, bl = ["00", "01", "10", "11"];
+        for (let i = 0; i < 4; i++) sg(r, "b-b" + i).textContent = "D" + i + " = " + st.b[i];
+        g += '<rect x="20" y="56" width="90" height="130" rx="6" fill="#142039" stroke="#9db0d3" stroke-width="2"/>' + tx(65, 50, "decodificador", "font-size:9px", "middle") + tx(65, 120, "end. " + bl[sel], "fill:var(--ink)", "middle");
+        for (let i = 0; i < 4; i++) {
+          const y = 60 + i * 32; g += L("M110 " + (y + 12) + "H150", i === sel) + tx(116, y + 8, bl[i], "font-size:8px");
+          if (i === sel) g += '<rect x="148" y="' + (y - 4) + '" width="188" height="32" rx="4" fill="none" stroke="#22d3ee" stroke-width="2"/>';
+          for (let j = 0; j < 4; j++) { const x = 156 + j * 44, v = st.m[i][j]; g += '<rect x="' + x + '" y="' + y + '" width="36" height="24" rx="3" fill="' + (v ? "#22d3ee" : "#1e293b") + '" opacity="' + (v ? .8 : 1) + '" stroke="#2a3b62"/>' + tx(x + 18, y + 16, String(v), "fill:" + (v ? "#0c1424" : "#6c7ea3"), "middle"); }
+        }
+        for (let j = 0; j < 4; j++) g += tx(174 + j * 44, 40, "D" + j + "=" + st.b[j], "font-size:10px;fill:" + (st.b[j] ? "#22d3ee" : "#9db0d3"), "middle") + tx(174 + j * 44, 210, st.out ? "S" + j + "=" + st.out[j] : "S" + j, "font-size:10px;fill:" + (st.out && st.out[j] ? "#34d399" : "#9db0d3"), "middle");
+        g += tx(354, 40, "entrada de dados", "font-size:9px") + tx(354, 210, "saída lida", "font-size:9px") + tx(360, 120, st.mem === "ram" ? "RAM" : "Flash", "fill:var(--ink);font-size:14px");
+        smet(r, "a", "Endereço", bl[sel]); smet(r, "b", "Dado na entrada", st.b.slice().reverse().join("")); smet(r, "c", "Dado lido", st.out ? st.out.slice().reverse().join("") : "–"); smet(r, "d", "Tipo", st.mem === "ram" ? "RAM (volátil)" : "Flash (não volátil)");
+        sread(r, (st.msg ? st.msg + " " : "") + "A memória é uma grade de células, cada uma guardando 1 bit (como um flip-flop). O <b>endereço</b> passa pelo decodificador, que escolhe uma linha só. Com <b>Gravar</b>, os bits da entrada são copiados para as células dessa linha; com <b>Ler</b>, o conteúdo da linha aparece na saída, sem apagar nada. Uma memória de verdade tem bilhões de linhas, mas o princípio é o mesmo. " + (st.mem === "ram" ? "A <b>RAM</b> é volátil: sem energia, perde tudo (é a memória de trabalho do computador)." : "A <b>Flash</b> guarda a carga numa porta isolada e mantém os dados sem energia (pendrive, SSD, memória de programa de um CLP ou microcontrolador)."));
+      }
+      sg(r, "g").innerHTML = g;
+    },
+    input(st, f) { if (f === "S" || f === "R") { if (st.S && !st.R) st.Q = 1; else if (st.R && !st.S) st.Q = 0; } if (f === "mem" || f === "addr") st.msg = ""; },
+    act(st, a) {
+      if (a === "clk") { st.qd = st.D; st.hd.push([st.D, st.qd]); if (st.hd.length > 50) st.hd.shift(); }
+      if (a === "clk2") st.cnt = (st.cnt + 1) % 16; if (a === "auto") st.run = st.run ? 0 : 1; if (a === "zera") { st.cnt = 0; st.run = 0; }
+      if (/^b[0-3]$/.test(a)) { const i = Number(a[1]); st.b[i] = st.b[i] ? 0 : 1; }
+      if (a === "grava") { st.m[st.addr] = st.b.slice(); st.msg = "<b>Gravado</b> no endereço " + ["00", "01", "10", "11"][st.addr] + "."; }
+      if (a === "le") { st.out = st.m[st.addr].slice(); st.msg = "<b>Lido</b> o endereço " + ["00", "01", "10", "11"][st.addr] + "."; }
+      if (a === "off") { if (st.mem === "ram") { st.m = st.m.map(w => w.map(() => Math.random() < .5 ? 1 : 0)); st.msg = "<b>A energia caiu e voltou:</b> a RAM perdeu os dados e voltou com valores aleatórios."; } else st.msg = "<b>A energia caiu e voltou:</b> a Flash manteve tudo."; st.out = null; }
+    },
+    tick(r, st, dt) { if (st.modo !== "cont" || !st.run) return; st.acc += dt; if (st.acc < .7) return; st.acc = 0; st.cnt = (st.cnt + 1) % 16; this.draw(r, st); }
+  },
+
+  bateria: {
+    fam: FE, title: "Simulador: bateria: células, associação, carga e descarga", hint: "Escolha o tipo de célula, quantas em série e em paralelo, a capacidade e a corrente. Descarregue e carregue (o tempo é acelerado: 1 segundo vale 10 minutos) e veja a tensão cair ao longo da descarga.",
+    init: { tipo: "li", ns: 3, np: 1, ah: 2.5, I: 1, soc: 1, run: 0, md: "des", msg: "" },
+    TY: {
+      li: ["Li-íon", 3.7, [[0, 3], [.1, 3.45], [.2, 3.6], [.5, 3.75], [.8, 3.95], [1, 4.2]], .1, 2, 1, "4,2 V por célula, corrente constante e depois tensão constante (CC-CV), com BMS cortando abaixo de 3,0 V"],
+      pb: ["Chumbo-ácido", 2, [[0, 1.75], [.2, 1.95], [.5, 2.03], [.8, 2.09], [1, 2.12]], .3, .5, 1, "2,4 V por célula até carregar e depois flutuação em 2,25 V; nunca deixe descarregar abaixo de 1,75 V por célula (sulfatação)"],
+      nimh: ["NiMH", 1.2, [[0, 1], [.1, 1.15], [.5, 1.22], [.9, 1.3], [1, 1.4]], .1, 1, 1, "corrente constante; o carregador para quando a tensão dá uma pequena queda no fim (−ΔV) ou quando a célula esquenta"],
+      alc: ["Alcalina", 1.5, [[0, .9], [.2, 1.1], [.5, 1.25], [.8, 1.4], [1, 1.55]], .3, .5, 0, ""]
+    },
+    calc(st) {
+      const T = this.TY[st.tipo], voc = lerpT(T[2], st.soc), rc = T[3] / st.ah, ic = st.I / st.np, ch = st.md === "car" && st.run;
+      const vc = voc + (ch ? 1 : -1) * ic * rc, cap = st.np * st.ah;
+      return { T, voc, vc, V: st.ns * vc, cap, E: st.ns * T[1] * cap, aut: st.I > 0 ? st.soc * cap / st.I : Infinity, cr: ic / st.ah };
+    },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 250", '<g data-g="g"></g>', "Banco de baterias") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("bateria", "tipo", [["li", "Li-íon (3,7 V)"], ["pb", "Chumbo-ácido (2 V)"], ["nimh", "NiMH (1,2 V)"], ["alc", "Alcalina (1,5 V)"]]) + sSeg("bateria", "md", [["des", "Descarregar"], ["car", "Carregar"]]) + sBtn("bateria", "run", "Iniciar", "primary") + sBtn("bateria", "cheia", "Encher (100%)") + '</div><div class="s-ctl">' + sRange("bateria", "ns", "Células em série", 1, 12, 1) + sRange("bateria", "np", "Fileiras em paralelo", 1, 4, 1) + sRange("bateria", "ah", "Capacidade de cada célula (Ah)", .5, 100, .5) + sRange("bateria", "I", "Corrente (A)", 0, 50, .1) + "</div>" + sMeters([["V", "Tensão do conjunto"], ["cap", "Capacidade"], ["E", "Energia"], ["aut", "Autonomia"], ["soc", "Carga restante"]]),
+    draw(r, st) {
+      const c = this.calc(st), ns = st.ns, np = st.np, gap = 6, cw = Math.min(30, (400 - (ns - 1) * gap) / ns), W = ns * cw + (ns - 1) * gap, x0 = 230 - W / 2, col = st.soc > .5 ? "#34d399" : st.soc > .2 ? "#fbbf24" : "#f87171";
+      let g = "";
+      for (let j = 0; j < np; j++) {
+        const y = 24 + j * 28;
+        for (let i = 0; i < ns; i++) { const x = x0 + i * (cw + gap); g += '<rect x="' + x.toFixed(1) + '" y="' + y + '" width="' + cw.toFixed(1) + '" height="18" rx="2" fill="#1e293b" stroke="#9db0d3"/><rect x="' + (x + 1).toFixed(1) + '" y="' + (y + 1) + '" width="' + ((cw - 2) * st.soc).toFixed(1) + '" height="16" fill="' + col + '" opacity=".8"/>' + (i < ns - 1 ? '<line x1="' + (x + cw).toFixed(1) + '" x2="' + (x + cw + gap).toFixed(1) + '" y1="' + (y + 9) + '" y2="' + (y + 9) + '" stroke="#e2e8f0" stroke-width="2"/>' : ""); }
+      }
+      const yb = 24 + (np - 1) * 28 + 9;
+      g += '<line x1="' + (x0 - 12) + '" x2="' + (x0 - 12) + '" y1="33" y2="' + yb + '" stroke="#38bdf8" stroke-width="3"/><line x1="' + (x0 + W + 12) + '" x2="' + (x0 + W + 12) + '" y1="33" y2="' + yb + '" stroke="#f87171" stroke-width="3"/>';
+      for (let j = 0; j < np; j++) { const y = 33 + j * 28; g += '<line x1="' + (x0 - 12) + '" x2="' + x0 + '" y1="' + y + '" y2="' + y + '" stroke="#38bdf8" stroke-width="2"/><line x1="' + (x0 + W) + '" x2="' + (x0 + W + 12) + '" y1="' + y + '" y2="' + y + '" stroke="#f87171" stroke-width="2"/>'; }
+      g += tx(x0 - 18, 38, "−", "fill:#38bdf8;font-size:14px", "end") + tx(x0 + W + 18, 38, "+", "fill:#f87171;font-size:14px") + tx(230, 150, ns + " em série × " + np + " em paralelo = " + fmtN(c.V, 1) + " V", "fill:var(--ink)", "middle");
+      const X = s => 40 + (1 - s) * 390, T = c.T, vmin = T[2][0][1], vmax = T[2][T[2].length - 1][1], Yv = v => 238 - (v - vmin) / (vmax - vmin) * 64;
+      g += plotBox(40, 166, 390, 80) + '<path d="' + fpath(100, t => X(1 - t), Yv, t => lerpT(T[2], 1 - t)) + '" fill="none" stroke="#22d3ee" stroke-width="2"/><circle cx="' + X(st.soc).toFixed(1) + '" cy="' + Yv(c.voc).toFixed(1) + '" r="5" fill="#fbbf24"/>' +
+        tx(44, 178, fmtN(vmax, 2) + " V", "font-size:9px") + tx(44, 242, fmtN(vmin, 2) + " V", "font-size:9px") + tx(426, 178, "tensão de uma célula × carga usada →", "font-size:9px", "end");
+      sg(r, "g").innerHTML = g;
+      so(r, "ns", String(ns)); so(r, "np", String(np)); so(r, "ah", fmtN(st.ah, 1) + " Ah"); so(r, "I", fmtN(st.I, 1) + " A");
+      so(r, "V", fmtN(c.V, 2) + " V"); so(r, "cap", fmtN(c.cap, 1) + " Ah"); so(r, "E", fmtN(c.E, 0) + " Wh"); so(r, "soc", fmtN(st.soc * 100, 0) + "%");
+      const tc = st.I > 0 ? (1 - st.soc) * c.cap / st.I / .9 : Infinity; smet(r, "aut", st.md === "car" ? "Tempo para encher" : "Autonomia", (st.md === "car" ? tc : c.aut) === Infinity ? "–" : (h => h >= 1 ? fmtN(h, 1) + " h" : fmtN(h * 60, 0) + " min")(st.md === "car" ? tc : c.aut));
+      sg(r, "b-run").textContent = st.run ? "Pausar" : "Iniciar";
+      let t = (st.msg ? st.msg + " " : "") + "Em <b>série</b> as tensões se somam (" + ns + " × " + fmtN(T[1], 1) + " V = " + fmtN(ns * T[1], 1) + " V nominais) e a capacidade fica a de uma célula; em <b>paralelo</b> as capacidades se somam (" + np + " × " + fmtN(st.ah, 1) + " Ah) e a tensão fica a mesma. A energia guardada é tensão × capacidade: " + fmtN(c.E, 0) + " Wh. ";
+      t += "Sob carga, a tensão cai um pouco por causa da <b>resistência interna</b> (agora " + fmtN(c.V, 2) + " V, contra " + fmtN(ns * c.voc, 2) + " V em aberto). ";
+      if (c.cr > T[4]) t += "<b>Corrente alta para esta célula</b> (" + fmtN(c.cr, 1) + " C, cada célula entregando " + fmtN(c.cr, 1) + " vezes a sua capacidade por hora): esquenta e encurta a vida. ";
+      t += st.tipo === "alc" ? "A <b>alcalina não é recarregável</b>: tentar carregar pode vazar ou estourar." : "Carga: " + T[6] + ".";
+      if (st.tipo === "li") t += " As baterias de Li-íon dos celulares e notebooks são conjuntos assim: 3 células em série dão 11,1 V.";
+      sread(r, t);
+    },
+    act(st, a) {
+      if (a === "run") { if (!st.run && st.md === "car" && st.tipo === "alc") { st.msg = "<b>Não dá para carregar alcalina.</b>"; return; } st.run = st.run ? 0 : 1; st.msg = ""; }
+      if (a === "cheia") { st.soc = 1; st.run = 0; st.msg = ""; }
+    },
+    input(st, f) { if (f === "md" || f === "tipo") { st.run = 0; st.msg = ""; } },
+    tick(r, st, dt) {
+      if (!st.run) return; const cap = st.np * st.ah, ds = st.I * dt * 600 / (3600 * cap);
+      if (st.md === "des") { st.soc = Math.max(0, st.soc - ds); if (st.soc <= 0) { st.run = 0; st.msg = "<b>Descarregada:</b> a tensão chegou ao mínimo da célula e a descarga parou."; } }
+      else { st.soc = Math.min(1, st.soc + ds * .9); if (st.soc >= 1) { st.run = 0; st.msg = "<b>Carga completa.</b>"; } }
+      this.draw(r, st);
+    }
+  },
+
+  dr: {
+    fam: FE, title: "Simulador: aterramento e dispositivo DR", hint: "Uma máquina de lavar com a carcaça de metal. Coloque um defeito (a fase encostando na carcaça), mude o aterramento e a proteção, e veja quem desarma e quanta corrente passaria por uma pessoa.",
+    init: { terra: "pe", prot: "dr", falha: 1, toca: 1, piso: "mol", tst: 0 },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 250", '<g data-g="g"></g>', "Aterramento e DR") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("dr", "terra", [["sem", "Sem fio terra"], ["pe", "Fio terra ligado ao quadro"], ["haste", "Só uma haste ruim (100 Ω)"]]) + sSeg("dr", "prot", [["dj", "Só disjuntor"], ["dr", "Disjuntor + DR 30 mA"]]) + sSeg("dr", "falha", [["0", "Sem defeito"], ["1", "Fase encostando na carcaça"]]) + sSeg("dr", "toca", [["0", "Ninguém toca"], ["1", "Pessoa toca na máquina"]]) + sSeg("dr", "piso", [["seco", "Pés secos, de chinelo"], ["mol", "Pés molhados, descalço"]]) + sBtn("dr", "teste", "Apertar o botão de teste do DR") + "</div>" + sMeters([["if", "Corrente de falta"], ["vc", "Tensão na carcaça"], ["ib", "Corrente no corpo"], ["tr", "Desarmou"]]),
+    calc(st) {
+      const V = 127, Rb = st.piso === "seco" ? 1e4 : 1e3, dr = st.prot === "dr"; let If = 0, Vc = 0, Ib = 0, trip = "";
+      if (st.tst) return { If: 0, Vc: 0, Ib: 0, trip: dr ? "teste" : "", Rb };
+      if (st.falha) {
+        if (st.terra === "pe") { If = V / .5; Vc = 60; trip = dr ? "ambos" : "dj"; }
+        else if (st.terra === "haste") { If = V / 110; Vc = If * 100; if (dr) trip = "dr"; }
+        else { Vc = V; }
+        Ib = st.toca ? Vc / Rb : 0; if (st.terra === "sem" && dr && Ib >= .03) trip = "dr";
+      }
+      return { If, Vc, Ib, trip, Rb };
+    },
+    eff(mA) { return mA < 1 ? "nem sente" : mA < 10 ? "formigamento; ainda consegue soltar" : mA < 30 ? "contração dos músculos: pode não conseguir soltar, falta de ar" : "risco de fibrilação do coração (parada cardíaca)"; },
+    draw(r, st) {
+      const c = this.calc(st), dr = st.prot === "dr", off = !!c.trip, mA = c.Ib * 1000, live = !off;
+      let g = '<rect x="10" y="20" width="120" height="196" rx="6" fill="#142039" stroke="#6c7ea3"/>' + tx(70, 14, "quadro", "font-size:10px", "middle") +
+        '<rect x="22" y="40" width="40" height="44" rx="4" fill="#0c1424" stroke="' + (c.trip === "dj" || c.trip === "ambos" ? "#f87171" : "#9db0d3") + '"/>' + tx(42, 58, "DJ", "fill:var(--ink)", "middle") + tx(42, 74, c.trip === "dj" || c.trip === "ambos" ? "OFF" : "ON", "font-size:9px;fill:" + (c.trip === "dj" || c.trip === "ambos" ? "#f87171" : "#34d399"), "middle") +
+        (dr ? '<rect x="72" y="40" width="48" height="44" rx="4" fill="#0c1424" stroke="' + (c.trip && c.trip !== "dj" ? "#f87171" : "#9db0d3") + '"/>' + tx(96, 58, "DR", "fill:var(--ink)", "middle") + tx(96, 74, c.trip && c.trip !== "dj" ? "OFF" : "ON", "font-size:9px;fill:" + (c.trip && c.trip !== "dj" ? "#f87171" : "#34d399"), "middle") : tx(96, 66, "sem DR", "font-size:9px", "middle")) +
+        '<rect x="24" y="190" width="92" height="8" fill="#34d399"/>' + tx(70, 210, "barra de terra", "font-size:9px", "middle") +
+        wre("M42 20V40", true, "#f87171") + wre("M42 84V100H250", live, live ? "#f87171" : null) + wre("M96 84V130H250", false, "#38bdf8") + wre("M96 20V40", false, "#38bdf8") + tx(36, 16, "F", "fill:#f87171;font-size:10px") + tx(100, 16, "N", "fill:#38bdf8;font-size:10px") +
+        '<rect x="250" y="60" width="110" height="140" rx="8" fill="#1e293b" stroke="' + (live && c.Vc > 1 ? "#f87171" : "#cbd5e1") + '" stroke-width="4"/><circle cx="305" cy="130" r="30" fill="#0c1424" stroke="#6c7ea3"/>' + tx(305, 214, "máquina (carcaça de metal)", "font-size:9px", "middle") +
+        '<path d="M250 100H282M250 130H282" stroke="#6c7ea3" stroke-width="2"/>';
+      if (st.falha) g += '<path d="M268 100l6 -14l-4 0l8 -18" fill="none" stroke="#fbbf24" stroke-width="2.5"/>' + tx(250, 52, "isolação rompida", "font-size:9px;fill:#fbbf24");
+      if (st.terra === "pe") g += wre("M116 194H220V190H250", live && st.falha, "#34d399");
+      g += '<line x1="200" x2="460" y1="232" y2="232" stroke="#6c7ea3" stroke-width="2"/>';
+      if (st.terra === "haste") g += wre("M330 200V232", live && st.falha, "#34d399") + '<line x1="330" x2="330" y1="232" y2="248" stroke="#34d399" stroke-width="4"/>' + tx(338, 246, "haste", "font-size:9px");
+      const px = 410, touch = !!st.toca;
+      if (st.piso === "mol") g += '<ellipse cx="' + px + '" cy="234" rx="30" ry="5" fill="#38bdf8" opacity=".4"/>';
+      g += '<circle cx="' + px + '" cy="112" r="10" fill="none" stroke="#e2e8f0" stroke-width="2.5"/><path d="M' + px + " 122V180M" + px + " 180L" + (px - 12) + " 230M" + px + " 180L" + (px + 12) + " 230M" + px + " 140" + (touch ? "L362 136" : "L" + (px + 14) + " 168") + "M" + px + " 140L" + (px + 16) + ' 164" fill="none" stroke="#e2e8f0" stroke-width="2.5"/>';
+      if (mA > .5 && live) g += '<path d="M364 136L' + px + " 140V180L" + (px - 12) + ' 230" fill="none" stroke="#f87171" stroke-width="3" stroke-dasharray="5 4"/>';
+      if (c.Ib > 0 && off) g += tx(px, 96, "choque de " + (c.trip === "dr" ? "≈ 30 ms" : "milésimos"), "font-size:9px;fill:#fbbf24", "middle");
+      sg(r, "g").innerHTML = g;
+      so(r, "if", c.If ? (c.If >= 1 ? fmtN(c.If, 1) + " A" : fmtN(c.If * 1000, 0) + " mA") : "0"); so(r, "vc", live ? fmtN(c.Vc, 0) + " V" : "0 V (desligado)");
+      so(r, "ib", mA ? fmtN(mA, 1) + " mA" + (off ? " (só um instante)" : "") : "0"); so(r, "tr", { "": "nada", dj: "disjuntor", dr: "DR", ambos: "disjuntor e DR", teste: "DR (teste)" }[c.trip]);
+      let t;
+      if (st.tst) t = dr ? "<b>Botão de teste:</b> ele cria uma pequena fuga de propósito, por dentro do DR. Se o DR desarmar, está funcionando. Teste uma vez por mês; se não desarmar, troque o DR." : "Não há DR neste quadro para testar.";
+      else if (!st.falha) t = "Sem defeito, a corrente que vai pela fase volta inteira pelo neutro, e a carcaça fica sem tensão. O <b>disjuntor</b> protege os fios contra sobrecarga e curto; o <b>DR</b> compara a corrente que vai com a que volta e desarma se a diferença (a fuga) passar de 30 mA. O <b>fio terra</b> liga a carcaça de metal ao terra, para que um defeito não deixe tensão nela. Coloque o defeito para ver.";
+      else if (st.terra === "pe") t = "Com o <b>fio terra ligado ao quadro</b>, o defeito vira praticamente um curto: a corrente de falta (centenas de ampères) volta pelo terra e o <b>disjuntor desarma em milésimos de segundo</b>" + (dr ? ", e o DR também percebe a fuga" : "") + ". A carcaça só fica com tensão por um instante. É a proteção certa: terra e disjuntor bem dimensionados.";
+      else if (st.terra === "haste") t = "Com <b>só uma haste ruim</b> (100 Ω) e sem o fio terra até o quadro, a corrente de falta é de apenas " + fmtN(c.If, 2) + " A: o disjuntor de 20 A <b>não vê nada</b>. " + (dr ? "O <b>DR desarma</b>, porque " + fmtN(c.If * 1000, 0) + " mA estão escapando para a terra, muito acima de 30 mA. Ninguém leva choque." : "A carcaça fica com " + fmtN(c.Vc, 0) + " V o tempo todo. " + (st.toca ? "Quem tocar recebe " + fmtN(mA, 1) + " mA: " + this.eff(mA) + "." : "Basta alguém tocar.") + " Só o DR resolveria.");
+      else t = "<b>Sem fio terra</b>, a carcaça fica com os " + fmtN(c.Vc, 0) + " V da fase, esperando alguém. " + (!st.toca ? "Por enquanto nada acontece: não há caminho para a corrente, e nem o disjuntor nem o DR percebem o defeito." : "A pessoa vira o caminho para a terra: passam " + fmtN(mA, 1) + " mA pelo corpo (" + this.eff(mA) + "). " + (dr ? (c.trip ? "O <b>DR desarma em cerca de 30 ms</b>, antes de o coração ser afetado. Foi um susto, não uma tragédia." : "<b>Abaixo de 30 mA, o DR não desarma.</b> O choque continua até a pessoa conseguir soltar. O DR protege contra a morte, não contra o choque: o fio terra continua necessário.") : "O disjuntor não desarma: para ele, alguns miliampères não são nada. Sem DR, o choque continua.")) + " Pés molhados reduzem muito a resistência do corpo: a mesma tensão faz passar 10 vezes mais corrente.";
+      sread(r, t);
+    },
+    input(st) { st.tst = 0; },
+    act(st, a) { if (a === "teste") st.tst = 1; }
+  },
+
+  microondas: {
+    fam: FE, title: "Simulador: alta tensão do micro-ondas", hint: "O transformador, o capacitor e o diodo de alta tensão formam um dobrador que leva o catodo do magnétron a cerca de −4.000 V. Veja as tensões em cada meio ciclo e o perigo do capacitor que continua carregado depois de tirar da tomada.",
+    init: { falha: "ok", plug: 1, bleed: 1, ang: 0, vc: 2970, run: 1, msg: "" },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 300", '<g data-g="g"></g>', "Alta tensão do micro-ondas") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("microondas", "falha", [["ok", "Tudo bom"], ["dcurto", "Diodo em curto"], ["caberto", "Capacitor aberto"]]) + sSeg("microondas", "bleed", [["1", "Resistor de descarga bom"], ["0", "Resistor de descarga aberto"]]) + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:10px">' + sBtn("microondas", "plug", "Tirar da tomada", "primary") + sBtn("microondas", "desc", "Descarregar o capacitor com segurança") + sBtn("microondas", "run", "Pausar") + "</div>" + sMeters([["s", "Secundário agora"], ["c", "No capacitor"], ["k", "Catodo do magnétron"], ["m", "Magnétron"]]),
+    V(st, th) {
+      const Vp = 2970, s = Math.sin(th);
+      if (!st.plug) return { sec: 0, cap: st.vc, node: 0, mag: false, dio: false };
+      if (st.falha === "dcurto") return { sec: Vp * s, cap: Vp * s, node: 0, mag: false, dio: true };
+      if (st.falha === "caberto") return { sec: Vp * s, cap: 0, node: 0, mag: false, dio: false };
+      const n = Vp * (s - 1); return { sec: Vp * s, cap: Vp, node: Math.max(-3800, n), mag: n < -3800, dio: s > .97 };
+    },
+    coil(x, y1, y2, s) { let d = "M" + x + " " + y1; const n = Math.round((y2 - y1) / 16), h = (y2 - y1) / n; for (let i = 0; i < n; i++) d += "a7 " + (h / 2).toFixed(1) + " 0 0 " + s + " 0 " + h.toFixed(1); return '<path d="' + d + '" fill="none" stroke="#9db0d3" stroke-width="2.5"/>'; },
+    draw(r, st) {
+      const th = st.ang, v = this.V(st, th), pl = !!st.plug, X = t => 20 + t * 430, Y = y => 220 - y * .015;
+      let g = this.coil(40, 30, 110, 1) + '<line x1="56" x2="56" y1="24" y2="116" stroke="#6c7ea3" stroke-width="2"/><line x1="60" x2="60" y1="24" y2="116" stroke="#6c7ea3" stroke-width="2"/>' + this.coil(76, 30, 110, 0) + tx(30, 128, "127 V", "font-size:9px", "middle") + tx(84, 128, "≈ 2.100 V", "font-size:9px") +
+        wre("M76 30H170", pl) + '<line x1="175" x2="175" y1="14" y2="46" stroke="#e2e8f0" stroke-width="3"/><line x1="185" x2="185" y1="14" y2="46" stroke="#e2e8f0" stroke-width="3"/>' + (st.falha === "caberto" ? '<path d="M176 30h8" stroke="#f87171" stroke-width="2"/>' : "") + tx(180, 62, "capacitor 1 µF", "font-size:9px", "middle") + tx(180, 76, fmtN(Math.abs(v.cap), 0) + " V", "font-size:10px;fill:" + (Math.abs(v.cap) > 50 ? "#f87171" : "#9db0d3"), "middle") +
+        wre("M190 30H260V58", pl) + dio(260, 76, 90, v.dio) + (st.falha === "dcurto" ? '<path d="M252 68l16 16" stroke="#f87171" stroke-width="2.5"/>' : "") + wre("M260 94V120", false) + tx(272, 80, "diodo AT", "font-size:9px") +
+        wre("M260 30H370V54", pl) + '<circle cx="370" cy="76" r="20" fill="' + (v.mag ? "#a78bfa" : "#142039") + '" opacity="' + (v.mag ? .8 : 1) + '" stroke="#9db0d3" stroke-width="2"/>' + tx(370, 80, "MAG", "font-size:9px;fill:var(--ink)", "middle") + wre("M370 96V120", false) + tx(396, 70, "magnétron", "font-size:9px") +
+        '<line x1="76" x2="400" y1="120" y2="120" stroke="#6c7ea3" stroke-width="3"/>' + wre("M76 110V120", false) + tx(300, 136, "carcaça (terra)", "font-size:9px", "middle") + '<circle cx="260" cy="30" r="3.5" fill="#9db0d3"/>' + tx(266, 22, "catodo", "font-size:9px");
+      if (!pl) g += tx(120, 156, "fora da tomada", "fill:#fbbf24;font-size:12px");
+      g += plotBox(20, 160, 430, 132) + '<line x1="20" x2="450" y1="220" y2="220" stroke="#2a3b62"/>';
+      if (pl) {
+        const P = f => fpath(240, X, Y, t => f(t * 4 * Math.PI));
+        g += '<path d="' + P(t => this.V(st, t).sec) + '" fill="none" stroke="#6c7ea3" stroke-width="1.5" stroke-dasharray="4 3"/><path d="' + P(t => this.V(st, t).cap) + '" fill="none" stroke="#fbbf24" stroke-width="2"/><path d="' + P(t => this.V(st, t).node) + '" fill="none" stroke="#22d3ee" stroke-width="2.5"/>' +
+          '<line x1="' + X((th % (4 * Math.PI)) / (4 * Math.PI)).toFixed(1) + '" x2="' + X((th % (4 * Math.PI)) / (4 * Math.PI)).toFixed(1) + '" y1="160" y2="292" stroke="#e2e8f0" stroke-dasharray="3 3"/>';
+      } else g += '<line x1="20" x2="450" y1="' + Y(st.vc).toFixed(1) + '" y2="' + Y(st.vc).toFixed(1) + '" stroke="#fbbf24" stroke-width="2"/>';
+      g += tx(26, 288, "secundário", "font-size:9px;fill:#9db0d3") + tx(96, 288, "capacitor", "font-size:9px;fill:#fbbf24") + tx(160, 288, "catodo do magnétron", "font-size:9px;fill:#22d3ee") + tx(446, 174, "+3.000 V", "font-size:8px", "end") + tx(446, 288, "−4.000 V", "font-size:8px", "end");
+      sg(r, "g").innerHTML = g; sg(r, "b-plug").textContent = pl ? "Tirar da tomada" : "Ligar na tomada"; sg(r, "b-run").textContent = st.run ? "Pausar" : "Continuar"; sBtnVis(r, "desc", !pl); sBtnVis(r, "run", pl);
+      so(r, "s", fmtN(v.sec, 0) + " V"); so(r, "c", fmtN(v.cap, 0) + " V"); so(r, "k", fmtN(v.node, 0) + " V"); so(r, "m", !pl ? "desligado" : v.mag ? "conduzindo (gera micro-ondas)" : st.falha === "ok" ? "aguardando o meio ciclo" : "não funciona");
+      let t;
+      if (!pl) t = (st.msg ? st.msg + " " : "") + (st.vc > 50 ? "<b>Perigo: o capacitor continua com " + fmtN(st.vc, 0) + " V</b>, mesmo fora da tomada. " + (st.bleed ? "O resistor de descarga, dentro do capacitor, vai esvaziá-lo em alguns segundos, mas não confie nele." : "<b>O resistor de descarga está aberto:</b> o capacitor pode guardar essa tensão por horas ou dias.") + " A descarga segura é feita por quem tem treinamento, com o aparelho desligado e uma ponta de descarga isolada (com resistor), ligando o terminal do capacitor à carcaça." : "Capacitor descarregado. Mesmo assim, antes de mexer, confirme com o instrumento adequado.");
+      else if (st.falha === "dcurto") t = "<b>Diodo em curto:</b> o catodo fica preso em 0 V e o magnétron não recebe tensão: o forno gira o prato, faz barulho, mas <b>não esquenta</b>. O capacitor fica ligado direto no secundário, e o transformador trabalha forçado: costuma roncar e queimar o fusível.";
+      else if (st.falha === "caberto") t = "<b>Capacitor aberto:</b> nada chega ao magnétron, e o forno funciona sem esquentar a comida. O transformador fica quase em vazio.";
+      else t = "No meio ciclo em que o secundário fica positivo, o <b>diodo conduz</b> e carrega o capacitor com cerca de 2.970 V. No meio ciclo seguinte, o secundário fica negativo e <b>soma</b> sua tensão com a do capacitor: o catodo do magnétron vai a quase −6.000 V e o magnétron conduz por volta de −4.000 V, gerando as micro-ondas em pulsos de 60 Hz. É um <b>dobrador de meia onda</b>. As tensões aqui são <b>mortais</b>: o capacitor guarda energia suficiente para matar, mesmo com o forno fora da tomada. Não abra um micro-ondas sem treinamento.";
+      sread(r, t);
+    },
+    act(st, a) {
+      if (a === "plug") { if (st.plug) { st.vc = st.falha === "ok" ? 2970 : st.falha === "dcurto" ? Math.abs(2970 * Math.sin(st.ang)) : 0; st.plug = 0; st.msg = ""; } else { st.plug = 1; st.msg = ""; } }
+      if (a === "desc" && !st.plug) { st.vc = 0; st.msg = "<b>Descarregado com a ponta de descarga.</b>"; }
+      if (a === "run") st.run = st.run ? 0 : 1;
+    },
+    tick(r, st, dt) {
+      if (st.plug) { if (!st.run || RMOT) return; st.ang = (st.ang + dt * Math.PI * .5) % (4 * Math.PI); this.draw(r, st); return; }
+      if (st.bleed && st.vc > 1) { st.vc *= Math.exp(-dt / 10); if (st.vc < 1) st.vc = 0; this.draw(r, st); }
+    }
+  },
+
+  monitor: {
+    fam: FE, title: "Simulador: geração de imagem: varredura, pixels e resolução", hint: "Veja como o feixe do tubo de imagem desenha a tela linha por linha, como três subpixels formam qualquer cor e quantos dados uma tela moderna recebe por segundo.",
+    init: { modo: "crt", lin: 16, vel: 1, p: 0, R: 255, G: 160, B: 0, res: "fhd", hz: 60 },
+    RES: { vga: ["640 × 480", 640, 480], hd: ["1280 × 720 (HD)", 1280, 720], fhd: ["1920 × 1080 (Full HD)", 1920, 1080], k4: ["3840 × 2160 (4K)", 3840, 2160] },
+    img(u, v) { const d = Math.hypot(u - .5, (v - .5) * .75); return Math.abs(d - .3) < .06 || d < .08 || (Math.abs(v - .5) < .05 && Math.abs(u - .5) < .3); },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 240", '<g data-g="g"></g>', "Formação da imagem") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("monitor", "modo", [["crt", "Varredura do tubo"], ["pix", "Pixels e cores"], ["res", "Resolução"]]) + sGrp("v-res", sSeg("monitor", "res", [["vga", "640 × 480"], ["hd", "1280 × 720"], ["fhd", "1920 × 1080"], ["k4", "3840 × 2160"]]) + sSeg("monitor", "hz", [["60", "60 Hz"], ["144", "144 Hz"]])) + '</div><div class="s-ctl">' + sRange("monitor", "lin", "Linhas por quadro", 6, 40, 1) + sRange("monitor", "vel", "Velocidade do feixe", .25, 4, .25) + sRange("monitor", "R", "Vermelho (R)", 0, 255, 1) + sRange("monitor", "G", "Verde (G)", 0, 255, 1) + sRange("monitor", "B", "Azul (B)", 0, 255, 1) + "</div>" + sMeters([["a", "–"], ["b", "–"], ["c", "–"], ["d", "–"]]),
+    draw(r, st) {
+      const m = st.modo; ["lin", "vel"].forEach(f => sShow(r, f, m === "crt")); ["R", "G", "B"].forEach(f => sShow(r, f, m === "pix")); sVis(r, "v-res", m === "res");
+      so(r, "lin", String(st.lin)); so(r, "vel", fmtN(st.vel, 2) + "×"); so(r, "R", String(st.R)); so(r, "G", String(st.G)); so(r, "B", String(st.B));
+      let g = "";
+      if (m === "crt") {
+        const cols = 32, cw = 280 / cols, lh = 200 / st.lin, Lb = Math.floor(st.p * st.lin), xb = st.p * st.lin - Lb;
+        g += '<rect x="20" y="20" width="280" height="200" rx="14" fill="#050608" stroke="#6c7ea3" stroke-width="2"/>';
+        for (let i = 0; i < st.lin; i++) for (let j = 0; j < cols; j++) {
+          if (!this.img((j + .5) / cols, (i + .5) / st.lin)) continue;
+          const tc = (i + (j + .5) / cols) / st.lin, age = ((st.p - tc) % 1 + 1) % 1, b = Math.exp(-age / .35);
+          g += '<rect x="' + (20 + j * cw).toFixed(1) + '" y="' + (20 + i * lh).toFixed(1) + '" width="' + (cw + .3).toFixed(1) + '" height="' + (lh * .8).toFixed(1) + '" fill="#4ade80" opacity="' + (.06 + .94 * b).toFixed(2) + '"/>';
+        }
+        const bx = 20 + xb * 280, by = 20 + (Lb + .4) * lh;
+        g += '<line x1="20" x2="' + bx.toFixed(1) + '" y1="' + by.toFixed(1) + '" y2="' + by.toFixed(1) + '" stroke="#e2e8f0" stroke-width="1" opacity=".25"/><circle cx="' + bx.toFixed(1) + '" cy="' + by.toFixed(1) + '" r="9" fill="#e2e8f0" opacity=".25"/><circle cx="' + bx.toFixed(1) + '" cy="' + by.toFixed(1) + '" r="3.5" fill="#fff"/>' +
+          plotBox(320, 30, 130, 70) + plotBox(320, 140, 130, 70) + '<path d="' + fpath(400, t => 320 + t * 130, y => 92 - y * 54, t => (t * st.lin) % 1) + '" fill="none" stroke="#22d3ee" stroke-width="1.5"/><path d="M320 202L450 148" stroke="#fbbf24" stroke-width="1.5"/>' +
+          '<line x1="' + (320 + st.p * 130).toFixed(1) + '" x2="' + (320 + st.p * 130).toFixed(1) + '" y1="30" y2="210" stroke="#e2e8f0" stroke-dasharray="3 3"/>' + tx(320, 24, "deflexão horizontal", "font-size:9px") + tx(320, 134, "deflexão vertical", "font-size:9px") + tx(385, 228, "um quadro →", "font-size:9px", "middle");
+        smet(r, "a", "Linhas por quadro", String(st.lin)); smet(r, "b", "Aqui", fmtN(.25 * st.vel, 2) + " quadro/s"); smet(r, "c", "TV analógica (NTSC)", "525 linhas, 30 quadros/s"); smet(r, "d", "Frequência horizontal da TV", "15.750 Hz");
+        sread(r, "No tubo de imagem (CRT), um canhão dispara um <b>feixe de elétrons</b> contra a tela pintada com fósforo, que brilha onde o feixe bate. Bobinas de deflexão desviam o feixe: a <b>horizontal</b> o leva da esquerda para a direita a cada linha (dente de serra rápido); a <b>vertical</b> o desce linha a linha até o fim do quadro (dente de serra lento). O brilho de cada ponto depende da intensidade do feixe naquele instante. O fósforo apaga logo, mas a tela é redesenhada tão depressa (dezenas de vezes por segundo) que o olho vê uma imagem parada. Aqui está bem devagar: " + st.lin + " linhas em vez de centenas. Nas telas de LCD e LED não há feixe, mas a imagem continua sendo enviada assim, linha por linha, de cima para baixo.");
+      } else if (m === "pix") {
+        const col = "rgb(" + st.R + "," + st.G + "," + st.B + ")", hex = "#" + [st.R, st.G, st.B].map(v => v.toString(16).padStart(2, "0")).join("").toUpperCase();
+        for (let i = 0; i < 3; i++) for (let j = 0; j < 4; j++) { const x = 20 + j * 54, y = 30 + i * 60; g += '<rect x="' + x + '" y="' + y + '" width="50" height="56" fill="#050608"/>' + [[st.R, "255,40,40"], [st.G, "40,255,80"], [st.B, "60,110,255"]].map((c, k) => '<rect x="' + (x + 3 + k * 16) + '" y="' + (y + 4) + '" width="13" height="48" rx="2" fill="rgb(' + c[1] + ')" opacity="' + (.06 + .94 * c[0] / 255).toFixed(2) + '"/>').join(""); }
+        g += tx(128, 222, "de perto: subpixels R, G e B", "font-size:10px", "middle") + '<rect x="270" y="30" width="170" height="176" rx="8" fill="' + col + '" stroke="#6c7ea3"/>' + tx(355, 222, "de longe: a cor vista", "font-size:10px", "middle");
+        smet(r, "a", "Vermelho", String(st.R)); smet(r, "b", "Verde", String(st.G)); smet(r, "c", "Azul", String(st.B)); smet(r, "d", "Código da cor", hex);
+        sread(r, "Cada <b>pixel</b> de uma tela LCD ou LED é formado por três <b>subpixels</b>: vermelho, verde e azul. De perto se veem as três luzinhas; de longe, o olho as mistura numa cor só (mistura <b>aditiva</b>). Com 256 níveis para cada um (8 bits por cor, 24 bits por pixel), dá para formar mais de 16 milhões de cores. Vermelho com verde dá amarelo; os três no máximo dão branco; todos apagados, preto. É o mesmo código de cor usado em páginas web: " + hex + ".");
+      } else {
+        const R = this.RES[st.res], px = R[1] * R[2], rate = px * 24 * st.hz, sc = 400 / 3840;
+        Object.keys(this.RES).forEach(k => { const q = this.RES[k], on = k === st.res; g += '<rect x="20" y="16" width="' + (q[1] * sc).toFixed(1) + '" height="' + (q[2] * sc).toFixed(1) + '" fill="' + (on ? "#22d3ee" : "none") + '" fill-opacity=".15" stroke="' + (on ? "#22d3ee" : "#6c7ea3") + '" stroke-width="' + (on ? 2.5 : 1.2) + '"/>' + tx(24 + q[1] * sc, 12 + q[2] * sc, q[0], "font-size:9px;fill:" + (on ? "#22d3ee" : "#9db0d3"), "end"); });
+        smet(r, "a", "Pixels", fmtN(px / 1e6, 2) + " milhões"); smet(r, "b", "Subpixels", fmtN(px * 3 / 1e6, 1) + " milhões"); smet(r, "c", "Dados por segundo (sem compressão)", fmtN(rate / 1e9, 2) + " Gbit/s"); smet(r, "d", "Linhas por segundo", fmtN(R[2] * st.hz, 0));
+        sread(r, "A <b>resolução</b> é quantos pixels a tela tem na largura e na altura. " + R[0] + " são " + fmtN(px / 1e6, 2) + " milhões de pixels, cada um com 24 bits de cor. Redesenhando a tela " + st.hz + " vezes por segundo, o cabo precisa levar cerca de <b>" + fmtN(rate / 1e9, 2) + " Gbit/s</b>. Por isso cada geração de HDMI e DisplayPort é mais rápida, e o vídeo da internet é <b>comprimido</b>, enviando só o que muda de um quadro para outro. Taxas de atualização maiores (144 Hz) deixam o movimento mais suave, mas multiplicam os dados.");
+      }
+      sg(r, "g").innerHTML = g;
+    },
+    tick(r, st, dt) { if (st.modo !== "crt" || RMOT) return; st.p = (st.p + dt * st.vel * .25) % 1; this.draw(r, st); }
+  },
+
   carga: {
     title: "Simulador: previsão de cargas de um cômodo", hint: "Escolha o tipo de cômodo e as medidas. O simulador aplica as regras mínimas da NBR 5410 para iluminação e tomadas de uso geral e desenha onde elas podem ficar.",
     init: { tipo: "sala", a: 3.6, b: 4.2 },
