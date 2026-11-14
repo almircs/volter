@@ -15,6 +15,10 @@ Isso só é preciso na primeira vez.
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.17.0: simuladores de medição
+- **Nove simuladores novos na família Medição**, montados a partir dos temas das animações didáticas: leitura de escala em milímetro e em polegada, micrômetro, anel graduado, termômetro e escalas Celsius, Fahrenheit e Kelvin, pressão (manômetro Bourdon, tubo em U, barômetro e vácuo em microns), régua de temperatura × pressão de fluidos refrigerantes com cálculo de superaquecimento, uso correto do multímetro (com os erros que queimam o fusível), alicate amperímetro (um fio, fase e neutro juntos para achar fuga, e voltas) e potenciômetro linear e logarítmico
+- A tela inicial não mostra mais o "continue de onde parou"
+
 ## Versão 2.16.0: Volter mais enxuto, com a seção Simuladores
 - **Nova seção Simuladores:** todos os 15 simuladores num só lugar, separados por etapa, para usar direto ou abrir a lição em que aparecem
 - **Saíram:** os exercícios do fim das lições, o Laboratório, os Projetos, o Treino, os Livros, Meu progresso (com o nível de experiência), Próximas etapas e a aba Nova Fase
