@@ -1,3 +1,7 @@
+## Versão 3.2.1: licenças
+- O Volter agora tem licença: **MIT** para o código e **Creative Commons BY-NC 4.0** para o conteúdo (artigos, fichas e lições)
+- Saíram os documentos antigos de planejamento da época em que o Volter seria uma plataforma de cursos
+
 ## Versão 3.2.0: da válvula ao SMD
 - **Tema novo em Eletrônica: "Da válvula ao SMD"**, com seis artigos sobre a história da eletrônica de consumo contada pelos aparelhos e pela bancada:
   - panorama e linha do tempo, com o relato "Uma bancada que atravessou tudo"

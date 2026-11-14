@@ -98,8 +98,13 @@ build/                              ícones (volter.ico, volter.icns, icon.png)
 ferramentas/sincronizar-conteudo.js copia o conteúdo do claude.ai para data/conteudo.js
 .github/workflows/instaladores.yml  gera os instaladores e publica em Releases
 .github/notas-da-versao.md          texto da página de cada versão
-docs/                               especificações do projeto e grade de temas
+docs/                               anotações do projeto
 ```
+
+## Licença
+
+- **Código:** MIT (arquivo [`LICENSE`](LICENSE)).
+- **Conteúdo** (artigos, fichas e lições): Creative Commons BY-NC 4.0 (arquivo [`LICENSE-CONTEUDO.md`](LICENSE-CONTEUDO.md)). Pode ler, compartilhar e adaptar citando o Volter, sem uso comercial.
 
 ---
 
