@@ -790,6 +790,8 @@ const TRACKS = [
     plan: [] },
   { id: "eletronica", area: "eletronica", color: "#4fe3a6", name: "Eletrônica analógica e digital", short: "Eletrônica", ico: "onda", desc: "Componentes, protoboard, solda, transistores, relés, fontes, amplificadores, lógica digital e chips.",
     plan: [] },
+  { id: "historia", area: "eletronica", color: "#f472b6", name: "Da válvula ao SMD", short: "Da válvula ao SMD", ico: "monitor", desc: "A história da eletrônica de consumo pelos aparelhos: rádios, TVs, amplificadores, videocassete, CD e DVD, e como a bancada mudou em cada fase.",
+    plan: [] },
   { id: "iot", area: "eletronica", color: "#a78bfa", name: "Microcontroladores e IoT", short: "IoT", ico: "chip", desc: "ESP32, sensores, Wi-Fi, MQTT e dispositivos conectados.",
     plan: [["Atuadores: relés, motores e servos", "Ventilador ligado pela temperatura"], ["Painel na nuvem com os dados do sensor", "Painel com leituras em tempo real"]] },
   /* Elétrica industrial e comandos */
@@ -852,7 +854,7 @@ const TRACKS = [
 const TRACK_IDS = new Set(TRACKS.map(t => t.id));
 /* Assuntos do menu: cada um abre uma página com os seus temas. A ordem aqui é a ordem do menu. */
 const AREAS = [
-  { id: "eletronica", route: "eletronica", name: "Eletrônica", short: "Eletrônica", ico: "onda", sub: "Eletricidade, componentes, circuitos e microcontroladores.", lead: "Fundamentos de eletricidade, componentes, circuitos analógicos e digitais, fontes e microcontroladores." },
+  { id: "eletronica", route: "eletronica", name: "Eletrônica", short: "Eletrônica", ico: "onda", sub: "Eletricidade, componentes, circuitos e microcontroladores.", lead: "Fundamentos de eletricidade, componentes, circuitos analógicos e digitais, fontes, microcontroladores e a história da eletrônica, da válvula ao SMD." },
   { id: "eletrica", route: "eletrica", name: "Elétrica industrial e comandos", short: "Elétrica industrial", ico: "eletrica", sub: "Motores, comandos, CLP, inversores, redes e instalações.", lead: "Motores, comandos elétricos, sensores, CLP, inversores, redes industriais e instalações elétricas." },
   { id: "producao", route: "producao", name: "Linha de produção", short: "Linha de produção", ico: "fabrica", sub: "Fábrica de bebidas: xarope, sopro, envase, paletização e utilidades.", lead: "As máquinas de uma fábrica de bebidas: tratamento de água, xaroparia e carbonatação, sopro, inspetor de garrafas Krones, enchedoras KHS, linha asséptica, rotulagem, paletização convencional e por robô, caldeiras e utilidades." },
   { id: "odonto", route: "odonto", name: "Equipamentos odontológicos", short: "Odontologia", ico: "dente", sub: "Consultório, esterilização, ar comprimido e sucção.", lead: "Os equipamentos do consultório odontológico: cadeira e equipo, ultrassom, fotopolimerizador, autoclave, cuba ultrassônica, destiladora, compressor e bomba de vácuo." },

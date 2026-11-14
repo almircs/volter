@@ -1,3 +1,12 @@
+## Versão 3.2.0: da válvula ao SMD
+- **Tema novo em Eletrônica: "Da válvula ao SMD"**, com seis artigos sobre a história da eletrônica de consumo contada pelos aparelhos e pela bancada:
+  - panorama e linha do tempo, com o relato "Uma bancada que atravessou tudo"
+  - a era das válvulas: rádio super-heteródino, TV preto e branco, flyback e cinescópio, amplificador valvulado
+  - o transistor: germânio e silício, rádio a pilha, TV híbrida, amplificador sem transformador e a placa de circuito impresso
+  - circuitos integrados: TV em cores PAL-M, varicap e controle remoto, fonte chaveada, 3 em 1 e videocassete
+  - a era digital: CD, DVD, microcontrolador, barramento I²C e EEPROM na TV
+  - SMD e telas planas: tamanhos e encapsulamentos, solda sem chumbo, LCD, LED, OLED e TV digital
+
 ## Versão 3.1.0: inspetor de garrafas vazias
 - **Ficha nova em Linha de produção → Sopro, envase e rotulagem:** inspetor de garrafas vazias (EBI) Krones Linatronic, com as estações de inspeção (fundo, boca, rosca, parede lateral, líquido residual), as garrafas de teste e o Linatronic AI com rede neural
 

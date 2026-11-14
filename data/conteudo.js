@@ -4267,6 +4267,169 @@ window.VOLTER_SEED = {
    "track": "envase",
    "updatedAt": "2026-11-14T21:00:00.000Z"
   },
+  "hist-ci": {
+   "author": "",
+   "body": "O **circuito integrado** junta muitos transistores, resistores e diodos num só pedaço de silício. Nos aparelhos de casa, ele aparece nos anos 1970 e domina nos anos 1980: estágios que ocupavam meia placa passam a caber num único chip.\n\n## A TV em cores no Brasil\n- A transmissão oficial em cores começou em **1972**, no sistema **PAL-M**: o padrão de linhas e quadros do sistema americano (525 linhas, 60 Hz) com a codificação de cor PAL.\n- A cor é enviada numa **subportadora** junto com o sinal de brilho. O televisor tem um **decodificador de crominância** que separa as cores e as entrega ao cinescópio.\n- O **cinescópio em cores** tem três canhões (vermelho, verde e azul) e uma máscara que faz cada feixe atingir só o fósforo da sua cor. Os tubos **in-line**, com os três canhões lado a lado, simplificaram a convergência.\n- A alta tensão sobe para algo entre **20 e 30 mil volts**.\n\n## A TV vira um conjunto de chips\nAo longo dos anos 1980, cada bloco da TV ganha o seu circuito integrado:\n- **FI de vídeo e som** num chip.\n- **Crominância** num chip.\n- **Oscilador e sincronismo** (o \"jungle\", que gera os pulsos de deflexão) num chip.\n- **Saída vertical** num chip de potência.\n- A saída horizontal continua com um transistor de potência e o flyback.\n\n## Controle remoto e sintonia eletrônica\n- A sintonia passa a ser feita por **diodos varicap**, cuja capacitância muda com a tensão aplicada. Girar um botão vira ajustar uma tensão.\n- Com a tensão de sintonia gerada eletronicamente, chega a **memória de canais** e o **controle remoto infravermelho**: um LED no controle pisca um código, e um receptor na TV o decodifica.\n\n## A fonte chaveada\nEm vez de um transformador grande de 60 Hz, a TV passa a usar uma **fonte chaveada**: um transistor liga e desliga dezenas de milhares de vezes por segundo, num transformador pequeno de ferrite. A fonte fica mais leve, mais eficiente e aceita variações grandes na tensão da rede.\n\n## Som em casa: o 3 em 1 e os amplificadores\n- O **3 em 1** reunia toca-discos, rádio AM/FM e toca-fitas num só móvel.\n- Amplificadores de áudio inteiros passam a vir em **circuitos integrados** ou em **módulos híbridos** de potência, com poucos componentes em volta.\n- O **toca-fitas** usa um cabeçote magnético e um motor com controle de velocidade; os gravadores ganham redução de ruído.\n\n## O videocassete\n- O **videocassete VHS** popularizou-se no Brasil nos anos 1980, com fábricas na **Zona Franca de Manaus**.\n- Um **cilindro de cabeças** girando inclinado grava o vídeo em trilhas diagonais na fita; servomecanismos controlam a rotação do cilindro e a velocidade da fita.\n- É um aparelho que junta mecânica fina, eletrônica analógica de vídeo e, nos modelos mais novos, microcontrolador.\n\n## Na bancada\n- O **osciloscópio** vira ferramenta indispensável: o sinal de cada pino do chip é comparado com a forma de onda do esquema.\n- **Esquemas com as tensões de cada pino** e os sinais esperados.\n- **Sugador e malha dessoldadora** para retirar chips de muitos terminais.\n- O raciocínio muda: em vez de testar cada transistor, verificam-se as **entradas e saídas** de cada bloco.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "TV em cores no Brasil desde 1972, no sistema PAL-M.",
+    "Varicap e controle remoto vieram com a sintonia eletrônica.",
+    "A fonte chaveada trocou o transformador pesado de 60 Hz.",
+    "Com os circuitos integrados, o osciloscópio virou ferramenta básica."
+   ],
+   "kind": "",
+   "minutes": 9,
+   "order": 4,
+   "questions": [],
+   "status": "published",
+   "summary": "Como os circuitos integrados reorganizaram a TV em cores, trouxeram o controle remoto e a fonte chaveada e chegaram ao som e ao vídeo de casa.",
+   "title": "Circuitos integrados: TV em cores, controle remoto, videocassete e o 3 em 1",
+   "track": "historia",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "hist-digital": {
+   "author": "",
+   "body": "Nos anos 1980 e 1990, os aparelhos de casa passam a ter um **microcontrolador** no comando, e o som e a imagem passam a ser guardados em forma **digital**. A eletrônica de consumo começa a ser também software.\n\n## O CD\n- Lançado em **1982** pela Philips e pela Sony, o **Compact Disc** guarda o som em números: amostras de **16 bits**, **44,1 mil vezes por segundo**, em dois canais.\n- Os dados ficam em **pits** (pequenas depressões) numa trilha em espiral. Um **laser infravermelho** (cerca de 780 nm) lê a trilha pela reflexão.\n- A **unidade óptica** tem o laser, lentes, fotodiodos e bobinas de foco e trilhamento, que corrigem a posição da lente o tempo todo.\n- Códigos de **correção de erros** recuperam os dados mesmo com riscos e poeira.\n- Um **conversor digital-analógico (DAC)** transforma os números de volta em sinal de áudio.\n\n## O DVD\n- O **DVD** foi lançado em **1996** e chegou com força ao Brasil na virada para os anos 2000.\n- Usa um **laser vermelho** (cerca de 650 nm), trilhas mais estreitas e pits menores que o CD, e até duas camadas por lado: cabem 4,7 GB numa camada.\n- O vídeo é **comprimido em MPEG-2**: em vez de guardar cada quadro inteiro, guarda o que muda de um quadro para o outro.\n- O aparelho é um pequeno computador: **processador de decodificação**, memória, **firmware**, servo da unidade óptica e saídas de vídeo e áudio (inclusive áudio digital multicanal).\n- Os aparelhos leem também CDs de áudio e, muitos, arquivos de MP3 e vídeos em discos gravados.\n\n## O microcontrolador dentro da TV\n- Os televisores dos anos 1990 têm um **microcontrolador** que recebe os comandos do controle remoto e do teclado, mostra o **menu na tela** e comanda todos os outros chips.\n- A conversa entre eles é feita pelo **barramento I²C**, criado pela Philips: dois fios (dados e relógio) ligam o microcontrolador ao sintonizador, ao processador de vídeo e ao de áudio.\n- Uma **memória EEPROM** guarda canais, volume, brilho e também os **ajustes de fábrica** (geometria, alta tensão, equilíbrio de cor).\n- O **modo de serviço**, acessado por uma sequência de teclas, permite ver e alterar esses ajustes.\n\n## Na bancada\n- Muitos ajustes deixam de ser feitos com chave de fenda em trimpots e passam a ser feitos **pelo menu de serviço**.\n- **Gravadores de memória** para ler, salvar e regravar o conteúdo da EEPROM.\n- Cuidado com **descarga eletrostática**: os chips digitais são sensíveis.\n- Na unidade óptica: limpeza da lente, alinhamento e cuidado para **nunca olhar** para o laser, que é invisível no CD.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "CD: 16 bits, 44,1 kHz, laser infravermelho de cerca de 780 nm.",
+    "DVD: laser vermelho de cerca de 650 nm e vídeo comprimido em MPEG-2.",
+    "O microcontrolador da TV fala com os outros chips pelo barramento I²C.",
+    "A EEPROM guarda canais e os ajustes de fábrica."
+   ],
+   "kind": "",
+   "minutes": 9,
+   "order": 5,
+   "questions": [],
+   "status": "published",
+   "summary": "O laser e o áudio digital do CD, o vídeo comprimido do DVD e os aparelhos comandados por microcontrolador, memória e barramento I²C.",
+   "title": "A era digital: CD, DVD e o microcontrolador dentro da TV",
+   "track": "historia",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "hist-panorama": {
+   "author": "",
+   "bancada": "## Uma bancada que atravessou tudo\nConsertando televisores, rádios, amplificadores e aparelhos de DVD, atravessei essa história inteira na bancada: das válvulas aos transistores, dos transistores aos circuitos integrados e, por fim, aos componentes SMD.\n\nCada fase pediu ferramentas novas e um jeito novo de olhar o circuito. O que não mudou foi o método: entender o caminho do sinal e da energia, estágio por estágio.",
+   "body": "Rádio, televisão, amplificador, videocassete, CD e DVD: em pouco mais de 70 anos, os aparelhos da sala mudaram de **válvulas** acesas dentro de caixas de madeira para **placas minúsculas** com componentes montados na superfície. Este tema conta essa história pelos aparelhos e pela bancada de quem os consertava.\n\n## Linha do tempo\n| Época | Tecnologia dominante | Aparelhos típicos |\n|---|---|---|\n| Anos 1920 a 1950 | Válvulas, fiação ponto a ponto no chassi | Rádios de mesa, radiovitrolas, amplificadores |\n| 1950 | Válvulas | Chega a TV ao Brasil (TV Tupi, São Paulo) |\n| Anos 1960 | Transistores de germânio e depois de silício, placas de circuito impresso | Rádios portáteis a pilha, TVs híbridas (válvulas e transistores) |\n| Anos 1970 | Transistores e primeiros circuitos integrados | TV em cores no Brasil (1972, sistema PAL-M), aparelhos 3 em 1 |\n| Anos 1980 | Circuitos integrados, fontes chaveadas | Controle remoto, videocassete, CD (lançado em 1982) |\n| Anos 1990 | Microcontroladores, barramento I²C, primeiros SMD em massa | TVs com menu na tela, DVD (lançado em 1996) |\n| Anos 2000 em diante | SMD, BGA, processadores de vídeo | TVs de tela plana, TV digital no Brasil (2007) |\n\n## O fio da meada\nA função básica nunca mudou: **controlar uma corrente com um sinal pequeno**, para amplificar ou chavear. Mudou o dispositivo que faz isso:\n1. A **válvula**, com filamento aquecido e centenas de volts na placa.\n2. O **transistor**, frio, pequeno e alimentado com poucos volts.\n3. O **circuito integrado**, que junta dezenas, depois milhares de transistores.\n4. O **processador**, que passa a controlar o aparelho por software.\n5. O **SMD**, que encolhe tudo e muda a forma de soldar.\n\n## A bancada em cada época\n| Época | Ferramentas e jeito de trabalhar |\n|---|---|\n| Válvulas | Ferro de solda grande, testador de válvulas, multímetro analógico, muito cuidado com alta tensão |\n| Transistores | Ferro mais fino, placa de circuito impresso, multímetro com teste de junção, injetor de sinais |\n| Circuitos integrados | Osciloscópio, esquemas com as tensões de cada pino, sugador de solda |\n| Digital | Leitura e gravação de memórias, códigos de serviço, ajustes pelo menu de serviço |\n| SMD | Estação de ar quente, pinça, fluxo, lupa ou microscópio, solda sem chumbo |\n\nOs próximos artigos detalham cada uma dessas fases.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Válvula, transistor, circuito integrado, processador e SMD fazem a mesma função básica: controlar corrente.",
+    "TV no Brasil em 1950; cores em 1972, no sistema PAL-M.",
+    "CD em 1982, DVD em 1996, TV digital no Brasil em 2007.",
+    "Cada fase trouxe ferramentas novas para a bancada."
+   ],
+   "kind": "",
+   "minutes": 7,
+   "order": 1,
+   "questions": [],
+   "status": "published",
+   "summary": "Uma linha do tempo do rádio, da TV, do som e do vídeo dentro de casa, e o que mudou na bancada do técnico em cada fase.",
+   "title": "Da válvula ao SMD: o caminho da eletrônica de consumo",
+   "track": "historia",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "hist-smd": {
+   "author": "",
+   "body": "**SMD** (*surface mount device*) é o componente montado na **superfície** da placa, sem atravessar furos. A técnica, chamada **SMT**, existia desde os anos 1960, mas tomou conta dos aparelhos de consumo nos anos 1980 e 1990, quando as máquinas de montagem automática ficaram baratas e rápidas.\n\n## Por que o SMD venceu\n- **Tamanho:** componentes muito menores, dos dois lados da placa.\n- **Montagem automática:** máquinas *pick and place* colocam milhares de peças por hora; a solda é feita num **forno de refusão**.\n- **Desempenho:** terminais curtos funcionam melhor em altas frequências.\n- **Custo:** menos material e menos furos.\n\n## Tamanhos de componentes passivos\n| Código | Tamanho aproximado |\n|---|---|\n| 1206 | 3,2 × 1,6 mm |\n| 0805 | 2,0 × 1,25 mm |\n| 0603 | 1,6 × 0,8 mm |\n| 0402 | 1,0 × 0,5 mm |\n| 0201 | 0,6 × 0,3 mm |\n\nResistores SMD trazem o valor num código de três ou quatro dígitos (por exemplo, **103** = 10 kΩ); capacitores cerâmicos SMD geralmente não trazem marcação nenhuma.\n\n## Encapsulamentos de chips\n- **SOT-23:** transistores e reguladores pequenos, com três terminais.\n- **SOIC e TSSOP:** terminais em duas fileiras laterais.\n- **QFP:** terminais nos quatro lados, muito finos.\n- **QFN:** contatos embaixo do corpo, sem terminais aparentes.\n- **BGA:** uma matriz de esferas de solda embaixo do chip, usada nos processadores e memórias.\n\n## Solda sem chumbo\nA partir de **2006**, a diretiva europeia **RoHS** restringiu o chumbo na solda. A liga sem chumbo funde em temperatura mais alta e muda o jeito de soldar: mais calor, mais fluxo e mais cuidado com as placas.\n\n## Telas planas e TV digital\n- Nos anos 2000, o cinescópio dá lugar às telas de **plasma** e **LCD**; depois, ao LCD com iluminação **LED** e às telas **OLED**.\n- A TV vira um computador: processador de vídeo, memória, sistema operacional e conexão à internet.\n- No Brasil, a **TV digital** (padrão ISDB-Tb) começou em **2007**, e o desligamento do sinal analógico começou em 2016.\n\n## A bancada de hoje\n- **Estação de ar quente** e ferro de ponta fina com controle de temperatura.\n- **Pinça**, **fluxo** em pasta ou gel e **malha dessoldadora**.\n- **Lupa, microscópio** ou câmera, porque muitos componentes são menores que um grão de arroz.\n- **Estação de retrabalho** com pré-aquecedor para BGA.\n- **Pulseira e manta antiestáticas**.\n- Software para gravar firmware em placas e memórias.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "SMD é montado na superfície; máquinas e forno de refusão fazem a montagem.",
+    "0603 e 0402 são milímetros ou menos; BGA tem esferas embaixo do chip.",
+    "A solda sem chumbo (RoHS, 2006) pede mais temperatura e fluxo.",
+    "Telas planas e TV digital transformaram a TV num computador."
+   ],
+   "kind": "",
+   "minutes": 8,
+   "order": 6,
+   "questions": [],
+   "status": "published",
+   "summary": "Componentes de montagem em superfície, encapsulamentos de chips, solda sem chumbo e o fim do tubo com as telas planas e a TV digital.",
+   "title": "SMD e telas planas: a eletrônica de hoje",
+   "track": "historia",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "hist-transistor": {
+   "author": "",
+   "body": "O **transistor** foi demonstrado em **1947**, nos Laboratórios Bell, mas levou alguns anos para chegar aos aparelhos de casa. Quando chegou, mudou tudo: menos calor, menos peso, alimentação com pilhas e aparelhos que funcionavam no instante em que eram ligados.\n\n## Germânio e silício\n- Os primeiros transistores comerciais eram de **germânio**. Funcionavam com tensões baixas, mas eram sensíveis ao calor e tinham fuga de corrente.\n- A partir dos anos 1960, os transistores de **silício** dominaram: mais estáveis, aguentam temperatura maior e custam menos.\n- Dois tipos, **NPN** e **PNP**, permitem montar circuitos complementares, um \"empurrando\" e outro \"puxando\" a corrente.\n\n## O rádio portátil\n- O rádio a pilha ficou tão popular que, no Brasil, o próprio aparelho passou a ser chamado de **\"transistor\"**.\n- O circuito continuou **super-heteródino**, com FI de 455 kHz, mas agora com transistores, **transformadores de FI** pequenos (as \"latinhas\" com núcleo ajustável) e uma **antena de ferrite** dentro da caixa.\n- A saída de áudio usava um par de transistores em push-pull, primeiro com transformadores, depois sem eles.\n\n## A TV híbrida\nA transição na TV foi gradual. Nos anos 1960 e 1970 foram comuns os televisores **híbridos**:\n- **Transistores** nos estágios de pequeno sinal: FI, vídeo, sincronismo.\n- **Válvulas** onde havia tensão e potência altas: saída horizontal, saída vertical, retificação da alta tensão.\n- Com o tempo, transistores de potência assumiram também a deflexão, e os televisores ficaram **totalmente transistorizados**.\n\n## O amplificador transistorizado\n- O transformador de saída desaparece: o estágio de saída **complementar** (um NPN e um PNP) liga direto no alto-falante, por um capacitor ou com fonte simétrica.\n- **Classe AB:** os dois transistores conduzem um pouco o tempo todo, para evitar a distorção na passagem pelo zero.\n- Os transistores de potência vão para **dissipadores** de alumínio, com mica e pasta térmica.\n- Surgem os amplificadores de muitos watts em caixas pequenas, base dos aparelhos de som e das caixas amplificadas.\n\n## A placa de circuito impresso\nA fiação ponto a ponto dá lugar à **placa de circuito impresso** de fenolite: trilhas de cobre de um lado, componentes **com terminais** (PTH) atravessando furos do outro. A montagem fica mais rápida e repetível, e o reparo muda: agora se segue a trilha.\n\n## Na bancada\n- Ferro de solda mais fino e de potência menor, para não aquecer demais as junções.\n- **Teste de junção** com o multímetro: um transistor bom se comporta como dois diodos.\n- **Injetor e seguidor de sinais**, para achar em qual estágio o som ou a imagem se perde.\n- Manuais com o **esquema** e as tensões esperadas em cada transistor.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Germânio veio primeiro; o silício dominou a partir dos anos 1960.",
+    "No Brasil, o rádio portátil virou sinônimo de transistor.",
+    "A TV híbrida misturava transistores no sinal e válvulas na potência.",
+    "O amplificador transistorizado eliminou o transformador de saída."
+   ],
+   "kind": "",
+   "minutes": 8,
+   "order": 3,
+   "questions": [],
+   "status": "published",
+   "summary": "Do germânio ao silício: como o transistor encolheu o rádio, entrou aos poucos na TV e mudou o amplificador e a bancada.",
+   "title": "O transistor chega à sala: rádios a pilha, TVs híbridas e som transistorizado",
+   "track": "historia",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "hist-valvulas": {
+   "author": "",
+   "body": "Durante a primeira metade do século XX, tudo o que amplificava um sinal era feito com **válvulas termiônicas**. Elas brilhavam dentro dos aparelhos, aqueciam o ambiente e levavam alguns segundos para \"esquentar\" antes de o som aparecer.\n\n## Como uma válvula trabalha\n- O **filamento** aquece o **catodo**, que libera elétrons no vácuo.\n- A **placa** (anodo), ligada a uma tensão positiva alta, atrai esses elétrons.\n- A **grade de controle**, entre os dois, recebe o sinal: uma pequena variação de tensão na grade controla uma grande corrente na placa. É isso que amplifica.\n- Variações com mais grades (**tetrodo**, **pentodo**) melhoram o ganho e a estabilidade.\n\nAs tensões de placa ficavam, em geral, entre **100 e 400 V**. O filamento era alimentado à parte, com 6,3 V num enrolamento do transformador, ou com as válvulas ligadas **em série** direto na rede.\n\n## O rádio\n- O rádio de mesa era quase sempre **super-heteródino**: o sinal da emissora é misturado com um oscilador local e convertido numa **frequência intermediária (FI)** fixa, de **455 kHz** em AM (10,7 MHz em FM). Assim, os filtros e amplificadores trabalham sempre na mesma frequência, e a seleção das emissoras fica melhor.\n- Um rádio típico tinha **cinco válvulas**: conversora, amplificadora de FI, detectora e pré-amplificadora de áudio, saída de áudio e retificadora.\n- A sintonia era feita por um **capacitor variável** de placas, girado pelo dial com um cordão e uma polia.\n- Nos rádios **sem transformador de força**, com os filamentos em série, o chassi podia ficar ligado direto à rede: o famoso **chassi vivo**.\n\n## A televisão preto e branco\nA TV chegou ao Brasil em **1950**, com a TV Tupi de São Paulo. O aparelho valvulado reunia vários \"rádios\" num só:\n- **Seletor de canais** (tuner) com válvulas e contatos rotativos.\n- **FI de vídeo e de som**, com várias válvulas.\n- **Separador de sincronismo**, que tira do sinal os pulsos que mantêm a imagem estável.\n- **Deflexão vertical e horizontal**, que movem o feixe de elétrons pela tela.\n- **Saída horizontal e flyback**: o transformador de saída horizontal gera a **alta tensão** do cinescópio, de mais de 10 mil volts.\n- **Cinescópio (tubo de raios catódicos)**: o canhão dispara elétrons contra a tela coberta de fósforo, e o ponto brilhante varre a tela linha por linha.\n\n## O amplificador valvulado\n- **Pré-amplificador** com válvulas duplas de pequeno sinal, como a **12AX7 (ECC83)**.\n- **Estágio de saída** com válvulas de potência, como a **6V6**, a **6L6** e a **EL34**, muitas vezes em **push-pull** (duas válvulas, cada uma amplificando metade da onda).\n- **Transformador de saída**: casa a alta impedância da válvula com os poucos ohms do alto-falante. É uma das peças mais caras e mais importantes do som.\n- O amplificador valvulado é usado até hoje em guitarra e em som de alta fidelidade, pelo jeito suave como distorce quando é levado ao limite.\n\n## Na bancada\n- Ferro de solda de potência alta, para soldar nos terminais do chassi e nos soquetes.\n- **Testador de válvulas** e válvulas de reposição numa caixa.\n- **Multímetro analógico** de ponteiro.\n- Muito respeito pela **alta tensão**: capacitores de filtro e o cinescópio guardam carga mesmo com o aparelho desligado, e o chassi vivo dá choque em quem encosta.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "A grade da válvula controla uma corrente grande na placa: isso amplifica.",
+    "O rádio super-heteródino converte tudo para a FI de 455 kHz em AM.",
+    "O flyback gera a alta tensão do cinescópio.",
+    "Capacitores e cinescópio guardam carga perigosa mesmo desligados."
+   ],
+   "kind": "",
+   "minutes": 9,
+   "order": 2,
+   "questions": [],
+   "status": "published",
+   "summary": "Como funcionavam o rádio super-heteródino, a TV preto e branco e o amplificador valvulado, e os cuidados de quem abria esses aparelhos.",
+   "title": "A era das válvulas: rádios, TVs e amplificadores",
+   "track": "historia",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
   "hw-fonte": {
    "author": "",
    "body": "A **fonte de alimentação** converte a tensão alternada da tomada nas tensões contínuas que as peças usam. Uma fonte ruim ou subdimensionada causa travamentos e pode danificar peças.\n\n## Tensões de saída\n| Tensão | Quem usa |\n|---|---|\n| **+12 V** | Processador (via VRM), placa de vídeo, motores de HD e ventoinhas; é a principal |\n| **+5 V** | USB, alguns circuitos e SSDs SATA |\n| **+3,3 V** | Memória e circuitos da placa-mãe |\n| **+5 VSB (standby)** | Mantém a placa \"acordada\" para ligar pelo botão, pela rede ou pelo teclado |\n\n## Conectores\n- **24 pinos ATX:** placa-mãe.\n- **EPS 4+4 ou 8 pinos:** processador.\n- **PCIe 6+2 pinos** ou **12V-2x6 (antigo 12VHPWR):** placas de vídeo.\n- **SATA:** SSDs e HDs de 2,5 e 3,5 polegadas.\n- **Molex:** periféricos antigos.\n\n## Como funciona\n1. Filtro de entrada contra ruídos da rede.\n2. Retificação e **PFC ativo** (correção do fator de potência), que aceita de 100 a 240 V automaticamente.\n3. Um conversor chaveado em alta frequência e um transformador pequeno baixam a tensão.\n4. Retificação e filtragem de saída, com regulação de cada tensão.\n5. Proteções contra sobretensão, sobrecorrente e curto-circuito.\n\n## Certificação 80 Plus\nIndica a eficiência: Bronze, Silver, Gold, Platinum e Titanium. Uma fonte **Gold** desperdiça menos energia em calor do que uma Bronze, esquenta menos e faz menos ruído.\n\n## Dimensionamento\n- Some o consumo do processador e da placa de vídeo (os maiores) e acrescente uma folga para o resto e para os picos.\n- Use os cabos da própria fonte; cabos modulares de fontes diferentes podem ter pinagens diferentes.\n\n## Nobreak (UPS)\n| Tipo | Como funciona |\n|---|---|\n| **Offline (standby)** | Liga a bateria quando a rede cai; tempo de transferência curto |\n| **Line-interactive** | Corrige variações de tensão sem usar a bateria |\n| **Online (dupla conversão)** | A carga é alimentada sempre pelo inversor; sem transferência, para equipamentos críticos |\n\n## Segurança\n- Nunca abra a fonte: os capacitores internos guardam tensão perigosa mesmo desligada da tomada.",

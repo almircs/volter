@@ -8,7 +8,7 @@ O Volter reúne, organizado por assunto, o conhecimento de mais de 30 anos em el
 
 | Assunto | Temas |
 |---|---|
-| **Eletrônica** | Fundamentos de eletricidade · Eletrônica analógica e digital · Microcontroladores e IoT |
+| **Eletrônica** | Fundamentos de eletricidade · Eletrônica analógica e digital · Da válvula ao SMD · Microcontroladores e IoT |
 | **Elétrica industrial e comandos** | Motores e comandos elétricos · CLP, inversores e redes industriais · Instalações elétricas residenciais |
 | **Linha de produção** | Água, xarope e carbonatação · Sopro, envase e rotulagem · Paletização · Robôs KUKA e programação KRL · Utilidades industriais |
 | **Equipamentos odontológicos** | Consultório odontológico · Esterilização e biossegurança · Ar comprimido e sucção |
