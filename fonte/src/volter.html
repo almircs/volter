@@ -1031,6 +1031,23 @@ function zig(a, b, c, v) {
   return '<polyline class="w on" points="' + pts.map(p => p.join(",")).join(" ") + '"/>';
 }
 
+// fluido no circuito: cores por estado e linhas com pontos animados
+const FLC = { dg: "#f87171", ql: "#fb923c", lq: "#fbbf24", mx: "#38bdf8", vb: "#a78bfa", ag: "#60a5fa", aq: "#fca5a5", off: "#3d4a63" };
+function flow(d, c, dir, w) {
+  return '<path d="' + d + '" fill="none" stroke="' + c + '" stroke-width="' + (w || 6) + '" stroke-linejoin="round" stroke-linecap="round" opacity=".9"/>' +
+    (dir ? '<path data-g="fl" data-dir="' + dir + '" d="' + d + '" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="2 12" stroke-linecap="round" opacity=".7"/>' : "");
+}
+function flowTick(r, st, dt, v) {
+  if (!st.run || RMOT) return; st.ph = (st.ph + dt * (v || 1)) % 1000; const o = st.ph * 30;
+  sgs(r, "fl").forEach(p => { p.style.strokeDashoffset = String(-o * Number(p.dataset.dir)); });
+}
+// serpentina vertical de (x, y1) a (x, y2), largura w (negativa vai para a esquerda), n voltas (par)
+function serp(x, y1, y2, w, n) { let d = "M" + x + " " + y1; const h = (y2 - y1) / n; for (let i = 0; i < n; i++) d += "H" + (i % 2 ? x : x + w) + "V" + (y1 + h * (i + 1)).toFixed(1); return d; }
+const smet = (r, k, l, v) => { const e = r.querySelector('[data-o="' + k + '"]'); if (e) { e.textContent = v; e.previousElementSibling.textContent = l; } };
+const sShow = (r, f, on) => { const i = r.querySelector('[data-f="' + f + '"]'); if (i) (i.closest("label") || i.parentNode).style.display = on ? "" : "none"; };
+const hot = t => { t = Math.max(0, Math.min(1, t)); const A = [56, 189, 248], B = [251, 191, 36], C = [248, 113, 113], u = t < .5 ? t * 2 : (t - .5) * 2, P = t < .5 ? A : B, Q = t < .5 ? B : C; return "rgb(" + P.map((v, i) => Math.round(v + (Q[i] - v) * u)).join(",") + ")"; };
+const legRef = '<p class="small muted s-cap" style="display:flex;flex-wrap:wrap;gap:4px 14px"><span><b style="color:#f87171">●</b> gás quente de alta</span><span><b style="color:#fb923c">●</b> condensando</span><span><b style="color:#fbbf24">●</b> líquido de alta</span><span><b style="color:#38bdf8">●</b> mistura fria evaporando</span><span><b style="color:#a78bfa">●</b> vapor de baixa</span></p>';
+
 const SIMS = {
   /* ===================== LOTE 1: MEDIÇÃO ===================== */
   regua: {
@@ -1195,6 +1212,552 @@ const SIMS = {
       const c = sg(r, "cur"); c.setAttribute("x2", (180 + 80 * Math.sin(ang)).toFixed(1)); c.setAttribute("y2", (120 - 80 * Math.cos(ang)).toFixed(1));
       so(r, "pos", st.pos + "%"); so(r, "r12", R(r12)); so(r, "r23", R(r23)); so(r, "vo", fmtN(5 * f, 2) + " V");
       sread(r, "O potenciômetro é um resistor com um cursor que desliza sobre a pista. A soma das duas partes é sempre a resistência total (" + R(st.rt) + "). Ligado entre 0 e 5 V, o cursor funciona como um <b>divisor de tensão</b> ajustável. " + (st.tipo === "lin" ? "No <b>linear</b>, a resistência muda na mesma proporção do giro: na metade do curso, metade da resistência." : "No <b>logarítmico</b>, a resistência muda pouco no começo e muito no fim. É o usado no volume de áudio, porque o ouvido percebe o som de forma logarítmica.") + " Ligado só com dois terminais (1 e 2), vira um reostato, um resistor variável.");
+    }
+  },
+
+  /* ===================== LOTE 2: REFRIGERAÇÃO E CALOR ===================== */
+  calor: {
+    fam: "Refrigeração e calor", title: "Simulador: calor, zero absoluto e dilatação da água", hint: "Três experiências sobre calor e temperatura: quanto calor é preciso para aquecer ou resfriar a água (caloria, BTU e joule), o zero absoluto e o comportamento da água perto de 4 °C.",
+    init: { modo: "cal", m: 10, ti: 20, tf: 60, tz: 20, ta: 2 },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 230", '<g data-g="g"></g>', "Experiência sobre calor") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("calor", "modo", [["cal", "Caloria e BTU"], ["zero", "Zero absoluto"], ["agua", "Dilatação da água"]]) + '</div><div class="s-ctl">' + sRange("calor", "m", "Massa de água (kg)", .5, 200, .5) + sRange("calor", "ti", "Temperatura inicial", 0, 100, 1) + sRange("calor", "tf", "Temperatura final", 0, 100, 1) + sRange("calor", "tz", "Temperatura do gás", -273, 300, 1) + sRange("calor", "ta", "Temperatura da água na superfície", -10, 20, .5) + "</div>" + sMeters([["a", "–"], ["b", "–"], ["c", "–"], ["d", "–"]]),
+    draw(r, st) {
+      const m = st.modo; ["m", "ti", "tf"].forEach(f => sShow(r, f, m === "cal")); sShow(r, "tz", m === "zero"); sShow(r, "ta", m === "agua");
+      so(r, "m", fmtN(st.m, 1) + " kg"); so(r, "ti", st.ti + " °C"); so(r, "tf", st.tf + " °C"); so(r, "tz", st.tz + " °C"); so(r, "ta", fmtN(st.ta, 1) + " °C");
+      let g = "", txt = "";
+      if (m === "cal") {
+        const dT = st.tf - st.ti, kcal = st.m * dT, kJ = kcal * 4.1868, btu = kcal * 3.9683, s = Math.abs(kJ) / 2, hw = 30 + 110 * Math.sqrt(st.m / 200);
+        g = '<path d="M60 40V196H200V40" fill="none" stroke="#9db0d3" stroke-width="3"/><rect x="62" y="' + (196 - hw).toFixed(1) + '" width="136" height="' + hw.toFixed(1) + '" fill="' + hot(st.tf / 100) + '" opacity=".75"/>' +
+          '<text x="130" y="' + (190 - hw).toFixed(1) + '" text-anchor="middle">' + fmtN(st.m, 1) + " kg de água</text>" +
+          (dT > 0 ? '<path d="M96 222q8-14 0-22q14 8 8 22zM126 222q8-16 0-26q16 10 8 26zM156 222q8-14 0-22q14 8 8 22z" fill="#fb923c"/><text x="130" y="16" text-anchor="middle">recebe calor</text>' : dT < 0 ? '<path d="M44 120h-26M216 120h26M44 160h-26M216 160h26" stroke="#38bdf8" stroke-width="3"/><path d="M18 120l8-6v12zM242 120l-8-6v12zM18 160l8-6v12zM242 160l-8-6v12z" fill="#38bdf8"/><text x="130" y="16" text-anchor="middle">perde calor (refrigeração)</text>' : "") +
+          '<text x="130" y="30" text-anchor="middle" style="fill:var(--ink)">' + st.ti + " °C → " + st.tf + " °C</text>" +
+          '<rect x="262" y="50" width="180" height="56" rx="6" fill="#142039" stroke="#2a3b62"/><text x="274" y="72" style="fill:var(--ink)">1 kcal</text><text x="274" y="92">1 kg de água sobe 1 °C</text>' +
+          '<rect x="262" y="116" width="180" height="56" rx="6" fill="#142039" stroke="#2a3b62"/><text x="274" y="138" style="fill:var(--ink)">1 BTU</text><text x="274" y="158">1 libra de água sobe 1 °F</text>' +
+          '<text x="262" y="196">1 BTU ≈ 0,252 kcal ≈ 1,055 kJ</text><text x="262" y="214">12.000 BTU/h = 1 TR ≈ 3,52 kW</text>';
+        smet(r, "a", "Calor (kcal)", fmtN(kcal, 0)); smet(r, "b", "Em kJ", fmtN(kJ, 0)); smet(r, "c", "Em BTU", fmtN(btu, 0)); smet(r, "d", "Tempo com 2 kW", s < 90 ? fmtN(s, 0) + " s" : fmtN(s / 60, 0) + " min");
+        txt = dT === 0 ? "Sem diferença de temperatura não há troca de calor sensível." : (dT > 0 ? "Para aquecer " : "Para resfriar ") + fmtN(st.m, 1) + " kg de água de " + st.ti + " °C para " + st.tf + " °C é preciso " + (dT > 0 ? "fornecer" : "retirar") + " Q = m × c × ΔT = " + fmtN(st.m, 1) + " × 1 × " + Math.abs(dT) + " = <b>" + fmtN(Math.abs(kcal), 0) + " kcal</b> (o calor específico da água é 1 kcal/kg·°C). Em joules, multiplique por 4,187; em BTU, por 3,968. " +
+          (dT < 0 ? "Retirar calor é o trabalho da refrigeração. A capacidade dos aparelhos é dada em BTU/h: um ar-condicionado de 12.000 BTU/h retira 12.000 BTU a cada hora, cerca de 3.024 kcal/h ou 3,52 kW (1 tonelada de refrigeração, TR). " : "") +
+          "Esse é o calor <b>sensível</b>, que muda a temperatura. Mudar de estado pede muito mais: derreter 1 kg de gelo a 0 °C consome 80 kcal, e evaporar 1 kg de água a 100 °C, cerca de 540 kcal (calor <b>latente</b>). A refrigeração usa justamente o calor latente da evaporação do fluido.";
+      }
+      if (m === "zero") {
+        const K = st.tz + 273.15, V = K / 293.15, X = t => 170 + (t + 273.15) / 573.15 * 260, Y = v => 200 - v * 80, hg = 70 * V;
+        g = '<path d="M40 40V200H120V40" fill="none" stroke="#9db0d3" stroke-width="3"/><rect x="42" y="' + (200 - hg).toFixed(1) + '" width="76" height="' + Math.max(0, hg - 2).toFixed(1) + '" fill="' + hot((st.tz + 100) / 400) + '" opacity=".35"/><rect x="42" y="' + (190 - hg).toFixed(1) + '" width="76" height="10" fill="#9aa1a9"/><rect x="76" y="' + (130 - hg).toFixed(1) + '" width="8" height="60" fill="#9aa1a9"/>';
+        const sp = Math.sqrt(Math.max(0, K) / 293.15) * 9; [[55, .2], [92, .35], [70, .55], [100, .7], [58, .82], [86, .9]].forEach(([x, f], i) => { const y = 200 - hg * f, a = i * 1.7; if (hg > 8) g += '<circle cx="' + x + '" cy="' + y.toFixed(1) + '" r="3" fill="#e2e8f0"/><line x1="' + x + '" y1="' + y.toFixed(1) + '" x2="' + (x + sp * Math.cos(a)).toFixed(1) + '" y2="' + (y + sp * Math.sin(a)).toFixed(1) + '" stroke="#e2e8f0"/>'; });
+        g += '<text x="80" y="220" text-anchor="middle">gás no cilindro</text><line x1="170" x2="440" y1="200" y2="200" stroke="#6c7ea3"/><line x1="' + X(-273.15) + '" x2="' + X(-273.15) + '" y1="30" y2="200" stroke="#6c7ea3"/>' +
+          '<line x1="' + X(-273.15) + '" y1="' + Y(0) + '" x2="' + X(-150) + '" y2="' + Y(123.15 / 293.15).toFixed(1) + '" stroke="#22d3ee" stroke-width="2" stroke-dasharray="4 4"/><line x1="' + X(-150) + '" y1="' + Y(123.15 / 293.15).toFixed(1) + '" x2="' + X(300) + '" y2="' + Y(573.15 / 293.15).toFixed(1) + '" stroke="#22d3ee" stroke-width="2.5"/>' +
+          '<circle cx="' + X(st.tz).toFixed(1) + '" cy="' + Y(V).toFixed(1) + '" r="6" fill="#fbbf24"/>';
+        [-273, -200, -100, 0, 100, 200, 300].forEach(t => { g += '<text x="' + X(t).toFixed(1) + '" y="214" text-anchor="middle" style="font-size:9px">' + t + "</text>"; });
+        g += '<text x="' + (X(-273.15) + 4) + '" y="190" style="font-size:10px">0 K = −273,15 °C</text><text x="180" y="24" style="font-size:10px">volume do gás × temperatura (°C), pressão constante</text><text x="190" y="228" style="font-size:9px">tracejado: extrapolação (o gás real vira líquido antes)</text>';
+        smet(r, "a", "Kelvin", fmtN(K, 2) + " K"); smet(r, "b", "Fahrenheit", fmtN(st.tz * 1.8 + 32, 1) + " °F"); smet(r, "c", "Volume (20 °C = 1 L)", fmtN(V, 3) + " L"); smet(r, "d", "Agitação (20 °C = 100%)", fmtN(V * 100, 0) + "%");
+        txt = "Com a pressão constante, o volume de um gás muda na mesma proporção da temperatura absoluta (lei de Charles): de 20 °C para " + st.tz + " °C, o volume vai de 1 L para " + fmtN(V, 3) + " L. Prolongando a reta para baixo, o volume chegaria a zero em <b>−273,15 °C</b>: é o <b>zero absoluto</b>, a temperatura em que as partículas teriam a menor agitação possível. Ele é o zero da escala Kelvin e não pode ser alcançado, só aproximado. Por isso as contas de gases e de rendimento usam kelvin: " + st.tz + " °C = " + fmtN(K, 2) + " K.";
+      }
+      if (m === "agua") {
+        const T = st.ta, gelo = T < 0, rho = gelo ? 916.7 : 1000 * (1 - (T + 288.9414) / (508929.2 * (T + 68.12963)) * Math.pow(T - 3.9863, 2)), vol = 1e6 / rho, X = t => 250 + t / 20 * 190, Y = v => 190 - (v - 1000) / 2 * 150;
+        const rv = t => 1e6 / (1000 * (1 - (t + 288.9414) / (508929.2 * (t + 68.12963)) * Math.pow(t - 3.9863, 2)));
+        let d = ""; for (let t = 0; t <= 20; t += .5) d += (d ? "L" : "M") + X(t).toFixed(1) + " " + Y(rv(t)).toFixed(1);
+        g = '<rect x="20" y="40" width="190" height="160" fill="#0c1424" stroke="#2a3b62"/><rect x="20" y="40" width="190" height="160" fill="url(#lagoG)"/>' +
+          '<defs><linearGradient id="lagoG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + hot((Math.max(T, 0) + 5) / 40) + '" stop-opacity=".55"/><stop offset="1" stop-color="' + hot(9 / 40) + '" stop-opacity=".55"/></linearGradient></defs>' +
+          (gelo ? '<rect x="20" y="40" width="190" height="16" fill="#e2e8f0"/><text x="115" y="52" text-anchor="middle" style="fill:#0c1424;font-size:10px">gelo flutua</text>' : "") +
+          '<text x="115" y="' + (gelo ? 74 : 58) + '" text-anchor="middle">superfície: ' + fmtN(T, 1) + ' °C</text><text x="115" y="190" text-anchor="middle">fundo: cerca de 4 °C</text><text x="115" y="30" text-anchor="middle">lago no inverno</text>' +
+          '<line x1="250" x2="440" y1="190" y2="190" stroke="#6c7ea3"/><line x1="250" x2="250" y1="36" y2="190" stroke="#6c7ea3"/><path d="' + d + '" fill="none" stroke="#22d3ee" stroke-width="2.5"/>' +
+          [0, 4, 10, 15, 20].map(t => '<text x="' + X(t).toFixed(1) + '" y="204" text-anchor="middle" style="font-size:9px">' + t + "</text>").join("") +
+          '<line x1="' + X(3.98) + '" x2="' + X(3.98) + '" y1="' + Y(1000) + '" y2="190" stroke="#fbbf24" stroke-dasharray="3 3"/><text x="256" y="30" style="font-size:10px">volume de 1 kg de água (mL) × °C</text><text x="256" y="46" style="font-size:9px">1.002</text><text x="256" y="184" style="font-size:9px">1.000</text>' +
+          (gelo ? '<text x="262" y="70" style="fill:#e2e8f0;font-size:10px">gelo: ' + fmtN(vol, 0) + ' mL (fora da escala, +9%)</text>' : '<circle cx="' + X(T).toFixed(1) + '" cy="' + Y(vol).toFixed(1) + '" r="6" fill="#fbbf24"/>');
+        smet(r, "a", "Densidade", fmtN(rho, gelo ? 1 : 2) + " kg/m³"); smet(r, "b", "Volume de 1 kg", fmtN(vol, gelo ? 0 : 2) + " mL"); smet(r, "c", "Estado", gelo ? "gelo" : "líquida"); smet(r, "d", "Em relação a 4 °C", "+" + fmtN((vol / 1000.03 - 1) * 100, gelo ? 1 : 3) + "%");
+        txt = "Quase tudo encolhe ao esfriar, mas a água não: ela tem a maior densidade perto de <b>4 °C</b>. Abaixo disso ela volta a dilatar, e ao congelar aumenta cerca de <b>9%</b> de volume. Por isso o gelo flutua, os lagos congelam de cima para baixo (o fundo fica a 4 °C) e garrafas e canos estouram no congelador. Na refrigeração isso importa: umidade dentro do circuito vira gelo na saída do capilar ou da válvula de expansão e entope a passagem. É uma das razões para fazer vácuo e usar filtro secador.";
+      }
+      sg(r, "g").innerHTML = g; sread(r, txt);
+    }
+  },
+
+  ciclo: {
+    fam: "Refrigeração e calor", title: "Simulador: circuito de refrigeração e ciclo reverso (bomba de calor)", hint: "O caminho do fluido refrigerante num ar-condicionado. Troque entre resfriar e aquecer para ver a válvula de 4 vias inverter o ciclo, e escolha cada componente para saber o que ele faz.",
+    init: { modo: "frio", foco: "comp", te: 32, ti: 24, run: 1, ph: 0 },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 270", '<g data-g="g"></g>', "Circuito de refrigeração") + "</div>" + legRef + '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px">' + sSeg("ciclo", "modo", [["frio", "Resfriar"], ["quente", "Aquecer (bomba de calor)"]]) + sBtn("ciclo", "run", "Pausar") + "</div>" + sSeg("ciclo", "foco", [["comp", "Compressor"], ["cond", "Condensador"], ["exp", "Expansão"], ["evap", "Evaporador"], ["v4", "Válvula de 4 vias"], ["acum", "Acumulador"]]) +
+      '<div class="s-ctl">' + sRange("ciclo", "te", "Temperatura do ar externo", -10, 43, 1) + sRange("ciclo", "ti", "Temperatura do ambiente interno", 15, 30, 1) + "</div>" + sMeters([["ev", "Evaporação"], ["pb", "Pressão de baixa"], ["cd", "Condensação"], ["pa", "Pressão de alta"], ["cop", "Rendimento (COP)"]]),
+    draw(r, st) {
+      const fr = st.modo === "frio", P = t => SIMS.ptchart.p("R410A", t) - 1.013;
+      const S = [["M215 203V176", [1, FLC.dg], [1, FLC.dg]], ["M245 176V186H300V196", [1, FLC.vb], [1, FLC.vb]], ["M300 244V254H215V247", [1, FLC.vb], [1, FLC.vb]],
+        ["M195 160H70V200", [-1, FLC.vb], [1, FLC.dg]], [serp(70, 200, 60, -50, 8), [-1, FLC.mx], [1, FLC.ql]], ["M70 60V30H200", [-1, FLC.mx], [1, FLC.lq]],
+        ["M260 30H390V60", [-1, FLC.lq], [1, FLC.mx]], [serp(390, 60, 200, 50, 8), [-1, FLC.ql], [1, FLC.mx]], ["M265 160H390V200", [1, FLC.dg], [-1, FLC.vb]]];
+      let g = '<rect x="0" y="0" width="150" height="270" fill="#22d3ee" opacity=".05"/><rect x="330" y="0" width="130" height="270" fill="#fbbf24" opacity=".05"/><text x="8" y="262">dentro de casa</text><text x="452" y="262" text-anchor="end">fora</text>';
+      S.forEach(s => { const m = fr ? s[1] : s[2]; g += flow(s[0], m[1], st.run ? m[0] : 0); });
+      g += flow("M200 30H210C214 18 222 18 226 30S238 42 242 30S254 18 260 30", FLC.mx, st.run ? (fr ? -1 : 1) : 0, 3);
+      g += '<circle cx="215" cy="225" r="22" fill="#142039" stroke="#9db0d3" stroke-width="2"/><text x="215" y="229" text-anchor="middle" style="font-size:9px">comp.</text>' +
+        '<rect x="290" y="196" width="20" height="48" rx="8" fill="#142039" stroke="#9db0d3" stroke-width="2"/><text x="316" y="224" style="font-size:9px">acum.</text>' +
+        '<rect x="195" y="144" width="70" height="32" rx="4" fill="#0c1424" stroke="#9db0d3" stroke-width="2"/>' +
+        (fr ? '<path d="M215 176V152H258V160H265" fill="none" stroke="' + FLC.dg + '" stroke-width="2.5"/><path d="M195 160H209A6 6 0 0 1 221 160H245V176" fill="none" stroke="' + FLC.vb + '" stroke-width="2.5"/>'
+          : '<path d="M215 176V160H195" fill="none" stroke="' + FLC.dg + '" stroke-width="2.5"/><path d="M265 160H245V176" fill="none" stroke="' + FLC.vb + '" stroke-width="2.5"/>') +
+        '<text x="230" y="140" text-anchor="middle" style="font-size:9px">válvula de 4 vias</text><text x="230" y="12" text-anchor="middle" style="font-size:9px">capilar ou válvula de expansão</text>' +
+        '<text x="45" y="225" text-anchor="middle" style="font-size:9px">trocador interno</text><text x="45" y="238" text-anchor="middle" style="fill:var(--ink);font-size:10px">' + (fr ? "evaporador" : "condensador") + "</text>" +
+        '<text x="415" y="225" text-anchor="middle" style="font-size:9px">trocador externo</text><text x="415" y="238" text-anchor="middle" style="fill:var(--ink);font-size:10px">' + (fr ? "condensador" : "evaporador") + "</text>" +
+        '<text x="104" y="110" style="font-size:10px;fill:' + (fr ? "#38bdf8" : "#f87171") + '">' + (fr ? "← calor" : "calor →") + '</text><text x="104" y="124" style="font-size:9px">' + (fr ? "entra" : "sai") + "</text>" +
+        '<text x="330" y="110" style="font-size:10px;fill:' + (fr ? "#f87171" : "#38bdf8") + '">' + (fr ? "calor →" : "← calor") + '</text><text x="330" y="124" style="font-size:9px">' + (fr ? "sai" : "entra") + "</text>";
+      const F = { comp: [215, 225, 32], exp: [230, 30, 30], v4: [230, 160, 44], acum: [300, 220, 34], evap: fr ? [45, 130, 56] : [415, 130, 56], cond: fr ? [415, 130, 56] : [45, 130, 56] }[st.foco];
+      g += '<circle cx="' + F[0] + '" cy="' + F[1] + '" r="' + F[2] + '" fill="none" stroke="#fde047" stroke-width="2" stroke-dasharray="5 4"/>';
+      sg(r, "g").innerHTML = g;
+      const tev = fr ? st.ti - 17 : st.te - 8, tcd = fr ? st.te + 13 : st.ti + 20, Tk = tev + 273.15, Tc = tcd + 273.15, cop = .5 * (fr ? Tk : Tc) / (Tc - Tk);
+      so(r, "te", st.te + " °C"); so(r, "ti", st.ti + " °C"); so(r, "ev", tev + " °C"); so(r, "cd", tcd + " °C");
+      so(r, "pb", fmtN(P(tev), 1) + " bar · " + fmtN(P(tev) * 14.504, 0) + " psi"); so(r, "pa", fmtN(P(tcd), 1) + " bar · " + fmtN(P(tcd) * 14.504, 0) + " psi"); so(r, "cop", fmtN(cop, 1));
+      sg(r, "b-run").textContent = st.run ? "Pausar" : "Continuar";
+      const T = {
+        comp: "O <b>compressor</b> aspira o vapor frio e de baixa pressão que volta do evaporador e o comprime. Com a pressão, a temperatura do gás também sobe muito (vermelho); é ela que permite jogar o calor fora. Ele não “produz frio”: só bombeia o calor de um lado para o outro.",
+        cond: "O <b>condensador</b> recebe o gás quente de alta pressão. Ao perder calor para o ar, o gás condensa a cerca de " + tcd + " °C e vira líquido, ainda em alta pressão (amarelo). " + (fr ? "Fica fora, na unidade condensadora." : "No modo aquecer ele está dentro de casa: quem aquece o ambiente é o condensador."),
+        exp: "O <b>dispositivo de expansão</b> (tubo capilar ou válvula de expansão) é uma restrição. O líquido de alta pressão passa por ele e a pressão cai de repente; parte do líquido evapora na hora e a mistura sai muito fria (azul). É ele que separa o lado de alta do lado de baixa.",
+        evap: "No <b>evaporador</b>, com a pressão baixa, o fluido ferve a cerca de " + tev + " °C e, para ferver, retira calor do ar que passa pela serpentina. Sai como vapor (lilás) a caminho do compressor. " + (fr ? "Está dentro de casa: é ele que esfria o ambiente." : "No modo aquecer ele fica fora e tira calor do ar externo, mesmo frio."),
+        v4: "A <b>válvula de 4 vias</b> (válvula reversora) escolhe para onde vai o gás que sai do compressor. A bobina dela desloca um êmbolo interno: " + (fr ? "agora a descarga vai para o trocador externo e a sucção vem do interno." : "agora a descarga vai para o trocador interno e a sucção vem do externo.") + " Os dois trocadores trocam de papel. É assim que funcionam o ar-condicionado quente e frio, a bomba de calor e o degelo.",
+        acum: "O <b>acumulador de sucção</b> é uma garrafa na entrada do compressor. Ele segura o líquido que não chegou a evaporar (comum na partida, no degelo e na inversão do ciclo) e deixa passar só vapor, com um furinho que devolve o óleo. Líquido não se comprime: se chegar ao compressor, quebra as válvulas (golpe de líquido)."
+      }[st.foco];
+      sread(r, T + " " + (fr ? "<br>Resfriando: o calor de dentro mais o calor do trabalho do compressor saem pela unidade externa. Para cada 1 kW elétrico, o aparelho retira cerca de " + fmtN(cop, 1) + " kW de calor nessas condições." :
+        "<br>Aquecendo (bomba de calor): para cada 1 kW elétrico entram cerca de " + fmtN(cop, 1) + " kW de calor na casa, porque a maior parte vem do ar de fora. " + (st.te < 5 ? "Com o ar externo frio, a serpentina de fora congela; o aparelho inverte o ciclo por alguns minutos para derreter o gelo (degelo)." : "")));
+    },
+    act(st, a) { if (a === "run") st.run = st.run ? 0 : 1; },
+    tick(r, st, dt) { flowTick(r, st, dt, .8); }
+  },
+
+  refrel: {
+    fam: "Refrigeração e calor", title: "Simulador: circuito elétrico do refrigerador, relé PTC e relé voltimétrico", hint: "O compressor monofásico tem duas bobinas: marcha (M) e partida (S). Ligue o termostato e veja o relé ligar a bobina de partida só por um instante. Depois desligue e religue logo em seguida.",
+    init: { tipo: "ptc", falha: "ok", on: 0, w: 0, tp: 0, prot: 0, trip: 0, cont: 1, ir: 0, is: 0, acc: 0, hist: [] },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 300", '<g data-g="g"></g>', "Circuito elétrico do refrigerador") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("refrel", "tipo", [["ptc", "Relé PTC"], ["volt", "Relé voltimétrico + capacitor"]]) + sSeg("refrel", "falha", [["ok", "Peças boas"], ["preso", "Partida não desliga"], ["aberto", "Partida não liga"]]) + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px">' + sBtn("refrel", "liga", "Termostato: ligar", "primary") + sBtn("refrel", "desl", "Termostato: desligar") + sBtn("refrel", "espera", "Esperar 3 minutos") + "</div>" +
+      sMeters([["ir", "Corrente na marcha"], ["is", "Corrente na partida"], ["rpm", "Rotação"], ["el", "Elemento de partida"], ["pr", "Protetor térmico"]]),
+    coil: (x, y1, y2, on) => { let d = "M" + x + " " + y1; const n = 4, h = (y2 - y1) / n; for (let i = 0; i < n; i++) d += "a8 " + (h / 2).toFixed(1) + " 0 0 1 0 " + h.toFixed(1); return '<path class="w' + (on ? " on" : "") + '" d="' + d + '"/>'; },
+    startOn(st) { if (st.falha === "preso") return true; if (st.falha === "aberto") return false; return st.tipo === "ptc" ? st.tp < .6 : !!st.cont; },
+    draw(r, st) {
+      const pwr = st.on && !st.trip, sOn = pwr && this.startOn(st), W = (d, on) => '<path class="w' + (on ? " on" : "") + '" d="' + d + '"/>';
+      let g = W("M20 30H60", true) + '<line x1="60" y1="30" x2="98" y2="' + (st.on ? 30 : 16) + '" stroke="#9db0d3" stroke-width="3"/><circle cx="60" cy="30" r="3" fill="#9db0d3"/><circle cx="100" cy="30" r="3" fill="#9db0d3"/><text x="80" y="48" text-anchor="middle" style="font-size:9px">termostato</text><text x="20" y="20" style="font-size:10px">F</text>' +
+        W("M100 30H160", pwr) + W("M160 30V60H220V70", pwr) + this.coil(220, 70, 130, pwr) + W("M220 130V160", pwr) + W("M160 30H360V50", sOn) + W("M360 95V100", sOn) + this.coil(360, 100, 130, sOn) + W("M360 130V160", sOn) +
+        W("M220 160H360", pwr) + W("M290 160V176", pwr) + W("M290 198V212H20", pwr) + '<text x="20" y="228" style="font-size:10px">N</text>' +
+        '<path d="M282 176h16v6h-16zM282 192h16v6h-16z" fill="' + (st.trip ? "#f87171" : "#9db0d3") + '"/><line x1="290" y1="182" x2="' + (st.trip ? 300 : 290) + '" y2="' + (st.trip ? 190 : 192) + '" stroke="#9db0d3" stroke-width="3"/><text x="304" y="192" style="font-size:9px">protetor térmico</text>' +
+        '<rect x="190" y="62" width="220" height="104" rx="10" fill="none" stroke="#6c7ea3" stroke-dasharray="5 4"/><text x="200" y="158" style="font-size:9px">compressor</text>' +
+        '<text x="234" y="104" style="font-size:9px">marcha</text><text x="374" y="120" style="font-size:9px">partida</text><text x="212" y="64" style="font-size:10px;fill:var(--ink)">M</text><text x="366" y="104" style="font-size:10px;fill:var(--ink)">S</text><text x="286" y="156" style="font-size:10px;fill:var(--ink)">C</text>';
+      if (st.tipo === "ptc") g += W("M360 50V56", sOn) + W("M360 89V95", sOn) + '<rect x="346" y="56" width="28" height="33" rx="3" fill="' + hot(st.tp) + '" stroke="#9db0d3"/><text x="360" y="77" text-anchor="middle" style="fill:#0c1424;font-size:9px">PTC</text><text x="342" y="76" text-anchor="end" style="font-size:9px">' + (st.tp < .6 ? "frio" : "quente") + "</text>";
+      else { const cl = st.falha === "preso" ? true : st.falha === "aberto" ? false : !!st.cont;
+        g += '<circle cx="360" cy="50" r="3" fill="#9db0d3"/><line x1="360" y1="50" x2="' + (cl ? 360 : 372) + '" y2="66" stroke="#9db0d3" stroke-width="3"/><circle cx="360" cy="68" r="3" fill="#9db0d3"/>' + W("M360 68V78", sOn) + '<path d="M348 78h24M348 85h24" stroke="#9db0d3" stroke-width="3"/>' + W("M360 85V95", sOn) +
+          W("M360 100H420V108", pwr) + this.coil(420, 108, 148, pwr && st.w > .05) + W("M420 148V160H360", pwr) + '<line x1="412" y1="128" x2="368" y2="60" stroke="#6c7ea3" stroke-dasharray="3 3"/><text x="398" y="58" style="font-size:9px">bobina do relé</text><text x="318" y="86" style="font-size:9px">capacitor</text>'; }
+      const H = st.hist, X = i => 20 + i * 420 / 149, Yi = v => 290 - Math.min(17, v) / 17 * 70, Yw = v => 290 - v * 70; let pr = "", ps = "", pw = "";
+      H.forEach((h, i) => { const c = i ? "L" : "M"; pr += c + X(i).toFixed(1) + " " + Yi(h[0]).toFixed(1); ps += c + X(i).toFixed(1) + " " + Yi(h[1]).toFixed(1); pw += c + X(i).toFixed(1) + " " + Yw(h[2]).toFixed(1); });
+      g += '<rect x="20" y="220" width="420" height="70" fill="#0c1424" stroke="#2a3b62"/><path d="' + pr + '" fill="none" stroke="#f87171" stroke-width="2"/><path d="' + ps + '" fill="none" stroke="#fbbf24" stroke-width="2"/><path d="' + pw + '" fill="none" stroke="#22d3ee" stroke-width="2"/>' +
+        '<text x="26" y="234" style="font-size:9px;fill:#f87171">marcha</text><text x="76" y="234" style="font-size:9px;fill:#fbbf24">partida</text><text x="128" y="234" style="font-size:9px;fill:#22d3ee">rotação</text><text x="434" y="234" text-anchor="end" style="font-size:9px">últimos 4,5 s</text>';
+      sg(r, "g").innerHTML = g;
+      so(r, "ir", fmtN(st.ir, 1) + " A"); so(r, "is", fmtN(st.is, 1) + " A"); so(r, "rpm", fmtN(st.w * 3450, 0) + " rpm");
+      so(r, "el", st.tipo === "ptc" ? (st.falha === "preso" ? "PTC em curto" : st.falha === "aberto" ? "PTC aberto" : st.tp < .6 ? "frio, conduz" : "quente, aberto") : (st.falha === "preso" ? "contato colado" : st.falha === "aberto" ? "contato não fecha" : st.cont ? "contato fechado" : "contato aberto"));
+      so(r, "pr", st.trip ? "desarmado" : st.prot > .6 ? "esquentando" : "fechado");
+      let t;
+      if (st.trip) t = "<b>O protetor térmico abriu.</b> A corrente ficou alta tempo demais e o bimetal se curvou, cortando o compressor. Quando ele esfriar, fecha de novo e o compressor tenta partir outra vez: é o “clique-clique” que se ouve atrás da geladeira. " + (st.falha === "preso" ? "Causa: a bobina de partida não sai do circuito e esquenta o motor." : st.falha === "aberto" ? "Causa: sem a bobina de partida, o motor não gira." : st.tipo === "ptc" && st.tp >= .6 ? "Causa: o PTC ainda estava quente. Espere alguns minutos antes de religar." : "");
+      else if (!st.on) t = st.w > .02 ? "Termostato aberto: o compressor está parando." : "Termostato aberto: o compressor está parado. " + (st.tipo === "ptc" && st.tp >= .6 ? "O PTC ainda está <b>quente</b>, com resistência alta. Se o termostato ligar agora, a bobina de partida não recebe corrente e o motor não parte. Isso acontece quando alguém desliga e religa a geladeira na tomada logo em seguida." : "Clique em Termostato: ligar.");
+      else if (sOn && st.w < .75) t = "<b>Partida:</b> as duas bobinas recebem corrente. A bobina de partida está defasada da marcha e cria o campo girante que tira o motor do lugar. A corrente é alta (corrente de rotor bloqueado) até o motor ganhar velocidade.";
+      else if (!sOn && st.w < .3) t = "<b>O motor não parte.</b> Só a bobina de marcha está ligada e ela sozinha não dá arranque: o compressor zumbe, a corrente fica alta e o protetor esquenta. " + (st.tipo === "ptc" && st.falha === "ok" ? "O PTC está quente e não deixa passar corrente para a bobina de partida." : "");
+      else if (sOn) t = "<b>A bobina de partida não saiu do circuito.</b> O motor gira, mas a bobina de partida (feita para trabalhar só por instantes) continua esquentando, e o protetor vai desarmar. Troque o relé" + (st.tipo === "ptc" ? " (PTC em curto)." : " (contato colado).");
+      else t = "Funcionando: só a bobina de marcha fica ligada, com corrente baixa. " + (st.tipo === "ptc" ? "O <b>relé PTC</b> é uma pastilha cerâmica cuja resistência sobe muito quando ela esquenta. Fria, ela conduz e liga a partida; em menos de um segundo esquenta com a corrente e praticamente abre, ficando quente enquanto o compressor trabalha. Por isso precisa de 3 a 5 minutos desligado para esfriar antes de uma nova partida." : "O <b>relé voltimétrico</b> (relé de potencial) tem a bobina ligada sobre a bobina de partida. Com o motor girando, a tensão nessa bobina sobe e o relé abre o contato, tirando o capacitor e a partida do circuito. Ele é usado com capacitor de partida em compressores maiores, que precisam de mais torque.");
+      sread(r, t);
+    },
+    act(st, a) {
+      if (a === "liga") st.on = 1; if (a === "desl") st.on = 0;
+      if (a === "espera") { if (!st.on) st.tp = 0; st.prot = 0; st.trip = 0; st.w = st.on ? st.w : 0; st.cont = 1; }
+    },
+    input(st, f) { if (f === "tipo") { st.tp = 0; st.cont = 1; } },
+    tick(r, st, dt) {
+      if (!st.on && st.w < .001 && !st.trip && st.prot < .01 && st.tp <= 0) return;
+      const pwr = st.on && !st.trip;
+      if (st.tipo === "volt") { if (st.w > .8) st.cont = 0; else if (st.w < .25) st.cont = 1; }
+      const sOn = pwr && this.startOn(st);
+      st.ir = pwr ? 1.3 + 8.7 * Math.pow(1 - st.w, 1.5) : 0;
+      st.is = sOn ? (st.tipo === "ptc" ? 2.5 + 4 * (1 - st.w) : 2 + 4 * (1 - st.w)) : 0;
+      if (pwr) { const acc = sOn ? 2.6 : st.w > .3 ? 1.6 : 0; st.w = acc ? st.w + dt * acc * (1 - st.w) : Math.max(0, st.w - dt * .5); }
+      else st.w = Math.max(0, st.w - dt * .7);
+      if (st.tipo === "ptc") { if (pwr && st.falha === "ok" && st.tp >= .6) st.tp = Math.min(1, st.tp + dt); else if (sOn) st.tp += dt * st.is * st.is * .06; else st.tp = Math.max(0, st.tp - dt * .004); }
+      const I = st.ir + st.is; st.prot = Math.max(0, st.prot + dt * (I * I * .006 - st.prot * .04));
+      if (st.prot >= 1) st.trip = 1; if (st.trip && st.prot < .35) st.trip = 0;
+      st.acc += dt; while (st.acc >= .03) { st.acc -= .03; st.hist.push([st.ir, st.is, st.w]); if (st.hist.length > 150) st.hist.shift(); }
+      this.draw(r, st);
+    }
+  },
+
+  compr: {
+    fam: "Refrigeração e calor", title: "Simulador: processo de compressão e tipos de compressores", hint: "Veja por dentro os compressores alternativo, rotativo, scroll, automotivo e centrífugo de mancais magnéticos. Mude as pressões para ver a taxa de compressão e a temperatura de descarga.",
+    init: { tipo: "alt", ps: 3, pd: 12, vel: .5, emb: 1, run: 1, ph: 0, pp: 0 },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 240", '<g data-g="g"></g>', "Compressor por dentro") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("compr", "tipo", [["alt", "Alternativo"], ["rot", "Rotativo"], ["scroll", "Scroll"], ["auto", "Automotivo"], ["mag", "Mancais magnéticos"]]) + sBtn("compr", "run", "Pausar") + "</div>" + sSeg("compr", "emb", [["1", "Embreagem ligada"], ["0", "Embreagem desligada"]]) +
+      '<div class="s-ctl">' + sRange("compr", "ps", "Pressão de sucção (bar absoluto)", 1, 8, .1) + sRange("compr", "pd", "Pressão de descarga (bar absoluto)", 6, 30, .5) + sRange("compr", "vel", "Velocidade da animação", .05, 1, .05) + "</div>" + sMeters([["tx", "Taxa de compressão"], ["t2", "Temperatura de descarga"], ["c", "–"], ["d", "–"]]),
+    K: 1.15,
+    pv(st, th) {
+      const s = Math.sin(th), c = Math.cos(th), py = 200 - 22 * c - Math.sqrt(72 * 72 - 484 * s * s), V = py - 47 - 56, Vc = 3, Vm = 47, k = this.K, a = ((th % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+      let P; if (a <= Math.PI) { P = st.pd * Math.pow(Vc / V, k); if (P < st.ps) P = st.ps; } else { P = st.ps * Math.pow(Vm / V, k); if (P > st.pd) P = st.pd; }
+      return { py, V, P, a, s, c };
+    },
+    draw(r, st) {
+      const th = st.ph * 2 * Math.PI, T = st.tipo; sShow(r, "emb", T === "auto"); let g = "";
+      if (T === "alt") {
+        const q = this.pv(st, th), dn = q.a <= Math.PI, sucA = dn && q.P <= st.ps + 1e-6, desA = !dn && q.P >= st.pd - 1e-6, top = q.py - 47, f = (q.P - st.ps) / (st.pd - st.ps);
+        g = '<rect x="78" y="56" width="64" height="' + (top - 56).toFixed(1) + '" fill="' + hot(f) + '" opacity=".55"/><path d="M76 56V172M144 56V172" stroke="#9db0d3" stroke-width="4"/><rect x="72" y="48" width="76" height="8" fill="#6c7ea3"/>' +
+          '<rect x="72" y="26" width="36" height="22" fill="#38bdf8" opacity=".35"/><rect x="112" y="26" width="36" height="22" fill="#f87171" opacity=".35"/><text x="90" y="20" text-anchor="middle" style="font-size:9px">sucção</text><text x="130" y="20" text-anchor="middle" style="font-size:9px">descarga</text>' +
+          '<line x1="84" y1="56" x2="100" y2="' + (sucA ? 66 : 56) + '" stroke="#e2e8f0" stroke-width="3"/><line x1="120" y1="48" x2="136" y2="' + (desA ? 38 : 48) + '" stroke="#e2e8f0" stroke-width="3"/>' +
+          '<rect x="80" y="' + top.toFixed(1) + '" width="60" height="50" rx="3" fill="#9aa1a9"/><line x1="110" y1="' + q.py.toFixed(1) + '" x2="' + (110 + 22 * q.s).toFixed(1) + '" y2="' + (200 - 22 * q.c).toFixed(1) + '" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round"/>' +
+          '<circle cx="110" cy="200" r="28" fill="none" stroke="#6c7ea3" stroke-width="2"/><circle cx="' + (110 + 22 * q.s).toFixed(1) + '" cy="' + (200 - 22 * q.c).toFixed(1) + '" r="5" fill="#fbbf24"/><circle cx="110" cy="200" r="4" fill="#9db0d3"/>' +
+          '<text x="110" y="236" text-anchor="middle" style="font-size:9px">' + (sucA ? "admissão: válvula de sucção aberta" : dn ? "reexpansão do gás que sobrou" : desA ? "descarga: válvula de descarga aberta" : "compressão: válvulas fechadas") + "</text>";
+        const X = v => 250 + v / 47 * 180, Y = p => 210 - p / (st.pd * 1.1) * 170; let d = "";
+        for (let i = 0; i <= 96; i++) { const z = this.pv(st, i / 96 * 2 * Math.PI); d += (i ? "L" : "M") + X(z.V).toFixed(1) + " " + Y(z.P).toFixed(1); }
+        g += '<line x1="250" x2="440" y1="210" y2="210" stroke="#6c7ea3"/><line x1="250" x2="250" y1="30" y2="210" stroke="#6c7ea3"/><path d="' + d + '" fill="none" stroke="#22d3ee" stroke-width="2"/><circle cx="' + X(q.V).toFixed(1) + '" cy="' + Y(q.P).toFixed(1) + '" r="6" fill="#fbbf24"/>' +
+          '<text x="256" y="26" style="font-size:10px">pressão no cilindro × volume</text><text x="440" y="224" text-anchor="end" style="font-size:9px">volume →</text><text x="' + X(6) + '" y="' + (Y(st.pd) - 6) + '" style="font-size:9px">descarga</text><text x="' + (X(47) - 40) + '" y="' + (Y(st.ps) - 6) + '" style="font-size:9px">sucção</text>';
+      }
+      if (T === "rot") {
+        const cx = 230, cy = 120, R = 82, rr = 60, e = R - rr, xc = cx + e * Math.cos(th), yc = cy + e * Math.sin(th), tip = yc - Math.sqrt(rr * rr - (cx - xc) * (cx - xc));
+        g = '<circle cx="' + cx + '" cy="' + cy + '" r="' + R + '" fill="#0c1424" stroke="#9db0d3" stroke-width="4"/><circle cx="' + xc.toFixed(1) + '" cy="' + yc.toFixed(1) + '" r="' + rr + '" fill="#6c7ea3"/><circle cx="' + xc.toFixed(1) + '" cy="' + yc.toFixed(1) + '" r="24" fill="none" stroke="#cbd5e1" stroke-dasharray="4 3"/><circle cx="' + cx + '" cy="' + cy + '" r="9" fill="#cbd5e1"/>' +
+          '<rect x="' + (cx - 5) + '" y="12" width="10" height="' + (tip - 12).toFixed(1) + '" fill="#e2e8f0"/><path d="M' + (cx - 26) + ' 44 l-26 -34" stroke="#38bdf8" stroke-width="10"/><path d="M' + (cx + 26) + ' 44 l26 -34" stroke="#f87171" stroke-width="10"/>' +
+          '<text x="' + (cx - 70) + '" y="14" style="font-size:9px">sucção</text><text x="' + (cx + 52) + '" y="14" style="font-size:9px">descarga</text><text x="' + (cx + 10) + '" y="30" style="font-size:9px">palheta</text><text x="' + cx + '" y="226" text-anchor="middle" style="font-size:9px">pistão rolante no excêntrico do eixo</text>';
+      }
+      if (T === "scroll") {
+        const cx = 230, cy = 120, a = 6.2, e = a * Math.PI / 2 - 3; let f = "", o = "";
+        for (let i = 0; i <= 160; i++) { const p = .6 + i / 160 * 4.2 * Math.PI, rr = a * p; f += (i ? "L" : "M") + (cx + rr * Math.cos(p)).toFixed(1) + " " + (cy + rr * Math.sin(p)).toFixed(1); o += (i ? "L" : "M") + (cx - rr * Math.cos(p) + e * Math.cos(th)).toFixed(1) + " " + (cy - rr * Math.sin(p) + e * Math.sin(th)).toFixed(1); }
+        g = '<circle cx="' + cx + '" cy="' + cy + '" r="98" fill="#0c1424" stroke="#9db0d3" stroke-width="3"/><path d="' + f + '" fill="none" stroke="#9db0d3" stroke-width="5"/><path d="' + o + '" fill="none" stroke="#22d3ee" stroke-width="5"/><circle cx="' + cx + '" cy="' + cy + '" r="7" fill="#f87171"/>' +
+          '<text x="' + cx + '" y="236" text-anchor="middle" style="font-size:9px">espiral fixa (cinza) e espiral orbitante (ciano) · descarga no centro</text><text x="340" y="30" style="font-size:9px">sucção pela borda</text>';
+      }
+      if (T === "auto") {
+        const sh = st.emb ? th : 0, pl = st.pp * 2 * Math.PI, c = Math.cos(sh), on = !!st.emb;
+        g = '<rect x="20" y="62" width="40" height="116" rx="4" fill="#142039" stroke="#9db0d3" stroke-width="2"/><circle cx="40" cy="' + (120 + 46 * Math.sin(pl)).toFixed(1) + '" r="5" fill="#fbbf24"/><rect x="62" y="80" width="8" height="80" fill="' + (on ? "#fbbf24" : "#6c7ea3") + '"/><text x="40" y="200" text-anchor="middle" style="font-size:9px">polia</text><text x="66" y="74" text-anchor="middle" style="font-size:9px">embreagem</text>' +
+          '<rect x="72" y="114" width="320" height="12" fill="#9aa1a9"/><circle cx="110" cy="' + (120 + 5 * Math.sin(sh)).toFixed(1) + '" r="3" fill="#0c1424"/>' +
+          '<line x1="' + (230 + 26 * c).toFixed(1) + '" y1="40" x2="' + (230 - 26 * c).toFixed(1) + '" y2="200" stroke="#22d3ee" stroke-width="8" stroke-linecap="round"/><text x="230" y="222" text-anchor="middle" style="font-size:9px">placa inclinada (swash plate)</text>' +
+          '<rect x="268" y="40" width="130" height="40" fill="none" stroke="#9db0d3" stroke-width="3"/><rect x="268" y="160" width="130" height="40" fill="none" stroke="#9db0d3" stroke-width="3"/>' +
+          '<rect x="' + (300 + 26 * c).toFixed(1) + '" y="44" width="40" height="32" fill="#9aa1a9"/><line x1="' + (236 + 26 * c).toFixed(1) + '" y1="60" x2="' + (300 + 26 * c).toFixed(1) + '" y2="60" stroke="#cbd5e1" stroke-width="5"/>' +
+          '<rect x="' + (300 - 26 * c).toFixed(1) + '" y="164" width="40" height="32" fill="#9aa1a9"/><line x1="' + (236 - 26 * c).toFixed(1) + '" y1="180" x2="' + (300 - 26 * c).toFixed(1) + '" y2="180" stroke="#cbd5e1" stroke-width="5"/>' +
+          '<rect x="398" y="36" width="8" height="168" fill="#6c7ea3"/><text x="410" y="124" style="font-size:9px">válvulas</text>' + (on ? "" : '<text x="230" y="16" text-anchor="middle" style="fill:#fbbf24;font-size:10px">embreagem desligada: a polia gira solta</text>');
+      }
+      if (T === "mag") {
+        const cx = 230, cy = 120; let b = "";
+        for (let i = 0; i < 7; i++) { const a0 = th * 1.5 + i * 2 * Math.PI / 7; let d = ""; for (let j = 0; j <= 8; j++) { const rr = 18 + j * 7, a = a0 + j * .09; d += (j ? "L" : "M") + (cx + rr * Math.cos(a)).toFixed(1) + " " + (cy + rr * Math.sin(a)).toFixed(1); } b += '<path d="' + d + '" fill="none" stroke="#22d3ee" stroke-width="4" stroke-linecap="round"/>'; }
+        let v = ""; for (let i = 0; i <= 60; i++) { const a = i / 60 * 2 * Math.PI, rr = 86 + i / 60 * 16; v += (i ? "L" : "M") + (cx + rr * Math.cos(a)).toFixed(1) + " " + (cy + rr * Math.sin(a)).toFixed(1); }
+        g = '<path d="' + v + 'L' + (cx + 102) + ' ' + (cy - 40) + '" fill="none" stroke="#9db0d3" stroke-width="3"/><circle cx="' + cx + '" cy="' + cy + '" r="80" fill="#0c1424"/>' + b + '<circle cx="' + cx + '" cy="' + cy + '" r="14" fill="#38bdf8"/>' +
+          '<rect x="40" y="96" width="44" height="48" rx="4" fill="#142039" stroke="#a78bfa"/><text x="62" y="124" text-anchor="middle" style="font-size:9px">mancal</text><rect x="376" y="96" width="44" height="48" rx="4" fill="#142039" stroke="#a78bfa"/><text x="398" y="124" text-anchor="middle" style="font-size:9px">mancal</text>' +
+          '<text x="' + cx + '" y="226" text-anchor="middle" style="font-size:9px">rotor centrífugo · o eixo flutua num campo magnético, sem óleo</text><text x="' + (cx + 110) + '" y="70" style="font-size:9px">descarga</text>';
+      }
+      sg(r, "g").innerHTML = g;
+      const tx = st.pd / st.ps, t2 = 283.15 * Math.pow(tx, (this.K - 1) / this.K) - 273.15 + (T === "mag" ? -4 : T === "scroll" ? -3 : 0);
+      so(r, "ps", fmtN(st.ps, 1) + " bar"); so(r, "pd", fmtN(st.pd, 1) + " bar"); so(r, "vel", fmtN(st.vel, 2) + "×"); so(r, "tx", fmtN(tx, 1) + " : 1"); so(r, "t2", "≈ " + fmtN(t2, 0) + " °C");
+      const I = { alt: ["Rendimento volumétrico", fmtN(Math.max(0, 1 - .05 * (Math.pow(tx, 1 / this.K) - 1)) * 100, 0) + "%", "Uso", "geladeira, câmara"], rot: ["Movimento", "rolante", "Uso", "split pequeno"], scroll: ["Movimento", "orbital", "Uso", "split, chiller"], auto: ["Acionamento", st.emb ? "pela correia" : "parado", "Uso", "carros"], mag: ["Óleo", "nenhum", "Uso", "chiller grande"] }[T];
+      smet(r, "c", I[0], I[1]); smet(r, "d", I[2], I[3]); sg(r, "b-run").textContent = st.run ? "Pausar" : "Continuar";
+      const base = " A taxa de compressão é a pressão de descarga dividida pela de sucção, sempre em pressão absoluta: " + fmtN(st.pd, 1) + " ÷ " + fmtN(st.ps, 1) + " = " + fmtN(tx, 1) + ". Quanto maior a taxa, mais quente sai o gás (aqui cerca de " + fmtN(t2, 0) + " °C, com sucção a 10 °C) e mais o óleo e as válvulas sofrem.";
+      sread(r, ({
+        alt: "No <b>alternativo</b>, um pistão sobe e desce como num motor de carro. Na descida, a válvula de sucção abre quando a pressão no cilindro cai abaixo da sucção; na subida, o gás é comprimido até passar da pressão de descarga e abrir a outra válvula. O gás que sobra no espaço morto se reexpande antes de entrar gás novo, e isso reduz o rendimento volumétrico quando a taxa sobe.",
+        rot: "No <b>rotativo de pistão rolante</b>, um rolo montado no excêntrico do eixo rola encostado na parede do cilindro, e uma palheta com mola separa a sucção da descarga. O espaço em forma de meia-lua diminui a cada volta e comprime o gás. É compacto, silencioso e comum em aparelhos de janela e splits pequenos; a carcaça fica com pressão de descarga.",
+        scroll: "No <b>scroll</b>, duas espirais iguais se encaixam: uma é fixa e a outra orbita, sem girar. Os bolsões de gás presos entre elas nascem na borda e vão ficando menores a caminho do centro, onde sai a descarga. Tem poucas peças móveis, não tem válvula de sucção e funciona de forma contínua e silenciosa. Não suporta bem golpe de líquido nem girar ao contrário.",
+        auto: "O compressor <b>automotivo</b> é tocado pela correia do motor. Na <b>embreagem eletromagnética</b>, a bobina puxa a placa contra a polia quando o ar é ligado; desligada, a polia gira solta. Dentro, uma <b>placa inclinada</b> presa ao eixo empurra os pistões axiais para frente e para trás. Nos de deslocamento variável, uma válvula muda a inclinação da placa e dispensa a embreagem.",
+        mag: "Nos compressores <b>centrífugos de mancais magnéticos</b>, o rotor gira a dezenas de milhares de rpm e joga o gás para fora com velocidade, que a voluta transforma em pressão. O eixo flutua num campo magnético controlado por sensores, sem contato e sem óleo. Um inversor ajusta a rotação à carga, o que dá rendimento alto em carga parcial. São usados em chillers de grande porte."
+      })[T] + base);
+    },
+    act(st, a) { if (a === "run") st.run = st.run ? 0 : 1; },
+    input(st, f) { if (f === "ps" || f === "pd") { if (st.pd < st.ps * 1.3) { if (f === "ps") st.pd = Math.min(30, Math.round(st.ps * 2.6 * 2) / 2); else st.ps = Math.max(1, Math.round(st.pd / 2.6 * 10) / 10); } } },
+    tick(r, st, dt) { if (!st.run || RMOT) return; st.ph = (st.ph + dt * st.vel) % 1000; st.pp = (st.pp + dt * st.vel) % 1000; this.draw(r, st); }
+  },
+
+  ph: {
+    fam: "Refrigeração e calor", title: "Simulador: diagrama pressão-entalpia (R-134a)", hint: "O ciclo de refrigeração desenhado no diagrama pressão-entalpia de um fluido real. Mude as temperaturas de evaporação e condensação, o superaquecimento e o sub-resfriamento, e veja o efeito refrigerante e o rendimento.",
+    init: { te: -10, tc: 40, sh: 8, sc: 5 },
+    P: [.512, .661, .844, 1.064, 1.327, 1.639, 2.006, 2.433, 2.928, 3.497, 4.146, 4.884, 5.717, 6.654, 7.702, 8.87, 10.166, 11.599, 13.179, 14.915, 16.818],
+    HF: [148.1, 154.4, 160.8, 167.2, 173.6, 180.1, 186.7, 193.3, 200, 206.8, 213.6, 220.5, 227.5, 234.5, 241.7, 249, 256.4, 263.9, 271.6, 279.5, 287.5],
+    HG: [374, 377.2, 380.3, 383.4, 386.6, 389.6, 392.7, 395.7, 398.6, 401.5, 404.3, 407.1, 409.7, 412.3, 414.8, 417.2, 419.4, 421.5, 423.4, 425.2, 426.6],
+    H2: [[423, 426.2, 429.3, 432.3, 435.2, 438, 440.7, 443.3], [421.4, 424.5, 427.6, 430.6, 433.4, 436.2, 438.9, 441.4], [419.9, 423.1, 426.1, 429, 431.9, 434.6, 437.2, 439.8], [418.6, 421.7, 424.8, 427.7, 430.5, 433.2, 435.8, 438.3], [417.5, 420.6, 423.6, 426.5, 429.3, 432, 434.6, 437.1], [416.5, 419.6, 422.5, 425.4, 428.2, 430.9, 433.4, 435.9], [415.6, 418.7, 421.6, 424.5, 427.2, 429.9, 432.5, 434.9], [414.8, 417.9, 420.8, 423.7, 426.4, 429, 431.6, 434], [414.1, 417.1, 420.1, 422.9, 425.6, 428.3, 430.8, 433.2], [413.5, 416.5, 419.4, 422.2, 425, 427.6, 430.1, 432.5]],
+    T2: [[36, 41, 46, 52, 57, 62, 68, 73], [34, 39, 45, 50, 55, 61, 66, 71], [32, 38, 43, 49, 54, 59, 65, 70], [31, 37, 42, 47, 53, 58, 64, 69], [30, 35, 41, 46, 52, 57, 62, 68], [29, 35, 40, 45, 51, 56, 62, 67], [28, 34, 39, 44, 50, 55, 61, 66], [27, 33, 38, 44, 49, 55, 60, 66], [27, 32, 38, 43, 49, 54, 59, 65], [26, 32, 37, 42, 48, 53, 59, 64]],
+    li(a, t) { const u = Math.max(0, Math.min(a.length - 1.0001, (t + 40) / 5)), i = Math.floor(u), f = u - i; return a[i] + f * (a[i + 1] - a[i]); },
+    p(t) { return Math.exp(this.li(this.P.map(Math.log), t)); },
+    bil(A, te, tc) { const u = Math.max(0, Math.min(8.999, (te + 30) / 5)), v = Math.max(0, Math.min(6.999, (tc - 25) / 5)), i = Math.floor(u), j = Math.floor(v), fu = u - i, fv = v - j;
+      return A[i][j] * (1 - fu) * (1 - fv) + A[i + 1][j] * fu * (1 - fv) + A[i][j + 1] * (1 - fu) * fv + A[i + 1][j + 1] * fu * fv; },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 230", '<g data-g="g"></g>', "Diagrama pressão-entalpia") + '</div><div class="s-ctl">' + sRange("ph", "te", "Temperatura de evaporação", -30, 15, 1) + sRange("ph", "tc", "Temperatura de condensação", 25, 60, 1) + sRange("ph", "sh", "Superaquecimento", 0, 20, 1) + sRange("ph", "sc", "Sub-resfriamento", 0, 15, 1) + "</div>" +
+      sMeters([["pe", "Baixa (manométrica)"], ["pc", "Alta (manométrica)"], ["qe", "Efeito refrigerante"], ["w", "Trabalho de compressão"], ["qc", "Calor no condensador"], ["cop", "COP"], ["t2", "Descarga"], ["x4", "Vapor na entrada do evaporador"]]),
+    draw(r, st) {
+      if (st.tc - st.te < 15) st.tc = st.te + 15;
+      const pe = this.p(st.te), pc = this.p(st.tc), h1 = this.li(this.HG, st.te) + .83 * st.sh, h2s = this.bil(this.H2, st.te, st.tc) + .98 * st.sh, h2 = h1 + (h2s - h1) / .7,
+        t2 = this.bil(this.T2, st.te, st.tc) + st.sh + (h2 - h2s) / 1.1, h3 = this.li(this.HF, st.tc - st.sc), h4 = h3, hfe = this.li(this.HF, st.te), hge = this.li(this.HG, st.te), x4 = (h4 - hfe) / (hge - hfe),
+        qe = h1 - h4, w = h2 - h1, qc = h2 - h3, cop = qe / w;
+      const X = h => 40 + (h - 140) / 340 * 400, Y = p => 200 - (Math.log10(p) - Math.log10(.5)) / (Math.log10(20) - Math.log10(.5)) * 175;
+      let dl = "", dv = ""; this.P.forEach((p, i) => { dl += (i ? "L" : "M") + X(this.HF[i]).toFixed(1) + " " + Y(p).toFixed(1); dv += (i ? "L" : "M") + X(this.HG[i]).toFixed(1) + " " + Y(p).toFixed(1); });
+      let g = '<line x1="40" x2="440" y1="200" y2="200" stroke="#6c7ea3"/><line x1="40" x2="40" y1="20" y2="200" stroke="#6c7ea3"/>';
+      [.5, 1, 2, 5, 10, 20].forEach(p => { g += '<line x1="40" x2="440" y1="' + Y(p).toFixed(1) + '" y2="' + Y(p).toFixed(1) + '" stroke="#2a3b62"/><text x="34" y="' + (Y(p) + 3).toFixed(1) + '" text-anchor="end" style="font-size:9px">' + fmtN(p, 1) + "</text>"; });
+      [150, 200, 250, 300, 350, 400, 450].forEach(h => { g += '<text x="' + X(h).toFixed(1) + '" y="213" text-anchor="middle" style="font-size:9px">' + h + "</text>"; });
+      g += '<path d="' + dl + '" fill="none" stroke="#9db0d3" stroke-width="2"/><path d="' + dv + '" fill="none" stroke="#9db0d3" stroke-width="2"/>' +
+        '<text x="60" y="40" style="font-size:9px">líquido</text><text x="200" y="120" style="font-size:9px">mistura</text><text x="405" y="150" style="font-size:9px">vapor</text><text x="440" y="226" text-anchor="end" style="font-size:9px">entalpia (kJ/kg)</text><text x="44" y="14" style="font-size:9px">pressão absoluta (bar, escala log)</text>';
+      const p1 = [X(h1), Y(pe)], p2 = [X(h2), Y(pc)], p3 = [X(h3), Y(pc)], p4 = [X(h4), Y(pe)], L = (a, b, c) => '<line x1="' + a[0].toFixed(1) + '" y1="' + a[1].toFixed(1) + '" x2="' + b[0].toFixed(1) + '" y2="' + b[1].toFixed(1) + '" stroke="' + c + '" stroke-width="3"/>';
+      g += L(p1, p2, FLC.dg) + L(p2, p3, FLC.ql) + L(p3, p4, FLC.lq) + L(p4, p1, FLC.mx);
+      [[p1, "1"], [p2, "2"], [p3, "3"], [p4, "4"]].forEach(([p, n]) => { g += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="5" fill="#fff"/><text x="' + (p[0] + 7).toFixed(1) + '" y="' + (p[1] - 6).toFixed(1) + '" style="fill:var(--ink);font-size:11px">' + n + "</text>"; });
+      sg(r, "g").innerHTML = g;
+      so(r, "te", st.te + " °C"); so(r, "tc", st.tc + " °C"); so(r, "pe", fmtN(pe - 1.013, 2) + " bar"); so(r, "pc", fmtN(pc - 1.013, 1) + " bar"); so(r, "sh", st.sh + " K"); so(r, "sc", st.sc + " K");
+      so(r, "qe", fmtN(qe, 0) + " kJ/kg"); so(r, "w", fmtN(w, 0) + " kJ/kg"); so(r, "qc", fmtN(qc, 0) + " kJ/kg"); so(r, "cop", fmtN(cop, 2)); so(r, "t2", "≈ " + fmtN(t2, 0) + " °C"); so(r, "x4", fmtN(x4 * 100, 0) + "%");
+      sread(r, "No diagrama, a pressão está na vertical e a entalpia (o conteúdo de energia de cada quilo de fluido) na horizontal. Dentro da “cúpula” o fluido é mistura de líquido e vapor. <b>1→2</b>: o compressor eleva a pressão e gasta " + fmtN(w, 0) + " kJ/kg. <b>2→3</b>: o condensador tira " + fmtN(qc, 0) + " kJ/kg (resfria o gás, condensa e sub-resfria o líquido). <b>3→4</b>: a expansão derruba a pressão sem trocar calor (linha vertical); " + fmtN(x4 * 100, 0) + "% do fluido já vira vapor. <b>4→1</b>: o evaporador absorve " + fmtN(qe, 0) + " kJ/kg do ambiente: é o <b>efeito refrigerante</b>. O COP é efeito ÷ trabalho = " + fmtN(cop, 2) + ". Baixar a evaporação ou subir a condensação (condensador sujo, por exemplo) aumenta o trabalho, esquenta a descarga e derruba o COP. Para 1 kW de frio circulam " + fmtN(3600 / qe, 1) + " kg/h de fluido. Valores calculados com propriedades do R-134a e rendimento do compressor de 70%.");
+    },
+    input(st, f) { if (st.tc - st.te < 15) { if (f === "te") st.tc = Math.min(60, st.te + 15); else st.te = Math.max(-30, st.tc - 15); } }
+  },
+
+  expansao: {
+    fam: "Refrigeração e calor", title: "Simulador: válvula de expansão termostática e vazão do tubo capilar", hint: "Compare os dois dispositivos de expansão. A válvula termostática ajusta a abertura pelo bulbo e mantém o superaquecimento; o capilar tem passagem fixa, que depende do comprimento e do diâmetro. Valores aproximados, com R-134a.",
+    init: { modo: "txv", carga: 100, ss: 5, bulbo: "ok", L: 3, D: .8, tc: 40 },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 230", '<g data-g="g"></g>', "Dispositivo de expansão e evaporador") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("expansao", "modo", [["txv", "Válvula termostática"], ["cap", "Tubo capilar"]]) + sSeg("expansao", "bulbo", [["ok", "Bulbo bem preso"], ["solto", "Bulbo solto"], ["vazio", "Bulbo perdeu a carga"]]) + "</div>" + sSeg("expansao", "D", [["0.6", "Ø 0,6 mm"], ["0.7", "Ø 0,7 mm"], ["0.8", "Ø 0,8 mm"], ["0.9", "Ø 0,9 mm"], ["1", "Ø 1,0 mm"], ["1.2", "Ø 1,2 mm"]]) +
+      '<div class="s-ctl">' + sRange("expansao", "carga", "Carga térmica no evaporador", 40, 150, 5) + sRange("expansao", "ss", "Ajuste da mola (superaquecimento)", 2, 10, 1) + sRange("expansao", "L", "Comprimento do capilar", 1, 5, .1) + sRange("expansao", "tc", "Temperatura de condensação", 30, 55, 1) + "</div>" +
+      sMeters([["a", "–"], ["b", "–"], ["c", "–"], ["d", "–"], ["e", "–"]]),
+    draw(r, st) {
+      const tx = st.modo === "txv", p = t => SIMS.ph.p(t); ["bulbo", "carga", "ss"].forEach(f => sShow(r, f, tx)); ["D", "L", "tc"].forEach(f => sShow(r, f, !tx));
+      so(r, "carga", st.carga + "%"); so(r, "ss", st.ss + " K"); so(r, "L", fmtN(st.L, 1) + " m"); so(r, "tc", st.tc + " °C");
+      let te, sh, ab, txt, flw = 1;
+      if (tx) {
+        te = -10 + (st.carga - 100) * .06; sh = st.ss + 2;
+        if (st.bulbo === "solto") sh = Math.max(0, st.ss - 6); if (st.bulbo === "vazio") { sh = 26; te -= 9; }
+        ab = st.bulbo === "vazio" ? 3 : st.bulbo === "solto" ? 100 : Math.min(100, Math.round(st.carga * .6));
+        const tb = st.bulbo === "vazio" ? null : te + sh + (st.bulbo === "solto" ? 12 : 0), pb = tb == null ? .3 : p(tb), pe = p(te), pm = p(te + st.ss) - pe;
+        smet(r, "a", "Pressão do bulbo (abre)", fmtN(pb, 2) + " bar"); smet(r, "b", "Evaporador (fecha)", fmtN(pe, 2) + " bar"); smet(r, "c", "Mola (fecha)", fmtN(pm, 2) + " bar"); smet(r, "d", "Abertura", ab + "%"); smet(r, "e", "Superaquecimento", fmtN(sh, 0) + " K");
+        txt = "Na válvula termostática, três pressões se enfrentam no diafragma: a do <b>bulbo</b> (que sente a temperatura na saída do evaporador) empurra para abrir; a do <b>evaporador</b> e a da <b>mola</b> empurram para fechar. Quando a carga aumenta, o vapor sai mais quente, o bulbo esquenta e a válvula abre mais; assim o superaquecimento fica perto do ajuste da mola, e o evaporador é aproveitado quase inteiro. " +
+          (st.bulbo === "solto" ? "<b>Bulbo solto:</b> ele sente o ar quente em vez do tubo, acha que falta fluido e abre demais. O evaporador inunda, o superaquecimento cai a quase zero e volta líquido para o compressor. Prenda o bulbo bem encostado no tubo, na posição certa, e isole." : st.bulbo === "vazio" ? "<b>Bulbo sem carga</b> (capilar do bulbo quebrado): não há pressão para abrir, a mola fecha a válvula. O evaporador fica faminto, a pressão de baixa despenca e o superaquecimento dispara. A válvula precisa ser trocada." : "Girar o parafuso da mola no sentido de apertar aumenta o superaquecimento; ajuste com calma, um quarto de volta por vez, esperando estabilizar.");
+      } else {
+        flw = Math.pow(st.D / .8, 2.6) * Math.sqrt(3 / st.L) * Math.sqrt(Math.max(.1, p(st.tc) - p(-10)) / (p(40) - p(-10)));
+        sh = Math.max(0, Math.min(35, 6 + (1 - flw) * 40)); te = -10 + (flw - 1) * 10; ab = Math.round(flw * 100);
+        smet(r, "a", "Vazão em relação ao ideal", ab + "%"); smet(r, "b", "Evaporação", fmtN(te, 0) + " °C"); smet(r, "c", "Pressão de baixa", fmtN(p(te) - 1.013, 2) + " bar"); smet(r, "d", "Superaquecimento", fmtN(sh, 0) + " K"); smet(r, "e", "Situação", flw > 1.15 ? "inundado" : flw < .85 ? "faminto" : "equilibrado");
+        txt = "O <b>tubo capilar</b> é um tubo de cobre bem fino e comprido que freia a passagem do líquido. A vazão sobe com o diâmetro (muito: cada décimo de milímetro conta) e com a diferença de pressão, e cai com o comprimento. Ele não se ajusta sozinho, por isso cada aparelho tem capilar e carga de gás calculados juntos. " +
+          (flw > 1.15 ? "<b>Vazão demais:</b> o evaporador inunda, o superaquecimento cai a zero, a pressão de baixa sobe e há risco de líquido voltar ao compressor (a sucção chega a suar ou congelar)." : flw < .85 ? "<b>Vazão de menos:</b> o evaporador fica faminto, só o começo da serpentina gela, a pressão de baixa cai e o superaquecimento sobe. É o mesmo sintoma de capilar parcialmente entupido (umidade, sujeira ou óleo queimado)." : "Vazão equilibrada para essa carga de gás: o evaporador gela quase inteiro e o vapor sai levemente superaquecido.") +
+          " Ao trocar um capilar, use o mesmo diâmetro interno e o mesmo comprimento do original.";
+      }
+      const frac = Math.max(.05, Math.min(1, 1 - sh / 32));
+      let g = flow("M20 150H96", FLC.lq, 0) + '<text x="20" y="140" style="font-size:9px">líquido</text>';
+      if (tx) {
+        const gap = 2 + ab / 100 * 12;
+        g += '<rect x="96" y="120" width="56" height="62" rx="4" fill="#142039" stroke="#9db0d3" stroke-width="2"/><ellipse cx="124" cy="96" rx="34" ry="14" fill="#142039" stroke="#9db0d3" stroke-width="2"/><line x1="92" x2="156" y1="' + (st.bulbo === "vazio" ? 94 : 100) + '" y2="' + (st.bulbo === "vazio" ? 94 : 100) + '" stroke="#fbbf24" stroke-width="2"/>' +
+          '<rect x="120" y="100" width="8" height="' + (44 - gap).toFixed(1) + '" fill="#cbd5e1"/><path d="M116 ' + (144 - gap + 4).toFixed(1) + 'l8 ' + -6 + 'l8 6z" fill="#cbd5e1"/><path d="M108 150h32" stroke="#6c7ea3" stroke-width="3"/>' + zig(152, 182, 124, true) +
+          '<text x="160" y="176" style="font-size:9px">mola</text><text x="164" y="92" style="font-size:9px">diafragma</text>' + flow("M152 150H230V196", FLC.mx, 0, 5) +
+          '<path d="M124 82V22H398V54" fill="none" stroke="#fbbf24" stroke-width="1.5"/><rect x="380" y="54" width="36" height="12" rx="6" fill="' + (st.bulbo === "vazio" ? "#6c7ea3" : "#fbbf24") + '" transform="' + (st.bulbo === "solto" ? "rotate(-12 398 60)" : "") + '"/><text x="420" y="52" style="font-size:9px">bulbo</text>';
+      } else {
+        let c = "M96 150"; for (let i = 0; i < 5; i++) c += "c14 -26 34 -26 34 0s-20 26 0 26";
+        g += '<path d="M96 150c10 -20 30 -20 30 0s-20 20 0 20s30 -20 30 0s-20 20 0 20s30 -20 30 0" fill="none" stroke="#fbbf24" stroke-width="' + (1 + st.D * 1.5).toFixed(1) + '"/><text x="100" y="118" style="font-size:9px">capilar ' + fmtN(st.L, 1) + " m × Ø " + fmtN(st.D, 1) + " mm</text>" + flow("M186 190H230V196", FLC.mx, 0, 5);
+      }
+      const ev = serp(230, 196, 66, 120, 10);
+      g += '<path d="' + ev + '" fill="none" stroke="' + FLC.vb + '" stroke-width="7" pathLength="100"/><path d="' + ev + '" fill="none" stroke="' + (frac > .97 ? "#e2e8f0" : FLC.mx) + '" stroke-width="7" pathLength="100" stroke-dasharray="' + (frac * 100).toFixed(1) + ' 200"/>' +
+        flow("M230 66V60H440", FLC.vb, 0, 5) + '<text x="250" y="216" text-anchor="middle" style="font-size:9px">evaporador: azul = fluido evaporando · lilás = vapor superaquecido</text><text x="400" y="80" style="font-size:9px">à sucção</text>';
+      sg(r, "g").innerHTML = g; sread(r, txt);
+    }
+  },
+
+  arauto: {
+    fam: "Refrigeração e calor", title: "Simulador: ar-condicionado automotivo (condensador, evaporador e acumulador)", hint: "O circuito de ar-condicionado de um carro. Compare o sistema com válvula de expansão e filtro secador com o sistema de tubo de orifício e acumulador de sucção. Mude a rotação do motor, o ventilador e a temperatura externa.",
+    init: { sist: "txv", emb: 1, rpm: 1500, vent: 1, tamb: 32, run: 1, ph: 0 },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 270", '<g data-g="g"></g>', "Ar-condicionado automotivo") + "</div>" + legRef + '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px">' + sSeg("arauto", "sist", [["txv", "Válvula de expansão + filtro secador"], ["orif", "Tubo de orifício + acumulador"]]) + "</div>" + '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px">' + sSeg("arauto", "emb", [["1", "A/C ligado"], ["0", "A/C desligado"]]) + sSeg("arauto", "vent", [["1", "Ventilador do condensador ok"], ["0", "Ventilador queimado"]]) + "</div>" +
+      '<div class="s-ctl">' + sRange("arauto", "rpm", "Rotação do motor", 800, 4000, 50) + sRange("arauto", "tamb", "Temperatura externa", 15, 42, 1) + "</div>" + sMeters([["pa", "Pressão de alta"], ["pb", "Pressão de baixa"], ["ar", "Ar na saída do painel"], ["si", "Situação"]]),
+    calc(st) {
+      const on = !!st.emb, slow = Math.max(0, Math.min(1, (st.rpm - 800) / 2000));
+      let tc = st.tamb + 13 + (st.vent ? 0 : 20 - 12 * slow), te = 9 - 9 * slow, cic = false;
+      if (te < 1) { te = 1; cic = true; }
+      if (!on) { tc = st.tamb; te = st.tamb; }
+      return { on, tc, te, cic, ar: on ? Math.max(3, te + 4 + (st.vent ? 0 : 6)) : st.tamb - 2 };
+    },
+    draw(r, st) {
+      const c = this.calc(st), on = c.on, tv = st.sist === "txv", d = on && st.run, C = x => on ? x : FLC.off, P = t => SIMS.ph.p(t) - 1.013;
+      let g = '<rect x="10" y="20" width="170" height="130" rx="8" fill="#22d3ee" opacity=".05"/><text x="18" y="164" style="font-size:9px">caixa evaporadora</text><text x="300" y="14" style="font-size:9px">frente do carro →</text>';
+      g += flow("M262 200H330V40H420", C(FLC.dg), d ? 1 : 0) + flow(serp(420, 40, 200, 30, 8), C(FLC.ql), d ? 1 : 0) + flow("M420 200V245H170V110H160", C(FLC.lq), d ? 1 : 0) + flow(serp(150, 110, 40, -110, 6), C(FLC.mx), d ? 1 : 0) + flow("M150 40H200V200H238", C(FLC.vb), d ? 1 : 0);
+      g += '<text x="429" y="28" text-anchor="middle" style="font-size:9px">condensador</text><rect x="402" y="34" width="54" height="172" fill="none" stroke="#6c7ea3" stroke-dasharray="4 3"/>' +
+        '<circle cx="250" cy="200" r="20" fill="#142039" stroke="#9db0d3" stroke-width="2"/><circle cx="250" cy="200" r="9" fill="' + (on ? "#fbbf24" : "#6c7ea3") + '"/><text x="250" y="236" text-anchor="middle" style="font-size:9px">compressor</text>' +
+        '<circle cx="290" cy="120" r="16" fill="none" stroke="#6c7ea3" stroke-width="2"/><path d="M240 183L276 112M266 205L304 128" stroke="#6c7ea3" stroke-width="2"/><text x="290" y="96" text-anchor="middle" style="font-size:9px">motor</text>' +
+        '<text x="80" y="134" text-anchor="middle" style="font-size:9px">evaporador</text>' +
+        (st.vent ? '<circle cx="452" cy="120" r="0"/>' : '<text x="398" y="30" text-anchor="end" style="fill:#f87171;font-size:9px">ventilador parado</text>');
+      if (tv) g += '<rect x="290" y="237" width="34" height="16" rx="6" fill="#142039" stroke="#fbbf24" stroke-width="2"/><text x="307" y="266" text-anchor="middle" style="font-size:9px">filtro secador</text><rect x="156" y="100" width="18" height="20" fill="#142039" stroke="#9db0d3" stroke-width="2"/><text x="206" y="112" style="font-size:9px">válvula de expansão</text>';
+      else g += '<rect x="186" y="80" width="28" height="56" rx="10" fill="#142039" stroke="#a78bfa" stroke-width="2"/><text x="218" y="100" style="font-size:9px">acumulador</text><rect x="160" y="106" width="12" height="8" fill="#fbbf24"/><text x="100" y="148" text-anchor="middle" style="font-size:9px">tubo de orifício</text>';
+      sg(r, "g").innerHTML = g;
+      so(r, "rpm", st.rpm + " rpm"); so(r, "tamb", st.tamb + " °C");
+      so(r, "pa", on ? fmtN(P(c.tc), 1) + " bar · " + fmtN(P(c.tc) * 14.504, 0) + " psi" : fmtN(P(c.tc), 1) + " bar (parado)"); so(r, "pb", on ? fmtN(P(c.te), 1) + " bar · " + fmtN(P(c.te) * 14.504, 0) + " psi" : "igual à alta"); so(r, "ar", fmtN(c.ar, 0) + " °C");
+      so(r, "si", !on ? "desligado" : !st.vent ? "alta pressão" : c.cic ? "ciclando" : "normal");
+      sread(r, (!on ? "Com o A/C desligado a embreagem solta o compressor, nada circula e as pressões se igualam (pressão de equilíbrio, que depende só da temperatura ambiente)." :
+        "O compressor, tocado pela correia, manda gás quente para o <b>condensador</b>, que fica na frente do radiador e usa o vento do carro e um ventilador elétrico. O líquido segue até o <b>evaporador</b>, dentro da caixa do painel, onde o ventilador interno sopra o ar da cabine; a água que condensa nele sai pelo dreno embaixo do carro.") +
+        (tv ? " Neste sistema há uma <b>válvula de expansão</b> na entrada do evaporador e um <b>filtro secador</b> no lado de alta, que guarda um pouco de líquido e segura a umidade com um dessecante." : " Neste sistema a expansão é feita por um <b>tubo de orifício</b> (um tubinho calibrado com tela, dentro do tubo de entrada do evaporador), que não se ajusta. Por isso há um <b>acumulador de sucção</b> na saída do evaporador: ele segura o líquido que sobra e também tem dessecante.") +
+        (on && !st.vent ? " <b>Ventilador do condensador parado:</b> parado no trânsito, sem vento, a pressão de alta sobe muito, o ar sai morno e o pressostato de alta pode desligar o compressor. Com o carro andando, o vento ajuda e a pressão cai um pouco." : "") +
+        (on && c.cic ? " Com rotação alta, o evaporador chegaria abaixo de 0 °C e congelaria. O sensor de anticongelamento desliga a embreagem por alguns segundos: o compressor <b>cicla</b>." : "") + " Os carros usam R-134a ou, nos mais novos, R-1234yf.");
+    },
+    tick(r, st, dt) { flowTick(r, st, dt, .5 + st.rpm / 4000); }
+  },
+
+  servico: {
+    fam: "Refrigeração e calor", title: "Simulador: recolhimento de gás, vácuo e carga de refrigerante", hint: "Três serviços do dia a dia de quem trabalha com refrigeração: recolher o gás na unidade externa, fazer vácuo (e por que não usar o compressor como bomba) e carregar refrigerante líquido pela balança. O tempo é acelerado.",
+    init: { modo: "recolher", etapa: 0, pl: 8.2, ph: 26, eq: "bomba", sis: "seco", iso: 0, on: 0, t: 0, P: 760000, umi: 1, Pi: 0, hist: [], gas: "R410A", via: "alta", alvo: 1200, g: 0, open: 0, liq: 0 },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 240", '<g data-g="g"></g>', "Serviço de refrigeração") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("servico", "modo", [["recolher", "Recolhimento"], ["vacuo", "Vácuo"], ["carga", "Carga de líquido"]]) + "</div>" +
+      '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px">' + sSeg("servico", "eq", [["bomba", "Bomba de vácuo"], ["compressor", "O próprio compressor"]]) + sSeg("servico", "sis", [["seco", "Sistema seco"], ["umido", "Com umidade"], ["vazamento", "Com vazamento"]]) + sSeg("servico", "gas", [["R410A", "R-410A (mistura)"], ["R22", "R-22"]]) + "</div>" +
+      sSeg("servico", "via", [["alta", "Pela alta, sistema desligado"], ["dosa", "Pela baixa, ligado, dosando"], ["direto", "Pela baixa, ligado, sem dosar"]]) +
+      '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px">' + sBtn("servico", "a1", "Ação 1", "primary") + sBtn("servico", "a2", "Ação 2") + sBtn("servico", "zera", "Recomeçar") + '</div><div class="s-ctl">' + sRange("servico", "alvo", "Carga da etiqueta (g)", 300, 3000, 50) + "</div>" + sMeters([["a", "–"], ["b", "–"], ["c", "–"]]),
+    dial(cx, cy, v, min, max, col, lab, unit) {
+      let g = '<circle cx="' + cx + '" cy="' + cy + '" r="52" fill="#0c1424" stroke="' + col + '" stroke-width="3"/>';
+      for (let i = 0; i <= 8; i++) { const a = (-135 + i * 33.75) * Math.PI / 180; g += '<line x1="' + (cx + 46 * Math.sin(a)).toFixed(1) + '" y1="' + (cy - 46 * Math.cos(a)).toFixed(1) + '" x2="' + (cx + 39 * Math.sin(a)).toFixed(1) + '" y2="' + (cy - 39 * Math.cos(a)).toFixed(1) + '" stroke="#9db0d3"/><text x="' + (cx + 30 * Math.sin(a)).toFixed(1) + '" y="' + (cy + 3 - 30 * Math.cos(a)).toFixed(1) + '" text-anchor="middle" style="font-size:7px">' + fmtN(min + (max - min) * i / 8, 0) + "</text>"; }
+      const a = (-135 + Math.max(0, Math.min(1, (v - min) / (max - min))) * 270) * Math.PI / 180;
+      return g + '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + 42 * Math.sin(a)).toFixed(1) + '" y2="' + (cy - 42 * Math.cos(a)).toFixed(1) + '" stroke="#f87171" stroke-width="2.5"/><circle cx="' + cx + '" cy="' + cy + '" r="4" fill="#f87171"/><text x="' + cx + '" y="' + (cy + 70) + '" text-anchor="middle" style="font-size:9px">' + lab + '</text><text x="' + cx + '" y="' + (cy + 30) + '" text-anchor="middle" style="font-size:8px">' + unit + "</text>";
+    },
+    draw(r, st) {
+      const M = st.modo; sShow(r, "eq", M === "vacuo"); sShow(r, "sis", M === "vacuo"); sShow(r, "gas", M === "carga"); sShow(r, "via", M === "carga"); sShow(r, "alvo", M === "carga");
+      const b1 = sg(r, "b-a1"), b2 = sg(r, "b-a2"); let g = "", txt = "";
+      if (M === "recolher") {
+        b1.textContent = "Fechar a válvula de líquido"; b2.textContent = "Fechar a sucção e desligar"; b1.disabled = st.etapa !== 0; b2.disabled = st.etapa !== 1;
+        g = this.dial(80, 80, st.pl, -1, 15, "#38bdf8", "manômetro de baixa", "bar") + this.dial(220, 80, st.ph, 0, 45, "#f87171", "manômetro de alta", "bar") +
+          '<rect x="300" y="40" width="140" height="120" rx="8" fill="#142039" stroke="#9db0d3" stroke-width="2"/><text x="370" y="60" text-anchor="middle" style="font-size:9px">unidade externa</text><circle cx="370" cy="100" r="22" fill="none" stroke="#6c7ea3" stroke-width="2"/><text x="370" y="104" text-anchor="middle" style="font-size:8px">' + (st.etapa < 2 ? "ligada" : "desligada") + "</text>" +
+          '<circle cx="320" cy="180" r="8" fill="' + (st.etapa >= 1 ? "#f87171" : "#34d399") + '"/><text x="332" y="200" style="font-size:9px">líquido</text><circle cx="420" cy="180" r="8" fill="' + (st.etapa >= 2 ? "#f87171" : "#34d399") + '"/><text x="408" y="200" text-anchor="end" style="font-size:9px">sucção</text>' +
+          '<path d="M320 188V226H40M420 188V232H40" stroke="#6c7ea3" stroke-width="3" fill="none"/><text x="44" y="220" style="font-size:9px">às evaporadoras</text><text x="370" y="30" text-anchor="middle" style="font-size:8px">válvulas: verde = aberta · vermelho = fechada</text>';
+        smet(r, "a", "Baixa", fmtN(st.pl, 2) + " bar"); smet(r, "b", "Alta", fmtN(st.ph, 1) + " bar"); smet(r, "c", "Etapa", ["funcionando", "recolhendo", "recolhido"][st.etapa]);
+        const vac = st.pl < -.2;
+        txt = st.etapa === 0 ? "O <b>recolhimento</b> (pump down) guarda todo o gás na unidade externa para mexer na tubulação ou na evaporadora sem perder fluido. Com o aparelho funcionando em refrigeração, feche a válvula de serviço da linha de <b>líquido</b> (a mais fina)." :
+          st.etapa === 1 ? (vac ? "<b>Passou do ponto:</b> a baixa entrou em vácuo. O compressor puxa ar e umidade por qualquer vazamento e esquenta, porque o gás de retorno é que o resfria. Feche a sucção agora." : "O compressor continua bombeando o gás da linha de sucção e da evaporadora para o condensador, onde ele fica como líquido. A baixa vai caindo. Quando chegar perto de 0 bar (sem entrar em vácuo), feche a sucção e desligue logo em seguida.") :
+          (st.pl < -.2 ? "Recolhido, mas com a baixa em vácuo: pode ter entrado ar. Da próxima vez, feche a sucção perto de 0 bar." : "Gás recolhido na unidade externa, com uma pressão pequena e positiva na linha, que impede a entrada de ar. Agora é possível desconectar as linhas. Depois do serviço, faça vácuo nas linhas e na evaporadora antes de abrir as válvulas.");
+      }
+      if (M === "vacuo") {
+        b1.textContent = st.on ? "Desligar" : "Ligar " + (st.eq === "bomba" ? "a bomba" : "o compressor"); b2.textContent = "Isolar e observar"; b1.disabled = st.iso; b2.disabled = st.iso || st.t < 2;
+        const X = t => 66 + Math.min(1, t / 120) * 374, Y = p => 200 - (Math.log10(Math.max(10, p)) - 1) / 5 * 170; let d = "";
+        st.hist.forEach((h, i) => { d += (i ? "L" : "M") + X(h[0]).toFixed(1) + " " + Y(h[1]).toFixed(1); });
+        g = '<line x1="66" x2="440" y1="200" y2="200" stroke="#6c7ea3"/><line x1="66" x2="66" y1="30" y2="200" stroke="#6c7ea3"/>' + [10, 100, 1000, 1e4, 1e5, 1e6].map(p => '<line x1="66" x2="440" y1="' + Y(p) + '" y2="' + Y(p) + '" stroke="#2a3b62"/><text x="62" y="' + (Y(p) + 3) + '" text-anchor="end" style="font-size:8px">' + fmtN(p, 0) + "</text>").join("") +
+          '<line x1="66" x2="440" y1="' + Y(500) + '" y2="' + Y(500) + '" stroke="#34d399" stroke-dasharray="4 4"/><text x="436" y="' + (Y(500) - 4) + '" text-anchor="end" style="font-size:9px;fill:#34d399">meta: 500 microns</text>' +
+          [0, 30, 60, 90, 120].map(t => '<text x="' + X(t) + '" y="214" text-anchor="middle" style="font-size:8px">' + t + " min</text>").join("") + '<path d="' + d + '" fill="none" stroke="#22d3ee" stroke-width="2.5"/><text x="44" y="22" style="font-size:9px">vacuômetro (microns, escala log) × tempo</text>' +
+          (st.iso ? '<line x1="' + X(st.Pi) + '" x2="' + X(st.Pi) + '" y1="30" y2="200" stroke="#fbbf24" stroke-dasharray="3 3"/><text x="' + (X(st.Pi) + 4) + '" y="40" style="font-size:9px;fill:#fbbf24">isolado</text>' : "");
+        smet(r, "a", "Vácuo", fmtN(st.P, 0) + " microns"); smet(r, "b", "Tempo", fmtN(st.t, 0) + " min"); smet(r, "c", st.eq === "compressor" ? "Compressor" : "Umidade restante", st.eq === "compressor" ? (st.on ? "esquentando" : "parado") : fmtN(st.sis === "umido" ? st.umi * 100 : 0, 0) + "%");
+        txt = st.eq === "compressor" ? "<b>Compressor não é bomba de vácuo.</b> Ele foi feito para comprimir gás de retorno, que também o resfria. Puxando vácuo ele esquenta, não passa de uns 30.000 a 50.000 microns (longe dos 500 necessários) e, com pressão muito baixa dentro da carcaça, o isolamento do motor pode sofrer descargas. A umidade fica no sistema e vira ácido e gelo no capilar." :
+          !st.on && !st.iso && st.t === 0 ? "Ligue a bomba de vácuo e acompanhe o <b>vacuômetro em microns</b> (o manifold em inHg não tem precisão para isso). O vácuo tira o ar e faz a água evaporar em temperatura ambiente, porque a pressão baixa derruba o ponto de ebulição." :
+          st.iso ? (st.sis === "vazamento" ? "<b>A pressão sobe sem parar:</b> há vazamento. Pressurize com nitrogênio, ache o ponto com espuma, corrija e refaça o vácuo." : st.sis === "umido" && st.umi > .05 ? "<b>A pressão subiu e estabilizou num valor alto:</b> ainda há umidade evaporando. Ligue a bomba de novo e deixe mais tempo (aquecer as linhas ajuda)." : "<b>A pressão subiu um pouco e estabilizou abaixo de 500 a 1.000 microns:</b> sistema seco e estanque. Pode liberar o gás.") :
+          (st.sis === "umido" && st.P < 20000 && st.umi > .05 ? "O ponteiro parou num patamar: é a água evaporando dentro do sistema. Enquanto houver umidade, o vácuo não desce." : st.sis === "vazamento" && st.P < 4000 ? "O vácuo não passa de alguns milhares de microns: entra ar por algum lugar." : "O vácuo está descendo. Ao chegar abaixo de 500 microns, isole o sistema (feche o registro da bomba) e observe por alguns minutos.");
+      }
+      if (M === "carga") {
+        b1.textContent = st.open ? "Fechar o cilindro" : "Abrir o cilindro"; b2.textContent = "Ligar o sistema"; b2.style.display = "none"; b1.disabled = false;
+        const cor = st.gas === "R410A" ? "#f472b6" : "#4ade80", lvl = Math.max(.08, 1 - st.g / 4000), mx = st.via === "alta" ? st.alvo * .75 : 1e9;
+        g = '<rect x="40" y="196" width="120" height="20" rx="3" fill="#142039" stroke="#9db0d3" stroke-width="2"/><rect x="66" y="200" width="68" height="12" fill="#0c1424"/><text x="100" y="210" text-anchor="middle" style="fill:#34d399;font-size:10px">' + fmtN(-st.g, 0) + ' g</text><text x="100" y="232" text-anchor="middle" style="font-size:9px">balança (zerada)</text>' +
+          '<rect x="66" y="56" width="68" height="138" rx="22" fill="' + cor + '" opacity=".25" stroke="' + cor + '" stroke-width="2"/><rect x="68" y="' + (192 - 120 * lvl).toFixed(1) + '" width="64" height="' + (120 * lvl).toFixed(1) + '" rx="10" fill="' + cor + '" opacity=".5"/><rect x="92" y="40" width="16" height="16" fill="#9db0d3"/><line x1="100" y1="56" x2="100" y2="186" stroke="#e2e8f0" stroke-dasharray="3 3"/><text x="140" y="120" style="font-size:9px">tubo pescador</text>' +
+          '<path d="M100 40V24H300" fill="none" stroke="' + (st.open ? FLC.lq : "#6c7ea3") + '" stroke-width="4"/><circle cx="210" cy="24" r="7" fill="' + (st.open ? "#34d399" : "#f87171") + '"/><text x="210" y="46" text-anchor="middle" style="font-size:9px">' + (st.via === "dosa" ? "dosador (restrição)" : "registro") + "</text>" +
+          '<rect x="300" y="60" width="140" height="120" rx="8" fill="#142039" stroke="#9db0d3" stroke-width="2"/><text x="370" y="80" text-anchor="middle" style="font-size:9px">sistema ' + (st.via === "alta" ? "desligado" : "ligado") + '</text><path d="M300 24H370V60" fill="none" stroke="#6c7ea3" stroke-width="3"/><text x="378" y="50" style="font-size:9px">' + (st.via === "alta" ? "lado de alta" : "lado de baixa") + "</text>" +
+          '<rect x="320" y="150" width="' + Math.min(100, st.g / st.alvo * 100).toFixed(1) + '" height="14" fill="' + (st.g > st.alvo * 1.03 ? "#f87171" : "#34d399") + '"/><rect x="320" y="150" width="100" height="14" fill="none" stroke="#9db0d3"/><text x="370" y="142" text-anchor="middle" style="font-size:9px">carga: ' + fmtN(st.g, 0) + " de " + st.alvo + " g</text>";
+        so(r, "alvo", st.alvo + " g"); smet(r, "a", "Carregado", fmtN(st.g, 0) + " g"); smet(r, "b", "Falta", fmtN(Math.max(0, st.alvo - st.g), 0) + " g"); smet(r, "c", "Líquido na sucção", st.liq > .5 ? "golpe!" : st.liq > .1 ? "perigo" : "não");
+        txt = (st.gas === "R410A" ? "O <b>R-410A</b> é uma mistura de dois gases que evaporam em temperaturas diferentes. Se sair vapor do cilindro, sai mais de um componente que do outro e a mistura muda. Por isso ele é carregado <b>sempre como líquido</b>: cilindro com tubo pescador em pé, ou cilindro sem pescador de cabeça para baixo. " : "O <b>R-22</b> é um fluido puro e pode ser carregado como vapor pela baixa, mas a carga em líquido é mais rápida. ") +
+          (st.via === "alta" ? (st.g >= mx - 5 ? "As pressões se igualaram e o líquido parou de entrar (cerca de 75% da carga). Complete pela baixa com o sistema ligado, dosando." : "Com o sistema <b>desligado</b>, o líquido entra pelo lado de alta, sem risco para o compressor. Ele entra até as pressões se igualarem.") :
+            st.via === "dosa" ? "Pela baixa, com o sistema <b>ligado</b>, o líquido passa por uma restrição (dosador ou registro quase fechado) e evapora antes de chegar ao compressor. Vai devagar, mas é seguro." :
+              "<b>Errado:</b> líquido entrando direto na sucção com o compressor ligado chega a ele sem evaporar. Líquido não se comprime: quebra palhetas e válvulas (golpe de líquido) e lava o óleo.") +
+          (st.g > st.alvo * 1.03 ? " <b>Passou da carga da etiqueta:</b> excesso de fluido sobe a pressão de alta e pode mandar líquido ao compressor. Recolha o excesso." : " Feche o cilindro quando a balança marcar a carga da etiqueta (descontando o que já havia no sistema).");
+      }
+      if (M !== "carga") b2.style.display = "";
+      sg(r, "g").innerHTML = g; sread(r, txt);
+    },
+    reset(st) { Object.assign(st, { etapa: 0, pl: 8.2, ph: 26, on: 0, t: 0, P: 760000, umi: 1, iso: 0, Pi: 0, hist: [], g: 0, open: 0, liq: 0 }); },
+    input(st, f) { if (["modo", "eq", "sis", "gas", "via"].includes(f)) this.reset(st); },
+    act(st, a) {
+      if (a === "zera") this.reset(st);
+      if (st.modo === "recolher") { if (a === "a1" && st.etapa === 0) st.etapa = 1; else if (a === "a2" && st.etapa === 1) st.etapa = 2; }
+      if (st.modo === "vacuo") { if (a === "a1" && !st.iso) st.on = st.on ? 0 : 1; if (a === "a2" && !st.iso && st.t >= 2) { st.iso = 1; st.on = 0; st.Pi = st.t; st.P0 = st.P; } }
+      if (st.modo === "carga" && a === "a1") st.open = st.open ? 0 : 1;
+    },
+    tick(r, st, dt) {
+      let ch = false;
+      if (st.modo === "recolher" && st.etapa === 1) { st.pl += (-.9 - st.pl) * dt / 3.5; st.ph += (29 - st.ph) * dt / 6; ch = true; }
+      if (st.modo === "vacuo" && (st.on || st.iso) && st.t < 120) {
+        const dm = dt * 3; st.t += dm;
+        if (st.on) { const fl = st.eq === "compressor" ? 40000 : st.sis === "vazamento" ? 2500 : st.sis === "umido" && st.umi > .05 ? 1800 : 25, tau = st.eq === "compressor" ? 5 : 1.6;
+          st.P = fl + (st.P - fl) * Math.exp(-dm / tau); if (st.sis === "umido" && st.P < 20000 && st.eq === "bomba") st.umi = Math.max(0, st.umi - dm * .022); }
+        else if (st.iso) { if (st.sis === "vazamento") st.P += 250 * dm; else { const tg = st.sis === "umido" && st.umi > .05 ? 2000 + st.umi * 15000 : st.P0 + 150; st.P = tg + (st.P - tg) * Math.exp(-dm / 3); } }
+        st.hist.push([st.t, st.P]); if (st.hist.length > 900) st.hist.splice(0, 2); ch = true;
+      }
+      if (st.modo === "carga" && st.open) {
+        const mx = st.via === "alta" ? st.alvo * .75 : 1e9, rate = st.via === "alta" ? Math.max(0, 120 * (1 - st.g / mx)) : st.via === "dosa" ? 12 : 45;
+        st.g += rate * dt; if (st.via === "direto") st.liq = Math.min(1, st.liq + dt * .25); ch = true;
+      } else if (st.modo === "carga" && st.liq > 0) { st.liq = Math.max(0, st.liq - dt * .3); ch = true; }
+      if (ch) this.draw(r, st);
+    }
+  },
+
+  chiller: {
+    fam: "Refrigeração e calor", title: "Simulador: chiller de água gelada", hint: "O chiller resfria água, e a água gelada vai por tubulação até os fan-coils do prédio. Mude a vazão, as temperaturas da água e o ar externo, e veja a carga térmica em kW e TR, o rendimento e a potência elétrica.",
+    init: { vaz: 12, tr: 12, ts: 7, tamb: 35, run: 1, ph: 0 },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 240", '<g data-g="g"></g>', "Chiller e prédio") + '</div><div class="s-ctl">' + sRange("chiller", "vaz", "Vazão de água gelada (m³/h)", 2, 40, .5) + sRange("chiller", "tr", "Água de retorno", 8, 18, .5) + sRange("chiller", "ts", "Água de saída (ajuste)", 3, 12, .5) + sRange("chiller", "tamb", "Ar externo (condensação a ar)", 20, 45, 1) + "</div>" +
+      sMeters([["q", "Carga térmica"], ["trr", "Em TR"], ["btu", "Em BTU/h"], ["cop", "COP"], ["pe", "Potência elétrica"], ["dt", "ΔT da água"]]),
+    draw(r, st) {
+      if (st.tr <= st.ts) st.tr = st.ts + .5;
+      const dT = st.tr - st.ts, m = st.vaz * 1000 / 3600, Q = m * 4.186 * dT, te = st.ts - 5 + 273.15, tc = st.tamb + 12 + 273.15, cop = .5 * te / (tc - te), d = st.run ? 1 : 0;
+      let g = '<rect x="10" y="20" width="170" height="200" rx="4" fill="#142039" stroke="#2a3b62"/><text x="95" y="36" text-anchor="middle" style="font-size:9px">prédio</text>';
+      [70, 140].forEach(y => { g += '<rect x="30" y="' + y + '" width="80" height="36" rx="4" fill="#0c1424" stroke="#9db0d3"/><text x="70" y="' + (y + 22) + '" text-anchor="middle" style="font-size:9px">fan-coil</text>'; });
+      g += flow("M300 120H140V88H110M140 120V158H110", FLC.ag, d * 1) + flow("M30 88H20V200H300V160", FLC.aq, d * 1) + flow("M30 158H20", FLC.aq, d) +
+        '<rect x="300" y="60" width="150" height="150" rx="6" fill="#142039" stroke="#9db0d3" stroke-width="2"/><text x="375" y="78" text-anchor="middle" style="font-size:9px">chiller</text>' +
+        '<rect x="310" y="110" width="130" height="30" rx="14" fill="#0c1424" stroke="#38bdf8" stroke-width="2"/><text x="375" y="129" text-anchor="middle" style="font-size:8px">evaporador casco e tubo</text><circle cx="340" cy="175" r="16" fill="#0c1424" stroke="#9db0d3"/><text x="340" y="178" text-anchor="middle" style="font-size:8px">comp.</text>' +
+        '<circle cx="340" cy="44" r="16" fill="none" stroke="#f87171"/><circle cx="410" cy="44" r="16" fill="none" stroke="#f87171"/><text x="375" y="18" text-anchor="middle" style="font-size:9px">condensador (o calor sai)</text>' +
+        '<circle cx="240" cy="200" r="11" fill="#0c1424" stroke="#9db0d3" stroke-width="2"/><text x="240" y="228" text-anchor="middle" style="font-size:9px">bomba</text>' +
+        '<text x="200" y="112" text-anchor="middle" style="fill:#60a5fa;font-size:10px">' + fmtN(st.ts, 1) + ' °C</text><text x="200" y="194" text-anchor="middle" style="fill:#fca5a5;font-size:10px">' + fmtN(st.tr, 1) + " °C</text>";
+      sg(r, "g").innerHTML = g;
+      so(r, "vaz", fmtN(st.vaz, 1) + " m³/h"); so(r, "tr", fmtN(st.tr, 1) + " °C"); so(r, "ts", fmtN(st.ts, 1) + " °C"); so(r, "tamb", st.tamb + " °C");
+      so(r, "q", fmtN(Q, 0) + " kW"); so(r, "trr", fmtN(Q / 3.517, 1) + " TR"); so(r, "btu", fmtN(Q * 3412, 0)); so(r, "cop", fmtN(cop, 1)); so(r, "pe", fmtN(Q / cop, 0) + " kW"); so(r, "dt", fmtN(dT, 1) + " K");
+      sread(r, "A carga que o chiller está tirando do prédio sai da água: Q = vazão × calor específico × ΔT = " + fmtN(m, 2) + " kg/s × 4,186 × " + fmtN(dT, 1) + " = <b>" + fmtN(Q, 0) + " kW</b>, ou " + fmtN(Q / 3.517, 1) + " TR. Com ar externo a " + st.tamb + " °C, o rendimento estimado é " + fmtN(cop, 1) + ", e o compressor consome cerca de " + fmtN(Q / cop, 0) + " kW. " +
+        (st.ts < 5 ? "<b>Água abaixo de 5 °C:</b> a água pode congelar dentro do evaporador e romper os tubos. Abaixo disso, só com mistura de água e glicol e proteção ajustada para ela. " : "") +
+        (dT > 8 ? "ΔT muito alto: a vazão está baixa para essa carga. Pouca vazão também arrisca congelamento, por isso o chiller tem chave de fluxo (flow switch) que o desliga sem água circulando. " : dT < 3 ? "ΔT baixo: muita água circulando para pouca carga, gastando energia de bombeamento à toa. " : "ΔT entre 3 e 8 K, faixa comum de projeto (5 K é o mais usado). ") +
+        "Cada grau a mais na água de saída e cada grau a menos no ar de condensação melhoram o rendimento. Manter o condensador limpo é economia direta.");
+    },
+    input(st, f) { if (st.tr <= st.ts) { if (f === "ts") st.tr = Math.min(18, st.ts + 5); else st.ts = Math.max(3, st.tr - .5); } },
+    tick(r, st, dt) { flowTick(r, st, dt, .3 + st.vaz / 40); }
+  },
+
+  peltier: {
+    fam: "Refrigeração e calor", title: "Simulador: pastilha Peltier (termoelétrica)", hint: "Uma pastilha Peltier bombeia calor de uma face para a outra quando passa corrente. Mude a corrente, o calor a retirar no lado frio e o dissipador do lado quente. Valores de uma pastilha comum de 12 V e 6 A.",
+    init: { I: 3, Q: 10, ta: 25, dis: "bom" },
+    A: .052, R: 2, Kt: .5,
+    calc(st, I) {
+      const Rth = { bom: .15, fraco: .6, sem: 3 }[st.dis], Ta = st.ta + 273.15; let Th = Ta, Tc = Ta, V = 0, P = 0, Qh = 0;
+      for (let i = 0; i < 60; i++) { Tc = (st.Q + .5 * I * I * this.R + this.Kt * Th) / (this.A * I + this.Kt); V = I * this.R + this.A * (Th - Tc); P = V * I; Qh = st.Q + P; Th = Ta + Rth * Qh; }
+      return { Tc: Tc - 273.15, Th: Th - 273.15, V, P, Qh };
+    },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 230", '<g data-g="g"></g>', "Pastilha Peltier") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("peltier", "dis", [["bom", "Dissipador grande com ventoinha"], ["fraco", "Dissipador pequeno"], ["sem", "Sem dissipador"]]) + '</div><div class="s-ctl">' + sRange("peltier", "I", "Corrente", 0, 8, .1) + sRange("peltier", "Q", "Calor a retirar no lado frio", 0, 40, 1) + sRange("peltier", "ta", "Temperatura ambiente", 10, 40, 1) + "</div>" +
+      sMeters([["tc", "Lado frio"], ["th", "Lado quente"], ["v", "Tensão"], ["p", "Potência elétrica"], ["cop", "COP"]]),
+    draw(r, st) {
+      const z = this.calc(st, st.I), X = i => 250 + i / 8 * 190, Y = t => 190 - (t + 40) / 120 * 160; let d = "", best = [0, 1e9];
+      for (let i = 0; i <= 80; i++) { const I = i / 10, q = this.calc(st, I); if (q.Tc < best[1]) best = [I, q.Tc]; d += (i ? "L" : "M") + X(I).toFixed(1) + " " + Y(Math.max(-40, Math.min(80, q.Tc))).toFixed(1); }
+      let g = '<rect x="40" y="60" width="160" height="14" fill="' + hot((z.Tc + 20) / 100) + '"/><text x="120" y="52" text-anchor="middle" style="font-size:10px;fill:var(--ink)">lado frio ' + fmtN(z.Tc, 1) + ' °C</text>';
+      for (let i = 0; i < 8; i++) g += '<rect x="' + (46 + i * 19) + '" y="76" width="12" height="40" fill="' + (i % 2 ? "#60a5fa" : "#f87171") + '" opacity=".8"/>';
+      g += '<rect x="40" y="118" width="160" height="14" fill="' + hot((z.Th + 20) / 100) + '"/><text x="120" y="226" text-anchor="middle" style="font-size:10px;fill:var(--ink)">lado quente ' + fmtN(z.Th, 1) + " °C</text>" +
+        (st.dis !== "sem" ? '<path d="' + Array.from({ length: st.dis === "bom" ? 9 : 5 }, (_, i) => "M" + (48 + i * (st.dis === "bom" ? 18 : 36)) + " 134V" + (st.dis === "bom" ? 196 : 166)).join("") + '" stroke="#9db0d3" stroke-width="5"/><text x="204" y="170" style="font-size:9px">dissipador</text>' : "") +
+        '<text x="20" y="100" style="font-size:9px">N</text><text x="206" y="100" style="font-size:9px">P</text><text x="120" y="22" text-anchor="middle" style="font-size:9px;fill:#38bdf8">↑ calor absorvido: ' + st.Q + " W</text>" +
+        '<line x1="250" x2="440" y1="190" y2="190" stroke="#6c7ea3"/><line x1="250" x2="250" y1="30" y2="190" stroke="#6c7ea3"/><path d="' + d + '" fill="none" stroke="#22d3ee" stroke-width="2.5"/><circle cx="' + X(st.I).toFixed(1) + '" cy="' + Y(Math.max(-40, Math.min(80, z.Tc))).toFixed(1) + '" r="6" fill="#fbbf24"/>' +
+        [0, 2, 4, 6, 8].map(i => '<text x="' + X(i) + '" y="204" text-anchor="middle" style="font-size:9px">' + i + " A</text>").join("") + [-40, 0, 40, 80].map(t => '<text x="246" y="' + (Y(t) + 3) + '" text-anchor="end" style="font-size:9px">' + t + "</text>").join("") +
+        '<text x="256" y="24" style="font-size:9px">temperatura do lado frio × corrente</text><line x1="' + X(best[0]).toFixed(1) + '" x2="' + X(best[0]).toFixed(1) + '" y1="30" y2="190" stroke="#34d399" stroke-dasharray="3 3"/>';
+      sg(r, "g").innerHTML = g;
+      const cop = z.P > 0 ? st.Q / z.P : 0;
+      so(r, "I", fmtN(st.I, 1) + " A"); so(r, "Q", st.Q + " W"); so(r, "ta", st.ta + " °C"); so(r, "tc", fmtN(z.Tc, 1) + " °C"); so(r, "th", fmtN(z.Th, 1) + " °C"); so(r, "v", fmtN(z.V, 1) + " V"); so(r, "p", fmtN(z.P, 0) + " W"); so(r, "cop", fmtN(cop, 2));
+      sread(r, "A pastilha tem dezenas de pares de semicondutores tipo N e tipo P ligados em série. A corrente carrega calor de uma face para a outra (<b>efeito Peltier</b>): uma esfria e a outra esquenta. Invertendo a polaridade, os lados trocam. Mas a própria corrente gera calor (perda por efeito Joule) e o calor volta do lado quente para o frio por condução. Por isso existe uma <b>corrente ótima</b> (linha verde, " + fmtN(best[0], 1) + " A nestas condições): acima dela, o lado frio volta a esquentar. " +
+        "O lado quente precisa jogar fora o calor retirado <b>mais</b> a potência elétrica (" + fmtN(z.Qh, 0) + " W); " + (st.dis === "sem" ? "<b>sem dissipador ela superaquece em segundos e queima.</b> " : st.dis === "fraco" ? "com dissipador pequeno, o lado quente sobe e o frio sobe junto. " : "com bom dissipador, o lado quente fica perto do ambiente. ") +
+        "O rendimento (COP " + fmtN(cop, 2) + ") é bem menor que o de um compressor, por isso a Peltier aparece em coolers pequenos, bebedouros, frigobares silenciosos e no resfriamento de sensores e lasers.");
+    }
+  },
+
+  tubos: {
+    fam: "Refrigeração e calor", title: "Simulador: ferramentas para tubo de cobre", hint: "Corte, flange, expansão, curvatura, selagem e união a frio de tubos de cobre. Escolha a ferramenta e avance o controle para ver cada etapa e os erros mais comuns.",
+    init: { f: "corta", p: 0, op: 0, d: 3 },
+    html: () => '<div class="s-fig">' + SVG("0 0 460 220", '<g data-g="g"></g>', "Ferramenta para tubo") + '</div><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">' + sSeg("tubos", "f", [["corta", "Cortador"], ["flange", "Flangeador"], ["expande", "Expansor"], ["curva", "Curvador"], ["sela", "Alicate selador"], ["uniao", "União a frio"]]) + "</div>" +
+      sSeg("tubos", "op", [["0", "Do jeito certo"], ["1", "Com o erro comum"]]) + sSeg("tubos", "d", [["2", "1/4\""], ["3", "3/8\""], ["4", "1/2\""], ["5", "5/8\""]]) + '<div class="s-ctl">' + sRange("tubos", "p", "Avanço", 0, 100, 1) + "</div>",
+    draw(r, st) {
+      const p = st.p / 100, e = !!st.op, F = st.f, D = { 2: 6.35, 3: 9.52, 4: 12.7, 5: 15.88 }[st.d], dp = D * 2.4;
+      const lab = r.querySelector('[data-f="p"]').closest("label").querySelector("span");
+      lab.textContent = { corta: "Voltas do cortador", flange: "Aperto do cone", expande: "Avanço do expansor", curva: "Ângulo da curva", sela: "Aperto do alicate", uniao: "Avanço do anel" }[F]; sShow(r, "d", F === "curva");
+      so(r, "p", F === "curva" ? Math.round(p * 180) + "°" : F === "corta" ? fmtN(p * 12, 0) + " voltas" : st.p + "%");
+      let g = "", t = "";
+      const tube = (x1, x2, y, h, extra) => '<rect x="' + x1 + '" y="' + (y - h / 2) + '" width="' + (x2 - x1) + '" height="' + h + '" fill="#d08a4e" ' + (extra || "") + "/>";
+      if (F === "corta") {
+        const dep = Math.min(1, p * 1.1), ov = e ? p * 10 : 0;
+        g = tube(30, 310, 110, 40) + '<rect x="226" y="' + (90 + dep * 4) + '" width="8" height="' + (40 - dep * 8) + '" fill="#0c1424" opacity="' + dep + '"/><circle cx="230" cy="' + (78 - (1 - dep) * 6) + '" r="14" fill="#cbd5e1"/><rect x="190" y="40" width="80" height="16" rx="4" fill="#6c7ea3"/><circle cx="215" cy="142" r="8" fill="#9db0d3"/><circle cx="245" cy="142" r="8" fill="#9db0d3"/>' +
+          '<ellipse cx="390" cy="110" rx="' + (22 + ov / 2) + '" ry="' + (22 - ov / 2) + '" fill="none" stroke="#d08a4e" stroke-width="5"/><text x="390" y="160" text-anchor="middle" style="font-size:9px">seção do tubo</text><text x="230" y="20" text-anchor="middle" style="font-size:9px">roda de corte e roletes</text>' + (p >= 1 ? '<text x="230" y="190" text-anchor="middle" style="fill:#34d399;font-size:10px">cortado: agora tire a rebarba com o escareador</text>' : "");
+        t = e ? "<b>Erro comum:</b> apertar demais o cortador a cada volta. A roda empurra a parede para dentro, o tubo <b>ovaliza</b> e a borda fica com rebarba grande, que estreita a passagem e atrapalha o flange e a solda." : "Gire o cortador em volta do tubo e aperte o botão só um pouco a cada volta. A roda vai abrindo um sulco até atravessar a parede. No fim, tire a rebarba interna com o escareador, com a ponta do tubo para baixo, para os cavacos não entrarem no tubo.";
+      }
+      if (F === "flange" || F === "expande") {
+        const fl = F === "flange";
+        g = tube(30, 240, 110, 36) + '<rect x="150" y="70" width="40" height="80" fill="#6c7ea3"/><text x="170" y="64" text-anchor="middle" style="font-size:9px">' + (fl ? "barra (bloco)" : "fixador") + "</text>";
+        if (fl) { const w = p * 22, cr = e && p > .85; g += '<path d="M240 92L' + (240 + w * .9).toFixed(1) + " " + (92 - w).toFixed(1) + "M240 128L" + (240 + w * .9).toFixed(1) + " " + (128 + w).toFixed(1) + '" stroke="#d08a4e" stroke-width="5"/>' + '<path d="M' + (300 - (1 - p) * 30).toFixed(1) + ' 110l34 -26v52z" fill="#cbd5e1"/><rect x="' + (334 - (1 - p) * 30).toFixed(1) + '" y="104" width="80" height="12" fill="#9db0d3"/><text x="320" y="170" style="font-size:9px">cone a 45°</text>' + (cr ? '<path d="M' + (240 + w * .9 - 4) + " " + (92 - w + 4) + 'l6 6l-4 3" stroke="#f87171" stroke-width="2" fill="none"/><text x="250" y="40" style="fill:#f87171;font-size:10px">trinca!</text>' : "") + (e ? '<text x="60" y="190" style="fill:#f87171;font-size:10px">porca esquecida fora do tubo</text>' : '<rect x="84" y="92" width="26" height="36" fill="#fbbf24" opacity=".7"/><text x="97" y="190" text-anchor="middle" style="font-size:9px">porca já no tubo</text>'); }
+        else { const w = p * 6, L = p * 34; g += '<path d="M240 ' + (92 - w) + "H" + (240 + L).toFixed(1) + "M240 " + (128 + w) + "H" + (240 + L).toFixed(1) + '" stroke="#d08a4e" stroke-width="5"/><rect x="' + (240 + L - 10).toFixed(1) + '" y="' + (96 - w).toFixed(1) + '" width="40" height="' + (28 + 2 * w).toFixed(1) + '" rx="6" fill="#cbd5e1"/><text x="300" y="70" style="font-size:9px">' + (p > .9 ? "bolsa pronta: o outro tubo entra justo" : "cabeça expansora") + "</text>" + (e ? '<text x="60" y="190" style="fill:#f87171;font-size:10px">bolsa curta e sem limpeza: solda falha</text>' : ""); }
+        t = fl ? (e ? "<b>Erros comuns:</b> esquecer de colocar a porca antes de flangear (aí é cortar e refazer), deixar a ponta do tubo pouco acima da barra (flange pequeno, que vaza) ou muito acima e apertar demais (o flange <b>trinca</b>)." : "No <b>flangeador</b>, a porca vai no tubo antes de tudo. O tubo é preso na barra com a ponta um pouco acima da face, e o cone, lubrificado com uma gota do óleo do sistema, abre a boca a 45°, no formato do assento da conexão. O flange certo é liso, sem trincas, e cobre o assento sem passar da rosca.") :
+          (e ? "<b>Erro comum:</b> bolsa curta ou com a ponta suja e oxidada. A solda não penetra na folga e o ponto vaza. A bolsa deve ter comprimento de cerca de um diâmetro, e as superfícies devem estar limpas." : "O <b>expansor</b> alarga a ponta do tubo em forma de bolsa, para que outro tubo do mesmo diâmetro entre justo e seja soldado sem luva. Avance a cabeça expansora em etapas, girando um pouco a cada aperto, até a marca da profundidade.");
+      }
+      if (F === "curva") {
+        const ang = p * Math.PI, R = e ? D * 1.2 : D * 4, sc = 3.2, cx = 140, cy = 160, kink = e && p > .25 && st.d >= 3, Rs = R * sc; let d = "M" + (cx - 110) + " " + (cy - Rs) + "H" + cx;
+        d += "A" + Rs.toFixed(1) + " " + Rs.toFixed(1) + " 0 0 1 " + (cx + Rs * Math.sin(ang)).toFixed(1) + " " + (cy - Rs * Math.cos(ang)).toFixed(1);
+        d += "l" + (Math.cos(ang) * 100).toFixed(1) + " " + (Math.sin(ang) * 100).toFixed(1);
+        g = '<path d="' + d + '" fill="none" stroke="#d08a4e" stroke-width="' + (D * .9).toFixed(1) + '" stroke-linecap="round" stroke-linejoin="round"/>' + (e ? "" : '<circle cx="' + cx + '" cy="' + cy + '" r="' + (Rs - D).toFixed(1) + '" fill="none" stroke="#6c7ea3" stroke-width="6"/>') +
+          (kink ? '<circle cx="' + (cx + Rs * Math.sin(ang / 2)).toFixed(1) + '" cy="' + (cy - Rs * Math.cos(ang / 2)).toFixed(1) + '" r="10" fill="none" stroke="#f87171" stroke-width="2"/><text x="450" y="40" text-anchor="end" style="fill:#f87171;font-size:10px">amassou: passagem estrangulada</text>' : "") +
+          '<text x="300" y="200" style="font-size:9px">raio de curvatura ≈ ' + fmtN(R, 0) + " mm</text>";
+        t = e ? "<b>Erro comum:</b> curvar à mão, com raio pequeno, tubos de 3/8\" ou mais. A parede de fora estica, a de dentro enruga e o tubo <b>amassa</b>, estrangulando a passagem do fluido (e o local fica fraco). Use curvador de alavanca, com a forma do diâmetro certo, ou mola curvadora." : "O <b>curvador</b> apoia o tubo numa forma do mesmo diâmetro, e a alavanca dobra o tubo sem amassar. O raio mínimo fica em torno de 3 a 5 vezes o diâmetro. Para tubos finos e recozidos, a mola curvadora por fora do tubo também serve. Marque o início da curva antes, para acertar as medidas.";
+      }
+      if (F === "sela") {
+        const h = 36 * (1 - Math.min(1, p * 1.05));
+        g = tube(30, 300, 110, 36) + '<rect x="300" y="' + (110 - Math.max(2, h) / 2).toFixed(1) + '" width="60" height="' + Math.max(2, h).toFixed(1) + '" fill="#d08a4e"/><rect x="296" y="' + (110 - h / 2 - 22).toFixed(1) + '" width="68" height="20" fill="#6c7ea3"/><rect x="296" y="' + (110 + h / 2 + 2).toFixed(1) + '" width="68" height="20" fill="#6c7ea3"/>' +
+          '<text x="330" y="40" text-anchor="middle" style="font-size:9px">mordente do alicate</text>' + (p > .95 ? (e ? '<text x="200" y="190" text-anchor="middle" style="fill:#f87171;font-size:10px">só prensado, sem solda: vaza com o tempo</text>' : '<text x="200" y="190" text-anchor="middle" style="fill:#34d399;font-size:10px">vedado: corte depois do aperto e solde a ponta</text><circle cx="390" cy="110" r="8" fill="#fbbf24"/>') : "");
+        t = "O <b>alicate selador</b> (pinch-off) esmaga o tubo de processo até fechar a passagem, com o sistema ainda pressurizado, depois da carga. " + (e ? "<b>Erro comum:</b> confiar só no amassado. Sem soldar a ponta, a vedação cede com a vibração e o gás vaza aos poucos." : "Com o alicate travado, corte o tubo além do aperto e solde a ponta. Só então solte o alicate.");
+      }
+      if (F === "uniao") {
+        const x = 150 + p * 90;
+        g = tube(30, 230, 110, 34) + tube(230, 430, 110, 34) + '<line x1="230" x2="230" y1="88" y2="132" stroke="#0c1424" stroke-width="2"/><rect x="190" y="84" width="80" height="52" rx="6" fill="#cbd5e1" opacity=".45"/><text x="230" y="70" text-anchor="middle" style="font-size:9px">corpo da união</text>' +
+          '<rect x="' + (x - 14).toFixed(1) + '" y="80" width="28" height="60" rx="4" fill="#fbbf24"/><text x="' + x.toFixed(1) + '" y="160" text-anchor="middle" style="font-size:9px">anel</text>' + (p > .97 ? (e ? '<text x="230" y="196" text-anchor="middle" style="fill:#f87171;font-size:10px">tubo riscado e sem selante: vazamento</text>' : '<text x="230" y="196" text-anchor="middle" style="fill:#34d399;font-size:10px">anel encostado: união vedada</text>') : "");
+        t = "A <b>união a frio</b> (de anel prensado) junta dois tubos sem chama: limpe e lixe as pontas, marque a profundidade, aplique o selante, encaixe a peça e use a ferramenta hidráulica para empurrar o anel sobre o corpo, que se comprime contra o tubo. " + (e ? "<b>Erro comum:</b> tubo ovalizado, riscado no sentido do comprimento ou sem selante. O anel não veda e o ponto vaza. Também não serve em tubo que não foi bem calibrado." : "É útil onde não pode haver fogo, como em ambientes com material inflamável ou em equipamentos já instalados.");
+      }
+      sg(r, "g").innerHTML = g; sread(r, t);
     }
   },
 
@@ -2439,7 +3002,7 @@ VIEWS.favoritos = () => {
 
 /* ----- Próximas etapas ----- */
 VIEWS.roteiro = () => {
-  const P = [["Versão 2.17", "Disponível", "ok", ["Simuladores de medição: régua em mm e polegada, micrômetro, anel graduado, termômetro, pressão (Bourdon, tubo em U, barômetro e vácuo), régua T×P de refrigerantes, multímetro, alicate amperímetro e potenciômetro; início sem o \"continue de onde parou\""]], ["Versão 2.16", "Concluída", "ok", ["Volter mais enxuto: saem os exercícios das lições, Laboratório, Projetos, Treino, Livros, Meu progresso, Próximas etapas e Nova Fase; entra a seção Simuladores, com todos os simuladores num só lugar"]], ["Versão 2.15", "Concluída", "ok", ["Instalações elétricas residenciais ampliada: 12 lições com tabelas, uma casa de exemplo do começo ao fim e lições novas de quadro e proteção, esquemas de ligação, eletrodutos na planta, demanda e levantamento de material"]], ["Versão 2.14", "Concluída", "ok", ["Instalações elétricas residenciais: seis lições novas (previsão de cargas, entrada e quadro, circuitos e planta, dimensionamento, DR e aterramento, eletrodutos e material), dois simuladores, um desafio e um projeto"]], ["Versão 2.13", "Concluída", "ok", ["Sopradora: lição de moldagem por estiramento e sopro com simulador animado, e o escopo da sopradora detalhado na Linha de envase"]], ["Versão 2.12", "Concluída", "ok", ["Linha de envase: área externa com os tanques de CO₂ e nitrogênio"]], ["Versão 2.11", "Concluída", "ok", ["Linha de envase no desenho real da planta: xaroparia, linha de envase, sopro, sala de máquinas, caldeira, sala de CIP e transportes com sensores e CLPs, com o mapa da planta"]], ["Versão 2.10", "Concluída", "ok", ["Cores tecnológicas (ciano e índigo) e o novo item Linha de envase, para montar o projeto e o escopo de uma linha completa com as máquinas interligadas"]], ["Versão 2.9", "Concluída", "ok", ["Layout novo: menu lateral com todas as áreas e etapas, início com blocos por área, busca em todo o conteúdo e fim do visual de streaming"]], ["Versão 2.8", "Concluída", "ok", ["Curso Programação de robôs com o Korum: 10 lições de KRL com prática no laboratório virtual Korum, um desafio no Laboratório e um projeto de célula de paletização"]], ["Versão 2.7", "Concluída", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
+  const P = [["Versão 2.18", "Disponível", "ok", ["Simuladores de refrigeração e calor: caloria e BTU, zero absoluto e dilatação da água; circuito de refrigeração e bomba de calor; circuito elétrico do refrigerador com relé PTC e voltimétrico; compressores; diagrama pressão-entalpia; válvula de expansão e capilar; ar-condicionado automotivo; recolhimento, vácuo e carga; chiller; Peltier; ferramentas para tubo de cobre"]], ["Versão 2.17", "Concluída", "ok", ["Simuladores de medição: régua em mm e polegada, micrômetro, anel graduado, termômetro, pressão (Bourdon, tubo em U, barômetro e vácuo), régua T×P de refrigerantes, multímetro, alicate amperímetro e potenciômetro; início sem o \"continue de onde parou\""]], ["Versão 2.16", "Concluída", "ok", ["Volter mais enxuto: saem os exercícios das lições, Laboratório, Projetos, Treino, Livros, Meu progresso, Próximas etapas e Nova Fase; entra a seção Simuladores, com todos os simuladores num só lugar"]], ["Versão 2.15", "Concluída", "ok", ["Instalações elétricas residenciais ampliada: 12 lições com tabelas, uma casa de exemplo do começo ao fim e lições novas de quadro e proteção, esquemas de ligação, eletrodutos na planta, demanda e levantamento de material"]], ["Versão 2.14", "Concluída", "ok", ["Instalações elétricas residenciais: seis lições novas (previsão de cargas, entrada e quadro, circuitos e planta, dimensionamento, DR e aterramento, eletrodutos e material), dois simuladores, um desafio e um projeto"]], ["Versão 2.13", "Concluída", "ok", ["Sopradora: lição de moldagem por estiramento e sopro com simulador animado, e o escopo da sopradora detalhado na Linha de envase"]], ["Versão 2.12", "Concluída", "ok", ["Linha de envase: área externa com os tanques de CO₂ e nitrogênio"]], ["Versão 2.11", "Concluída", "ok", ["Linha de envase no desenho real da planta: xaroparia, linha de envase, sopro, sala de máquinas, caldeira, sala de CIP e transportes com sensores e CLPs, com o mapa da planta"]], ["Versão 2.10", "Concluída", "ok", ["Cores tecnológicas (ciano e índigo) e o novo item Linha de envase, para montar o projeto e o escopo de uma linha completa com as máquinas interligadas"]], ["Versão 2.9", "Concluída", "ok", ["Layout novo: menu lateral com todas as áreas e etapas, início com blocos por área, busca em todo o conteúdo e fim do visual de streaming"]], ["Versão 2.8", "Concluída", "ok", ["Curso Programação de robôs com o Korum: 10 lições de KRL com prática no laboratório virtual Korum, um desafio no Laboratório e um projeto de célula de paletização"]], ["Versão 2.7", "Concluída", "ok", ["Fundamentos de IA: a história em duas partes, como a IA funciona, como a máquina aprende (com simulador de um neurônio) e um glossário", "A aba Comece aos 40+ passa a se chamar Nova Fase", "Os casos reais aparecem em nome da marca, como Da bancada"]], ["Versão 2.6", "Concluída", "ok", ["Quadros Da bancada nas lições, com experiências reais de eletrônica, indústria e equipamentos de saúde", "Primeira lição da etapa Recomeço em tecnologia, na aba Nova Fase", "Desafio baseado num caso real: o IHM que parou na festa de fim de ano"]], ["Versão 2.5", "Concluída", "ok", ["Eletrônica básica completa, com 14 lições: circuitos, solda, ganho do transistor, relés, amplificadores, multivibradores, chips, história e roteiro de falhas", "Simuladores novos: transistor ligado por sensor e amplificador com polarização", "Novo desafio no Laboratório e projeto guiado de alarme com relé"]], ["Versão 2.4", "Concluída", "ok", ["Elétrica e Hardware com 18 lições: eletricidade, instalações, eletrônica e comandos elétricos", "Nove simuladores interativos nas lições: lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, fases, partida de motor e paquímetro", "Novo desafio no Laboratório e projeto guiado de pisca-pisca na protoboard"]], ["Versão 2.3", "Concluída", "ok", ["Abas Comece aos 40+ e Elétrica, Eletrônica e Hardware, com trilhas em etapas e temas em sequência", "Nova grade: IA no trabalho, agentes e automação, programação com IA, dados, IA por profissão, segurança e carreira", "Cursos planejados de cada trilha aparecem como Em breve", "Laboratório com desafios de investigação e correção comentada", "Projetos guiados com passo a passo", "Livros atuais, progresso, conquistas e itens salvos", "Volter Assist na versão do claude.ai"]],
     ["Próxima", "Planejada", "go", ["Cursos completos da trilha IA no Trabalho", "Trilha Agentes e Automação: n8n, WhatsApp e primeiro agente", "Volter Assist também no programa instalado", "Certificado por curso concluído"]],
     ["Depois", "Planejada", "", ["Turmas fechadas e licenças para empresas", "Um curso de IA por profissão a cada etapa", "Aplicativo para celular com modo offline"]]];
   const L = S.mode === "local";

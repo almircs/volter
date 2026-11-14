@@ -15,6 +15,18 @@ Isso só é preciso na primeira vez.
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 2.18.0: simuladores de refrigeração e calor
+- **Onze simuladores novos na família Refrigeração e calor**, montados a partir dos temas das animações didáticas:
+  - calor sensível em caloria, BTU e joule, zero absoluto (lei de Charles) e a dilatação da água perto de 4 °C
+  - circuito de refrigeração animado, com a válvula de 4 vias invertendo o ciclo (bomba de calor e degelo) e o papel de cada componente, inclusive o acumulador de sucção
+  - circuito elétrico do refrigerador com relé PTC e relé voltimétrico: partida, religada com o PTC quente, protetor térmico e relé com defeito
+  - processo de compressão e os compressores alternativo (com o diagrama pressão × volume), rotativo, scroll, automotivo com embreagem e placa inclinada, e centrífugo de mancais magnéticos
+  - diagrama pressão-entalpia do R-134a com efeito refrigerante, trabalho, COP e temperatura de descarga
+  - válvula de expansão termostática (bulbo solto, bulbo sem carga) e vazão do tubo capilar
+  - ar-condicionado automotivo: condensador, evaporador, filtro secador × tubo de orifício com acumulador, ventilador parado e ciclagem anticongelamento
+  - recolhimento de gás, vácuo em microns (por que o compressor não serve de bomba de vácuo) e carga de refrigerante líquido pela balança
+  - chiller de água gelada (carga em kW e TR), pastilha Peltier e ferramentas para tubo de cobre (cortador, flangeador, expansor, curvador, alicate selador e união a frio)
+
 ## Versão 2.17.0: simuladores de medição
 - **Nove simuladores novos na família Medição**, montados a partir dos temas das animações didáticas: leitura de escala em milímetro e em polegada, micrômetro, anel graduado, termômetro e escalas Celsius, Fahrenheit e Kelvin, pressão (manômetro Bourdon, tubo em U, barômetro e vácuo em microns), régua de temperatura × pressão de fluidos refrigerantes com cálculo de superaquecimento, uso correto do multímetro (com os erros que queimam o fusível), alicate amperímetro (um fio, fase e neutro juntos para achar fuga, e voltas) e potenciômetro linear e logarítmico
 - A tela inicial não mostra mais o "continue de onde parou"
