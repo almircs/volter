@@ -1,5 +1,137 @@
 // Conteúdo do Volter, sincronizado do claude.ai. Também pode ser gerado pelo editor de conteúdo (botão "Gerar conteudo.js").
 window.VOLTER_SEED = {
+ "books": {
+  "agentes-de-ia-albada": {
+   "area": "IA e agentes",
+   "authors": "Michael Albada",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-19T00:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "isbn": "978-85-7522-990-3",
+   "language": "Português",
+   "level": "Intermediário",
+   "pages": 360,
+   "publisher": "Novatec",
+   "status": "published",
+   "subtitle": "Projeto e implementação de sistemas multiagentes",
+   "summary": "Guia prático sobre como projetar agentes de IA: ferramentas, memória, RAG, orquestração, passagem de um agente para vários, avaliação, monitoramento em produção, segurança e colaboração entre pessoas e agentes.",
+   "title": "Construindo Aplicações com Agentes de IA",
+   "updatedAt": "2026-10-19T01:30:00.000Z",
+   "url": "https://novatec.com.br/livros/construindo-aplicacoes-com-agentes-IA/",
+   "urlLabel": "Ver na Novatec",
+   "why": "Aprofunda a parte de agentes: ferramentas, memória, avaliação e como manter uma pessoa no controle das ações importantes.",
+   "year": 2026
+  },
+  "engenharia-de-ia": {
+   "area": "IA e agentes",
+   "authors": "Chip Huyen",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-19T00:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "isbn": "978-85-7522-996-5",
+   "language": "Português",
+   "level": "Intermediário",
+   "pages": 488,
+   "publisher": "Novatec",
+   "status": "published",
+   "subtitle": "Construindo aplicações com modelos de fundação",
+   "summary": "Explica como criar aplicações em cima de modelos de IA já prontos: engenharia de prompt, RAG, ajuste fino, agentes, avaliação dos resultados e custo e tempo de resposta. Edição brasileira do livro mais citado sobre o tema.",
+   "title": "Engenharia de IA",
+   "updatedAt": "2026-10-19T01:30:00.000Z",
+   "url": "https://novatec.com.br/livros/engenharia-de-ia/",
+   "urlLabel": "Ver na Novatec",
+   "why": "O guia mais completo para quem quer construir aplicações com IA, e não só usar o chat. Boa leitura depois da trilha de IA.",
+   "year": 2026
+  },
+  "hands-on-llms": {
+   "area": "IA e agentes",
+   "authors": "Jay Alammar e Maarten Grootendorst",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-19T00:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "isbn": "",
+   "language": "Inglês",
+   "level": "Iniciante",
+   "pages": "",
+   "publisher": "O'Reilly",
+   "status": "published",
+   "subtitle": "Language understanding and generation",
+   "summary": "Introdução muito visual ao funcionamento dos modelos de linguagem: embeddings, busca semântica, classificação e geração de texto, com muitos diagramas.",
+   "title": "Hands-On Large Language Models",
+   "updatedAt": "2026-10-19T01:30:00.000Z",
+   "url": "https://www.kdnuggets.com/5-best-books-for-building-agentic-ai-systems-in-2026",
+   "urlLabel": "Ver indicação (KDnuggets)",
+   "why": "Cheio de diagramas, é uma ótima segunda leitura depois da lição sobre modelos de linguagem.",
+   "year": 2024
+  },
+  "llm-engineers-handbook": {
+   "area": "IA e agentes",
+   "authors": "Paul Iusztin e Maxime Labonne",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-19T00:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "isbn": "",
+   "language": "Inglês",
+   "level": "Avançado",
+   "pages": "",
+   "publisher": "Packt",
+   "status": "published",
+   "subtitle": "",
+   "summary": "Cobre o caminho completo para colocar uma aplicação de IA em produção: ajuste fino, RAG, pipelines, monitoramento e confiabilidade.",
+   "title": "LLM Engineer's Handbook",
+   "updatedAt": "2026-10-19T01:30:00.000Z",
+   "url": "https://www.kdnuggets.com/5-best-books-for-building-agentic-ai-systems-in-2026",
+   "urlLabel": "Ver indicação (KDnuggets)",
+   "why": "Para quando um projeto de IA precisa funcionar todos os dias, com testes, monitoramento e confiabilidade.",
+   "year": 2024
+  },
+  "llm-from-scratch-raschka": {
+   "area": "IA e agentes",
+   "authors": "Sebastian Raschka",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-10-19T00:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "isbn": "",
+   "language": "Inglês",
+   "level": "Avançado",
+   "pages": 368,
+   "publisher": "Manning",
+   "status": "published",
+   "subtitle": "",
+   "summary": "Constrói passo a passo um modelo de linguagem no estilo GPT em Python: atenção, arquitetura transformer, pré-treino e ajuste fino para classificação e para seguir instruções.",
+   "title": "Build a Large Language Model (From Scratch)",
+   "updatedAt": "2026-10-19T01:30:00.000Z",
+   "url": "https://oreilly.com/library/view/build-a-large/9781633437166",
+   "urlLabel": "Ver na O'Reilly",
+   "why": "Para entender o que acontece dentro de um modelo de linguagem, escrevendo cada parte em Python. Exige Python intermediário.",
+   "year": 2024
+  }
+ },
  "cases": {
   "api-campo-renomeado": {
    "actions": [
@@ -1828,6 +1960,114 @@ window.VOLTER_SEED = {
    "title": "Sua experiência vale: traduzindo anos de trabalho para a tecnologia",
    "track": "carreira",
    "updatedAt": "2026-10-24T19:40:00.000Z"
+  },
+  "clp-inversor": {
+   "author": "",
+   "body": "O motor de indução gira numa velocidade ligada à frequência da rede: um motor de 4 polos em 60 Hz gira perto de 1800 rpm. O **inversor de frequência** muda essa frequência e, com ela, a velocidade.\n\n## Para que serve\n- Ajustar a velocidade de esteiras, bombas, ventiladores e máquinas.\n- Partir e parar o motor com rampa, sem tranco mecânico nem pico de corrente.\n- Economizar energia: em bombas e ventiladores, a potência cai com o **cubo da rotação** (lei da afinidade). A 80% da velocidade, a potência fica perto de 51%.\n\n## Como funciona\n1. **Retificador:** uma ponte de diodos transforma a corrente alternada da rede em contínua.\n2. **Barramento CC:** capacitores filtram a tensão. Numa rede de 380 V, o barramento fica perto de **540 Vcc**.\n3. **Inversor:** seis **IGBTs** chaveiam o barramento milhares de vezes por segundo (2 a 16 kHz), em **PWM**. A largura dos pulsos forma, no motor, uma corrente quase senoidal na frequência desejada.\n\n## Modos de controle\n- **Escalar (V/f):** mantém tensão e frequência na mesma proporção (220 V a 60 Hz, 110 V a 30 Hz). Simples, bom para bombas e ventiladores.\n- **Vetorial sem sensor:** calcula o fluxo e o torque pelo modelo do motor; melhor torque em baixa velocidade.\n- **Vetorial com encoder:** controle preciso de velocidade e posição, usado em elevadores e bobinadeiras.\n\n## Parâmetros básicos\n| Grupo | Exemplos |\n|---|---|\n| Dados do motor | Tensão, corrente, potência, rotação e frequência de placa |\n| Limites | Frequência mínima e máxima, limite de corrente |\n| Rampas | Tempo de aceleração e de desaceleração |\n| Comando | Liga/desliga e sentido por bornes, IHM ou rede |\n| Referência | 0–10 V, 4–20 mA, potenciômetro, multivelocidade ou rede |\n\n## Frenagem\nAo desacelerar uma carga pesada rápido demais, o motor vira gerador e devolve energia ao barramento. A tensão sobe e o inversor desliga por **sobretensão**. A solução é uma rampa mais longa ou um **resistor de frenagem**, ligado por um transistor (chopper) que queima o excesso em calor.\n\n## Fabricantes comuns\nWEG (linha CFW), Siemens (SINAMICS e o antigo MICROMASTER), Danfoss, ABB, Schneider (Altivar) e Yaskawa.\n\n## Segurança\n- Os capacitores do barramento continuam carregados depois que o inversor é desligado. Respeite o tempo indicado na tampa (geralmente 5 a 10 minutos) e meça antes de tocar.\n- O cabo do motor deve ser blindado e aterrado nas duas pontas para reduzir interferência.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Retificador, barramento CC e ponte de IGBTs em PWM formam o inversor.",
+    "Em bombas e ventiladores a potência cai com o cubo da rotação.",
+    "V/f é simples; vetorial dá torque em baixa velocidade.",
+    "O barramento CC fica carregado depois de desligar: aguarde e meça."
+   ],
+   "kind": "ficha",
+   "minutes": 8,
+   "order": 3,
+   "questions": [],
+   "status": "published",
+   "summary": "Como o inversor controla a velocidade do motor de indução variando frequência e tensão, e quais parâmetros definem o seu comportamento.",
+   "title": "Inversor de frequência",
+   "track": "clp",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "clp-redes": {
+   "author": "",
+   "body": "Uma linha de envase tem centenas de sensores e atuadores. Em vez de levar um fio de cada um até o painel, a CPU conversa com estações remotas por uma **rede industrial**. As duas mais comuns nas máquinas alemãs são o **Profibus** e o **Profinet**.\n\n## Profibus DP\nO Profibus DP (periferia descentralizada) é uma rede serial **RS-485** de dois fios.\n- **Cabo:** violeta, com dois condutores (A verde e B vermelho) e blindagem.\n- **Mestre e escravos:** a CPU (mestre) consulta cada estação (escravo) em sequência.\n- **Endereços:** de 0 a 125, ajustados por chave rotativa ou software. Dois equipamentos com o mesmo endereço derrubam a comunicação.\n- **Terminação:** os conectores das duas pontas do segmento ficam com o resistor de terminação **ON**; os do meio, **OFF**.\n- **Arquivo GSD:** descreve o equipamento para o software de configuração.\n\n| Velocidade | Comprimento máximo do segmento |\n|---|---|\n| 9,6 a 93,75 kbit/s | 1200 m |\n| 500 kbit/s | 400 m |\n| 1,5 Mbit/s | 200 m |\n| 12 Mbit/s | 100 m |\n\nCada segmento aceita até 32 estações; repetidores criam novos segmentos.\n\n> O **Profibus PA** é a variante para instrumentos de processo (transmissores de pressão, nível e vazão): 31,25 kbit/s, alimenta o instrumento pelo próprio cabo e pode ir para áreas classificadas.\n\n## Profinet\nO Profinet é **Ethernet industrial**: o mesmo princípio da rede do escritório, com regras de tempo real.\n- **Cabo:** verde, com conectores RJ45 industriais ou M12.\n- **Nome do dispositivo:** cada equipamento recebe um nome (por exemplo, \"inversor-esteira-3\"). O CLP encontra o equipamento pelo nome e entrega o endereço IP.\n- **Arquivo GSDML:** a descrição do equipamento, equivalente ao GSD.\n- **Topologias:** estrela (com switch), linha (switch embutido nos equipamentos) e anel com redundância (MRP).\n- **Classes de tempo:** RT (tempo real, ciclos de alguns milissegundos) e IRT (isócrono, para servomotores sincronizados).\n\n## Comparação\n| Item | Profibus DP | Profinet |\n|---|---|---|\n| Meio físico | RS-485, par trançado | Ethernet |\n| Velocidade | até 12 Mbit/s | 100 Mbit/s |\n| Identificação | Endereço numérico | Nome do dispositivo e IP |\n| Diagnóstico | Pela CPU | Pela CPU e por servidor web nos equipamentos |\n\n## Segurança\n- Redes industriais não devem ser ligadas diretamente à rede do escritório; use firewall e segmentação.\n- A comunicação de segurança (PROFIsafe) roda sobre as duas redes para emergências e portas.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Profibus DP é RS-485 com cabo violeta, endereços de 0 a 125 e terminação nas pontas.",
+    "Quanto maior a velocidade do Profibus, menor o comprimento do segmento.",
+    "Profinet é Ethernet industrial; cada equipamento é identificado pelo nome.",
+    "GSD descreve o equipamento Profibus; GSDML, o Profinet."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 2,
+   "questions": [],
+   "status": "published",
+   "summary": "Como CLP, inversores, ilhas de válvulas e periferia conversam pelas redes Profibus DP e Profinet.",
+   "title": "Redes industriais: Profibus e Profinet",
+   "track": "clp",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "clp-s7": {
+   "author": "",
+   "body": "O **CLP** (Controlador Lógico Programável) é o computador industrial que comanda a máquina: lê sensores e botões, executa a lógica e liga motores, válvulas e sinalizações. Na indústria de bebidas, a família **SIMATIC S7**, da Siemens, aparece em quase todas as máquinas alemãs.\n\n## Para que serve\n- Substituir os painéis de relés por lógica programada, fácil de alterar.\n- Coordenar a máquina com as vizinhas da linha (sinais de pronto, falha, acúmulo).\n- Trocar dados com IHM, inversores, robôs e o sistema de supervisão por rede.\n\n## Famílias\n| Família | Software | Onde aparece |\n|---|---|---|\n| S7-200 | STEP 7-Micro/WIN | Máquinas pequenas e antigas |\n| S7-300 e S7-400 | STEP 7 Classic (SIMATIC Manager) | A maior parte das linhas instaladas até os anos 2010 |\n| S7-1200 | TIA Portal | Máquinas compactas e novas |\n| S7-1500 | TIA Portal | Máquinas e linhas novas de maior porte |\n\n## Partes principais\n- **Fonte (PS):** entrega 24 Vcc para a CPU e os módulos.\n- **CPU:** guarda e executa o programa; tem a interface de rede (MPI, Profibus ou Profinet).\n- **Módulos de sinais (SM):** entradas digitais (DI), saídas digitais (DO), entradas analógicas (AI) e saídas analógicas (AO).\n- **Módulos de comunicação (CP/CM):** redes adicionais, como Ethernet ou serial.\n- **Periferia descentralizada (ET 200):** cartões montados perto dos sensores, ligados à CPU pela rede, o que economiza cabos.\n\n## Como funciona: o ciclo de varredura\n1. A CPU copia o estado de todas as entradas para a **imagem de processo das entradas** (PII).\n2. Executa o programa a partir do **OB1**, linha por linha, usando a imagem, não o borne.\n3. Escreve os resultados na **imagem de processo das saídas** (PIQ), que é transferida para os cartões.\n4. Faz a comunicação e o autodiagnóstico, e começa de novo.\n\nO ciclo dura poucos milissegundos. Um **watchdog** (tempo de ciclo máximo) para a CPU se o programa travar num laço.\n\n## Blocos do programa\n- **OB (bloco de organização):** chamado pelo sistema. OB1 é o ciclo; outros tratam interrupções, partida e erros.\n- **FC (função):** trecho de lógica sem memória própria.\n- **FB (bloco de função):** lógica com memória, guardada num **DB de instância** (um por motor, por válvula etc.).\n- **DB (bloco de dados):** área de dados global, como receitas e contadores.\n\n## Endereçamento\n| Área | Inglês | Alemão | Exemplo |\n|---|---|---|---|\n| Entrada digital | I | E | I0.0 / E0.0 |\n| Saída digital | Q | A | Q4.1 / A4.1 |\n| Marcador (memória) | M | M | M10.0 |\n| Entrada analógica | IW / PIW | EW / PEW | PIW256 |\n\nNa mnemônica alemã, que muitas máquinas usam, **E** é entrada (Eingang) e **A** é saída (Ausgang). Um canal analógico padrão converte o sinal (0–10 V ou 4–20 mA) em números de **0 a 27648**.\n\n## Linguagens\n- **LAD/KOP:** ladder, parecido com o diagrama de relés.\n- **FBD/FUP:** blocos lógicos.\n- **STL/AWL:** lista de instruções, comum no S7-300.\n- **SCL:** texto estruturado, parecido com Pascal.\n- **GRAPH:** sequências passo a passo.\n\n## Segurança e normas\n- A lógica de segurança (emergência, portas) usa relés de segurança ou CPUs **F (fail-safe)**, não a lógica comum.\n- A NR-12 exige que a máquina pare com segurança, e a NR-10 rege o trabalho no painel energizado.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "O CLP lê as entradas, executa o programa e escreve as saídas, num ciclo de poucos milissegundos.",
+    "S7-300/400 usam STEP 7 Classic; S7-1200/1500 usam o TIA Portal.",
+    "OB1 é o ciclo; FB tem memória num DB de instância; FC não tem.",
+    "Na mnemônica alemã, E é entrada e A é saída."
+   ],
+   "kind": "ficha",
+   "minutes": 8,
+   "order": 1,
+   "questions": [],
+   "status": "published",
+   "summary": "Como um CLP da família SIMATIC S7 é montado, como executa o programa e como os blocos OB, FC, FB e DB se organizam.",
+   "title": "CLP Siemens S7: estrutura e ciclo de varredura",
+   "track": "clp",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "clp-softstarter": {
+   "author": "",
+   "body": "A partida direta de um motor de indução puxa de **6 a 8 vezes** a corrente nominal e dá um tranco no eixo. O **soft-starter** suaviza a partida e a parada controlando a tensão aplicada ao motor.\n\n## Como funciona\n- Em cada fase há um par de **tiristores (SCRs) em antiparalelo**.\n- O soft-starter atrasa o disparo dos tiristores em cada semiciclo (**ângulo de disparo**). Quanto maior o atraso, menor a tensão eficaz no motor.\n- Durante a partida, o atraso diminui aos poucos, e a tensão sobe numa **rampa** até a tensão plena.\n- Ao fim da rampa, um **contator de by-pass** fecha e os tiristores saem do circuito, o que elimina as perdas e o aquecimento em regime.\n\n## Ajustes principais\n| Ajuste | Efeito |\n|---|---|\n| Tensão inicial | Torque de arranque; baixa demais, o motor não sai do lugar |\n| Tempo de rampa de aceleração | Suavidade da partida |\n| Limite de corrente | Teto da corrente durante a partida (por exemplo, 3 × In) |\n| Rampa de desaceleração | Parada suave, útil contra golpe de aríete em bombas |\n| Proteções | Sobrecarga, falta de fase, rotor bloqueado |\n\n## Soft-starter ou inversor?\n| Item | Soft-starter | Inversor |\n|---|---|---|\n| Controle de velocidade em regime | Não | Sim |\n| Torque na partida | Reduzido (cai com o quadrado da tensão) | Alto, até em baixa rotação |\n| Custo e tamanho | Menores | Maiores |\n| Uso típico | Bombas, compressores, ventiladores e esteiras de velocidade fixa | Processos com velocidade variável |\n\n## Segurança\n- Mesmo com o motor parado, os tiristores podem deixar tensão nos bornes do motor. Abra a chave seccionadora antes de mexer no motor.\n- Respeite o número máximo de partidas por hora indicado pelo fabricante: os tiristores aquecem em cada partida.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Tiristores em antiparalelo reduzem a tensão eficaz durante a partida.",
+    "O contator de by-pass assume ao fim da rampa.",
+    "O soft-starter não varia a velocidade em regime; o inversor varia.",
+    "A rampa de parada evita o golpe de aríete em bombas."
+   ],
+   "kind": "ficha",
+   "minutes": 5,
+   "order": 4,
+   "questions": [],
+   "status": "published",
+   "summary": "A partida suave por tiristores: como reduz a tensão na partida, quando usar e como difere do inversor.",
+   "title": "Soft-starter",
+   "track": "clp",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
   },
   "cmd-contatores": {
    "author": "",
@@ -3792,6 +4032,87 @@ window.VOLTER_SEED = {
    "track": "eletronica",
    "updatedAt": "2026-10-24T16:30:00.000Z"
   },
+  "env-asseptica-krones": {
+   "author": "",
+   "body": "Sucos, chás, isotônicos e bebidas lácteas sem conservantes estragam com facilidade. Para que durem meses fora da geladeira, são envasados em **linha asséptica**: produto estéril, embalagem estéril e ambiente estéril. A **Krones**, fabricante alemã com sede em Neutraubling, tem linhas assépticas completas, como o sistema **PET-Asept**.\n\n## Os três pilares\n1. **Produto estéril:** a bebida passa por tratamento térmico rápido (pasteurização de alta temperatura ou UHT) e é resfriada antes do envase.\n2. **Embalagem estéril:** pré-formas ou garrafas são esterilizadas, geralmente com **peróxido de hidrogênio (H₂O₂)** vaporizado ou **ácido peracético**, e depois enxaguadas com água estéril ou ar estéril.\n3. **Ambiente estéril:** o enchimento e o tampamento acontecem dentro de um **isolador** com ar estéril em sobrepressão, para que nada de fora entre.\n\n## Fluxo típico\n1. Esterilização das pré-formas.\n2. Sopro das garrafas (sopradora Contiform), já em ambiente controlado.\n3. Esterilização e enxágue das garrafas, quando o processo pede.\n4. Enchimento a frio no isolador.\n5. Esterilização e aplicação das tampas.\n6. Saída para rotulagem e embalagem fora da zona estéril.\n\n## Partes principais\n| Parte | Função |\n|---|---|\n| Sistema de tratamento térmico do produto | Pasteuriza ou esteriliza a bebida |\n| Esterilizador de pré-formas ou garrafas | Aplica H₂O₂ ou ácido peracético |\n| Isolador | Mantém a zona de enchimento estéril, com filtros de ar HEPA |\n| Enchedora e tampadora assépticas | Enchimento sem contato e tampas esterilizadas |\n| Sistemas CIP e SIP | Limpeza no local e esterilização no local (com vapor ou químicos) |\n\n## Antes de produzir\nA linha só começa depois de um ciclo de **esterilização (SIP)** completo e validado. Se a esterilidade for quebrada durante a produção (porta aberta, queda de pressão do isolador), a linha para e o ciclo é repetido.\n\n## Segurança\n- H₂O₂ e ácido peracético são oxidantes fortes: exigem EPI, detectores e exaustão.\n- O acesso ao isolador segue procedimento próprio, com luvas fixas (glove ports) para pequenas intervenções.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Linha asséptica: produto, embalagem e ambiente estéreis.",
+    "Pré-formas e garrafas são esterilizadas com H₂O₂ ou ácido peracético.",
+    "O enchimento acontece num isolador com ar estéril em sobrepressão.",
+    "A produção só começa depois do ciclo de esterilização (SIP) validado."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 3,
+   "questions": [],
+   "status": "published",
+   "summary": "Envase asséptico de bebidas sensíveis: esterilização do produto, das garrafas e do ambiente, e o bloco Krones PET-Asept.",
+   "title": "Linha asséptica Krones",
+   "track": "envase",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "env-enchedora-khs": {
+   "author": "",
+   "body": "A **KHS** é uma fabricante alemã de máquinas de envase e embalagem, com sede em Dortmund. As suas **enchedoras rotativas** (linha Innofill) aparecem em muitas fábricas de refrigerantes, cervejas e águas, para vidro, PET e lata.\n\n## O problema da bebida gaseificada\nSe uma bebida com gás for despejada numa garrafa à pressão atmosférica, o CO₂ escapa e forma espuma. A solução é o **enchimento isobarométrico** (por contrapressão): a garrafa é pressurizada com CO₂ até a **mesma pressão** do tanque da enchedora, e o líquido desce por gravidade, sem espumar.\n\n## Ciclo de uma válvula de enchimento\n1. **Entrada:** a rosca sem-fim e a estrela de entrada colocam a garrafa sob a válvula; a garrafa sobe (ou a válvula desce) e veda no bocal.\n2. **Pré-evacuação (em garrafas de vidro):** o vácuo retira o ar da garrafa, reduzindo o oxigênio no produto.\n3. **Pressurização:** o CO₂ do tanque enche a garrafa até igualar a pressão.\n4. **Enchimento:** com as pressões iguais, a válvula de líquido abre. O líquido desce pelas paredes, e o gás da garrafa volta ao tanque pelo **tubo de retorno de gás**.\n5. **Fim do enchimento:** quando o líquido cobre a ponta do tubo de retorno, o gás não sai mais e o enchimento para. Em válvulas eletrônicas, uma sonda ou um medidor de vazão encerra o enchimento.\n6. **Alívio (snift):** a pressão do gargalo é liberada aos poucos, para o produto não espumar.\n7. **Saída:** a garrafa desce e segue pela estrela de saída para a tampadora.\n\n## Como o nível é definido\n- Em válvulas **mecânicas**, pela **altura do tubo de retorno de gás**: tubo mais curto, nível mais alto.\n- Em válvulas **eletrônicas**, por **sonda de nível** ou por **volume** medido em medidor de vazão, ajustado na receita.\n\n## Partes principais\n| Parte | Função |\n|---|---|\n| Tanque anelar ou central | Guarda o produto sob pressão de CO₂ |\n| Válvulas de enchimento | Uma por posição no carrossel |\n| Carrossel | Gira com as válvulas e os pratos de elevação |\n| Estrelas e rosca sem-fim | Entrada e saída das garrafas |\n| Tampadora (monobloco) | Coloca e aperta a tampa logo depois do enchimento |\n| CLP e IHM | Receitas, velocidades e sincronismo com a linha |\n\n## Tampadora\n- Para **PET**, cabeçotes com embreagem magnética aplicam a tampa de rosca com torque definido.\n- Para **vidro**, cabeçotes de coroa (tampinha metálica) prensam a tampa contra o gargalo.\n\n## Segurança\n- A área da enchedora é protegida por portas intertravadas: garrafas sob pressão podem estourar.\n- CIP e trocas de formato só com a máquina parada e as energias bloqueadas.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Contrapressão: a garrafa é pressurizada até igualar a pressão do tanque, e o líquido desce sem espumar.",
+    "Em válvulas mecânicas, o nível é dado pela altura do tubo de retorno de gás.",
+    "O alívio (snift) libera a pressão do gargalo aos poucos.",
+    "Enchedora e tampadora formam um monobloco sincronizado."
+   ],
+   "kind": "ficha",
+   "minutes": 8,
+   "order": 2,
+   "questions": [],
+   "status": "published",
+   "summary": "Como a enchedora rotativa isobarométrica da KHS enche bebidas gaseificadas sem perder CO₂ e como o nível é definido.",
+   "title": "Enchedora KHS: enchimento por contrapressão",
+   "track": "envase",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "env-rotuladora": {
+   "author": "",
+   "body": "A **rotuladora** aplica o rótulo na garrafa com posição, alinhamento e colagem repetíveis em dezenas de milhares de garrafas por hora.\n\n## Tipos\n| Tipo | Rótulo | Uso típico |\n|---|---|---|\n| **Cola fria** | Rótulos de papel já cortados, num magazine | Vidro, incluindo retornável |\n| **Cola quente em bobina (roll-fed)** | Filme plástico (BOPP) em bobina, cortado na máquina | Garrafas PET de refrigerante e água |\n| **Autoadesivo** | Etiquetas em bobina com liner | Produtos premium, frascos variados |\n| **Sleeve** | Luva de filme termoencolhível, encolhida num túnel | Rótulo de corpo inteiro, formatos irregulares |\n\nNa Krones, a linha **Contiroll** é um exemplo de rotuladora de bobina com cola quente.\n\n## Como funciona (bobina e cola quente)\n1. A **rosca sem-fim** espaça as garrafas e a **estrela de entrada** as coloca nos **pratos giratórios** do carrossel.\n2. Um **cabeçote** prende a garrafa por cima.\n3. O filme sai da bobina, passa por rolos de tração e é cortado no comprimento exato por uma **faca rotativa**, guiada pela **marca de registro** impressa no filme (lida por fotocélula).\n4. O **rolo de cola** aplica cola quente na borda inicial e na borda final do rótulo.\n5. O **cilindro de vácuo** entrega o rótulo à garrafa, que gira e se enrola nele; **escovas** ou esponjas assentam o rótulo.\n\n## Na cola fria\nPaletas recebem cola do rolo, retiram um rótulo do magazine, e um cilindro de pinças o entrega à garrafa. Escovas pressionam o rótulo e eliminam bolhas.\n\n## Equipamentos auxiliares\n- **Datador ou codificador** (jato de tinta ou laser): imprime lote e validade.\n- **Inspeção por câmera:** confere presença, posição e o código impresso, e rejeita garrafas fora do padrão.\n- **Trocador automático de bobina:** emenda a bobina nova sem parar a máquina.\n\n## Segurança\n- A cola quente trabalha perto de **150 a 180 °C**: risco de queimadura no reservatório e no rolo.\n- Facas rotativas e pontos de esmagamento ficam atrás de portas intertravadas.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Cola fria para papel e vidro; bobina com cola quente para PET.",
+    "A faca corta o filme guiada pela marca de registro lida por fotocélula.",
+    "Datador e câmera de inspeção completam a rotulagem.",
+    "Cola quente e facas exigem portas intertravadas e cuidado com queimaduras."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 4,
+   "questions": [],
+   "status": "published",
+   "summary": "Tipos de rotuladora (cola fria, cola quente em bobina, autoadesivo e sleeve) e como o rótulo chega à garrafa.",
+   "title": "Rotuladora",
+   "track": "envase",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
   "env-sopradora": {
    "author": "",
    "body": "## Do PET à garrafa\nO **PET** (politereftalato de etileno) é um plástico termoplástico criado em 1941 pelos químicos britânicos Whinfield e Dickson. Ele nasce da reação entre o **ácido tereftálico** e o **etilenoglicol**, numa policondensação. Amolece com o calor e endurece ao esfriar, por isso pode ser moldado. É usado em fibras para tecidos e, principalmente, em embalagens de bebida.\n\nA garrafa não é injetada pronta. Primeiro se injeta a **preforma**, um tubo grosso parecido com um tubo de ensaio, que já tem o gargalo e a rosca no tamanho final. Na sopradora, essa preforma é aquecida e transformada em garrafa.\n\n## Por que esticar e soprar: o processo biorientado\nNa sopradora a preforma é esticada em **dois sentidos**: no comprimento, pela haste de estiragem (estiramento axial), e no diâmetro, pelo ar (estiramento radial). As cadeias do PET, que estavam emboladas, se alinham e formam uma malha cruzada. O resultado:\n- a resistência mecânica e ao impacto aumenta muito: o material passa de cerca de **7.000 psi** na preforma para cerca de **24.000 psi** na garrafa;\n- a parede fica menos permeável e a bebida perde menos **CO₂**.\n\nPor isso uma garrafa de parede fina aguenta a pressão de um refrigerante.\n\n## As fases do ciclo\nCada posto da sopradora repete o mesmo ciclo. Rode o simulador abaixo em câmera lenta e acompanhe:\n\n1. **Molde fecha:** a preforma chega aquecida do forno, o molde fecha em volta dela e o bico de sopro desce e veda o gargalo.\n2. **Estiragem:** a haste desce a cerca de **0,8 m/s**, empurrada por um cilindro de cerca de **7 bar**. Ela toca o centro do fundo da preforma e estica o material até o fundo do molde, quase dobrando o comprimento.\n3. **Pré-sopro:** com a haste ainda descendo, entra ar de **7 a 13 bar** (o mais comum é perto de 7). O ar abre a preforma no sentido radial e espalha o material em volta da haste.\n4. **Sopro:** a pressão sobe para **35 a 40 bar**. O ar aperta a parede contra o molde frio, forma o fundo e resfria a garrafa.\n5. **Degasagem:** antes de o bico subir, o ar da garrafa é aliviado. Essa saída rápida também ajuda a resfriar.\n6. **Extração:** o molde abre e a garrafa segue para a rotuladora.\n\nA ordem de atuação é sempre **estiragem, pré-sopro, sopro**, e depois a degasagem.\n\n## A haste de estiragem\nA haste não só estica: no fundo do molde ela **segura** a preforma, para o ponto de injeção (aquele pontinho no centro do fundo da garrafa) ficar centralizado. A altura da haste é regulada pela espessura do fundo da preforma: ela deve penetrar cerca de **2/3 dessa espessura**. Haste curta deixa o fundo escorregar e o ponto sai do centro; haste longa demais pode furar ou marcar o fundo.\n\n## A válvula de três vias\nCada posto tem uma **válvula de três vias** que comuta o ar entre pré-sopro, sopro e degasagem. Quem manda nela são **cames**: a came de pré-sopro, a de sopro e a de degasagem empurram o êmbolo da válvula para a posição certa em cada momento do giro da máquina.\n\n## Pressão e vazão não são a mesma coisa\n- **Pressão** é força por área (bar ou kgf/cm²). Na sopradora, a pressão do pré-sopro é regulada numa **única válvula para todos os postos**.\n- **Vazão** é quantidade de ar por tempo (litros por segundo). Ela é regulada **posto a posto**, numa válvula em cada um, contando as voltas do ajuste.\n\nNa prática: mexer na pressão afeta a máquina inteira; mexer na vazão corrige um posto que está diferente dos outros.\n\n## O que decide onde fica o material\nO pré-sopro, junto com a estiragem, é o que mais influencia a **distribuição de massa** da garrafa. Para descrever o momento em que o pré-sopro entra, usa-se uma escala no curso da haste: o **ponto 0** é o início do estiramento ativo (a haste encostando no fundo da preforma) e o **ponto 10** é o fim do estiramento.\n\n- **Pré-sopro adiantado** (came num ponto baixo, por exemplo 2): a preforma abre cedo, estica menos perto do gargalo, e a haste leva **menos** material para o fundo. Sobra material no **ombro**, e o fundo fica mais fino.\n- **Pré-sopro atrasado** (came num ponto alto, por exemplo 8): a preforma estica mais na parte de cima, e a haste leva **mais** material para o fundo, tirando do ombro.\n- **Mais pressão ou mais vazão** fazem a bolha abrir mais depressa, com efeito parecido com adiantar o pré-sopro.\n\n## O perfil de aquecimento\nO forno aquece a preforma por **zonas** (lâmpadas em alturas diferentes, numeradas de baixo para cima). Cada zona da preforma vira uma região da garrafa. A regra é simples: **zona mais quente estica mais e fica mais fina; zona mais fria estica menos e fica mais grossa**. Por isso cada zona tem o seu percentual de potência (por exemplo 75%, 90%, 100%).\n\nPara corrigir um problema de espessura numa região da parede, primeiro se localiza qual zona da preforma forma aquela região e se ajusta o percentual dela, em passos pequenos, conferindo a garrafa depois de cada ajuste.\n\n## Tipos de fundo\nO desenho do fundo depende do produto: **petalóide** (os \"pezinhos\" das garrafas de refrigerante, que aguentam a pressão do gás), fundo **sem pull-shape**, fundo para **enchimento a quente** (hot fill), fundo para **óleo**, e garrafas **cilíndricas**, **quadradas** e **retangulares**. Quanto mais simples o desenho do fundo, menor a pressão de sopro necessária para formá-lo.",
@@ -3891,6 +4212,141 @@ window.VOLTER_SEED = {
    "title": "Sopradora: moldagem por estiramento e sopro",
    "track": "envase",
    "updatedAt": "2026-11-09T23:30:00.000Z"
+  },
+  "env-transportes": {
+   "author": "",
+   "body": "Os **transportadores** ligam as máquinas da linha e funcionam como pulmões: guardam garrafas entre uma máquina e outra para que uma parada curta não pare a linha inteira.\n\n## Tipos de transporte\n| Tipo | O que transporta |\n|---|---|\n| **Corrente de placas (tabletop)** | Garrafas e latas em pé, em correntes de plástico ou inox |\n| **Transporte aéreo (air conveyor)** | Garrafas PET vazias e leves, sustentadas pelo gargalo e empurradas por jatos de ar, da sopradora até a enchedora |\n| **Esteiras e roletes** | Fardos e caixas |\n| **Transportadores de palete** | Correntes e roletes pesados, depois da paletizadora |\n\n## A curva em V\nA **enchedora** é a máquina-chave da linha: é a mais cara e a que define a produção. As outras máquinas são dimensionadas um pouco **mais rápidas** que ela:\n- **Antes da enchedora** (sopradora, despaletizadora, lavadora), as máquinas são mais rápidas para que a enchedora nunca fique sem garrafa.\n- **Depois da enchedora** (rotuladora, empacotadora, paletizadora), também são mais rápidas para escoar o acúmulo depois de uma parada.\n\nDesenhada num gráfico, a capacidade das máquinas ao longo da linha forma um **V**, com a enchedora no fundo.\n\n## Acúmulo\n- Entre as máquinas, o transportador é mais largo ou mais longo para guardar garrafas.\n- **Sensores de acúmulo** (mínimo, normal, máximo) dizem ao CLP quanto há de garrafa: com o acúmulo baixo, a máquina anterior acelera; cheio, a máquina posterior acelera ou a anterior desacelera.\n- Os motores das esteiras têm **inversores**, que ajustam a velocidade de forma contínua.\n\n## Partes principais\n- Correntes, guias laterais ajustáveis por formato, rodas e curvas.\n- Motorredutores com inversor.\n- Sensores fotoelétricos de acúmulo e de queda de garrafa.\n- **Lubrificação** das correntes (seca ou com água e lubrificante), que reduz atrito e tombamentos.\n- **Combinadores e divisores** de fluxo, que juntam ou separam filas de garrafas.\n\n## Segurança\n- Pontos de puxamento entre corrente e engrenagem ficam protegidos por tampas.\n- Nunca destrave garrafas tombadas com a esteira em movimento: pare pela botoeira local.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "A enchedora é a máquina-chave; as outras são mais rápidas, formando a curva em V.",
+    "O acúmulo entre máquinas absorve pequenas paradas.",
+    "Sensores de mínimo e máximo ajustam a velocidade por inversor.",
+    "Garrafas PET vazias viajam no transporte aéreo, pelo gargalo."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 5,
+   "questions": [],
+   "status": "published",
+   "summary": "Como as esteiras ligam as máquinas da linha, por que a enchedora é a máquina-chave e como o acúmulo absorve pequenas paradas.",
+   "title": "Transportadores, acúmulo e controle de velocidade",
+   "track": "envase",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "hw-fonte": {
+   "author": "",
+   "body": "A **fonte de alimentação** converte a tensão alternada da tomada nas tensões contínuas que as peças usam. Uma fonte ruim ou subdimensionada causa travamentos e pode danificar peças.\n\n## Tensões de saída\n| Tensão | Quem usa |\n|---|---|\n| **+12 V** | Processador (via VRM), placa de vídeo, motores de HD e ventoinhas; é a principal |\n| **+5 V** | USB, alguns circuitos e SSDs SATA |\n| **+3,3 V** | Memória e circuitos da placa-mãe |\n| **+5 VSB (standby)** | Mantém a placa \"acordada\" para ligar pelo botão, pela rede ou pelo teclado |\n\n## Conectores\n- **24 pinos ATX:** placa-mãe.\n- **EPS 4+4 ou 8 pinos:** processador.\n- **PCIe 6+2 pinos** ou **12V-2x6 (antigo 12VHPWR):** placas de vídeo.\n- **SATA:** SSDs e HDs de 2,5 e 3,5 polegadas.\n- **Molex:** periféricos antigos.\n\n## Como funciona\n1. Filtro de entrada contra ruídos da rede.\n2. Retificação e **PFC ativo** (correção do fator de potência), que aceita de 100 a 240 V automaticamente.\n3. Um conversor chaveado em alta frequência e um transformador pequeno baixam a tensão.\n4. Retificação e filtragem de saída, com regulação de cada tensão.\n5. Proteções contra sobretensão, sobrecorrente e curto-circuito.\n\n## Certificação 80 Plus\nIndica a eficiência: Bronze, Silver, Gold, Platinum e Titanium. Uma fonte **Gold** desperdiça menos energia em calor do que uma Bronze, esquenta menos e faz menos ruído.\n\n## Dimensionamento\n- Some o consumo do processador e da placa de vídeo (os maiores) e acrescente uma folga para o resto e para os picos.\n- Use os cabos da própria fonte; cabos modulares de fontes diferentes podem ter pinagens diferentes.\n\n## Nobreak (UPS)\n| Tipo | Como funciona |\n|---|---|\n| **Offline (standby)** | Liga a bateria quando a rede cai; tempo de transferência curto |\n| **Line-interactive** | Corrige variações de tensão sem usar a bateria |\n| **Online (dupla conversão)** | A carga é alimentada sempre pelo inversor; sem transferência, para equipamentos críticos |\n\n## Segurança\n- Nunca abra a fonte: os capacitores internos guardam tensão perigosa mesmo desligada da tomada.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "+12 V é a tensão principal; +5 VSB mantém o standby.",
+    "PFC ativo aceita de 100 a 240 V automaticamente.",
+    "80 Plus indica a eficiência da fonte.",
+    "Nunca abra a fonte: capacitores guardam carga."
+   ],
+   "kind": "ficha",
+   "minutes": 6,
+   "order": 3,
+   "questions": [],
+   "status": "published",
+   "summary": "Como a fonte ATX entrega as tensões do computador, os conectores, a certificação 80 Plus e o papel do nobreak.",
+   "title": "Fonte de alimentação e energia",
+   "track": "hardware",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "hw-memoria-armaz": {
+   "author": "",
+   "body": "**Memória RAM** e **armazenamento** fazem papéis diferentes. A RAM é a mesa de trabalho: rápida, mas perde tudo ao desligar. O armazenamento é o arquivo: guarda programas e dados de forma permanente.\n\n## Memória RAM\n| Item | O que significa |\n|---|---|\n| **Tipo** | DDR4 ou DDR5; não são intercambiáveis (encaixes diferentes) |\n| **Capacidade** | 8 GB para uso leve, 16 GB para a maioria, 32 GB ou mais para edição e máquinas virtuais |\n| **Frequência** | Em MT/s (por exemplo, DDR5-5600) |\n| **Latência (CL)** | Atraso de acesso, em ciclos |\n| **Dual channel** | Dois pentes iguais nos slots indicados pelo manual dobram a largura de acesso |\n| **ECC** | Corrige erros; usada em servidores e estações de trabalho |\n| **SO-DIMM** | Formato menor, de notebooks |\n\n## Armazenamento\n| Tipo | Como guarda | Velocidade típica de leitura |\n|---|---|---|\n| **HD** | Pratos magnéticos girando (5400 ou 7200 rpm) e cabeça de leitura | 100 a 250 MB/s |\n| **SSD SATA** | Memória flash, interface SATA | Até cerca de 550 MB/s |\n| **SSD NVMe PCIe 3.0** | Flash, interface PCIe, formato M.2 | Até cerca de 3,5 GB/s |\n| **SSD NVMe PCIe 4.0** | Idem | Até cerca de 7 GB/s |\n| **SSD NVMe PCIe 5.0** | Idem | Acima de 10 GB/s |\n\nO HD ainda é o mais barato por gigabyte e serve para guardar grandes volumes. O SSD faz o computador ligar e abrir programas em segundos.\n\n## Partições\n- **MBR:** padrão antigo, até 2 TB por disco e 4 partições primárias.\n- **GPT:** padrão atual, discos enormes e até 128 partições no Windows. Trabalha junto com o UEFI.\n- **Sistemas de arquivos:** NTFS (Windows), APFS (macOS), ext4 (Linux), exFAT (pendrives e discos compartilhados entre sistemas).\n\n## Conceitos úteis\n- **TRIM:** o sistema avisa o SSD quais blocos foram apagados, mantendo o desempenho.\n- **Ciclo de escrita (TBW):** quantidade de dados que um SSD suporta gravar ao longo da vida.\n- **Backup:** nenhum disco é eterno; a regra 3-2-1 sugere três cópias, em dois tipos de mídia, uma fora de casa.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "RAM é a mesa de trabalho; armazenamento é o arquivo permanente.",
+    "DDR4 e DDR5 não são intercambiáveis.",
+    "NVMe é várias vezes mais rápido que SSD SATA, que é mais rápido que HD.",
+    "GPT com UEFI é o padrão atual de partição."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 2,
+   "questions": [],
+   "status": "published",
+   "summary": "A diferença entre memória e armazenamento, os tipos de RAM, HD, SSD SATA e NVMe, e as tabelas de partição MBR e GPT.",
+   "title": "Memória RAM e armazenamento",
+   "track": "hardware",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "hw-placa-cpu": {
+   "author": "",
+   "body": "A **placa-mãe** liga todas as peças do computador: processador, memória, armazenamento, placa de vídeo, portas e energia. O **processador** (CPU) executa as instruções dos programas.\n\n## Placa-mãe: partes principais\n| Parte | Função |\n|---|---|\n| **Soquete** | Encaixe do processador; define a família compatível (por exemplo, LGA 1700 e LGA 1851 da Intel, AM4 e AM5 da AMD) |\n| **VRM** | Reguladores que convertem os 12 V da fonte na tensão baixa e estável que o processador usa |\n| **Chipset** | Controla parte das portas USB, SATA e linhas PCIe extras |\n| **Slots de memória** | Recebem os pentes de RAM (DDR4 ou DDR5, conforme a placa) |\n| **Slots PCIe** | Placa de vídeo e outras placas de expansão |\n| **Slots M.2** | SSDs NVMe e, em alguns, placas Wi-Fi |\n| **Portas SATA** | HDs e SSDs de 2,5 polegadas |\n| **Painel traseiro** | USB, rede, áudio e vídeo integrado |\n| **Chip do firmware e bateria CR2032** | Guardam a BIOS/UEFI e as configurações |\n\n## Formatos\n**ATX** (padrão), **Micro-ATX** (menor, menos slots) e **Mini-ITX** (compacta). O formato define o gabinete e a fonte compatíveis.\n\n## BIOS e UEFI\nO firmware da placa testa o hardware ao ligar (**POST**), configura as peças e entrega o controle ao sistema operacional. O **UEFI** substituiu a BIOS antiga: tem interface gráfica, suporta discos GPT grandes e o **Secure Boot**, exigido pelo Windows 11.\n\n## Barramento PCIe\n| Geração | Velocidade por linha (aprox.) | Um slot x16 (aprox.) |\n|---|---|---|\n| 3.0 | 1 GB/s | 16 GB/s |\n| 4.0 | 2 GB/s | 32 GB/s |\n| 5.0 | 4 GB/s | 64 GB/s |\n\n## Processador\n- **Núcleos e threads:** cada núcleo executa uma tarefa; o SMT (Hyper-Threading) permite duas threads por núcleo.\n- **Núcleos de desempenho e de eficiência:** processadores recentes misturam os dois tipos.\n- **Frequência (GHz)** base e turbo.\n- **Cache** (L1, L2, L3): memória ultrarrápida dentro do chip.\n- **TDP:** potência térmica que o cooler precisa dissipar.\n- **Vídeo integrado (iGPU):** dispensa placa de vídeo em uso comum.\n- **Arquitetura:** a maioria dos PCs usa **x86-64** (Intel e AMD); celulares e os Macs atuais usam **ARM**.\n\n## Segurança\n- Toque numa parte metálica aterrada ou use pulseira antiestática antes de manusear placas e processador.\n- O processador só encaixa numa posição; nunca force: pinos e contatos entortam.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "O soquete define quais processadores a placa aceita.",
+    "UEFI substituiu a BIOS e traz Secure Boot e discos GPT.",
+    "Cada geração de PCIe dobra a velocidade da anterior.",
+    "Núcleos, threads, frequência, cache e TDP descrevem o processador."
+   ],
+   "kind": "ficha",
+   "minutes": 8,
+   "order": 1,
+   "questions": [],
+   "status": "published",
+   "summary": "A placa-mãe como ponto de encontro das peças: soquete, chipset, barramentos, BIOS/UEFI, e o que define um processador.",
+   "title": "Placa-mãe e processador",
+   "track": "hardware",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "hw-video-perif": {
+   "author": "",
+   "body": "A **placa de vídeo** (GPU) gera a imagem do monitor e acelera jogos, edição de vídeo e, hoje, cálculos de inteligência artificial.\n\n## GPU integrada ou dedicada\n- **Integrada:** dentro do processador; usa parte da RAM do sistema. Suficiente para escritório, internet e vídeos.\n- **Dedicada:** placa própria, com memória **VRAM** e alimentação extra da fonte. Necessária para jogos, 3D, edição pesada e IA local.\n\n## Saídas de vídeo\n| Saída | Observação |\n|---|---|\n| **HDMI** | TVs e monitores; também leva áudio |\n| **DisplayPort** | Padrão dos monitores de computador; altas taxas e vários monitores em cadeia |\n| **USB-C (DisplayPort Alt Mode)** | Notebooks e Macs; vídeo, dados e energia num cabo |\n| **DVI e VGA** | Antigas; VGA é analógica |\n\n## Monitores\n- **Resolução:** Full HD (1920 × 1080), QHD (2560 × 1440) e 4K (3840 × 2160).\n- **Taxa de atualização (Hz):** 60 Hz para escritório; 144 Hz ou mais para jogos.\n- **Painéis:** IPS (cores e ângulo de visão), VA (contraste) e OLED (preto perfeito e contraste altíssimo).\n- **Tamanho e densidade:** 27 polegadas em QHD ou 4K deixam o texto nítido.\n\n## USB e Thunderbolt\n| Padrão | Velocidade máxima |\n|---|---|\n| USB 2.0 | 480 Mbit/s |\n| USB 3.2 Gen 1 (antigo USB 3.0) | 5 Gbit/s |\n| USB 3.2 Gen 2 | 10 Gbit/s |\n| USB 3.2 Gen 2x2 | 20 Gbit/s |\n| USB4 e Thunderbolt 3/4 | 40 Gbit/s |\n| USB4 v2 e Thunderbolt 5 | 80 Gbit/s |\n\nO conector **USB-C** é só o formato: a velocidade depende do padrão da porta e do cabo.\n\n## Outras portas\n- **Rede (RJ45):** 1 Gbit/s é o comum; placas recentes chegam a 2,5 Gbit/s.\n- **Áudio:** saída de fone e entrada de microfone.\n- **Leitor de cartão:** SD e microSD.\n\n## Segurança\n- Placas de vídeo grandes pesam: use o suporte do gabinete para não forçar o slot.\n- Ligue todos os conectores de energia que a placa pede.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "GPU integrada atende o uso comum; dedicada é para jogos, 3D e IA.",
+    "DisplayPort é o padrão dos monitores; HDMI das TVs.",
+    "Resolução, taxa em Hz e tipo de painel definem o monitor.",
+    "USB-C é só o conector: a velocidade depende da porta e do cabo."
+   ],
+   "kind": "ficha",
+   "minutes": 6,
+   "order": 4,
+   "questions": [],
+   "status": "published",
+   "summary": "GPU integrada e dedicada, saídas de vídeo, resolução e taxa de atualização, e as versões de USB e Thunderbolt.",
+   "title": "Placa de vídeo, monitores e portas",
+   "track": "hardware",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
   },
   "ia-1-modelos": {
    "author": "",
@@ -6743,6 +7199,438 @@ window.VOLTER_SEED = {
    "track": "robotica",
    "updatedAt": "2026-11-08T22:00:00.000Z"
   },
+  "lnx-distros": {
+   "author": "",
+   "body": "**Linux**, a rigor, é o **kernel** (núcleo) criado por Linus Torvalds em 1991. Um sistema completo junta o kernel a ferramentas do projeto GNU, um gerenciador de pacotes e um ambiente gráfico. Esse pacote completo é uma **distribuição** (distro).\n\n## Famílias principais\n| Família | Exemplos | Pacotes | Gerenciador |\n|---|---|---|---|\n| **Debian** | Debian, Ubuntu, Linux Mint, Pop!_OS | .deb | apt |\n| **Red Hat** | Fedora, RHEL, Rocky Linux, AlmaLinux | .rpm | dnf |\n| **Arch** | Arch Linux, Manjaro, EndeavourOS | pacotes do pacman | pacman |\n| **SUSE** | openSUSE, SLES | .rpm | zypper |\n\nPara começar em desktop, **Ubuntu** e **Linux Mint** são os mais usados. Em servidores, **Debian**, **Ubuntu Server** e a família Red Hat dominam.\n\n## Ambientes gráficos\n- **GNOME:** padrão do Ubuntu e do Fedora; visual limpo.\n- **KDE Plasma:** muito configurável, parecido com o Windows.\n- **Xfce e LXQt:** leves, bons para computadores antigos.\n- **Cinnamon:** padrão do Linux Mint.\n\n## Estrutura de diretórios\nNo Linux não há letras de unidade: tudo parte da **raiz** `/`, e outros discos são **montados** em pastas.\n| Diretório | Conteúdo |\n|---|---|\n| `/` | Raiz de tudo |\n| `/home` | Pastas dos usuários (`/home/ana`, abreviada como `~`) |\n| `/etc` | Arquivos de configuração do sistema |\n| `/usr` | Programas e bibliotecas instalados |\n| `/bin` e `/sbin` | Comandos essenciais (hoje, em geral, ligados a `/usr`) |\n| `/var` | Dados variáveis: logs (`/var/log`), filas, caches |\n| `/opt` | Programas de terceiros |\n| `/tmp` | Arquivos temporários |\n| `/dev` | Dispositivos (discos aparecem como `/dev/sda` ou `/dev/nvme0n1`) |\n| `/proc` e `/sys` | Informações do kernel e do hardware, geradas na hora |\n| `/boot` | Kernel e arquivos de inicialização |\n| `/media` e `/mnt` | Pontos de montagem de pendrives e discos |\n\n## Ideias centrais\n- **Tudo é arquivo:** dispositivos, processos e configurações aparecem como arquivos.\n- **Maiúsculas e minúsculas importam:** `Foto.jpg` e `foto.jpg` são arquivos diferentes.\n- **Multiusuário desde a origem:** cada arquivo tem dono, grupo e permissões.\n\n## Segurança\n- O usuário comum não altera o sistema; para isso existe o `sudo`, que pede a senha.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Linux é o kernel; distribuição é o sistema completo.",
+    "Debian/Ubuntu usam apt; Fedora/RHEL usam dnf; Arch usa pacman.",
+    "Tudo parte da raiz /; discos são montados em pastas.",
+    "Configurações em /etc, usuários em /home, logs em /var/log."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 1,
+   "questions": [],
+   "status": "published",
+   "summary": "O que é uma distribuição, as famílias principais, os ambientes gráficos e a árvore de diretórios a partir da raiz.",
+   "title": "Linux: distribuições e estrutura de diretórios",
+   "track": "linux",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "lnx-pacotes": {
+   "author": "",
+   "body": "No Linux, os programas vêm de **repositórios** mantidos pela distribuição. O **gerenciador de pacotes** baixa, instala, atualiza e remove cada programa com as dependências.\n\n## apt (Debian, Ubuntu, Mint)\n```\nsudo apt update             # atualiza a lista de pacotes\nsudo apt upgrade            # atualiza os programas instalados\nsudo apt install htop       # instala\nsudo apt remove htop        # remove\napt search editor           # procura\n```\nNa família Red Hat, os equivalentes são `dnf install`, `dnf upgrade` e `dnf remove`.\n\n## Formatos universais\n- **Flatpak** (loja Flathub) e **Snap** (padrão no Ubuntu): pacotes que funcionam em várias distribuições, com as dependências dentro e isolamento do sistema.\n- **AppImage:** um arquivo executável único, sem instalação.\n\n## Serviços com systemd\nO **systemd** inicia o sistema e controla os serviços (servidor web, SSH, banco de dados, impressão).\n```\nsystemctl status ssh\nsudo systemctl start ssh\nsudo systemctl stop ssh\nsudo systemctl enable ssh    # inicia junto com o sistema\njournalctl -u ssh -f         # acompanha o log do serviço\n```\n\n## Processos\n| Comando | Para quê |\n|---|---|\n| `ps aux` | Lista todos os processos |\n| `top` ou `htop` | Monitor ao vivo de CPU e memória |\n| `kill PID` | Pede para encerrar um processo pelo número |\n| `kill -9 PID` | Força o encerramento |\n| `free -h` | Memória usada e livre |\n\n## Tarefas agendadas\nO **cron** executa comandos em horários definidos. `crontab -e` edita a lista do usuário:\n```\n# minuto hora dia mês dia-da-semana comando\n30 2 * * * /home/ana/backup.sh\n```\nOs **timers do systemd** são a alternativa moderna.\n\n## Acesso remoto\n- **SSH:** `ssh usuario@endereco` abre um terminal em outro computador, com conexão criptografada.\n- `scp` e `rsync` copiam arquivos entre computadores.\n\n## Segurança\n- Instale programas pelos repositórios oficiais sempre que possível.\n- Para acessar por SSH, prefira chaves em vez de senha.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "apt update atualiza a lista; apt upgrade atualiza os programas.",
+    "Flatpak e Snap funcionam em várias distribuições.",
+    "systemctl controla serviços; journalctl mostra os logs.",
+    "cron agenda tarefas; SSH dá acesso remoto criptografado."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 3,
+   "questions": [],
+   "status": "published",
+   "summary": "Instalar e atualizar programas com apt, Flatpak e Snap, controlar serviços com systemd, ver processos e agendar tarefas.",
+   "title": "Pacotes, serviços e processos",
+   "track": "linux",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "lnx-terminal": {
+   "author": "",
+   "body": "O **terminal** é a forma mais direta de usar o Linux. O programa que interpreta os comandos é o **shell**; o mais comum é o **bash** (algumas distribuições e o macOS usam o **zsh**, muito parecido).\n\n## Comandos essenciais\n| Comando | Para quê |\n|---|---|\n| `pwd` | Mostra a pasta atual |\n| `ls -la` | Lista arquivos, inclusive ocultos, com detalhes |\n| `cd pasta`, `cd ..`, `cd ~` | Muda de pasta |\n| `mkdir`, `cp`, `mv`, `rm` | Cria pasta, copia, move ou renomeia, apaga |\n| `cat`, `less`, `head`, `tail -f` | Mostra arquivos; `tail -f` acompanha um log ao vivo |\n| `nano arquivo` | Editor de texto simples no terminal |\n| `grep texto arquivo` | Procura texto |\n| `find / -name \"*.conf\"` | Procura arquivos |\n| `df -h` e `du -sh` | Espaço livre nos discos e tamanho de pastas |\n| `man comando` | Manual do comando |\n\n## Redirecionamento e pipes\n```\nls -la > lista.txt          # grava a saída num arquivo\necho \"linha\" >> lista.txt   # acrescenta no fim\ncat /var/log/syslog | grep erro | tail -20\n```\nO **pipe** (`|`) envia a saída de um comando para a entrada do próximo.\n\n## Usuários e grupos\n- Cada usuário tem um número (UID) e pertence a grupos.\n- **root** é o administrador, com poder total.\n- `sudo comando` executa um comando como root, se o usuário estiver autorizado.\n- `whoami`, `id` e `groups` mostram quem você é e seus grupos.\n\n## Permissões\n`ls -l` mostra algo como `-rwxr-xr--`:\n| Posição | Significado |\n|---|---|\n| 1º caractere | `-` arquivo, `d` pasta, `l` atalho (link) |\n| 3 seguintes | Permissões do **dono** |\n| 3 seguintes | Permissões do **grupo** |\n| 3 últimos | Permissões dos **outros** |\n\n**r** = ler (4), **w** = escrever (2), **x** = executar (1). Somando, cada grupo de três vira um número:\n```\nchmod 755 script.sh    # dono rwx, grupo r-x, outros r-x\nchmod 644 texto.txt    # dono rw-, grupo r--, outros r--\nchown ana:equipe arquivo\n```\n\n## Segurança\n- `rm -rf` apaga sem lixeira e sem perguntar: confira o caminho antes de apertar Enter.\n- Evite trabalhar como root; use `sudo` só no comando que precisa.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "bash interpreta os comandos; man mostra o manual de cada um.",
+    "O pipe envia a saída de um comando para o próximo.",
+    "rwx valem 4, 2 e 1; 755 e 644 são as combinações mais comuns.",
+    "Use sudo só quando precisar; rm -rf não tem volta."
+   ],
+   "kind": "ficha",
+   "minutes": 8,
+   "order": 2,
+   "questions": [],
+   "status": "published",
+   "summary": "Comandos essenciais do bash, redirecionamento e pipes, usuários e grupos, e as permissões rwx com chmod e chown.",
+   "title": "Terminal, usuários e permissões",
+   "track": "linux",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "mac-hardware": {
+   "author": "",
+   "body": "De 2006 a 2020, os Macs usaram processadores **Intel** (x86). Em 2020, a Apple começou a trocar para chips próprios, os **Apple Silicon** (série M), baseados em arquitetura **ARM**, a mesma família dos chips do iPhone e do iPad.\n\n## O que é o chip da série M\nO chip é um **SoC** (sistema em um chip): reúne no mesmo encapsulamento\n- **CPU** com núcleos de desempenho e de eficiência;\n- **GPU**;\n- **Neural Engine**, para tarefas de inteligência artificial;\n- controladores de vídeo, de armazenamento e de segurança;\n- **memória unificada**, compartilhada por CPU e GPU, sem cópias entre elas.\n\nAs gerações começaram no **M1** (2020) e seguem com M2, M3, M4 e sucessoras, cada uma com variantes Pro, Max e Ultra.\n\n## Intel x Apple Silicon na prática\n| Item | Mac Intel | Mac Apple Silicon |\n|---|---|---|\n| Arquitetura | x86-64 | ARM64 |\n| Aplicativos Intel | Nativos | Rodam pelo **Rosetta 2** (tradução automática) |\n| Windows | Boot Camp (Windows nativo) | Só em máquina virtual (Windows para ARM) |\n| Consumo e calor | Maiores | Muito menores; muitos modelos sem ventoinha |\n| Memória e SSD | Trocáveis em alguns modelos antigos | Soldados: escolha a capacidade na compra |\n| Opções de inicialização | Teclas ao ligar (Option, Command + R) | Manter o botão de ligar pressionado |\n\n## Linha de produtos\n- **MacBook Air:** leve, sem ventoinha.\n- **MacBook Pro:** desempenho para trabalho pesado.\n- **iMac:** tudo em um, com tela integrada.\n- **Mac mini:** compacto, sem tela.\n- **Mac Studio e Mac Pro:** estações de trabalho.\n\n## Instaladores para os dois tipos\nAplicativos distribuídos fora da App Store costumam ter duas versões, **Apple Silicon (arm64)** e **Intel (x64)**, ou uma versão **universal** que roda nos dois.\n\n## Segurança\n- O chip tem um **Secure Enclave**, que guarda as chaves de criptografia e os dados do Touch ID.\n- Nos Macs Intel mais recentes, o chip **T2** fazia papel parecido.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Apple Silicon é ARM; os Macs Intel são x86.",
+    "CPU, GPU, Neural Engine e memória unificada ficam num só chip.",
+    "Rosetta 2 roda aplicativos Intel nos Macs com chip M.",
+    "Memória e SSD são soldados: escolha na compra."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 1,
+   "questions": [],
+   "status": "published",
+   "summary": "A transição dos Macs para os chips da Apple, o que muda na arquitetura, a linha atual e as diferenças práticas em relação aos Macs Intel.",
+   "title": "Mac: Intel e Apple Silicon",
+   "track": "apple",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "mac-macos": {
+   "author": "",
+   "body": "O **macOS** é o sistema dos Macs. É baseado em Unix (núcleo Darwin), o que aproxima o seu terminal do Linux. Cada versão tem um nome; em 2025 a Apple passou a numerar as versões pelo ano seguinte ao lançamento: depois do **macOS 15 Sequoia** veio o **macOS 26 Tahoe**.\n\n## Recursos do dia a dia\n| Recurso | Para quê |\n|---|---|\n| **Finder** | Gerenciador de arquivos |\n| **Spotlight** (Command + Espaço) | Busca arquivos, abre apps, faz contas |\n| **Dock** | Barra de aplicativos |\n| **Ajustes do Sistema** | Configurações (antes Preferências do Sistema) |\n| **Mission Control** | Visão de todas as janelas e mesas virtuais |\n| **Central de Controle** | Wi-Fi, Bluetooth, som e brilho |\n| **Monitor de Atividade** | Equivalente ao Gerenciador de Tarefas |\n| **Utilitário de Disco** | Discos, partições e imagens |\n\n## Atalhos básicos\n**Command** faz o papel do Ctrl do Windows: Command + C, V, Z, S, Q (sair do app) e W (fechar janela). **Command + Tab** troca de aplicativo.\n\n## Estrutura de pastas\n| Pasta | Conteúdo |\n|---|---|\n| `/Applications` | Aplicativos (cada app é uma pasta .app) |\n| `/Users/<nome>` (`~`) | Pasta do usuário: Documentos, Downloads, Mesa |\n| `~/Library` | Configurações e dados dos apps do usuário (oculta) |\n| `/Library` | Configurações para todos os usuários |\n| `/System` | O sistema, num **volume selado** e somente leitura |\n| `/Volumes` | Discos externos montados |\n\n## Sistema de arquivos\nO **APFS** é o padrão desde 2017: rápido em SSD, com **snapshots** e criptografia nativa. Discos para compartilhar com o Windows usam **exFAT**.\n\n## Proteções\n- **Gatekeeper:** só abre apps da App Store ou de desenvolvedores identificados; outros exigem liberação em Ajustes do Sistema → Privacidade e Segurança.\n- **SIP** (Proteção da Integridade do Sistema): impede alterar arquivos do sistema, mesmo como administrador.\n- **FileVault:** criptografa todo o disco.\n- **Permissões por app:** câmera, microfone, tela, arquivos e acessibilidade são liberados um a um.\n\n## Ecossistema\niCloud, AirDrop, Handoff e Continuidade ligam o Mac ao iPhone e ao iPad: copiar num aparelho e colar no outro, atender ligações, usar o iPad como segunda tela.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "macOS é baseado em Unix; depois do Sequoia (15) veio o Tahoe (26).",
+    "Command faz o papel do Ctrl; Spotlight abre com Command + Espaço.",
+    "~/Library guarda as configurações dos apps do usuário.",
+    "Gatekeeper, SIP e FileVault protegem o sistema."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 2,
+   "questions": [],
+   "status": "published",
+   "summary": "Versões do macOS, Finder, Spotlight, Ajustes do Sistema, estrutura de pastas, APFS e as proteções Gatekeeper, SIP e FileVault.",
+   "title": "macOS: estrutura e recursos",
+   "track": "apple",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "mac-terminal": {
+   "author": "",
+   "body": "Por baixo da interface, o macOS tem um ambiente Unix completo. O **Terminal** (em Aplicativos → Utilitários) dá acesso a ele.\n\n## Terminal e zsh\n- Desde o macOS Catalina, o shell padrão é o **zsh**. A maior parte dos comandos do Linux funciona igual: `ls`, `cd`, `cp`, `mv`, `grep`, `find`, `chmod`.\n- As ferramentas vêm na versão **BSD**, com pequenas diferenças de opções em relação às do Linux (GNU).\n- `open .` abre a pasta atual no Finder; `open arquivo.pdf` abre no app padrão.\n- As **Ferramentas de Linha de Comando do Xcode** (`xcode-select --install`) trazem git, compiladores e outras ferramentas de desenvolvimento.\n\n## Homebrew\nO **Homebrew** é o gerenciador de pacotes mais usado no Mac:\n```\nbrew install git node python\nbrew install --cask visual-studio-code\nbrew upgrade\nbrew list\n```\n- Nos Macs Apple Silicon, instala em `/opt/homebrew`; nos Macs Intel, em `/usr/local`.\n- **Formulae** são ferramentas de linha de comando; **casks** são aplicativos com interface.\n\n## Quarentena de apps baixados\nArquivos baixados da internet recebem o atributo de **quarentena**. O Gatekeeper o verifica ao abrir o app. Em apps não assinados, depois de confirmar que a origem é confiável, é possível liberar em Ajustes do Sistema → Privacidade e Segurança → Abrir Mesmo Assim, ou pelo Terminal:\n```\nxattr -dr com.apple.quarantine /Applications/NomeDoApp.app\n```\n\n## Time Machine\nO **Time Machine** faz backups automáticos e incrementais:\n- Primeiro, uma cópia completa; depois, só o que mudou, a cada hora.\n- Guarda cópias horárias das últimas 24 horas, diárias do último mês e semanais enquanto houver espaço.\n- O destino pode ser um disco externo ou um disco na rede.\n- Para restaurar um arquivo, abra a pasta no Finder e entre no Time Machine; para restaurar o Mac inteiro, use o **Assistente de Migração** ou a recuperação do macOS.\n\n## Recuperação do macOS\nUm ambiente separado, usado para reinstalar o sistema, restaurar do Time Machine e usar o Utilitário de Disco. Nos Macs Apple Silicon, abre mantendo o botão de ligar pressionado e escolhendo **Opções**.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "O shell padrão do macOS é o zsh; os comandos Unix são da versão BSD.",
+    "Homebrew instala ferramentas (formulae) e aplicativos (casks).",
+    "A quarentena marca arquivos baixados; xattr remove a marca.",
+    "Time Machine faz backups incrementais por hora, dia e semana."
+   ],
+   "kind": "ficha",
+   "minutes": 6,
+   "order": 3,
+   "questions": [],
+   "status": "published",
+   "summary": "O Terminal do macOS com zsh, o gerenciador de pacotes Homebrew, a quarentena de apps baixados e os backups com Time Machine.",
+   "title": "Terminal, Homebrew e Time Machine",
+   "track": "apple",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "od-autoclave": {
+   "author": "",
+   "body": "A **autoclave** esteriliza instrumentais com **vapor de água saturado sob pressão**. O vapor, acima de 100 °C, transfere calor rapidamente e destrói todas as formas de vida, inclusive esporos bacterianos.\n\n## Parâmetros típicos\n| Temperatura | Pressão manométrica aproximada | Tempo de esterilização típico |\n|---|---|---|\n| 121 °C | 1 bar | 15 a 30 minutos |\n| 134 °C | 2,1 bar | 3 a 18 minutos |\n\nO tempo exato depende do fabricante e do tipo de carga.\n\n## Fases do ciclo\n1. **Remoção do ar:** o ar impede o contato do vapor com o instrumental. Nas autoclaves **gravitacionais**, o vapor empurra o ar para fora; nas de **pré-vácuo**, uma bomba faz vácuo várias vezes (vácuo fracionado).\n2. **Aquecimento:** a câmara chega à temperatura e à pressão de trabalho.\n3. **Esterilização:** temperatura mantida pelo tempo programado.\n4. **Despressurização:** o vapor é liberado.\n5. **Secagem:** calor e vácuo retiram a umidade dos pacotes. Pacote úmido não é considerado estéril.\n\n## Classes (norma EN 13060, para autoclaves de pequeno porte)\n- **Classe N:** só instrumentos sólidos, sem embalagem.\n- **Classe S:** cargas específicas indicadas pelo fabricante.\n- **Classe B:** pré-vácuo fracionado; esteriliza instrumentos ocos (como peças de mão), porosos e embalados. É a referência para consultórios.\n\n## Partes principais\n- **Câmara** de aço inox e **porta** com trava que não abre sob pressão.\n- **Gaxeta** (vedação da porta).\n- **Gerador de vapor** separado ou resistências na própria câmara.\n- **Reservatório de água destilada** e, em alguns modelos, reservatório de água usada.\n- **Bomba de vácuo** (nas de pré-vácuo).\n- **Sensores** de temperatura e pressão, **válvula de segurança** e **filtro bacteriológico** na entrada de ar.\n- Controle eletrônico com registro ou impressão dos ciclos.\n\n## Monitoramento\n- **Indicadores químicos:** fitas e integradores que mudam de cor com tempo, temperatura e vapor.\n- **Indicadores biológicos:** ampolas com esporos de *Geobacillus stearothermophilus*, incubadas depois do ciclo.\n- **Teste de Bowie-Dick:** confere a remoção do ar nas autoclaves de pré-vácuo.\n- Registro de cada ciclo, lote e carga.\n\n## Segurança e normas\n- No Brasil, o processamento de produtos para saúde segue a **RDC 15/2012** da Anvisa.\n- Use só **água destilada ou desmineralizada**: sais incrustam a câmara e mancham o instrumental.\n- Abra a porta só ao fim do ciclo e com luvas térmicas: carga e câmara estão quentes.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Vapor saturado sob pressão: 121 °C por mais tempo ou 134 °C por menos.",
+    "Remover o ar é essencial; a classe B faz pré-vácuo fracionado.",
+    "Indicadores químicos, biológicos e Bowie-Dick comprovam o ciclo.",
+    "Só água destilada ou desmineralizada no reservatório."
+   ],
+   "kind": "ficha",
+   "minutes": 8,
+   "order": 1,
+   "questions": [],
+   "status": "published",
+   "summary": "Esterilização por vapor saturado sob pressão: fases do ciclo, classes de autoclave, parâmetros e indicadores.",
+   "title": "Autoclave",
+   "track": "odest",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "od-cadeira": {
+   "author": "",
+   "body": "O **consultório odontológico** é montado em volta de um conjunto: a **cadeira** do paciente, o **equipo** com as pontas, a **unidade auxiliar** (cuspideira e sugadores) e o **refletor**. Juntos, recebem energia elétrica, ar comprimido, água e vácuo.\n\n## Cadeira\n- **Estrutura:** base, coluna de elevação, assento, encosto e apoio de cabeça.\n- **Movimentos:** subir e descer o assento, inclinar o encosto. São feitos por **motorredutores elétricos** com fuso ou por **sistema eletro-hidráulico** (bomba, válvulas e pistões).\n- **Comandos:** pedal e painel no equipo, com **posições programáveis** (memórias), volta a zero e posição de enxágue.\n- **Fins de curso e proteções:** limitam o movimento e param a cadeira se algo ficar preso embaixo dela.\n\n## Equipo\nO equipo segura e alimenta as pontas de trabalho:\n| Ponta | O que faz |\n|---|---|\n| **Alta rotação** | Turbina a ar, na faixa de 300 a 450 mil rpm, com spray de água para refrigerar |\n| **Micromotor (baixa rotação)** | Motor a ar ou elétrico, até cerca de 20 a 40 mil rpm, com contra-ângulos e peças retas |\n| **Seringa tríplice** | Água, ar ou spray |\n| **Ultrassom e fotopolimerizador** | Podem vir integrados ao equipo |\n\nCada ponta tem uma **válvula pilotada**: ao retirar a ponta do suporte e pisar no **pedal**, o ar e a água chegam só àquela ponta. O **reservatório de água** (garrafa pressurizada) fornece água limpa para os sprays.\n\n## Unidade auxiliar\n- **Cuspideira** com água de enxágue para o copo e para a cuba.\n- **Sugadores:** o de saliva e o de alta potência, ligados à bomba de vácuo ou a um venturi.\n- **Filtros e separadores** de resíduos sólidos.\n\n## Refletor\nIlumina o campo de trabalho com luz fria e sem sombras. Os modelos atuais usam **LED**, com intensidade ajustável e temperatura de cor próxima da luz do dia.\n\n## Caixa de ligação\nNo piso, junto à cadeira, ficam as entradas de **ar comprimido** (perto de 80 psi, cerca de 5,5 bar), **água**, **esgoto**, **vácuo** e **energia** (127 ou 220 V). Registros e filtros de entrada protegem o equipo.\n\n## Segurança e normas\n- Equipamentos odontológicos são **equipamentos eletromédicos**: seguem a **ABNT NBR IEC 60601-1** e precisam de registro na **Anvisa**.\n- A **ISO 7494-1** trata das unidades odontológicas e cadeiras.\n- Desligue o registro geral ao fim do dia: ar e água pressurizados não devem ficar nas mangueiras sem uso.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Cadeira, equipo, unidade auxiliar e refletor formam o conjunto.",
+    "Alta rotação é turbina a ar; baixa rotação é micromotor.",
+    "Cada ponta tem válvula pilotada acionada pelo pedal.",
+    "A caixa de ligação recebe ar, água, esgoto, vácuo e energia."
+   ],
+   "kind": "ficha",
+   "minutes": 8,
+   "order": 1,
+   "questions": [],
+   "status": "published",
+   "summary": "O conjunto do consultório: cadeira, equipo, unidade auxiliar e refletor, e como ar, água, vácuo e energia chegam até eles.",
+   "title": "Cadeira odontológica e equipo",
+   "track": "odcons",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "od-compressor": {
+   "author": "",
+   "body": "O **ar comprimido** move a turbina de alta rotação, o micromotor a ar, a seringa tríplice e as válvulas do equipo. Como esse ar chega à boca do paciente, o compressor odontológico é **isento de óleo** e precisa entregar ar **limpo e seco**.\n\n## Como funciona\n1. Um **motor elétrico** aciona um ou mais **pistões** dentro de cilindros.\n2. Os pistões têm anéis de material autolubrificante (como PTFE), e não usam óleo na câmara de compressão.\n3. O ar comprimido vai para o **reservatório**.\n4. O **pressostato** liga o motor quando a pressão cai até o mínimo e desliga no máximo.\n5. Um **secador** e **filtros** tratam o ar antes que ele siga para o consultório.\n\n## Dados típicos\n| Item | Ordem de grandeza |\n|---|---|\n| Pressão de trabalho | Liga perto de 80 psi e desliga perto de 120 psi (5,5 a 8 bar) |\n| Pressão no equipo | Perto de 80 psi, ajustada por regulador |\n| Reservatório | 30 a 100 litros, conforme o número de cadeiras |\n| Ruído | Modelos com cabine acústica ficam na faixa de 60 a 70 dB(A) |\n\n## Partes principais\n- Cabeçote(s) com pistão, válvulas de admissão e descarga, e **filtro de admissão**.\n- Motor monofásico ou trifásico, com protetor térmico.\n- **Reservatório** com pintura interna anticorrosiva, **dreno** e **válvula de segurança**.\n- Pressostato, manômetro e válvula de retenção.\n- **Secador de ar** (por membrana, refrigeração ou adsorção) e filtros.\n- Cabine acústica com ventilação, em muitos modelos.\n\n## Instalação\n- Local ventilado, protegido do sol e da chuva, longe do consultório por causa do ruído.\n- Tomada exclusiva, com disjuntor adequado e aterramento.\n- Tubulação de cobre ou mangueira própria até a caixa de ligação, com registro e filtro na chegada.\n\n## Segurança e normas\n- O reservatório é um **vaso de pressão**: a válvula de segurança deve estar sempre livre, e o reservatório não pode ser furado nem soldado.\n- Drene a água do reservatório com a frequência indicada pelo fabricante; a umidade corrói o tanque e chega às pontas.\n- Desligue e alivie a pressão antes de abrir qualquer conexão.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Compressor odontológico é isento de óleo: o ar chega à boca do paciente.",
+    "Pressostato liga perto de 80 psi e desliga perto de 120 psi.",
+    "Secador e filtros entregam ar limpo e seco.",
+    "Reservatório é vaso de pressão: válvula de segurança sempre livre."
+   ],
+   "kind": "ficha",
+   "minutes": 6,
+   "order": 1,
+   "questions": [],
+   "status": "published",
+   "summary": "O compressor isento de óleo que alimenta turbinas, micromotores e seringas: tipos, pressões, tratamento do ar e instalação.",
+   "title": "Compressor odontológico",
+   "track": "odar",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "od-cuba": {
+   "author": "",
+   "body": "A **cuba ultrassônica** (lavadora ultrassônica) limpa o instrumental antes da autoclave. Ela **não esteriliza**: remove sangue, saliva e resíduos de reentrâncias, articulações e serrilhas, onde a escova não chega. Sem limpeza, a esterilização falha, porque a sujeira protege os micro-organismos do vapor.\n\n## Como funciona\n1. Um **gerador eletrônico** produz um sinal de alta frequência, em geral entre **25 e 45 kHz** (muitas trabalham perto de 40 kHz).\n2. **Transdutores piezoelétricos** colados no fundo da cuba de inox fazem o fundo vibrar.\n3. A vibração cria ondas de pressão no líquido, que formam e estouram **microbolhas** milhares de vezes por segundo. Esse fenômeno é a **cavitação**.\n4. A implosão das bolhas solta a sujeira da superfície do instrumental.\n\n## Partes principais\n- Cuba de aço inox com dreno.\n- Transdutores e gerador.\n- **Aquecimento** (em muitos modelos), que ajuda o detergente.\n- **Cesto** para apoiar os instrumentos sem tocar o fundo.\n- **Tampa**, que segura aerossóis e reduz o ruído.\n- Temporizador.\n\n## Uso correto\n1. Encha com água e **detergente enzimático** na diluição do fabricante.\n2. Ligue alguns minutos sem carga para **desgaseificar** a solução (bolhas de ar atrapalham a cavitação).\n3. Coloque o instrumental aberto e desarticulado no cesto, sem sobrepor demais.\n4. Feche a tampa e rode pelo tempo indicado (geralmente de 5 a 15 minutos).\n5. Enxágue, seque e inspecione antes de embalar para a autoclave.\n6. Troque a solução a cada uso ou quando ficar suja.\n\n## Parâmetros\n| Item | Observação |\n|---|---|\n| Frequência | Mais baixa limpa sujeira grossa; mais alta, peças delicadas |\n| Temperatura | Detergentes enzimáticos funcionam melhor em água morna, sem passar do limite do fabricante |\n| Tempo | Conforme o fabricante da cuba e do detergente |\n\n## Segurança\n- Não coloque a mão na solução com a cuba ligada.\n- Use luvas grossas, avental e óculos: o instrumental está contaminado.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "A cuba limpa, não esteriliza.",
+    "Transdutores no fundo provocam cavitação, que solta a sujeira.",
+    "Detergente enzimático, desgaseificação e cesto sem tocar o fundo.",
+    "Depois: enxágue, secagem, inspeção e autoclave."
+   ],
+   "kind": "ficha",
+   "minutes": 5,
+   "order": 2,
+   "questions": [],
+   "status": "published",
+   "summary": "A limpeza por cavitação do instrumental antes da esterilização: frequência, detergente, tempo e uso correto.",
+   "title": "Cuba ultrassônica",
+   "track": "odest",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "od-destiladora": {
+   "author": "",
+   "body": "A **destiladora** produz **água destilada** para a autoclave. A água da torneira tem cálcio, magnésio, cloretos e outros sais que, ao evaporar na autoclave, deixam incrustação na câmara e manchas e corrosão no instrumental.\n\n## Como funciona\n1. A água da torneira é colocada na **caldeira** (recipiente de inox).\n2. Uma **resistência elétrica** aquece a água até ferver.\n3. O **vapor** sobe e passa por uma **serpentina** ou condensador, resfriado por **ventilador** (nos modelos de bancada) ou por água corrente.\n4. O vapor volta a ser líquido e goteja num recipiente de coleta, muitas vezes passando por um pequeno **filtro de carvão** no bico, que retém odores e compostos voláteis.\n5. Os sais não evaporam: ficam no fundo da caldeira como **resíduo branco**.\n\n## Partes principais\n- Caldeira de aço inox com tampa e condensador.\n- Resistência e **termostato** de segurança, que desliga quando a água acaba.\n- Ventilador do condensador.\n- Recipiente de coleta (vidro ou plástico próprio) e filtro de carvão.\n\n## Dados típicos\n| Item | Ordem de grandeza |\n|---|---|\n| Capacidade dos modelos de bancada | Cerca de 4 litros por ciclo |\n| Tempo de ciclo | Algumas horas |\n| Potência | Perto de 500 a 800 W |\n| Condutividade da água destilada | Baixa, de poucos µS/cm |\n\n## Uso correto\n- Guarde a água destilada em recipiente fechado e limpo, e use em poucos dias.\n- Remova o resíduo da caldeira com frequência, com vinagre ou ácido cítrico, conforme o fabricante.\n- Coloque a destiladora em local ventilado: ela libera calor.\n\n## Alternativas\nEm clínicas maiores, a água para autoclave pode vir de **desmineralizadores** (resinas de troca iônica) ou de **osmose reversa**. O critério é o mesmo: água com baixa condutividade.\n\n## Segurança\n- Caldeira e serpentina ficam muito quentes: espere esfriar antes de abrir ou limpar.\n- Não ligue sem água: o termostato protege, mas o aquecimento a seco pode danificar a resistência.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Água da torneira deixa sais e manchas na autoclave.",
+    "A destiladora ferve a água e condensa o vapor; os sais ficam na caldeira.",
+    "Água destilada tem condutividade baixa, de poucos µS/cm.",
+    "Desmineralizador e osmose são alternativas em clínicas maiores."
+   ],
+   "kind": "ficha",
+   "minutes": 5,
+   "order": 3,
+   "questions": [],
+   "status": "published",
+   "summary": "Como a destiladora produz água para a autoclave, separando os sais por evaporação e condensação.",
+   "title": "Destiladora de água",
+   "track": "odest",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "od-fotopolimerizador": {
+   "author": "",
+   "body": "As resinas compostas e muitos adesivos endurecem por **fotopolimerização**: um fotoiniciador absorve luz e dispara a reação que une os monômeros. O **fotopolimerizador** entrega essa luz na cor e na intensidade certas.\n\n## A luz certa\n- O fotoiniciador mais usado é a **canforoquinona**, que absorve luz azul, com pico perto de **468 nm**.\n- Por isso os aparelhos emitem na faixa de **400 a 500 nm**.\n- Algumas resinas claras usam outros fotoiniciadores, que absorvem no **violeta** (perto de 400 nm).\n\n## Tipos\n| Tipo | Como é | Observação |\n|---|---|---|\n| **Halógeno** | Lâmpada halógena com filtro azul e ventilador | Antigo, esquenta e perde intensidade com o tempo |\n| **LED de uma faixa (monowave)** | LEDs azuis | Atende a canforoquinona |\n| **LED de várias faixas (polywave)** | LEDs azuis e violeta | Atende também os outros fotoiniciadores |\n\n## Grandezas\n- **Irradiância** (mW/cm²): potência que chega a cada centímetro quadrado. Aparelhos atuais ficam, em geral, entre **1000 e 1500 mW/cm²**, alguns acima.\n- **Exposição radiante** (J/cm²): irradiância × tempo. É a dose que a resina recebe.\n- **Radiômetro:** mede a irradiância na ponteira; muitos aparelhos já têm um embutido na base.\n\n## Partes principais\n- Corpo com circuito de controle, **bateria** de lítio e base de recarga.\n- Fonte de luz (LED) e sistema de dissipação de calor.\n- **Ponteira** (guia de luz) de fibra óptica ou lente, removível e autoclavável em muitos modelos.\n- **Temporizador** com aviso sonoro a cada intervalo e modos de rampa ou pulso.\n- **Protetor laranja**, que filtra a luz azul.\n\n## Uso correto\n- Ponteira o mais perto possível e perpendicular à resina: a irradiância cai com a distância.\n- Respeitar o tempo indicado pelo fabricante da resina para cada espessura de camada.\n\n## Segurança\n- A luz azul intensa pode lesar a retina: use o protetor laranja ou óculos com filtro, e não olhe para a ponteira acesa.\n- A ponteira aquece a superfície: evite exposições longas sobre a gengiva e a polpa.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "A canforoquinona absorve luz azul com pico perto de 468 nm.",
+    "Irradiância em mW/cm²; dose em J/cm² (irradiância × tempo).",
+    "Polywave inclui LED violeta para outros fotoiniciadores.",
+    "Protetor laranja e ponteira perto e perpendicular à resina."
+   ],
+   "kind": "ficha",
+   "minutes": 6,
+   "order": 3,
+   "questions": [],
+   "status": "published",
+   "summary": "A luz azul que endurece as resinas: comprimento de onda, irradiância, tempo de exposição e os tipos de aparelho.",
+   "title": "Fotopolimerizador",
+   "track": "odcons",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "od-ultrassom": {
+   "author": "",
+   "body": "O **ultrassom odontológico** (raspador ultrassônico) faz uma ponta metálica vibrar acima da frequência audível. A vibração, junto com a água, remove **cálculo** e placa dos dentes com menos esforço que os instrumentos manuais. Também é usado em endodontia e preparos.\n\n## Como funciona\n1. O **gerador eletrônico** produz um sinal elétrico de alta frequência, na faixa de **25 a 50 kHz**.\n2. O **transdutor**, na peça de mão, converte o sinal em vibração mecânica.\n3. A vibração passa para a **ponta** (inserto), que oscila alguns micrômetros.\n4. A **água de irrigação** resfria a ponta e, com a vibração, forma microbolhas (**cavitação**) que ajudam a limpar.\n\n## Tipos\n| Tipo | Transdutor | Movimento da ponta |\n|---|---|---|\n| **Piezoelétrico** | Cerâmicas que mudam de tamanho com a tensão elétrica | Linear, de vaivém |\n| **Magnetostritivo** | Pilha de lâminas metálicas (ou haste de ferrite) dentro de uma bobina | Elíptico ou circular |\n\n## Partes principais\n- Gerador com controle de **potência** e de **vazão de água**.\n- Peça de mão com o transdutor; em muitos modelos, removível e autoclavável.\n- Pontas intercambiáveis: periodontais, endodônticas, de preparo.\n- Pedal de acionamento.\n- Alimentação de água pela rede, por reservatório próprio ou pelo equipo.\n\nMuitos aparelhos combinam ultrassom com **jato de bicarbonato** (profilaxia), num só equipamento.\n\n## Uso correto\n- Potência e água compatíveis com a ponta: ponta fina pede potência baixa.\n- Aperto da ponta com a chave própria, para transmitir a vibração.\n\n## Segurança\n- Peças de mão e pontas passam pela limpeza e esterilização indicadas pelo fabricante.\n- O jato de água forma **aerossol**: use sugador de alta potência, máscara, óculos e protetor facial.\n- Pacientes com marca-passo: siga a orientação do fabricante do aparelho, especialmente nos modelos magnetostritivos.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "O gerador alimenta um transdutor que vibra na faixa de 25 a 50 kHz.",
+    "Piezoelétrico vibra em linha; magnetostritivo, em elipse.",
+    "A água resfria a ponta e forma a cavitação.",
+    "Aerossol exige sugador de alta potência e EPI completo."
+   ],
+   "kind": "ficha",
+   "minutes": 6,
+   "order": 2,
+   "questions": [],
+   "status": "published",
+   "summary": "Como o aparelho de ultrassom transforma energia elétrica em vibração para remover cálculo, e as diferenças entre piezoelétrico e magnetostritivo.",
+   "title": "Ultrassom odontológico",
+   "track": "odcons",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "od-vacuo": {
+   "author": "",
+   "body": "O **sistema de sucção** retira da boca do paciente saliva, sangue, água dos sprays e boa parte dos **aerossóis**. No consultório, a sucção chega por dois terminais: o **sugador de saliva** (baixa vazão) e o **sugador de alta potência** (cânula larga, grande vazão).\n\n## Tipos de bomba\n| Tipo | Como funciona | Observação |\n|---|---|---|\n| **Anel líquido (úmida)** | Um rotor excêntrico gira dentro de uma carcaça com água; o anel de água forma câmaras que aspiram e expulsam o ar | Recebe ar e líquido juntos; consome água de selagem |\n| **Seca** | Turbina ou rotor de canal lateral aspira só ar | Precisa de um **separador** antes, para tirar o líquido |\n| **Venturi** | Ar comprimido ou água passando por um bico cria sucção | Simples, de baixa capacidade, comum em equipos pequenos |\n\n## Partes do sistema\n- **Terminais** no equipo ou na unidade auxiliar, com válvulas que abrem ao retirar a cânula do suporte.\n- **Filtro de sólidos** perto da cadeira, que retém fragmentos.\n- **Separador ar/líquido:** centrífugo ou por decantação; manda o líquido para o esgoto e o ar para a bomba.\n- **Separador de amálgama:** retém partículas de amálgama (mercúrio) antes do esgoto, conforme a **ISO 11143**.\n- **Bomba**, motor e controle de acionamento automático (liga quando um terminal é aberto).\n- **Saída do ar** para fora do prédio, com filtro, para não devolver aerossol ao ambiente.\n\n## Como funciona\n1. Ao retirar a cânula do suporte, uma válvula abre e a bomba é ligada.\n2. O ar, carregando líquidos e partículas, passa pelo filtro e pelo separador.\n3. O líquido segue para o esgoto; o ar passa pela bomba e é descartado do lado de fora.\n\n## Dados típicos\n- O sugador de alta potência trabalha com **vazão alta e vácuo moderado**: o que importa é o volume de ar aspirado, para capturar o aerossol na origem.\n- Uma bomba central pode atender várias cadeiras, dimensionada pelo número de terminais usados ao mesmo tempo.\n\n## Uso correto e segurança\n- Aspire água limpa e a solução desinfetante própria para sucção ao fim de cada período, conforme o fabricante: resíduos de sangue e saliva formam biofilme nas mangueiras.\n- Não use produtos que façam espuma, alvejante ou desinfetantes não indicados: atacam vedações e separadores.\n- Ao abrir filtros, use luvas, máscara e óculos: o conteúdo é material biológico.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Sugador de saliva tem baixa vazão; o de alta potência captura o aerossol.",
+    "Bomba de anel líquido aceita líquido; a seca precisa de separador antes.",
+    "Separador de amálgama retém o mercúrio antes do esgoto (ISO 11143).",
+    "O ar aspirado deve sair para fora do prédio."
+   ],
+   "kind": "ficha",
+   "minutes": 6,
+   "order": 2,
+   "questions": [],
+   "status": "published",
+   "summary": "Como o sistema de sucção aspira saliva, água e aerossóis: bombas de anel líquido e secas, separadores e o caminho até o esgoto.",
+   "title": "Bomba de vácuo (sucção odontológica)",
+   "track": "odar",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "pal-convencional": {
+   "author": "",
+   "body": "A **paletizadora** recebe os pacotes (fardos de garrafas ou latas, caixas) e monta as camadas sobre o palete. A **convencional** usa mesas, empurradores e um elevador, sem robô, e alcança velocidades altas com pacotes padronizados.\n\n## Para que serve\n- Formar paletes estáveis e sempre iguais, com o padrão de amarração definido para cada produto.\n- Trabalhar no ritmo da linha, sem esforço manual.\n\n## Tipos\n- **Alta entrada:** a camada é formada no alto, e o palete sobe e desce no elevador. O operador trabalha no nível do chão nos pacotes.\n- **Baixa entrada:** os pacotes chegam no nível do chão, e a camada é transferida para o palete em níveis crescentes. Ocupa menos altura.\n\n## Partes e funções\n1. **Transportador de entrada:** recebe os pacotes do fardo e regula o espaçamento.\n2. **Virador ou orientador:** gira os pacotes 90° quando o padrão da camada pede (por pinças, batentes ou rolos de velocidades diferentes).\n3. **Formação de fileiras:** agrupa os pacotes em linhas.\n4. **Mesa de formação da camada:** um empurrador junta as fileiras numa camada completa.\n5. **Transferência da camada:** uma placa deslizante (cortina) ou um pente leva a camada até sobre o palete e se retira, deixando a camada no lugar.\n6. **Elevador:** desce o palete uma camada a cada ciclo.\n7. **Magazine de paletes vazios** e **colocador de folha intercalar** (papelão entre camadas).\n8. **Saída:** o palete pronto segue para a **envolvedora de filme stretch** e para a etiquetagem.\n\n## Dados típicos\n| Item | Ordem de grandeza |\n|---|---|\n| Camadas por palete | 4 a 8, conforme o produto |\n| Velocidade | Algumas camadas por minuto |\n| Acionamentos | Motores com inversor e servo, CLP e IHM com receitas por produto |\n\n## Segurança e normas\n- A área interna é protegida por grades, **portas com intertravamento** e **barreiras de luz** nas entradas e saídas de palete.\n- A **NR-12** exige parada de emergência, proteção das zonas de esmagamento e procedimento de bloqueio de energias antes de entrar na célula.\n- Nunca entre embaixo do elevador ou da camada suspensa sem o travamento mecânico aplicado.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "A camada é formada em mesa, transferida por placa ou pente e descida pelo elevador.",
+    "O virador orienta os pacotes conforme o padrão da camada.",
+    "Alta entrada forma no alto; baixa entrada forma no nível do chão.",
+    "Intertravamentos, barreiras de luz e bloqueio de energias protegem a célula."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 1,
+   "questions": [],
+   "status": "published",
+   "summary": "Como a paletizadora forma as camadas de pacotes, monta o palete e entrega a carga pronta para o filme.",
+   "title": "Paletizadora convencional (por camadas)",
+   "track": "paletes",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "pal-robo": {
+   "author": "",
+   "body": "Na **paletização por robô**, um robô industrial pega os pacotes (um a um, em grupos ou camadas inteiras) e os coloca no palete. A célula é mais flexível que a paletizadora convencional: troca de padrão por software e pode atender várias linhas ao mesmo tempo.\n\n## Tipos de robô\n- **Robôs de paletização:** geralmente com 4 ou 5 eixos, braço longo e punho que mantém a garra sempre na horizontal. São rápidos e carregam muito peso.\n- **Robôs de 6 eixos:** mais versáteis, usados quando é preciso inclinar ou girar a peça em várias direções.\n- **Pórticos cartesianos:** eixos lineares sobre a área de paletes, para cargas pesadas.\n\nA KUKA, a ABB e a FANUC têm linhas próprias para paletização. A programação dos robôs KUKA em KRL está no tema **Robôs KUKA e programação KRL**, com prática no laboratório virtual Korum.\n\n## Tipos de garra\n| Garra | Para quê |\n|---|---|\n| Pinças ou mandíbulas | Fardos com filme e caixas |\n| Ventosas a vácuo | Caixas fechadas e superfícies lisas |\n| Garfos | Sacos e fardos que não aceitam pressão lateral |\n| Garra de camada | Uma camada inteira de uma vez, com cortina e pinças laterais |\n| Combinada | Pega pacotes, folha intercalar e palete vazio |\n\n## Como funciona a célula\n1. Os pacotes chegam por transportadores a uma **posição de pega** fixa, sinalizada por sensores.\n2. O CLP da célula avisa o robô; o robô calcula a posição de colocação pelo **padrão de paletização** (receita).\n3. A cada camada, o robô gira a garra conforme o padrão e coloca a folha intercalar, se houver.\n4. Com o palete completo, o transportador leva a carga para o filme e traz um palete vazio.\n\n## Padrões\n- O padrão define quantos pacotes por camada, a orientação de cada um e o **amarrado** entre camadas (alternar o desenho para travar a carga).\n- Softwares dos fabricantes geram o padrão e o programa a partir das medidas do pacote e do palete.\n\n## Segurança e normas\n- A célula é cercada, com portas intertravadas e **scanners a laser** ou barreiras de luz nas passagens de palete.\n- O robô só se move em velocidade reduzida e com dispositivo de habilitação quando alguém está dentro, em modo manual.\n- A **NR-12** e as normas ISO 10218 (robôs industriais) orientam o projeto da célula.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Robôs de paletização têm 4 ou 5 eixos e mantêm a garra na horizontal.",
+    "A garra é escolhida pelo tipo de pacote: pinça, vácuo, garfo ou camada.",
+    "O padrão de paletização define posições e o amarrado entre camadas.",
+    "Cerca, intertravamento e scanner protegem a célula (NR-12, ISO 10218)."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 2,
+   "questions": [],
+   "status": "published",
+   "summary": "Células de paletização com robô industrial: tipos de robô e de garra, padrões de palete e a integração com a linha.",
+   "title": "Paletização por robô",
+   "track": "paletes",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
   "prog-1-logica": {
    "author": "",
    "body": "Todo programa é feito de três ideias: **guardar dados**, **decidir** e **repetir**.\n\n## Variáveis\n```python\nnome = \"Ana\"\nidade = 19\naltura = 1.68\n```\n\n## Decisões\n```python\nif idade >= 18:\n    print(nome, \"é maior de idade\")\nelse:\n    print(nome, \"é menor de idade\")\n```\nO Python usa a **indentação** (o recuo) para saber o que está dentro do if.\n\n## Repetições\n```python\nfor numero in range(1, 4):\n    print(\"Volta\", numero)\n```\nIsso imprime Volta 1, Volta 2 e Volta 3: o range vai do primeiro número até antes do último.\n\n## Onde rodar\nInstale o Python em python.org e use o VS Code, ou teste no navegador em sites como o Google Colab.",
@@ -6925,6 +7813,595 @@ window.VOLTER_SEED = {
    "title": "Web em 15 minutos: HTML, CSS e JavaScript",
    "track": "prog",
    "updatedAt": "2026-10-19T01:30:00.000Z"
+  },
+  "util-ar": {
+   "author": "",
+   "body": "O **ar comprimido** move cilindros, válvulas, garras e transportadores aéreos. Na fábrica de bebidas há duas redes: a de **baixa pressão** (cerca de 6 a 8 bar), para a pneumática das máquinas, e a de **alta pressão** (perto de 40 bar), para o sopro das garrafas PET.\n\n## Tipos de compressor\n| Tipo | Como comprime | Uso |\n|---|---|---|\n| **Parafuso** | Dois rotores helicoidais engrenados reduzem o volume do ar continuamente | Rede de baixa pressão, operação contínua |\n| **Pistão** | Pistão em cilindro, em um ou mais estágios | Alta pressão para o sopro (vários estágios com resfriamento entre eles) |\n| **Centrífugo** | Rotor de alta velocidade acelera o ar | Grandes vazões |\n\nOs compressores podem ser **lubrificados** ou **isentos de óleo**. Em contato com produto e garrafas, o ar deve vir livre de óleo.\n\n## Controle\n- **Carga e alívio:** o compressor trabalha cheio até a pressão máxima e alivia até a mínima.\n- **Velocidade variável:** um inversor ajusta a rotação ao consumo e economiza energia.\n- **Sequenciador:** em salas com várias máquinas, decide quem entra e quem sai.\n\n## Tratamento do ar\n1. **Resfriador posterior:** baixa a temperatura do ar e condensa boa parte da água.\n2. **Reservatório:** acumula ar, estabiliza a pressão e separa condensado.\n3. **Secador:** por **refrigeração** (ponto de orvalho perto de 3 °C) ou por **adsorção** (até −40 °C, para usos críticos).\n4. **Filtros:** coalescentes retiram gotas e aerossol de óleo; carvão ativado retira vapor de óleo e odor.\n5. **Drenos automáticos:** eliminam o condensado sem perder ar.\n\nA qualidade do ar é classificada pela **ISO 8573-1**, por partículas, umidade e óleo.\n\n## Segurança e normas\n- Reservatórios e secadores de alta pressão são vasos de pressão: entram na **NR-13**, com válvula de segurança e inspeção.\n- Nunca use ar comprimido para limpar o corpo ou a roupa: o ar pode penetrar na pele.\n- Vazamentos custam caro: somados, pequenos furos em engates e mangueiras podem consumir boa parte da energia da sala de compressores.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Baixa pressão (6 a 8 bar) para a pneumática; alta (perto de 40 bar) para o sopro PET.",
+    "Parafuso para a rede contínua; pistão em estágios para a alta pressão.",
+    "Resfriador, secador e filtros deixam o ar limpo e seco (ISO 8573-1).",
+    "Reservatórios são vasos de pressão sob a NR-13."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 2,
+   "questions": [],
+   "status": "published",
+   "summary": "Compressores de parafuso e de pistão, ar de baixa e de alta pressão para o sopro PET e o tratamento que deixa o ar limpo e seco.",
+   "title": "Ar comprimido industrial",
+   "track": "utilidades",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "util-caldeira": {
+   "author": "",
+   "body": "A **caldeira** transforma água em vapor sob pressão, queimando um combustível. Numa fábrica de bebidas, o vapor aquece a xaroparia, a lavadora de garrafas, a limpeza CIP e os pasteurizadores.\n\n## Tipos\n| Tipo | Como é | Uso |\n|---|---|---|\n| **Flamotubular** | Os gases quentes passam por dentro dos tubos, imersos num corpo cheio de água | Pequeno e médio porte, pressões moderadas; a mais comum em fábricas de bebidas |\n| **Aquatubular** | A água circula dentro dos tubos, e a chama fica do lado de fora | Grandes vazões e pressões altas |\n| **Elétrica** | Resistências ou eletrodos aquecem a água | Pequenas demandas, sem combustão |\n\nCombustíveis comuns: gás natural, GLP, óleo, lenha e cavaco de biomassa.\n\n## Partes principais\n- **Queimador:** mistura combustível e ar e mantém a chama, com detector de chama (fotocélula ou eletrodo de ionização).\n- **Câmara de combustão e tubos:** onde o calor passa para a água.\n- **Bomba de alimentação:** repõe a água evaporada.\n- **Controle de nível:** eletrodos ou boia ligam a bomba e desligam o queimador por nível baixo.\n- **Visor de nível, manômetro e pressostatos:** mostram e limitam a pressão.\n- **Válvulas de segurança:** abrem sozinhas acima da pressão máxima de trabalho.\n- **Descarga de fundo (purga):** retira a lama e os sais concentrados.\n\n## O circuito do vapor\n1. A água passa por **tratamento** (abrandador ou osmose) para não formar incrustação.\n2. O **desaerador** retira oxigênio, que corrói os tubos.\n3. A caldeira gera o vapor, que segue pelas linhas isoladas até os consumidores.\n4. Nos consumidores, o vapor cede calor e vira **condensado**; os **purgadores** deixam sair o condensado e seguram o vapor.\n5. O condensado volta quente ao tanque de alimentação, economizando água e combustível.\n\n## Segurança e normas\n- A **NR-13** rege caldeiras e vasos de pressão: categoria da caldeira, prontuário, livro de registro, inspeções periódicas, válvulas de segurança calibradas e **operador com treinamento específico**.\n- A caldeira deve ficar em casa de caldeiras ventilada, com duas saídas e longe de áreas de circulação, conforme a categoria.\n- Nunca opere com o nível de água abaixo do mínimo: o metal superaquece e pode romper.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Flamotubular: gases dentro dos tubos; aquatubular: água dentro dos tubos.",
+    "Tratamento e desaeração da água protegem a caldeira contra incrustação e corrosão.",
+    "Purgadores devolvem o condensado e seguram o vapor.",
+    "A NR-13 exige operador treinado, prontuário e inspeções."
+   ],
+   "kind": "ficha",
+   "minutes": 8,
+   "order": 1,
+   "questions": [],
+   "status": "published",
+   "summary": "Tipos de caldeira, como o vapor é gerado e distribuído na fábrica e os dispositivos de segurança exigidos pela NR-13.",
+   "title": "Caldeira a vapor",
+   "track": "utilidades",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "util-frio": {
+   "author": "",
+   "body": "A carbonatação funciona melhor com produto frio: quanto menor a temperatura, mais CO₂ a água dissolve. Por isso a fábrica de bebidas tem uma **sala de máquinas de refrigeração** que produz **água gelada** ou **água glicolada** para os trocadores de calor.\n\n## Fluidos refrigerantes\n- **Amônia (R717):** o fluido clássico das grandes instalações. Tem ótimo rendimento e não agride a camada de ozônio, mas é tóxica e, em certas concentrações, inflamável.\n- **HFCs e HFOs:** usados em chillers menores, com fluidos como R134a e os de baixo impacto climático.\n- **CO₂ (R744):** cresce em sistemas novos, sozinho ou em cascata com amônia.\n\n## Como funciona\nÉ o mesmo ciclo da geladeira, em escala industrial:\n1. O **compressor** (parafuso ou alternativo) aspira o vapor do refrigerante e eleva a pressão.\n2. O **condensador** (evaporativo, a ar ou a água) retira calor, e o refrigerante vira líquido.\n3. O líquido fica no **recipiente de líquido** e passa por uma **válvula de expansão**, onde a pressão cai.\n4. No **evaporador** (trocador a placas ou casco e tubo), o refrigerante evapora e retira calor da água ou do glicol.\n5. Um **separador de líquido** protege o compressor de receber líquido.\n\n## Chiller\nO **chiller** é um conjunto compacto, montado em fábrica, que entrega água gelada pronta: compressor, condensador, evaporador e controle num só equipamento. A água gelada circula por bombas até os consumidores, como o resfriador do carbonatador e o resfriador de xarope.\n\n## Dados típicos\n| Circuito | Temperatura típica |\n|---|---|\n| Água gelada | 1 a 7 °C |\n| Água glicolada | abaixo de 0 °C |\n| Produto na entrada do carbonatador | perto de 4 a 8 °C, conforme o processo |\n\n## Segurança e normas\n- A **NBR 16069** trata da segurança em sistemas frigoríficos; vasos de pressão entram na **NR-13**.\n- Salas de amônia exigem detectores de vazamento, ventilação de emergência, chuveiro e lava-olhos, e máscaras autônomas acessíveis.\n- O cheiro forte da amônia é um aviso: ao sentir, saia da sala e acione a equipe responsável.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Produto frio dissolve mais CO₂: por isso a linha precisa de refrigeração.",
+    "Amônia rende muito, mas é tóxica e exige sala com detecção e ventilação.",
+    "Chiller é o conjunto compacto que entrega água gelada.",
+    "NBR 16069 e NR-13 regem a segurança da instalação."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 3,
+   "questions": [],
+   "status": "published",
+   "summary": "Sistemas de amônia e chillers que resfriam a água de processo, o produto antes da carbonatação e as salas da fábrica.",
+   "title": "Refrigeração industrial e água gelada",
+   "track": "utilidades",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "win-estrutura": {
+   "author": "",
+   "body": "O **Windows**, da Microsoft, é o sistema operacional da maioria dos PCs. A versão atual é o **Windows 11**; o suporte gratuito do Windows 10 terminou em outubro de 2025.\n\n## Edições\n| Edição | Para quem |\n|---|---|\n| **Home** | Uso doméstico |\n| **Pro** | Profissionais e pequenas empresas: BitLocker completo, política de grupo, área de trabalho remota como servidor, ingresso em domínio |\n| **Enterprise e Education** | Grandes organizações e escolas, com licenciamento por volume |\n\n## Requisitos do Windows 11\n- Processador de 64 bits compatível (lista da Microsoft).\n- **TPM 2.0** (chip de segurança, muitas vezes ativado no UEFI como fTPM ou PTT).\n- **UEFI com Secure Boot.**\n- 4 GB de RAM e 64 GB de armazenamento, no mínimo.\n\n## Instalação\n1. Crie um pendrive com a **Ferramenta de Criação de Mídia** da Microsoft.\n2. Inicie o computador pelo pendrive (menu de boot do UEFI).\n3. Escolha o disco; o instalador cria as partições.\n4. Configure região, teclado, rede e conta.\n\nPartições criadas num disco GPT:\n| Partição | Função |\n|---|---|\n| **EFI** (algumas centenas de MB, FAT32) | Arquivos de inicialização |\n| **MSR** | Reservada pela Microsoft |\n| **Windows** (NTFS) | O sistema e os dados (unidade C:) |\n| **Recuperação** | Ambiente de recuperação (WinRE) |\n\n## Pastas importantes\n| Pasta | Conteúdo |\n|---|---|\n| `C:\\Windows` | O sistema operacional |\n| `C:\\Program Files` | Programas de 64 bits |\n| `C:\\Program Files (x86)` | Programas de 32 bits |\n| `C:\\ProgramData` | Dados compartilhados dos programas (oculta) |\n| `C:\\Users\\<nome>` | Pasta de cada usuário: Documentos, Downloads, Área de Trabalho |\n| `C:\\Users\\<nome>\\AppData` | Configurações dos programas: Local, LocalLow e Roaming (oculta) |\n\n## Contas\n- **Conta Microsoft:** sincroniza configurações e OneDrive.\n- **Conta local:** só no computador.\n- **Administrador** e **usuário padrão:** o **UAC** (Controle de Conta de Usuário) pede confirmação antes de mudanças no sistema.\n\n## Segurança\n- **Windows Update** e **Segurança do Windows** (Defender) vêm ativos por padrão.\n- **BitLocker** criptografa o disco; guarde a **chave de recuperação** fora do computador.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Windows 11 exige TPM 2.0, UEFI e Secure Boot.",
+    "A instalação cria partições EFI, MSR, Windows e Recuperação.",
+    "Program Files guarda programas; AppData, configurações de cada usuário.",
+    "UAC pede confirmação antes de mudanças no sistema."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 1,
+   "questions": [],
+   "status": "published",
+   "summary": "Edições do Windows, requisitos do Windows 11, partições criadas na instalação, pastas do sistema e contas de usuário.",
+   "title": "Windows: edições, instalação e estrutura",
+   "track": "windows",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "win-ferramentas": {
+   "author": "",
+   "body": "O Windows tem um conjunto de **ferramentas administrativas** para ver e ajustar o sistema. Quase todas abrem pelo **Executar** (tecla Windows + R), digitando o nome do console.\n\n## Ferramentas e atalhos\n| Ferramenta | Comando | Para quê |\n|---|---|---|\n| Gerenciador de Tarefas | Ctrl + Shift + Esc | Processos, desempenho, aplicativos de inicialização |\n| Gerenciamento do Computador | `compmgmt.msc` | Reúne várias ferramentas num só lugar |\n| Gerenciador de Dispositivos | `devmgmt.msc` | Hardware e drivers |\n| Gerenciamento de Disco | `diskmgmt.msc` | Partições e letras de unidade |\n| Serviços | `services.msc` | Programas que rodam em segundo plano |\n| Visualizador de Eventos | `eventvwr.msc` | Registros (logs) do sistema e dos aplicativos |\n| Agendador de Tarefas | `taskschd.msc` | Tarefas automáticas por horário ou evento |\n| Configuração do Sistema | `msconfig` | Modo de inicialização |\n| Editor de Política de Grupo | `gpedit.msc` | Regras do sistema (edições Pro e superiores) |\n| Informações do Sistema | `msinfo32` | Resumo do hardware e do software |\n| Editor do Registro | `regedit` | Banco de configurações |\n\n## Serviços\nUm **serviço** é um programa que roda sem janela, muitas vezes antes do login (impressão, rede, atualizações, antivírus). Cada serviço tem um **tipo de inicialização**: automático, automático com atraso, manual ou desabilitado.\n\n## Registro\nO **Registro** é o banco de dados hierárquico onde o Windows e os programas guardam configurações. Ele é organizado em **chaves** (como pastas) e **valores**.\n\n| Chave raiz | Conteúdo |\n|---|---|\n| `HKEY_LOCAL_MACHINE` (HKLM) | Configurações do computador, valem para todos os usuários |\n| `HKEY_CURRENT_USER` (HKCU) | Configurações do usuário conectado |\n| `HKEY_CLASSES_ROOT` | Associações de arquivos |\n| `HKEY_USERS` | Perfis de todos os usuários |\n| `HKEY_CURRENT_CONFIG` | Perfil de hardware atual |\n\nTipos de valor comuns: **REG_SZ** (texto), **REG_DWORD** (número de 32 bits) e **REG_BINARY**.\n\n## Configurações modernas\nO app **Configurações** (Windows + I) substituiu boa parte do antigo Painel de Controle, que ainda existe para opções mais antigas.\n\n## Segurança\n- Exporte a chave antes de editar o Registro (Arquivo → Exportar); um valor errado pode impedir o Windows de iniciar.\n- Ferramentas administrativas exigem conta de administrador.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Windows + R abre o Executar; consoles terminam em .msc.",
+    "Serviços rodam em segundo plano, com tipo de inicialização próprio.",
+    "HKLM vale para o computador; HKCU, para o usuário conectado.",
+    "Exporte a chave antes de editar o Registro."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 2,
+   "questions": [],
+   "status": "published",
+   "summary": "As ferramentas administrativas do Windows, os atalhos para abri-las e como o Registro organiza as configurações.",
+   "title": "Ferramentas do sistema e Registro",
+   "track": "windows",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "win-powershell": {
+   "author": "",
+   "body": "O Windows tem duas linhas de comando: o **Prompt de Comando** (cmd), herdado do MS-DOS, e o **PowerShell**, mais moderno, que trabalha com **objetos** em vez de texto. O **Windows Terminal** reúne os dois em abas.\n\n## Comandos úteis no Prompt\n| Comando | Para quê |\n|---|---|\n| `dir`, `cd`, `copy`, `move`, `del`, `mkdir` | Pastas e arquivos |\n| `ipconfig /all` | Endereços e configurações de rede |\n| `ping` e `tracert` | Testar conexão e caminho até um endereço |\n| `systeminfo` | Resumo do sistema |\n| `tasklist` e `taskkill` | Listar e encerrar processos |\n| `shutdown /r /t 0` | Reiniciar agora |\n\n## PowerShell\nOs comandos do PowerShell (**cmdlets**) seguem o padrão **Verbo-Substantivo**:\n```\nGet-Process                     # processos em execução\nGet-Service | Where-Object Status -eq Running\nGet-ChildItem C:\\Users -Recurse -Filter *.pdf\nStop-Process -Name notepad\nGet-Help Get-Service -Examples\n```\n- O **pipeline** (`|`) passa objetos de um cmdlet para outro, com propriedades como nome, status e tamanho.\n- Os comandos antigos (`dir`, `cd`, `ls`) funcionam como **aliases**.\n- Scripts têm extensão **.ps1**; a **política de execução** define se scripts podem rodar.\n\n## winget\nO **winget** instala e atualiza programas pela linha de comando:\n```\nwinget search vscode\nwinget install Microsoft.VisualStudioCode\nwinget upgrade --all\n```\n\n## WSL\nO **WSL** (Subsistema do Windows para Linux) roda distribuições Linux, como o Ubuntu, dentro do Windows: `wsl --install`. É usado para programar com ferramentas Linux sem sair do Windows.\n\n## Segurança\n- Abra o terminal como administrador só quando o comando precisar.\n- Leia um script baixado da internet antes de executá-lo.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "cmd vem do MS-DOS; PowerShell trabalha com objetos.",
+    "Cmdlets seguem o padrão Verbo-Substantivo.",
+    "winget instala e atualiza programas pelo terminal.",
+    "WSL roda Linux dentro do Windows."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 3,
+   "questions": [],
+   "status": "published",
+   "summary": "Prompt de Comando, PowerShell e Windows Terminal: comandos essenciais, cmdlets, pipeline de objetos, winget e WSL.",
+   "title": "Linha de comando: Prompt e PowerShell",
+   "track": "windows",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "xar-agua": {
+   "author": "",
+   "body": "A água é cerca de **90% de um refrigerante**. Ela precisa sair sempre igual, sem sabor, sem cloro, com dureza e alcalinidade controladas e sem micro-organismos. A **estação de tratamento de água** (ETA) da fábrica faz esse trabalho.\n\n## Para que serve\n- Garantir o sabor padrão do produto em qualquer fábrica do grupo.\n- Proteger o xarope e o produto contra contaminação.\n- Fornecer água adequada para caldeiras, torres e lavadoras (água de utilidades).\n\n## Etapas típicas\n1. **Captação e reservação:** poço artesiano ou concessionária, com tanques de reserva.\n2. **Cloração:** dosagem de cloro para desinfecção e um tempo de contato no tanque.\n3. **Coagulação e floculação (quando necessário):** agrupam partículas finas para que decantem ou fiquem no filtro.\n4. **Filtro de areia:** retém sólidos em suspensão.\n5. **Filtro de carvão ativado:** retira o cloro, que alteraria o sabor, além de odores e matéria orgânica.\n6. **Abrandamento ou osmose reversa:** reduz dureza e sais dissolvidos, conforme o padrão da bebida.\n7. **Filtros polidores (cartuchos de poucos micrômetros) e luz UV:** última barreira antes da xaroparia e do mixer.\n\n## Partes principais\n- Bombas dosadoras de cloro e de produtos químicos.\n- Vasos de filtração com retrolavagem automática.\n- Membranas de osmose em vasos de pressão, com bomba de alta pressão.\n- Instrumentos em linha: cloro livre, pH, condutividade, turbidez e vazão.\n\n## Parâmetros acompanhados\n| Parâmetro | Por que importa |\n|---|---|\n| Cloro livre | Desinfecção antes do carvão; deve ser zero depois dele |\n| pH e alcalinidade | Interferem na acidez e no sabor da bebida |\n| Dureza | Forma incrustação e altera o sabor |\n| Turbidez | Indica sólidos e eficiência da filtração |\n| Análise microbiológica | Liberação da água para o processo |\n\n## Segurança e normas\n- A água de processo segue os padrões de potabilidade do Ministério da Saúde e os padrões internos do fabricante da bebida.\n- Produtos químicos (cloro, ácidos, soda) exigem EPI, bacia de contenção e ficha de segurança (FISPQ) no local.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "A água é a maior parte do refrigerante e precisa sair sempre igual.",
+    "O carvão ativado retira o cloro, que alteraria o sabor.",
+    "Osmose ou abrandamento ajustam sais e dureza.",
+    "Cartuchos e UV são a última barreira antes do processo."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 1,
+   "questions": [],
+   "status": "published",
+   "summary": "Como a água bruta vira água de processo para refrigerantes: cloração, filtros de areia e carvão, abrandamento, osmose e polimento.",
+   "title": "Tratamento de água",
+   "track": "xarope",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "xar-cip": {
+   "author": "",
+   "body": "**CIP** (do inglês *clean in place*) é a limpeza feita sem desmontar o equipamento: soluções de limpeza circulam pelos tanques, tubulações, mixer e enchedora em ciclos automáticos.\n\n## Para que serve\n- Remover resíduos de açúcar, xarope e sabor entre lotes e trocas de produto.\n- Eliminar micro-organismos e garantir a vida de prateleira da bebida.\n- Repetir sempre o mesmo procedimento, com registro de tempos, temperaturas e concentrações.\n\n## Os quatro fatores\nA eficiência da limpeza depende de quatro fatores, que se compensam entre si:\n- **Tempo** de contato.\n- **Ação mecânica:** vazão e turbulência (nas tubulações, velocidade de pelo menos 1,5 m/s).\n- **Concentração** do produto químico.\n- **Temperatura** da solução.\n\n## Etapas típicas\n1. **Pré-enxágue** com água, para retirar a maior parte do resíduo.\n2. **Solução alcalina** (soda cáustica, em torno de 1 a 2%, aquecida a 70–85 °C): remove açúcar e matéria orgânica.\n3. **Enxágue intermediário.**\n4. **Solução ácida** (nítrico ou fosfórico), quando necessário: remove incrustações minerais.\n5. **Enxágue final.**\n6. **Sanitização:** ácido peracético, outro sanitizante ou água quente.\n\n## Partes do sistema\n| Parte | Função |\n|---|---|\n| Tanques de água, soda e ácido | Guardam as soluções, que muitas vezes são reaproveitadas |\n| Bomba de ida e bomba de retorno | Circulam a solução |\n| Trocador de calor | Aquece a solução |\n| Esferas de spray (spray balls) | Espalham a solução por dentro dos tanques |\n| Condutivímetro | Detecta a troca entre água e solução e mede a concentração |\n| CLP com receitas | Controla cada circuito e registra os dados |\n\n## Segurança\n- Soda e ácidos causam queimaduras graves: use luvas, óculos ou viseira e avental, e mantenha lava-olhos por perto.\n- Nunca abra um tanque ou um painel de válvulas com o CIP em andamento.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "CIP limpa tanques e linhas sem desmontar.",
+    "Tempo, ação mecânica, concentração e temperatura definem o resultado.",
+    "Sequência típica: água, soda quente, água, ácido, água e sanitizante.",
+    "Soda e ácido exigem EPI completo e lava-olhos."
+   ],
+   "kind": "ficha",
+   "minutes": 6,
+   "order": 4,
+   "questions": [],
+   "status": "published",
+   "summary": "A limpeza no local de tanques, linhas e máquinas: etapas, produtos, temperaturas e os quatro fatores da limpeza.",
+   "title": "Limpeza CIP",
+   "track": "xarope",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "xar-mixer": {
+   "author": "",
+   "body": "O **mixer** (proporcionador) recebe água tratada e xarope final, mistura os dois na proporção da receita e **carbona** o produto antes de mandá-lo à enchedora. Exemplos de fabricantes: Krones (linha Contiflow), KHS, Sidel e Mojonnier.\n\n## Etapas\n1. **Desaeração da água:** a água entra num tanque sob vácuo (ou passa por uma coluna com CO₂). O oxigênio dissolvido sai, o que melhora a carbonatação, reduz espuma na enchedora e protege o sabor.\n2. **Dosagem:** medidores de vazão (mássicos ou indutivos) controlam água e xarope; válvulas de controle mantêm a proporção, por exemplo **1 parte de xarope para 4 a 6 partes de água**, conforme a bebida.\n3. **Resfriamento:** um trocador a placas com água gelada ou glicol baixa a temperatura do produto.\n4. **Carbonatação:** o CO₂ é injetado no produto (por injetor em linha ou num tanque pressurizado) e se dissolve.\n5. **Tanque de produto:** guarda o produto pronto sob pressão de CO₂ e alimenta a enchedora.\n\n## Como o CO₂ se dissolve\nA **lei de Henry** diz que a quantidade de gás dissolvido cresce com a **pressão** e diminui com a **temperatura**. Por isso a carbonatação é feita com o produto frio e sob pressão.\n\nO gás é medido em **volumes de CO₂**: um volume é a quantidade de gás que, à pressão atmosférica e 0 °C, ocupa o mesmo volume do líquido.\n\n| Bebida | Volumes de CO₂ (ordem de grandeza) |\n|---|---|\n| Água com gás leve | 2 a 3 |\n| Refrigerantes de fruta | 2,5 a 3,5 |\n| Refrigerantes de cola e água tônica | 3,5 a 4,5 |\n\n## Instrumentos em linha\n- **Brix ou densidade:** confere a proporção xarope/água.\n- **CO₂:** mede o gás dissolvido pela pressão e temperatura de equilíbrio.\n- **Oxigênio dissolvido:** acompanha a desaeração.\n\n## Segurança\n- O CO₂ é asfixiante e mais pesado que o ar: acumula em fossos e salas baixas. Áreas com tanques e cilindros de CO₂ precisam de detector e ventilação.\n- Tanques de produto e de CO₂ são vasos de pressão (NR-13).",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "O mixer desaera a água, dosa o xarope e carbona o produto.",
+    "Pela lei de Henry, mais pressão e menos temperatura dissolvem mais CO₂.",
+    "O gás é medido em volumes de CO₂.",
+    "CO₂ é asfixiante e se acumula em lugares baixos."
+   ],
+   "kind": "ficha",
+   "minutes": 8,
+   "order": 3,
+   "questions": [],
+   "status": "published",
+   "summary": "Como o mixer desaera a água, dosa o xarope na proporção certa e dissolve o CO₂ que dá o gás ao refrigerante.",
+   "title": "Mixer e carbonatador",
+   "track": "xarope",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  },
+  "xar-xaroparia": {
+   "author": "",
+   "body": "A **xaroparia** prepara o xarope que dá sabor e doçura ao refrigerante. O trabalho é feito em duas fases: primeiro o **xarope simples** (açúcar e água), depois o **xarope final** (ou composto), com o concentrado do sabor.\n\n## Xarope simples\n1. **Dissolução:** açúcar cristal e água tratada vão para um tanque com agitador. Pode ser feita a quente (mais rápida) ou a frio.\n2. **Tratamento e filtração:** carvão ativado e auxiliares de filtração removem cor e impurezas; filtros de placas, de velas ou de cartucho retêm as partículas.\n3. **Pasteurização:** o xarope passa por um trocador de calor (aquecido com vapor ou água quente) para eliminar micro-organismos.\n4. **Resfriamento:** outro trocador baixa a temperatura antes de seguir para os tanques.\n\nO xarope simples costuma ficar perto de **60 a 65 °Brix** (gramas de sólidos solúveis em 100 g de solução).\n\n## Xarope final\n- O xarope simples recebe o **concentrado** (base do sabor), ácidos, conservantes e, em alguns produtos, corantes e cafeína, na ordem definida pela fórmula.\n- A mistura é feita com agitação controlada, para não incorporar ar.\n- O lote é analisado (Brix, acidez, sabor) e liberado pelo laboratório antes de seguir para o mixer.\n\n## Partes principais\n| Equipamento | Função |\n|---|---|\n| Silo ou moega de açúcar | Recebe e dosa o açúcar |\n| Tanques de dissolução e de xarope | Inox, com agitadores e CIP |\n| Filtros | Retêm partículas e auxiliares de filtração |\n| Trocadores de calor a placas | Pasteurizam e resfriam |\n| Medidores de vazão e de Brix | Controlam a receita |\n\n## Medição de Brix\n- **Refratômetro:** mede o desvio da luz pela amostra; rápido, usado no laboratório e em linha.\n- **Densímetro:** mede a densidade, que se converte em Brix por tabela.\n\n## Segurança e higiene\n- Pó de açúcar em suspensão é **combustível**: a área de descarga precisa de exaustão e controle de fontes de ignição.\n- Tanques e linhas passam por limpeza CIP entre lotes e trocas de sabor.",
+   "createdAt": "2026-11-14T21:00:00.000Z",
+   "demo": false,
+   "history": [
+    {
+     "at": "2026-11-14T21:00:00.000Z",
+     "status": "published"
+    }
+   ],
+   "keypoints": [
+    "Xarope simples é açúcar e água; xarope final recebe o concentrado do sabor.",
+    "Filtração, pasteurização e resfriamento vêm antes da mistura.",
+    "O xarope simples fica perto de 60 a 65 °Brix.",
+    "O lote só segue para o mixer depois de liberado pelo laboratório."
+   ],
+   "kind": "ficha",
+   "minutes": 7,
+   "order": 2,
+   "questions": [],
+   "status": "published",
+   "summary": "Do açúcar ao xarope pronto: dissolução, filtração, pasteurização, resfriamento e a mistura com o concentrado.",
+   "title": "Xaroparia: xarope simples e xarope final",
+   "track": "xarope",
+   "updatedAt": "2026-11-14T21:00:00.000Z"
+  }
+ },
+ "news": {
+  "abes-ia-prioridade": {
+   "category": "Carreira e mercado",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "demo": false,
+   "further": "Estudo Mercado Brasileiro de Software, da ABES.",
+   "history": [
+    {
+     "at": "2026-10-19T00:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "impact": "As empresas querem investir em IA e agentes, mas faltam profissionais. Saber montar automações com IA já diferencia um currículo de iniciante.",
+   "keywords": [
+    "brasil",
+    "mercado",
+    "agentes",
+    "carreira"
+   ],
+   "practice": "Publique no GitHub 2 ou 3 projetos guiados do Volter e use-os como portfólio.",
+   "publishedAt": "2026-06-15",
+   "sourceName": "Convergência Digital",
+   "sourceUpdatedAt": "",
+   "status": "published",
+   "summary": "Estudo da ABES mostra que 53% dos executivos colocam IA generativa e agentes como prioridade número um de investimento para 2026. 40% das empresas já investem em agentes e 33% planejam começar em até 12 meses. A falta de profissionais especializados está entre os principais obstáculos.",
+   "title": "IA generativa e agentes viram a principal prioridade de investimento das empresas de software no Brasil",
+   "updatedAt": "2026-10-19T01:30:00.000Z",
+   "url": "https://convergenciadigital.com.br/mercado/inteligencia-artificial-ultrapassa-seguranca-e-nuvem-e-assume-1o-lugar-na-agenda-estrategica-de-empresas-nacionais/"
+  },
+  "coreia-humanoides-fabricas": {
+   "category": "IoT e robótica",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "demo": false,
+   "further": "Normas internacionais de segurança para robôs industriais e colaborativos (família ISO 10218).",
+   "history": [
+    {
+     "at": "2026-10-19T00:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "impact": "Robôs que trabalham ao lado de pessoas dependem de software de visão, controle e segurança, áreas que vão precisar de muita gente.",
+   "keywords": [
+    "robôs",
+    "humanoides",
+    "segurança",
+    "coreia"
+   ],
+   "practice": "Para entrar em robótica, comece por microcontroladores como o ESP32 e por Python.",
+   "publishedAt": "2026-10-14",
+   "sourceName": "Seoul Economic Daily",
+   "sourceUpdatedAt": "",
+   "status": "published",
+   "summary": "Um comitê do Ministério do Comércio e Indústria concedeu à fabricante Robros uma isenção para demonstração, flexibilizando regras feitas para robôs fixos, que exigem cercas de segurança. Os 20 humanoides vão atuar em quatro empresas dos setores de semicondutores, autopeças, construção naval e logística.",
+   "title": "Coreia do Sul libera 20 robôs humanoides para trabalhar ao lado de pessoas em fábricas",
+   "updatedAt": "2026-10-19T01:30:00.000Z",
+   "url": "https://en.sedaily.com/finance/2026/10/14/korea-clears-safety-rules-to-put-20-humanoid-robots-on"
+  },
+  "gemini-4-argon-app": {
+   "author": "",
+   "category": "IA e agentes",
+   "createdAt": "2026-10-19T10:06:01.000Z",
+   "demo": false,
+   "further": "Notas de versão oficiais do app Gemini (gemini.google/release-notes).",
+   "history": [
+    {
+     "at": "2026-10-19T10:06:01.000Z",
+     "status": "review"
+    }
+   ],
+   "impact": "Mostra para onde os assistentes estão indo: menos conversa e mais agentes que executam tarefas longas sozinhos. Entender esse modelo de trabalho ajuda a planejar automações e projetos com IA.",
+   "keywords": [
+    "gemini",
+    "google",
+    "agentes",
+    "assistente de ia"
+   ],
+   "practice": "Mesmo na versão gratuita do Gemini, peça uma tarefa em etapas (por exemplo, montar um plano de estudos de 4 semanas) e observe como o assistente divide e acompanha o trabalho; compare com outro assistente que você já usa.",
+   "publishedAt": "2026-10-13",
+   "sourceName": "Google (blog oficial)",
+   "sourceUpdatedAt": "",
+   "status": "review",
+   "summary": "Em 13 de outubro, o Google liberou o modelo Gemini 4 Argon no app Gemini para quem assina os planos Google AI Pro e Ultra. Segundo a empresa, as respostas ficaram mais diretas, o assistente informa melhor o andamento de tarefas longas e ganhou um modo de tarefas que continua trabalhando quando você se afasta do computador. O app também passou a se conectar a mais de 40 serviços e recebeu a interface de programação com agentes Antigravity na versão para macOS.",
+   "title": "Gemini 4 Argon chega ao app Gemini para assinantes AI Pro e Ultra",
+   "updatedAt": "2026-10-19T10:06:01.000Z",
+   "url": "https://blog.google/innovation-and-ai/products/gemini-app/gemini-4-argon-availability/"
+  },
+  "modelos-ia-outubro-2026": {
+   "category": "IA e agentes",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "demo": false,
+   "further": "O rastreador da Digital Applied é atualizado ao longo do mês com a data de cada lançamento.",
+   "history": [
+    {
+     "at": "2026-10-19T00:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "impact": "Modelos menores e abertos já rodam no próprio computador, sem pagar API e sem enviar dados para fora.",
+   "keywords": [
+    "ia",
+    "modelos",
+    "código aberto",
+    "local"
+   ],
+   "practice": "Experimente rodar um modelo aberto pequeno no seu computador com ferramentas como Ollama ou LM Studio.",
+   "publishedAt": "2026-10-01",
+   "sourceName": "Digital Applied",
+   "sourceUpdatedAt": "2026-10-16",
+   "status": "published",
+   "summary": "Entre os lançamentos do mês estão os pesos abertos do Muse Spark, da Meta, e o LFM2.5, da Liquid AI, voltado a agentes que rodam no dispositivo. Também apareceram modelos de decisão, da Cloudflare e da Amazon, que devolvem respostas com probabilidade.",
+   "title": "Outubro traz modelos de IA abertos e menores, feitos para rodar no próprio equipamento",
+   "updatedAt": "2026-10-19T01:30:00.000Z",
+   "url": "https://www.digitalapplied.com/blog/ai-model-releases-october-2026-tracker"
+  },
+  "muse-gadgets-sdk-esp32": {
+   "author": "",
+   "category": "IoT e robótica",
+   "createdAt": "2026-10-19T10:06:01.000Z",
+   "demo": false,
+   "further": "Site oficial do projeto, gadgets.muse.ai, e o repositório muse-gadget-sdk da organização facebookincubator no GitHub.",
+   "history": [
+    {
+     "at": "2026-10-19T10:06:01.000Z",
+     "status": "review"
+    }
+   ],
+   "impact": "Une duas trilhas que costumam ser estudadas separadas, IoT e agentes de IA: uma placa barata passa a funcionar como olhos, ouvidos e mãos de um assistente.",
+   "keywords": [
+    "esp32",
+    "raspberry pi",
+    "meta",
+    "agentes de ia",
+    "open source"
+   ],
+   "practice": "Abra o repositório do SDK e leia os exemplos para ESP32; mesmo sem a conta Muse, dá para estudar como o código lê sensores e envia dados, e reproduzir a ideia com uma ESP32 e outra IA.",
+   "publishedAt": "2026-10-12",
+   "sourceName": "CNX Software",
+   "sourceUpdatedAt": "",
+   "status": "review",
+   "summary": "A Meta publicou no GitHub o Muse Gadgets SDK, de código aberto (em sua maior parte sob licença Apache 2.0), para conectar placas ESP32 e computadores Linux como o Raspberry Pi ao agente de IA Muse. O kit para ESP32 cuida de tela, áudio, sensores, atuadores e botões, e o de Linux pode ser usado em tarefas como administração do sistema ou integração com o Home Assistant. Para usar é preciso um token do SDK e o app Muse em modo de desenvolvedor.",
+   "title": "Meta libera SDK aberto para ligar ESP32 e Raspberry Pi ao seu agente de IA Muse",
+   "updatedAt": "2026-10-19T10:06:01.000Z",
+   "url": "https://www.cnx-software.com/2026/10/12/facebook-releases-muse-gadgets-sdk-for-esp32-and-raspberry-pi-linux-based-devices/"
+  },
+  "n8n-agents": {
+   "category": "IA e agentes",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "demo": false,
+   "further": "Changelog oficial do n8n (docs.n8n.io/changelog).",
+   "history": [
+    {
+     "at": "2026-10-19T00:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "impact": "Dá para criar um agente útil sem escrever código, ligando planilhas, e-mail e mensagens. Ótima porta de entrada para automação com IA.",
+   "keywords": [
+    "n8n",
+    "agentes",
+    "automação",
+    "ia"
+   ],
+   "practice": "Faça o projeto guiado \"Assistente que responde com base nos seus documentos\" no Volter.",
+   "publishedAt": "2026-08-05",
+   "sourceName": "Comunidade n8n",
+   "sourceUpdatedAt": "",
+   "status": "published",
+   "summary": "Novo recurso em prévia: o agente é definido uma vez, com instruções, ferramentas e modelo, guarda memória própria e pode ser usado no chat, como etapa de um fluxo, no Slack ou por agendamento. Está em prévia no n8n Cloud a partir da versão 2.32.3 e em beta na versão auto-hospedada.",
+   "title": "n8n lança Agents: agentes de IA reutilizáveis em fluxos, chat e Slack",
+   "updatedAt": "2026-10-19T01:30:00.000Z",
+   "url": "https://community.n8n.io/t/introducing-n8n-agents-a-new-way-to-build-agents-you-set-up-once-and-use-anywhere/306323"
+  },
+  "nvidia-nemotron-3-5": {
+   "author": "",
+   "category": "Ferramentas e lançamentos",
+   "createdAt": "2026-10-19T10:06:01.000Z",
+   "demo": false,
+   "further": "Página da NVIDIA no Hugging Face, onde ficam os modelos Nemotron e suas fichas técnicas.",
+   "history": [
+    {
+     "at": "2026-10-19T10:06:01.000Z",
+     "status": "review"
+    }
+   ],
+   "impact": "Modelos com pesos abertos e versões menores permitem testar IA sem pagar por API e sem enviar dados para fora da máquina, algo útil para estudar e prototipar agentes.",
+   "keywords": [
+    "nvidia",
+    "nemotron",
+    "modelos abertos",
+    "ia local",
+    "hugging face"
+   ],
+   "practice": "Instale o Ollama ou o LM Studio e experimente um modelo aberto pequeno no seu computador; quando o Bolt E4B sair, compare as respostas com as de um assistente online.",
+   "publishedAt": "2026-10-15",
+   "sourceName": "Interesting Engineering",
+   "sourceUpdatedAt": "",
+   "status": "review",
+   "summary": "Em 15 de outubro, a NVIDIA apresentou novos modelos abertos da família Nemotron 3.5. O Super VL tem 120 bilhões de parâmetros (12 bilhões ativos) e entende texto, documentos, imagens e vídeo. O Bolt 74B-A9B foi comprimido para caber em 24 GB de memória e já está no Hugging Face, e o Bolt E4B, de 4 GB e pensado para agentes de conversa, tem chegada prevista para 23 de outubro.",
+   "title": "NVIDIA lança modelos abertos Nemotron 3.5, incluindo versões que rodam no próprio computador",
+   "updatedAt": "2026-10-19T10:06:01.000Z",
+   "url": "https://interestingengineering.com/ai-robotics/nvidia-nemotron-35-super-vl-5x-faster"
+  },
+  "python-3-15": {
+   "category": "Programação e web",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "demo": false,
+   "further": "Resumo mensal de outubro de 2026 da Real Python, com o ciclo de lançamento e outras novidades do ecossistema (realpython.com).",
+   "history": [
+    {
+     "at": "2026-10-19T00:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "impact": "Para quem está começando, vale aprender direto na versão nova: as mensagens de erro estão mais claras e o UTF-8 padrão evita problemas com acentos.",
+   "keywords": [
+    "python",
+    "jit",
+    "lançamento",
+    "programação"
+   ],
+   "practice": "Instale o Python 3.15 pelo site python.org e rode os exemplos da trilha de Programação do Volter.",
+   "publishedAt": "2026-10-09",
+   "sourceName": "Phoronix",
+   "sourceUpdatedAt": "",
+   "status": "published",
+   "summary": "A versão anual do Python saiu em 9 de outubro. O compilador JIT, ainda experimental, ficou cerca de 7 a 8% mais rápido no Linux x86-64. A versão traz importações preguiçosas (lazy imports), o tipo frozendict embutido e UTF-8 como codificação padrão.",
+   "title": "Python 3.15 é lançado com compilador JIT mais rápido e UTF-8 como padrão",
+   "updatedAt": "2026-10-19T01:30:00.000Z",
+   "url": "https://phoronix.com/news/Python-3.15-Released"
+  },
+  "samsung-ocean-outubro-2026": {
+   "author": "",
+   "category": "Carreira e mercado",
+   "createdAt": "2026-10-19T10:06:01.000Z",
+   "demo": false,
+   "further": "Agenda completa no portal oficial do Samsung Ocean (oceanbrasil.com).",
+   "history": [
+    {
+     "at": "2026-10-19T10:06:01.000Z",
+     "status": "review"
+    }
+   ],
+   "impact": "São aulas curtas, gratuitas e com certificado, nos mesmos temas das trilhas do Volter, o que ajuda a praticar com instrutores e a montar currículo.",
+   "keywords": [
+    "cursos gratuitos",
+    "samsung ocean",
+    "python",
+    "iot",
+    "certificado"
+   ],
+   "practice": "Acesse oceanbrasil.com ou o app do Samsung Ocean, escolha uma aula online desta semana (como o chatbot em Python) e inscreva-se enquanto houver vagas.",
+   "publishedAt": "2026-10-14",
+   "sourceName": "Samsung Newsroom Brasil",
+   "sourceUpdatedAt": "",
+   "status": "review",
+   "summary": "O Samsung Ocean divulgou em 14 de outubro a agenda gratuita da segunda metade do mês, com aulas online e presenciais em Brasília e Manaus. Entre os destaques estão um chatbot em Python (20 e 21/10), introdução à IoT (16/10), consultas SQL com Python (29 e 30/10 em Manaus) e IA para saúde digital (30/10). É preciso ter 18 anos ou mais, e quem conclui recebe certificado.",
+   "title": "Samsung Ocean abre cursos gratuitos de IA, Python, IoT e Android na segunda quinzena de outubro",
+   "updatedAt": "2026-10-19T10:06:01.000Z",
+   "url": "https://news.samsung.com/br/samsung-ocean-oferece-cursos-gratuitos-de-tecnologia-na-segunda-quinzena-de-outubro"
+  },
+  "siemens-eigen-tia-portal": {
+   "category": "IA e agentes",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "demo": false,
+   "further": "Página do Eigen Engineering Agent no portfólio Siemens Xcelerator.",
+   "history": [
+    {
+     "at": "2026-10-19T00:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "impact": "Agentes que montam projetos inteiros a partir de uma descrição mostram para onde a programação está indo: descrever bem o que se quer e revisar o resultado com cuidado.",
+   "keywords": [
+    "siemens",
+    "tia portal",
+    "clp",
+    "agente",
+    "ia"
+   ],
+   "practice": "Treine escrever especificações claras e completas. Elas viram o prompt dos agentes de código.",
+   "publishedAt": "2026-06-17",
+   "sourceName": "Siemens (comunicado à imprensa)",
+   "sourceUpdatedAt": "",
+   "status": "published",
+   "summary": "O Eigen Engineering Agent, lançado na Hannover Messe 2026, ganhou duas funções: ler projetos elétricos em XML/AML e gerar tags de CLP a partir da topologia de hardware, e criar um projeto completo no padrão Siemens Automation Framework a partir de uma descrição em linguagem natural. A Siemens diz que mais de 100 empresas em 19 países usam o agente.",
+   "title": "Siemens amplia agente de IA que monta projetos no TIA Portal a partir de texto",
+   "updatedAt": "2026-10-19T01:30:00.000Z",
+   "url": "https://press.siemens.com/global/en/pressrelease/siemens-takes-ai-physical-world-next-level-two-new-eigen-engineering-agent"
+  },
+  "tiobe-outubro-2026": {
+   "category": "Programação e web",
+   "createdAt": "2026-10-19T00:30:00.000Z",
+   "demo": false,
+   "further": "O índice completo é publicado mensalmente no site da TIOBE (tiobe.com).",
+   "history": [
+    {
+     "at": "2026-10-19T00:30:00.000Z",
+     "status": "published"
+    }
+   ],
+   "impact": "Python segue no topo, o que o torna a escolha mais segura para a primeira linguagem. C e Rust continuam fortes em dispositivos e sistemas.",
+   "keywords": [
+    "tiobe",
+    "linguagens",
+    "python",
+    "c",
+    "rust"
+   ],
+   "practice": "Comece por Python. Depois, escolha JavaScript se quiser web ou C se quiser IoT e eletrônica.",
+   "publishedAt": "2026-10-12",
+   "sourceName": "TechRepublic",
+   "sourceUpdatedAt": "",
+   "status": "published",
+   "summary": "Python aparece com 19,23%, seguido de C (11,33%), C++ (8,87%) e Java (8,41%). Rust está em 10º lugar pelo quarto mês seguido. O TIOBE passou a contar buscas em mandarim, o que pode explicar parte das variações.",
+   "title": "Índice TIOBE de outubro: Python lidera, C cresce e Rust segue no top 10",
+   "updatedAt": "2026-10-19T01:30:00.000Z",
+   "url": "https://www.techrepublic.com/article/news-tiobe-october-2026-java-closes-cpp-gap/"
   }
  },
  "projects": {
@@ -7306,457 +8783,6 @@ window.VOLTER_SEED = {
    ],
    "track": "instalacoes",
    "updatedAt": "2026-11-10T00:30:00.000Z"
-  }
- },
- "news": {
-  "abes-ia-prioridade": {
-   "category": "Carreira e mercado",
-   "createdAt": "2026-10-19T00:30:00.000Z",
-   "demo": false,
-   "further": "Estudo Mercado Brasileiro de Software, da ABES.",
-   "history": [
-    {
-     "at": "2026-10-19T00:30:00.000Z",
-     "status": "published"
-    }
-   ],
-   "impact": "As empresas querem investir em IA e agentes, mas faltam profissionais. Saber montar automações com IA já diferencia um currículo de iniciante.",
-   "keywords": [
-    "brasil",
-    "mercado",
-    "agentes",
-    "carreira"
-   ],
-   "practice": "Publique no GitHub 2 ou 3 projetos guiados do Volter e use-os como portfólio.",
-   "publishedAt": "2026-06-15",
-   "sourceName": "Convergência Digital",
-   "sourceUpdatedAt": "",
-   "status": "published",
-   "summary": "Estudo da ABES mostra que 53% dos executivos colocam IA generativa e agentes como prioridade número um de investimento para 2026. 40% das empresas já investem em agentes e 33% planejam começar em até 12 meses. A falta de profissionais especializados está entre os principais obstáculos.",
-   "title": "IA generativa e agentes viram a principal prioridade de investimento das empresas de software no Brasil",
-   "updatedAt": "2026-10-19T01:30:00.000Z",
-   "url": "https://convergenciadigital.com.br/mercado/inteligencia-artificial-ultrapassa-seguranca-e-nuvem-e-assume-1o-lugar-na-agenda-estrategica-de-empresas-nacionais/"
-  },
-  "coreia-humanoides-fabricas": {
-   "category": "IoT e robótica",
-   "createdAt": "2026-10-19T00:30:00.000Z",
-   "demo": false,
-   "further": "Normas internacionais de segurança para robôs industriais e colaborativos (família ISO 10218).",
-   "history": [
-    {
-     "at": "2026-10-19T00:30:00.000Z",
-     "status": "published"
-    }
-   ],
-   "impact": "Robôs que trabalham ao lado de pessoas dependem de software de visão, controle e segurança, áreas que vão precisar de muita gente.",
-   "keywords": [
-    "robôs",
-    "humanoides",
-    "segurança",
-    "coreia"
-   ],
-   "practice": "Para entrar em robótica, comece por microcontroladores como o ESP32 e por Python.",
-   "publishedAt": "2026-10-14",
-   "sourceName": "Seoul Economic Daily",
-   "sourceUpdatedAt": "",
-   "status": "published",
-   "summary": "Um comitê do Ministério do Comércio e Indústria concedeu à fabricante Robros uma isenção para demonstração, flexibilizando regras feitas para robôs fixos, que exigem cercas de segurança. Os 20 humanoides vão atuar em quatro empresas dos setores de semicondutores, autopeças, construção naval e logística.",
-   "title": "Coreia do Sul libera 20 robôs humanoides para trabalhar ao lado de pessoas em fábricas",
-   "updatedAt": "2026-10-19T01:30:00.000Z",
-   "url": "https://en.sedaily.com/finance/2026/10/14/korea-clears-safety-rules-to-put-20-humanoid-robots-on"
-  },
-  "gemini-4-argon-app": {
-   "author": "",
-   "category": "IA e agentes",
-   "createdAt": "2026-10-19T10:06:01.000Z",
-   "demo": false,
-   "further": "Notas de versão oficiais do app Gemini (gemini.google/release-notes).",
-   "history": [
-    {
-     "at": "2026-10-19T10:06:01.000Z",
-     "status": "review"
-    }
-   ],
-   "impact": "Mostra para onde os assistentes estão indo: menos conversa e mais agentes que executam tarefas longas sozinhos. Entender esse modelo de trabalho ajuda a planejar automações e projetos com IA.",
-   "keywords": [
-    "gemini",
-    "google",
-    "agentes",
-    "assistente de ia"
-   ],
-   "practice": "Mesmo na versão gratuita do Gemini, peça uma tarefa em etapas (por exemplo, montar um plano de estudos de 4 semanas) e observe como o assistente divide e acompanha o trabalho; compare com outro assistente que você já usa.",
-   "publishedAt": "2026-10-13",
-   "sourceName": "Google (blog oficial)",
-   "sourceUpdatedAt": "",
-   "status": "review",
-   "summary": "Em 13 de outubro, o Google liberou o modelo Gemini 4 Argon no app Gemini para quem assina os planos Google AI Pro e Ultra. Segundo a empresa, as respostas ficaram mais diretas, o assistente informa melhor o andamento de tarefas longas e ganhou um modo de tarefas que continua trabalhando quando você se afasta do computador. O app também passou a se conectar a mais de 40 serviços e recebeu a interface de programação com agentes Antigravity na versão para macOS.",
-   "title": "Gemini 4 Argon chega ao app Gemini para assinantes AI Pro e Ultra",
-   "updatedAt": "2026-10-19T10:06:01.000Z",
-   "url": "https://blog.google/innovation-and-ai/products/gemini-app/gemini-4-argon-availability/"
-  },
-  "modelos-ia-outubro-2026": {
-   "category": "IA e agentes",
-   "createdAt": "2026-10-19T00:30:00.000Z",
-   "demo": false,
-   "further": "O rastreador da Digital Applied é atualizado ao longo do mês com a data de cada lançamento.",
-   "history": [
-    {
-     "at": "2026-10-19T00:30:00.000Z",
-     "status": "published"
-    }
-   ],
-   "impact": "Modelos menores e abertos já rodam no próprio computador, sem pagar API e sem enviar dados para fora.",
-   "keywords": [
-    "ia",
-    "modelos",
-    "código aberto",
-    "local"
-   ],
-   "practice": "Experimente rodar um modelo aberto pequeno no seu computador com ferramentas como Ollama ou LM Studio.",
-   "publishedAt": "2026-10-01",
-   "sourceName": "Digital Applied",
-   "sourceUpdatedAt": "2026-10-16",
-   "status": "published",
-   "summary": "Entre os lançamentos do mês estão os pesos abertos do Muse Spark, da Meta, e o LFM2.5, da Liquid AI, voltado a agentes que rodam no dispositivo. Também apareceram modelos de decisão, da Cloudflare e da Amazon, que devolvem respostas com probabilidade.",
-   "title": "Outubro traz modelos de IA abertos e menores, feitos para rodar no próprio equipamento",
-   "updatedAt": "2026-10-19T01:30:00.000Z",
-   "url": "https://www.digitalapplied.com/blog/ai-model-releases-october-2026-tracker"
-  },
-  "muse-gadgets-sdk-esp32": {
-   "author": "",
-   "category": "IoT e robótica",
-   "createdAt": "2026-10-19T10:06:01.000Z",
-   "demo": false,
-   "further": "Site oficial do projeto, gadgets.muse.ai, e o repositório muse-gadget-sdk da organização facebookincubator no GitHub.",
-   "history": [
-    {
-     "at": "2026-10-19T10:06:01.000Z",
-     "status": "review"
-    }
-   ],
-   "impact": "Une duas trilhas que costumam ser estudadas separadas, IoT e agentes de IA: uma placa barata passa a funcionar como olhos, ouvidos e mãos de um assistente.",
-   "keywords": [
-    "esp32",
-    "raspberry pi",
-    "meta",
-    "agentes de ia",
-    "open source"
-   ],
-   "practice": "Abra o repositório do SDK e leia os exemplos para ESP32; mesmo sem a conta Muse, dá para estudar como o código lê sensores e envia dados, e reproduzir a ideia com uma ESP32 e outra IA.",
-   "publishedAt": "2026-10-12",
-   "sourceName": "CNX Software",
-   "sourceUpdatedAt": "",
-   "status": "review",
-   "summary": "A Meta publicou no GitHub o Muse Gadgets SDK, de código aberto (em sua maior parte sob licença Apache 2.0), para conectar placas ESP32 e computadores Linux como o Raspberry Pi ao agente de IA Muse. O kit para ESP32 cuida de tela, áudio, sensores, atuadores e botões, e o de Linux pode ser usado em tarefas como administração do sistema ou integração com o Home Assistant. Para usar é preciso um token do SDK e o app Muse em modo de desenvolvedor.",
-   "title": "Meta libera SDK aberto para ligar ESP32 e Raspberry Pi ao seu agente de IA Muse",
-   "updatedAt": "2026-10-19T10:06:01.000Z",
-   "url": "https://www.cnx-software.com/2026/10/12/facebook-releases-muse-gadgets-sdk-for-esp32-and-raspberry-pi-linux-based-devices/"
-  },
-  "n8n-agents": {
-   "category": "IA e agentes",
-   "createdAt": "2026-10-19T00:30:00.000Z",
-   "demo": false,
-   "further": "Changelog oficial do n8n (docs.n8n.io/changelog).",
-   "history": [
-    {
-     "at": "2026-10-19T00:30:00.000Z",
-     "status": "published"
-    }
-   ],
-   "impact": "Dá para criar um agente útil sem escrever código, ligando planilhas, e-mail e mensagens. Ótima porta de entrada para automação com IA.",
-   "keywords": [
-    "n8n",
-    "agentes",
-    "automação",
-    "ia"
-   ],
-   "practice": "Faça o projeto guiado \"Assistente que responde com base nos seus documentos\" no Volter.",
-   "publishedAt": "2026-08-05",
-   "sourceName": "Comunidade n8n",
-   "sourceUpdatedAt": "",
-   "status": "published",
-   "summary": "Novo recurso em prévia: o agente é definido uma vez, com instruções, ferramentas e modelo, guarda memória própria e pode ser usado no chat, como etapa de um fluxo, no Slack ou por agendamento. Está em prévia no n8n Cloud a partir da versão 2.32.3 e em beta na versão auto-hospedada.",
-   "title": "n8n lança Agents: agentes de IA reutilizáveis em fluxos, chat e Slack",
-   "updatedAt": "2026-10-19T01:30:00.000Z",
-   "url": "https://community.n8n.io/t/introducing-n8n-agents-a-new-way-to-build-agents-you-set-up-once-and-use-anywhere/306323"
-  },
-  "nvidia-nemotron-3-5": {
-   "author": "",
-   "category": "Ferramentas e lançamentos",
-   "createdAt": "2026-10-19T10:06:01.000Z",
-   "demo": false,
-   "further": "Página da NVIDIA no Hugging Face, onde ficam os modelos Nemotron e suas fichas técnicas.",
-   "history": [
-    {
-     "at": "2026-10-19T10:06:01.000Z",
-     "status": "review"
-    }
-   ],
-   "impact": "Modelos com pesos abertos e versões menores permitem testar IA sem pagar por API e sem enviar dados para fora da máquina, algo útil para estudar e prototipar agentes.",
-   "keywords": [
-    "nvidia",
-    "nemotron",
-    "modelos abertos",
-    "ia local",
-    "hugging face"
-   ],
-   "practice": "Instale o Ollama ou o LM Studio e experimente um modelo aberto pequeno no seu computador; quando o Bolt E4B sair, compare as respostas com as de um assistente online.",
-   "publishedAt": "2026-10-15",
-   "sourceName": "Interesting Engineering",
-   "sourceUpdatedAt": "",
-   "status": "review",
-   "summary": "Em 15 de outubro, a NVIDIA apresentou novos modelos abertos da família Nemotron 3.5. O Super VL tem 120 bilhões de parâmetros (12 bilhões ativos) e entende texto, documentos, imagens e vídeo. O Bolt 74B-A9B foi comprimido para caber em 24 GB de memória e já está no Hugging Face, e o Bolt E4B, de 4 GB e pensado para agentes de conversa, tem chegada prevista para 23 de outubro.",
-   "title": "NVIDIA lança modelos abertos Nemotron 3.5, incluindo versões que rodam no próprio computador",
-   "updatedAt": "2026-10-19T10:06:01.000Z",
-   "url": "https://interestingengineering.com/ai-robotics/nvidia-nemotron-35-super-vl-5x-faster"
-  },
-  "python-3-15": {
-   "category": "Programação e web",
-   "createdAt": "2026-10-19T00:30:00.000Z",
-   "demo": false,
-   "further": "Resumo mensal de outubro de 2026 da Real Python, com o ciclo de lançamento e outras novidades do ecossistema (realpython.com).",
-   "history": [
-    {
-     "at": "2026-10-19T00:30:00.000Z",
-     "status": "published"
-    }
-   ],
-   "impact": "Para quem está começando, vale aprender direto na versão nova: as mensagens de erro estão mais claras e o UTF-8 padrão evita problemas com acentos.",
-   "keywords": [
-    "python",
-    "jit",
-    "lançamento",
-    "programação"
-   ],
-   "practice": "Instale o Python 3.15 pelo site python.org e rode os exemplos da trilha de Programação do Volter.",
-   "publishedAt": "2026-10-09",
-   "sourceName": "Phoronix",
-   "sourceUpdatedAt": "",
-   "status": "published",
-   "summary": "A versão anual do Python saiu em 9 de outubro. O compilador JIT, ainda experimental, ficou cerca de 7 a 8% mais rápido no Linux x86-64. A versão traz importações preguiçosas (lazy imports), o tipo frozendict embutido e UTF-8 como codificação padrão.",
-   "title": "Python 3.15 é lançado com compilador JIT mais rápido e UTF-8 como padrão",
-   "updatedAt": "2026-10-19T01:30:00.000Z",
-   "url": "https://phoronix.com/news/Python-3.15-Released"
-  },
-  "samsung-ocean-outubro-2026": {
-   "author": "",
-   "category": "Carreira e mercado",
-   "createdAt": "2026-10-19T10:06:01.000Z",
-   "demo": false,
-   "further": "Agenda completa no portal oficial do Samsung Ocean (oceanbrasil.com).",
-   "history": [
-    {
-     "at": "2026-10-19T10:06:01.000Z",
-     "status": "review"
-    }
-   ],
-   "impact": "São aulas curtas, gratuitas e com certificado, nos mesmos temas das trilhas do Volter, o que ajuda a praticar com instrutores e a montar currículo.",
-   "keywords": [
-    "cursos gratuitos",
-    "samsung ocean",
-    "python",
-    "iot",
-    "certificado"
-   ],
-   "practice": "Acesse oceanbrasil.com ou o app do Samsung Ocean, escolha uma aula online desta semana (como o chatbot em Python) e inscreva-se enquanto houver vagas.",
-   "publishedAt": "2026-10-14",
-   "sourceName": "Samsung Newsroom Brasil",
-   "sourceUpdatedAt": "",
-   "status": "review",
-   "summary": "O Samsung Ocean divulgou em 14 de outubro a agenda gratuita da segunda metade do mês, com aulas online e presenciais em Brasília e Manaus. Entre os destaques estão um chatbot em Python (20 e 21/10), introdução à IoT (16/10), consultas SQL com Python (29 e 30/10 em Manaus) e IA para saúde digital (30/10). É preciso ter 18 anos ou mais, e quem conclui recebe certificado.",
-   "title": "Samsung Ocean abre cursos gratuitos de IA, Python, IoT e Android na segunda quinzena de outubro",
-   "updatedAt": "2026-10-19T10:06:01.000Z",
-   "url": "https://news.samsung.com/br/samsung-ocean-oferece-cursos-gratuitos-de-tecnologia-na-segunda-quinzena-de-outubro"
-  },
-  "siemens-eigen-tia-portal": {
-   "category": "IA e agentes",
-   "createdAt": "2026-10-19T00:30:00.000Z",
-   "demo": false,
-   "further": "Página do Eigen Engineering Agent no portfólio Siemens Xcelerator.",
-   "history": [
-    {
-     "at": "2026-10-19T00:30:00.000Z",
-     "status": "published"
-    }
-   ],
-   "impact": "Agentes que montam projetos inteiros a partir de uma descrição mostram para onde a programação está indo: descrever bem o que se quer e revisar o resultado com cuidado.",
-   "keywords": [
-    "siemens",
-    "tia portal",
-    "clp",
-    "agente",
-    "ia"
-   ],
-   "practice": "Treine escrever especificações claras e completas. Elas viram o prompt dos agentes de código.",
-   "publishedAt": "2026-06-17",
-   "sourceName": "Siemens (comunicado à imprensa)",
-   "sourceUpdatedAt": "",
-   "status": "published",
-   "summary": "O Eigen Engineering Agent, lançado na Hannover Messe 2026, ganhou duas funções: ler projetos elétricos em XML/AML e gerar tags de CLP a partir da topologia de hardware, e criar um projeto completo no padrão Siemens Automation Framework a partir de uma descrição em linguagem natural. A Siemens diz que mais de 100 empresas em 19 países usam o agente.",
-   "title": "Siemens amplia agente de IA que monta projetos no TIA Portal a partir de texto",
-   "updatedAt": "2026-10-19T01:30:00.000Z",
-   "url": "https://press.siemens.com/global/en/pressrelease/siemens-takes-ai-physical-world-next-level-two-new-eigen-engineering-agent"
-  },
-  "tiobe-outubro-2026": {
-   "category": "Programação e web",
-   "createdAt": "2026-10-19T00:30:00.000Z",
-   "demo": false,
-   "further": "O índice completo é publicado mensalmente no site da TIOBE (tiobe.com).",
-   "history": [
-    {
-     "at": "2026-10-19T00:30:00.000Z",
-     "status": "published"
-    }
-   ],
-   "impact": "Python segue no topo, o que o torna a escolha mais segura para a primeira linguagem. C e Rust continuam fortes em dispositivos e sistemas.",
-   "keywords": [
-    "tiobe",
-    "linguagens",
-    "python",
-    "c",
-    "rust"
-   ],
-   "practice": "Comece por Python. Depois, escolha JavaScript se quiser web ou C se quiser IoT e eletrônica.",
-   "publishedAt": "2026-10-12",
-   "sourceName": "TechRepublic",
-   "sourceUpdatedAt": "",
-   "status": "published",
-   "summary": "Python aparece com 19,23%, seguido de C (11,33%), C++ (8,87%) e Java (8,41%). Rust está em 10º lugar pelo quarto mês seguido. O TIOBE passou a contar buscas em mandarim, o que pode explicar parte das variações.",
-   "title": "Índice TIOBE de outubro: Python lidera, C cresce e Rust segue no top 10",
-   "updatedAt": "2026-10-19T01:30:00.000Z",
-   "url": "https://www.techrepublic.com/article/news-tiobe-october-2026-java-closes-cpp-gap/"
-  }
- },
- "books": {
-  "agentes-de-ia-albada": {
-   "area": "IA e agentes",
-   "authors": "Michael Albada",
-   "createdAt": "2026-10-19T00:30:00.000Z",
-   "demo": false,
-   "history": [
-    {
-     "at": "2026-10-19T00:30:00.000Z",
-     "status": "published"
-    }
-   ],
-   "isbn": "978-85-7522-990-3",
-   "language": "Português",
-   "level": "Intermediário",
-   "pages": 360,
-   "publisher": "Novatec",
-   "status": "published",
-   "subtitle": "Projeto e implementação de sistemas multiagentes",
-   "summary": "Guia prático sobre como projetar agentes de IA: ferramentas, memória, RAG, orquestração, passagem de um agente para vários, avaliação, monitoramento em produção, segurança e colaboração entre pessoas e agentes.",
-   "title": "Construindo Aplicações com Agentes de IA",
-   "updatedAt": "2026-10-19T01:30:00.000Z",
-   "url": "https://novatec.com.br/livros/construindo-aplicacoes-com-agentes-IA/",
-   "urlLabel": "Ver na Novatec",
-   "why": "Aprofunda a parte de agentes: ferramentas, memória, avaliação e como manter uma pessoa no controle das ações importantes.",
-   "year": 2026
-  },
-  "engenharia-de-ia": {
-   "area": "IA e agentes",
-   "authors": "Chip Huyen",
-   "createdAt": "2026-10-19T00:30:00.000Z",
-   "demo": false,
-   "history": [
-    {
-     "at": "2026-10-19T00:30:00.000Z",
-     "status": "published"
-    }
-   ],
-   "isbn": "978-85-7522-996-5",
-   "language": "Português",
-   "level": "Intermediário",
-   "pages": 488,
-   "publisher": "Novatec",
-   "status": "published",
-   "subtitle": "Construindo aplicações com modelos de fundação",
-   "summary": "Explica como criar aplicações em cima de modelos de IA já prontos: engenharia de prompt, RAG, ajuste fino, agentes, avaliação dos resultados e custo e tempo de resposta. Edição brasileira do livro mais citado sobre o tema.",
-   "title": "Engenharia de IA",
-   "updatedAt": "2026-10-19T01:30:00.000Z",
-   "url": "https://novatec.com.br/livros/engenharia-de-ia/",
-   "urlLabel": "Ver na Novatec",
-   "why": "O guia mais completo para quem quer construir aplicações com IA, e não só usar o chat. Boa leitura depois da trilha de IA.",
-   "year": 2026
-  },
-  "hands-on-llms": {
-   "area": "IA e agentes",
-   "authors": "Jay Alammar e Maarten Grootendorst",
-   "createdAt": "2026-10-19T00:30:00.000Z",
-   "demo": false,
-   "history": [
-    {
-     "at": "2026-10-19T00:30:00.000Z",
-     "status": "published"
-    }
-   ],
-   "isbn": "",
-   "language": "Inglês",
-   "level": "Iniciante",
-   "pages": "",
-   "publisher": "O'Reilly",
-   "status": "published",
-   "subtitle": "Language understanding and generation",
-   "summary": "Introdução muito visual ao funcionamento dos modelos de linguagem: embeddings, busca semântica, classificação e geração de texto, com muitos diagramas.",
-   "title": "Hands-On Large Language Models",
-   "updatedAt": "2026-10-19T01:30:00.000Z",
-   "url": "https://www.kdnuggets.com/5-best-books-for-building-agentic-ai-systems-in-2026",
-   "urlLabel": "Ver indicação (KDnuggets)",
-   "why": "Cheio de diagramas, é uma ótima segunda leitura depois da lição sobre modelos de linguagem.",
-   "year": 2024
-  },
-  "llm-engineers-handbook": {
-   "area": "IA e agentes",
-   "authors": "Paul Iusztin e Maxime Labonne",
-   "createdAt": "2026-10-19T00:30:00.000Z",
-   "demo": false,
-   "history": [
-    {
-     "at": "2026-10-19T00:30:00.000Z",
-     "status": "published"
-    }
-   ],
-   "isbn": "",
-   "language": "Inglês",
-   "level": "Avançado",
-   "pages": "",
-   "publisher": "Packt",
-   "status": "published",
-   "subtitle": "",
-   "summary": "Cobre o caminho completo para colocar uma aplicação de IA em produção: ajuste fino, RAG, pipelines, monitoramento e confiabilidade.",
-   "title": "LLM Engineer's Handbook",
-   "updatedAt": "2026-10-19T01:30:00.000Z",
-   "url": "https://www.kdnuggets.com/5-best-books-for-building-agentic-ai-systems-in-2026",
-   "urlLabel": "Ver indicação (KDnuggets)",
-   "why": "Para quando um projeto de IA precisa funcionar todos os dias, com testes, monitoramento e confiabilidade.",
-   "year": 2024
-  },
-  "llm-from-scratch-raschka": {
-   "area": "IA e agentes",
-   "authors": "Sebastian Raschka",
-   "createdAt": "2026-10-19T00:30:00.000Z",
-   "demo": false,
-   "history": [
-    {
-     "at": "2026-10-19T00:30:00.000Z",
-     "status": "published"
-    }
-   ],
-   "isbn": "",
-   "language": "Inglês",
-   "level": "Avançado",
-   "pages": 368,
-   "publisher": "Manning",
-   "status": "published",
-   "subtitle": "",
-   "summary": "Constrói passo a passo um modelo de linguagem no estilo GPT em Python: atenção, arquitetura transformer, pré-treino e ajuste fino para classificação e para seguir instruções.",
-   "title": "Build a Large Language Model (From Scratch)",
-   "updatedAt": "2026-10-19T01:30:00.000Z",
-   "url": "https://oreilly.com/library/view/build-a-large/9781633437166",
-   "urlLabel": "Ver na O'Reilly",
-   "why": "Para entender o que acontece dentro de um modelo de linguagem, escrevendo cada parte em Python. Exige Python intermediário.",
-   "year": 2024
   }
  }
 };

@@ -1,43 +1,37 @@
 # Volter
 
-**IA prática para quem trabalha.**
+**Arquivo de conhecimento técnico.**
 
-O Volter é uma plataforma para quem quer usar IA e tecnologia no trabalho. Cada curso termina com algo pronto para usar, e no **Laboratório** você pratica investigando problemas que acontecem de verdade: um chatbot que inventa respostas, uma página que mostra `undefined`, um painel com números errados.
+O Volter reúne, organizado por assunto, o conhecimento de mais de 30 anos em eletrônica, elétrica industrial, automação de linhas de produção e equipamentos odontológicos, junto com informática, programação e IA. Cada assunto tem temas; cada tema tem artigos e **fichas de equipamento**.
 
-## Trilhas
+## Assuntos
 
-| Trilha | O que você aprende |
+| Assunto | Temas |
 |---|---|
-| **IA no Trabalho** | ChatGPT, Claude e Gemini no dia a dia: prompts, documentos, planilhas e pesquisa com fontes conferidas |
-| **Agentes e Automação** | n8n, WhatsApp, APIs de IA e agentes que executam tarefas |
-| **Programação com IA** | Lógica, Python e web com a IA como tutora, até um app instalável |
-| **Dados e Decisão** | Planilhas, SQL e dashboards para decidir com números |
-| **IA por Profissão** | IA aplicada a pequenos negócios, RH, educação, saúde e profissões técnicas |
-| **Segurança e Uso Responsável** | Golpes, deepfakes, LGPD e regras para usar IA com dados da empresa |
+| **Eletrônica** | Fundamentos de eletricidade · Eletrônica analógica e digital · Microcontroladores e IoT |
+| **Elétrica industrial e comandos** | Motores e comandos elétricos · CLP, inversores e redes industriais · Instalações elétricas residenciais |
+| **Linha de produção** | Água, xarope e carbonatação · Sopro, envase e rotulagem · Paletização · Robôs KUKA e programação KRL · Utilidades industriais |
+| **Equipamentos odontológicos** | Consultório odontológico · Esterilização e biossegurança · Ar comprimido e sucção |
+| **Informática** | Hardware de computadores · Windows · Linux · Apple: Mac e macOS · Primeiros passos no digital · Ferramentas do trabalho moderno |
+| **Programação** | Programação com IA · Dados e Decisão · Recomeço em tecnologia |
+| **Inteligência artificial** | IA no Trabalho · IA no dia a dia · Agentes e Automação · Projetos com IA · Segurança e Uso Responsável |
 
-Duas abas têm trilhas próprias, feitas em sequência (etapa 1, 2, 3…) e com temas numerados dentro de cada etapa:
+Os assuntos ficam em `AREAS` e os temas em `TRACKS`, no `fonte/src/volter.html` (o campo `area` diz a qual assunto o tema pertence; `plan` lista os temas ainda a escrever).
 
-| Aba | Etapas |
-|---|---|
-| **Elétrica, Eletrônica e Hardware** | 1. Fundamentos de eletricidade · 2. Instalações elétricas residenciais · 3. Eletrônica básica · 4. Hardware de computadores · 5. Microcontroladores e IoT · 6. Comandos elétricos e automação |
+## Fichas de equipamento
 
-Os cursos que ainda não têm lições aparecem no app como **Em breve**. A lista completa está em [`docs/grade-de-temas.md`](docs/grade-de-temas.md) e, no app, no campo `plan` de cada trilha (`TRACKS` no `index.html`); o campo `area` diz em qual aba a trilha fica.
-
-### Planejamento de cursos
-
-A grade de temas em [`docs/grade-de-temas.md`](docs/grade-de-temas.md) define o rumo do Volter: público inicial (profissionais que querem usar IA no trabalho), venda de cursos avulsos e pacotes para empresas (sem assinatura), seis trilhas com 26 cursos e a ordem de lançamento. Ela também mostra como as trilhas atuais se encaixam na nova grade.
+As fichas seguem sempre as mesmas seções: **para que serve**, **como funciona**, **partes principais**, **dados técnicos típicos** e **segurança e normas**. No editor de conteúdo, o campo **Tipo** marca um artigo como ficha.
 
 ## O que tem no app
 
 | Área | O que faz |
 |---|---|
-| **Início** | Blocos por área de estudo, com as etapas de cada uma, "continue de onde parou" e atalhos para a Linha de envase, os Simuladores, a busca e os salvos |
-| **Trilhas** | Lições curtas com blocos de código, tabelas e simuladores |
-| **Linha de envase** | Projeto e escopo de uma linha de envase completa: mapa da planta, setores, blocos de cada máquina com o seu escopo, interligações e exportação |
-| **Simuladores** | Todos os simuladores interativos num só lugar, separados por etapa |
-| **Elétrica e Hardware** | Trilhas em etapas de eletricidade, instalações, eletrônica, hardware, IoT e automação, com 27 lições de elétrica e eletrônica um curso de programação de robôs em KRL com prática no Korum e a etapa de processos da linha de envase (sopradora), e simuladores interativos (previsão de cargas, dimensionamento de circuito, moldagem por estiramento e sopro, lei de Ohm, divisor de tensão, capacitor, 555, portas lógicas, retificador, transistor com sensor, amplificador, sistema trifásico, partida de motor e paquímetro) |
-| **Editor de conteúdo** | Formulários para criar, revisar e publicar desafios, lições, projetos e livros; cada lição pode ganhar um dos simuladores |
-
+| **Início** | Um cartão por assunto, com os temas e a quantidade de artigos |
+| **Assuntos** | Página de cada assunto com os temas e a lista de artigos e fichas |
+| **Simuladores** | Todos os simuladores interativos num só lugar, separados por família |
+| **Projeto da linha de envase** | Mapa da planta, blocos de cada máquina com o seu escopo, interligações e exportação |
+| **Buscar e Salvos** | Busca em todo o arquivo e itens salvos |
+| **Editor de conteúdo** | Formulários para criar, revisar e publicar artigos e fichas; cada artigo pode ganhar um simulador |
 
 ## Instalar no computador (Windows e Mac)
 
@@ -97,7 +91,7 @@ Para levar ao repositório o que for editado no Volter do claude.ai, exporte as 
 
 ```
 index.html                          aplicação completa (HTML, CSS e JavaScript)
-data/conteudo.js                    desafios, lições, projetos, notícias e livros
+data/conteudo.js                    artigos, fichas e demais conteúdos
 main.js, preload.js                 programa desktop (Electron)
 package.json                        versão e configuração dos instaladores
 build/                              ícones (volter.ico, volter.icns, icon.png)

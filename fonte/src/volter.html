@@ -1,6 +1,6 @@
 <title>Volter</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Volter — IA prática para quem trabalha: IA no dia a dia, automação, programação e dados.">
+<meta name="description" content="Volter — arquivo de conhecimento técnico: eletrônica, elétrica industrial, linha de produção, equipamentos odontológicos, informática, programação e IA.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
 <style>
@@ -719,7 +719,7 @@ h1{background:linear-gradient(90deg,#f1f6ff 0%,#9ad8ff 100%);-webkit-background-
 </header>
 <aside class="side" id="side" aria-label="Menu do Volter">
   <button class="brand" data-act="go" data-r="inicio" aria-label="Volter, início"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="vg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#818cf8"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="8" fill="#181818" stroke="#3d3d3d"/><path d="M8.5 9 L16 24 L23.5 9" fill="none" stroke="url(#vg)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="8.5" cy="9" r="2.4" fill="#b69cff"/><circle cx="23.5" cy="9" r="2.4" fill="#5cc8ff"/><circle cx="16" cy="24" r="2.4" fill="#4fe3a6"/><circle cx="16" cy="9" r="2.4" fill="#ffcb5c"/></svg><b>Volter</b></button>
-  <label class="side-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="q" placeholder="Buscar lição ou simulador" aria-label="Buscar no Volter" autocomplete="off"></label>
+  <label class="side-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="q" placeholder="Buscar no arquivo" aria-label="Buscar no Volter" autocomplete="off"></label>
   <nav class="snav" id="snav" aria-label="Seções"></nav>
   <div class="side-foot" id="sfoot"></div>
 </aside>
@@ -774,53 +774,83 @@ function md(t) {
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, 3200); }
 
 /* ---------- vocabulário ---------- */
-/* Trilhas da grade de temas (docs/grade-de-temas.md). "plan" lista os cursos planejados que ainda não têm lições:
-   aparecem para o aluno como "Em breve". Trilhas com "area" pertencem às abas Nova Fase e Elétrica, Eletrônica e Hardware. */
+/* Assuntos do arquivo de conhecimento. Cada tema (antigo "trilha") pertence a um assunto pelo campo "area".
+   "plan" lista temas ainda a escrever. */
 const TRACKS = [
-  { id: "ia", name: "IA no Trabalho", short: "IA no trabalho", ico: "ia", desc: "ChatGPT, Claude e Gemini no dia a dia: prompts, documentos, planilhas e pesquisa com fontes conferidas.",
-    plan: [["E-mails, atas e relatórios com IA", "Kit de modelos de documentos"], ["Planilhas e Excel com IA", "Planilha automatizada do próprio trabalho"], ["Apresentações e imagens com IA", "Apresentação completa gerada e revisada"], ["Pesquisa e estudo com IA: checar fontes e evitar erros", "Dossiê de pesquisa com fontes verificadas"]] },
-  { id: "agentes", name: "Agentes e Automação", short: "Agentes", ico: "agente", desc: "n8n, WhatsApp, APIs de IA e agentes que executam tarefas sozinhos.",
-    plan: [["Automação sem código com n8n", "Fluxo que economiza 1 hora por semana"], ["WhatsApp + IA: atendimento automático", "Atendente virtual para pequeno negócio"], ["APIs de IA para não programadores", "Integração entre IA e Google Planilhas"], ["Agentes para pequenas empresas", "Agente de vendas ou de agenda"]] },
-  { id: "prog", name: "Programação com IA", short: "Programação", ico: "codigo", desc: "Lógica, Python e web aprendendo com a IA como tutora, até um app instalável.",
-    plan: [["Sites e apps web com IA", "Site pessoal publicado"], ["Do projeto ao app instalável", "App desktop com instalador Windows e Mac"]] },
-  { id: "dados", name: "Dados e Decisão", short: "Dados", ico: "dados", desc: "Planilhas, SQL e dashboards para decidir com números.",
-    plan: [["Dados para quem não é de dados", "Painel com dados do próprio trabalho"], ["Dashboards com Power BI ou Looker Studio", "Dashboard publicado"]] },
-  { id: "profissao", name: "IA por Profissão", short: "Profissões", ico: "pessoas", desc: "IA aplicada a pequenos negócios, RH, educação, saúde e profissões técnicas.",
-    plan: [["IA para pequenos negócios e autônomos", "Plano de marketing e atendimento com IA"], ["IA para RH e recrutamento", "Processo seletivo assistido por IA"], ["IA para professores", "Plano de aula e materiais gerados"], ["IA para profissionais de saúde (administrativo)", "Rotina de documentos e agenda com IA"], ["IA para técnicos e profissões práticas", "Relatórios técnicos e orçamentos com IA"]] },
-  { id: "seguranca", name: "Segurança e Uso Responsável", short: "Segurança", ico: "escudo", desc: "Golpes, deepfakes, LGPD e regras para usar IA com os dados da empresa.",
-    plan: [["Golpes, deepfakes e phishing na era da IA", "Checklist de proteção pessoal e da família"], ["LGPD e dados da empresa ao usar IA", "Política de uso de IA para a equipe"]] },
-  /* Aba "Nova Fase" (antes "Comece aos 40+"): etapas em sequência (a ordem aqui é a ordem das etapas) */
-  { id: "digital", area: "40", color: "#7fd1c7", name: "Primeiros passos no digital", short: "Primeiros passos", ico: "monitor", desc: "Computador, celular, arquivos, internet segura e videochamadas, explicados com calma.",
-    plan: [["Computador e celular sem medo: o básico que ninguém explicou", "Celular e computador configurados do seu jeito"], ["Arquivos e pastas: salvar, encontrar e organizar", "Pastas do trabalho organizadas"], ["Internet segura: senhas, golpes e verificação em duas etapas", "Contas principais protegidas"], ["E-mail, WhatsApp Web e videochamadas", "Reunião por vídeo marcada e conduzida por você"], ["Nuvem: guardar e compartilhar no Google Drive e no OneDrive", "Documentos com cópia na nuvem"]] },
-  { id: "iadia", area: "40", color: "#c39bff", name: "IA no dia a dia, sem jargão", short: "IA sem jargão", ico: "ia", desc: "O que é IA, como conversar com ela, como pedir bem e como saber quando ela errou.",
-    plan: [["O que é IA, explicado com calma", "Mapa do que a IA faz bem e do que ela erra"], ["Primeira conversa com ChatGPT, Claude ou Gemini", "Conta criada e primeiras perguntas feitas"], ["Como pedir bem: prompts com exemplos do seu trabalho", "Cinco prompts prontos para a sua rotina"], ["E-mails, textos e currículo com ajuda da IA", "Currículo revisado com a IA"], ["Checar antes de confiar: como saber se a IA errou", "Lista de verificação pessoal"]] },
-  { id: "ferramentas", area: "40", color: "#ffcb5c", name: "Ferramentas do trabalho moderno", short: "Ferramentas", ico: "planilha", desc: "Planilhas, documentos, apresentações, agenda e automações simples.",
-    plan: [["Planilhas do zero: Excel e Google Planilhas", "Controle de gastos em planilha"], ["Documentos e apresentações bem-feitos", "Apresentação de 5 slides sobre o seu trabalho"], ["Agenda, tarefas e lembretes digitais", "Semana organizada no calendário"], ["Automatizar tarefas repetitivas sem programar", "Uma tarefa repetitiva automatizada"]] },
-  { id: "carreira", area: "40", name: "Recomeço em tecnologia", short: "Recomeço", ico: "carreira", desc: "Transformar a sua experiência em uma nova carreira, com currículo, LinkedIn, portfólio e um plano de 90 dias.",
-    plan: [["Mapa de carreiras em tecnologia para quem começa depois dos 40", "Duas carreiras escolhidas para explorar"], ["LinkedIn e currículo para a transição", "Perfil do LinkedIn atualizado"], ["Primeiro portfólio: três projetos simples para mostrar", "Portfólio publicado"], ["Plano de estudo de 90 dias que cabe na rotina", "Plano de 90 dias no calendário"]] },
-  /* Aba "Elétrica, Eletrônica e Hardware" */
-  { id: "eletricidade", area: "hw", color: "#ffd23f", name: "Fundamentos de eletricidade", short: "Eletricidade", ico: "raio", desc: "Tensão, corrente, resistência, multímetro e segurança antes de tudo, mais consumo de energia e o paquímetro da bancada.",
+  /* Eletrônica */
+  { id: "eletricidade", area: "eletronica", color: "#ffd23f", name: "Fundamentos de eletricidade", short: "Eletricidade", ico: "raio", desc: "Tensão, corrente, resistência, multímetro e segurança antes de tudo, mais consumo de energia e o paquímetro da bancada.",
     plan: [] },
-  { id: "instalacoes", area: "hw", color: "#ff9f43", name: "Instalações elétricas residenciais", short: "Instalações", ico: "casa", desc: "Do poste ao quadro: previsão de cargas, circuitos, dimensionamento de fios e disjuntores, DR, aterramento e projeto na planta, seguindo a NBR 5410.",
-    plan: [["Diagnóstico de falhas em instalações", "Roteiro para um disjuntor que desarma"], ["Aterramento e esquemas TN e TT", "Medição da resistência de aterramento"]] },
-  { id: "eletronica", area: "hw", color: "#4fe3a6", name: "Eletrônica básica", short: "Eletrônica", ico: "onda", desc: "Componentes, protoboard, solda, transistores, relés, fontes, amplificadores, lógica digital e chips.",
+  { id: "eletronica", area: "eletronica", color: "#4fe3a6", name: "Eletrônica analógica e digital", short: "Eletrônica", ico: "onda", desc: "Componentes, protoboard, solda, transistores, relés, fontes, amplificadores, lógica digital e chips.",
     plan: [] },
-  { id: "hardware", area: "hw", color: "#5cc8ff", name: "Hardware de computadores", short: "Hardware", ico: "pc", desc: "Peças, montagem, diagnóstico, redes e manutenção preventiva.",
-    plan: [["Peças do computador e como elas conversam", "Ficha técnica do seu computador"], ["Montagem e upgrade: memória, SSD e fonte", "Upgrade feito e testado"], ["Diagnóstico: o PC não liga, trava ou esquenta", "Roteiro de diagnóstico de defeitos"], ["Redes domésticas: cabos, roteador e Wi-Fi", "Rede de casa configurada e protegida"], ["Manutenção preventiva e backup", "Plano de manutenção e backup"]] },
-  { id: "iot", area: "hw", name: "Microcontroladores e IoT", short: "IoT", ico: "chip", desc: "ESP32, sensores, Wi-Fi, MQTT e dispositivos conectados.",
+  { id: "iot", area: "eletronica", color: "#a78bfa", name: "Microcontroladores e IoT", short: "IoT", ico: "chip", desc: "ESP32, sensores, Wi-Fi, MQTT e dispositivos conectados.",
     plan: [["Atuadores: relés, motores e servos", "Ventilador ligado pela temperatura"], ["Painel na nuvem com os dados do sensor", "Painel com leituras em tempo real"]] },
-  { id: "comandos", area: "hw", color: "#ff6b6b", name: "Comandos elétricos e automação", short: "Automação", ico: "motor", desc: "Contatores, motores, sensores, CLP e inversores de frequência.",
-    plan: [["Introdução ao CLP: entradas, saídas e linguagem ladder", "Primeiro programa ladder simulado"], ["Inversor de frequência: parametrização básica", "Roteiro de parametrização de um inversor"]] },
-  { id: "robotica", area: "hw", color: "#7aa2ff", name: "Programação de robôs com o Korum", short: "Robôs com o Korum", ico: "robo", desc: "Programe um robô industrial de seis eixos em KRL, praticando no laboratório virtual Korum: movimentos, garra, paletização, CLP e diagnóstico.",
+  /* Elétrica industrial e comandos */
+  { id: "comandos", area: "eletrica", color: "#ff6b6b", name: "Motores e comandos elétricos", short: "Comandos", ico: "motor", desc: "Motor trifásico, contatores, relés, botoeiras, partidas, reversão e sensores industriais.",
     plan: [] },
-  { id: "envase", area: "hw", color: "#22d3ee", name: "Processos da linha de envase", short: "Linha de envase", ico: "fabrica", desc: "Como funcionam as máquinas de uma linha de envase de refrigerantes, da sopradora à paletizadora, com simuladores das fases do processo.",
-    plan: [["Enchedora: enchimento por contrapressão", "Roteiro de ajuste de nível"], ["Mixer e carbonatador", "Cálculo da proporção xarope e água"], ["Transportes, acúmulo e controle de velocidade", "Lógica de acúmulo entre duas máquinas"]] }
+  { id: "clp", area: "eletrica", color: "#f97316", name: "CLP, inversores e redes industriais", short: "CLP e redes", ico: "chip", desc: "CLP Siemens S7, inversor de frequência, soft-starter e as redes Profibus e Profinet.",
+    plan: [] },
+  { id: "instalacoes", area: "eletrica", color: "#ff9f43", name: "Instalações elétricas residenciais", short: "Instalações", ico: "casa", desc: "Do poste ao quadro: previsão de cargas, circuitos, dimensionamento de fios e disjuntores, DR, aterramento e projeto na planta, seguindo a NBR 5410.",
+    plan: [] },
+  /* Linha de produção */
+  { id: "xarope", area: "producao", color: "#38bdf8", name: "Água, xarope e carbonatação", short: "Xarope e CO₂", ico: "gota", desc: "Tratamento de água, xaroparia, mixer e carbonatador, e a limpeza CIP que mantém tudo higienizado.",
+    plan: [] },
+  { id: "envase", area: "producao", color: "#22d3ee", name: "Sopro, envase e rotulagem", short: "Sopro e envase", ico: "fabrica", desc: "Da pré-forma à garrafa cheia e rotulada: sopradora, enchedora KHS, linha asséptica Krones, rotuladora e transportadores.",
+    plan: [] },
+  { id: "paletes", area: "producao", color: "#a3e635", name: "Paletização", short: "Paletização", ico: "palete", desc: "Paletizadoras convencionais (por camadas) e robotizadas: formação de camadas, elevador, filme e segurança da célula.",
+    plan: [] },
+  { id: "robotica", area: "producao", color: "#7aa2ff", name: "Robôs KUKA e programação KRL", short: "Robôs KUKA", ico: "robo", desc: "Robô industrial de seis eixos em KRL, praticando no laboratório virtual Korum: movimentos, garra, paletização, CLP e diagnóstico.",
+    plan: [] },
+  { id: "utilidades", area: "producao", color: "#fb7185", name: "Utilidades industriais", short: "Utilidades", ico: "caldeira", desc: "Caldeira a vapor, compressores de ar e refrigeração industrial: a energia que alimenta a linha.",
+    plan: [] },
+  /* Equipamentos odontológicos */
+  { id: "odcons", area: "odonto", color: "#60a5fa", name: "Consultório odontológico", short: "Consultório", ico: "dente", desc: "Cadeira e equipo, ultrassom periodontal e fotopolimerizador: os equipamentos do atendimento.",
+    plan: [] },
+  { id: "odest", area: "odonto", color: "#34d399", name: "Esterilização e biossegurança", short: "Esterilização", ico: "gota", desc: "Autoclave, cuba ultrassônica e destiladora: o caminho do instrumental do uso à próxima consulta.",
+    plan: [] },
+  { id: "odar", area: "odonto", color: "#fbbf24", name: "Ar comprimido e sucção", short: "Ar e sucção", ico: "motor", desc: "Compressor odontológico isento de óleo e bomba de vácuo: as utilidades que alimentam o consultório.",
+    plan: [] },
+  /* Informática */
+  { id: "hardware", area: "info", color: "#5cc8ff", name: "Hardware de computadores", short: "Hardware", ico: "pc", desc: "Placa-mãe, processador, memória, armazenamento, fonte e periféricos: como as peças do PC trabalham juntas.",
+    plan: [] },
+  { id: "windows", area: "info", color: "#3b82f6", name: "Windows", short: "Windows", ico: "janela", desc: "Instalação, estrutura de pastas, contas, ferramentas do sistema, registro, serviços e PowerShell.",
+    plan: [] },
+  { id: "linux", area: "info", color: "#facc15", name: "Linux", short: "Linux", ico: "terminal", desc: "Distribuições, estrutura de diretórios, terminal, permissões, pacotes e serviços com systemd.",
+    plan: [] },
+  { id: "apple", area: "info", color: "#d4d4d8", name: "Apple: Mac e macOS", short: "Apple", ico: "maca", desc: "Macs Intel e Apple Silicon, recursos do macOS, Terminal, Homebrew e Time Machine.",
+    plan: [] },
+  { id: "digital", area: "info", color: "#7fd1c7", name: "Primeiros passos no digital", short: "Primeiros passos", ico: "monitor", desc: "Computador, celular, arquivos, internet segura e videochamadas, explicados com calma.",
+    plan: [["Computador e celular sem medo: o básico que ninguém explicou", "Celular e computador configurados do seu jeito"], ["Arquivos e pastas: salvar, encontrar e organizar", "Pastas do trabalho organizadas"], ["Internet segura: senhas, golpes e verificação em duas etapas", "Contas principais protegidas"], ["E-mail, WhatsApp Web e videochamadas", "Reunião por vídeo marcada e conduzida por você"], ["Nuvem: guardar e compartilhar no Google Drive e no OneDrive", "Documentos com cópia na nuvem"]] },
+  { id: "ferramentas", area: "info", color: "#ffcb5c", name: "Ferramentas do trabalho moderno", short: "Ferramentas", ico: "planilha", desc: "Planilhas, documentos, apresentações, agenda e automações simples.",
+    plan: [["Planilhas do zero: Excel e Google Planilhas", "Controle de gastos em planilha"], ["Documentos e apresentações bem-feitos", "Apresentação de 5 slides sobre o seu trabalho"], ["Agenda, tarefas e lembretes digitais", "Semana organizada no calendário"], ["Automatizar tarefas repetitivas sem programar", "Uma tarefa repetitiva automatizada"]] },
+  /* Programação */
+  { id: "prog", area: "dev", color: "#22c55e", name: "Programação com IA", short: "Programação", ico: "codigo", desc: "Lógica, Python e web aprendendo com a IA como tutora, até um app instalável.",
+    plan: [["Sites e apps web com IA", "Site pessoal publicado"], ["Do projeto ao app instalável", "App desktop com instalador Windows e Mac"]] },
+  { id: "dados", area: "dev", color: "#06b6d4", name: "Dados e Decisão", short: "Dados", ico: "dados", desc: "Planilhas, SQL e dashboards para decidir com números.",
+    plan: [["Dados para quem não é de dados", "Painel com dados do próprio trabalho"], ["Dashboards com Power BI ou Looker Studio", "Dashboard publicado"]] },
+  { id: "carreira", area: "dev", color: "#f59e0b", name: "Recomeço em tecnologia", short: "Recomeço", ico: "carreira", desc: "Transformar a sua experiência em uma nova carreira, com currículo, LinkedIn, portfólio e um plano de 90 dias.",
+    plan: [["Mapa de carreiras em tecnologia para quem começa depois dos 40", "Duas carreiras escolhidas para explorar"], ["LinkedIn e currículo para a transição", "Perfil do LinkedIn atualizado"], ["Primeiro portfólio: três projetos simples para mostrar", "Portfólio publicado"], ["Plano de estudo de 90 dias que cabe na rotina", "Plano de 90 dias no calendário"]] },
+  /* Inteligência artificial */
+  { id: "ia", area: "ia", color: "#c084fc", name: "IA no Trabalho", short: "IA no trabalho", ico: "ia", desc: "ChatGPT, Claude e Gemini no dia a dia: prompts, documentos, planilhas e pesquisa com fontes conferidas.",
+    plan: [["E-mails, atas e relatórios com IA", "Kit de modelos de documentos"], ["Planilhas e Excel com IA", "Planilha automatizada do próprio trabalho"], ["Apresentações e imagens com IA", "Apresentação completa gerada e revisada"], ["Pesquisa e estudo com IA: checar fontes e evitar erros", "Dossiê de pesquisa com fontes verificadas"]] },
+  { id: "iadia", area: "ia", color: "#c39bff", name: "IA no dia a dia, sem jargão", short: "IA sem jargão", ico: "ia", desc: "O que é IA, como conversar com ela, como pedir bem e como saber quando ela errou.",
+    plan: [["O que é IA, explicado com calma", "Mapa do que a IA faz bem e do que ela erra"], ["Primeira conversa com ChatGPT, Claude ou Gemini", "Conta criada e primeiras perguntas feitas"], ["Como pedir bem: prompts com exemplos do seu trabalho", "Cinco prompts prontos para a sua rotina"], ["E-mails, textos e currículo com ajuda da IA", "Currículo revisado com a IA"], ["Checar antes de confiar: como saber se a IA errou", "Lista de verificação pessoal"]] },
+  { id: "agentes", area: "ia", color: "#e879f9", name: "Agentes e Automação", short: "Agentes", ico: "agente", desc: "n8n, WhatsApp, APIs de IA e agentes que executam tarefas sozinhos.",
+    plan: [["Automação sem código com n8n", "Fluxo que economiza 1 hora por semana"], ["WhatsApp + IA: atendimento automático", "Atendente virtual para pequeno negócio"], ["APIs de IA para não programadores", "Integração entre IA e Google Planilhas"], ["Agentes para pequenas empresas", "Agente de vendas ou de agenda"]] },
+  { id: "profissao", area: "ia", color: "#818cf8", name: "Projetos com IA", short: "Projetos com IA", ico: "pessoas", desc: "A IA aplicada em projetos em desenvolvimento: pequenos negócios, saúde, educação e profissões técnicas.",
+    plan: [["IA para pequenos negócios e autônomos", "Plano de marketing e atendimento com IA"], ["IA para RH e recrutamento", "Processo seletivo assistido por IA"], ["IA para professores", "Plano de aula e materiais gerados"], ["IA para profissionais de saúde (administrativo)", "Rotina de documentos e agenda com IA"], ["IA para técnicos e profissões práticas", "Relatórios técnicos e orçamentos com IA"]] },
+  { id: "seguranca", area: "ia", color: "#f87171", name: "Segurança e Uso Responsável", short: "Segurança", ico: "escudo", desc: "Golpes, deepfakes, LGPD e regras para usar IA com os dados da empresa.",
+    plan: [["Golpes, deepfakes e phishing na era da IA", "Checklist de proteção pessoal e da família"], ["LGPD e dados da empresa ao usar IA", "Política de uso de IA para a equipe"]] },
 ];
 const TRACK_IDS = new Set(TRACKS.map(t => t.id));
-/* Abas com trilhas em sequência. As trilhas sem "area" são as da aba Trilhas. */
+/* Assuntos do menu: cada um abre uma página com os seus temas. A ordem aqui é a ordem do menu. */
 const AREAS = [
-  { id: "40", route: "quarenta", name: "Nova Fase", short: "Nova Fase", ico: "quarenta", lead: "Para quem começa ou recomeça em tecnologia numa nova fase da vida: depois dos 40, numa troca de carreira ou perto da aposentadoria. Siga as etapas na ordem, com explicações sem pressa e exemplos do dia a dia." },
-  { id: "hw", route: "eletrica", name: "Elétrica, Eletrônica e Hardware", short: "Elétrica e Hardware", ico: "eletrica", lead: "Dos fundamentos de eletricidade até automação e IoT. Siga as etapas na ordem: segurança e fundamentos vêm antes de qualquer montagem." }
+  { id: "eletronica", route: "eletronica", name: "Eletrônica", short: "Eletrônica", ico: "onda", sub: "Eletricidade, componentes, circuitos e microcontroladores.", lead: "Fundamentos de eletricidade, componentes, circuitos analógicos e digitais, fontes e microcontroladores." },
+  { id: "eletrica", route: "eletrica", name: "Elétrica industrial e comandos", short: "Elétrica industrial", ico: "eletrica", sub: "Motores, comandos, CLP, inversores, redes e instalações.", lead: "Motores, comandos elétricos, sensores, CLP, inversores, redes industriais e instalações elétricas." },
+  { id: "producao", route: "producao", name: "Linha de produção", short: "Linha de produção", ico: "fabrica", sub: "Fábrica de bebidas: xarope, sopro, envase, paletização e utilidades.", lead: "As máquinas de uma fábrica de bebidas: tratamento de água, xaroparia e carbonatação, sopro, enchedoras KHS, linha asséptica Krones, rotulagem, paletização convencional e por robô, caldeiras e utilidades." },
+  { id: "odonto", route: "odonto", name: "Equipamentos odontológicos", short: "Odontologia", ico: "dente", sub: "Consultório, esterilização, ar comprimido e sucção.", lead: "Os equipamentos do consultório odontológico: cadeira e equipo, ultrassom, fotopolimerizador, autoclave, cuba ultrassônica, destiladora, compressor e bomba de vácuo." },
+  { id: "info", route: "informatica", name: "Informática", short: "Informática", ico: "pc", sub: "Hardware, Windows, Linux e Apple.", lead: "Hardware e software: PCs, Windows, Linux e Apple (Mac e macOS), além do uso do computador no dia a dia." },
+  { id: "dev", route: "programacao", name: "Programação", short: "Programação", ico: "codigo", sub: "Python, web, dados e carreira em tecnologia.", lead: "Lógica, Python e web, dados e SQL, e a transição de carreira para a tecnologia." },
+  { id: "ia", route: "inteligencia", name: "Inteligência artificial", short: "Inteligência artificial", ico: "ia", sub: "Fundamentos, prompts, agentes e uso responsável.", lead: "Como a IA funciona, prompts, agentes e automação, IA aplicada a projetos e uso responsável." }
 ];
 const areaOf = t => t && AREAS.find(a => a.id === t.area) || null;
 const areaTracks = id => TRACKS.filter(t => (t.area || "") === (id || ""));
@@ -840,7 +870,7 @@ const TESTVAL = [["util", "Útil: aproxima da causa"], ["neutro", "Neutro: váli
 const STATUS = { draft: "Rascunho", review: "Em revisão", published: "Publicado", archived: "Arquivado" };
 const STAGES = ["Entender", "Hipóteses", "Investigar", "Evidências", "Causa", "Corrigir", "Aprender"];
 const STAGE_TXT = ["Leia o cenário com calma. O que o sistema deveria fazer, o que está fazendo e o que mudou?", "Marque as causas que você considera possíveis. De duas a quatro é uma boa faixa.", "Cada verificação custa tempo. Escolha as que mais separam as suas hipóteses. O resultado aparece quando você executa.", "Revise o que encontrou e marque, para cada hipótese, se as evidências a sustentam ou a enfraquecem.", "Qual é a causa mais provável? Ao confirmar, as etapas anteriores ficam travadas.", "Escolha a correção. Prefira a que resolve a causa e evita que o problema volte."];
-const TYPES = { cases: { label: "Laboratório", one: "desafio", m: 1 }, lessons: { label: "Lições", one: "lição" }, projects: { label: "Projetos", one: "projeto", m: 1 }, news: { label: "Notícias", one: "notícia" }, books: { label: "Livros", one: "livro", m: 1 } };
+const TYPES = { cases: { label: "Laboratório", one: "desafio", m: 1 }, lessons: { label: "Artigos", one: "artigo" }, projects: { label: "Projetos", one: "projeto", m: 1 }, news: { label: "Notícias", one: "notícia" }, books: { label: "Livros", one: "livro", m: 1 } };
 const COLLS = ["cases", "lessons", "projects", "news", "books"];
 const ROUTE_OF = { cases: "caso", lessons: "licao", projects: "projeto", news: "noticias", books: "livros" };
 const lvl = n => '<span class="lvl" title="Nível ' + n + '">' + [1, 2, 3, 4, 5].map(i => '<i class="' + (i <= n ? "on" : "") + '"></i>').join("") + "</span>";
@@ -904,7 +934,7 @@ const NAVDEF = [
 const TABS = [["inicio", "Início"], ["trilhas", "Trilhas"], ["lab", "Lab"], ["progresso", "Progresso"]];
 function go(name, id) { if ((name === "noticias" && !NEWS_ON) || GONE.includes(name)) name = "inicio"; if (name === "trilha" && !trackShown(TRACKS.find(t => t.id === id))) name = "inicio"; S.route = { name, id: id || null }; S.ui.more = false; S.ui.modal = null; sideOpen(false); window.scrollTo(0, 0); render(true); renderModal(); }
 const FULL = [];
-function navGroup() { const r = S.route; if (r.name === "trilha" || r.name === "licao") { const t = r.name === "trilha" ? TRACKS.find(x => x.id === r.id) : TRACKS.find(x => x.id === (find("lessons", r.id) || {}).track); const a = areaOf(t); if (a) return a.route; } return { caso: "lab", correcao: "lab", licao: "trilhas", trilha: "trilhas", projeto: "projetos", editor: "admin" }[S.route.name] || S.route.name; }
+function navGroup() { const r = S.route; if (r.name === "trilha" || r.name === "licao") { const t = r.name === "trilha" ? TRACKS.find(x => x.id === r.id) : TRACKS.find(x => x.id === (find("lessons", r.id) || {}).track); const a = areaOf(t); if (a) return a.route; } return { caso: "lab", correcao: "lab", licao: "inicio", trilha: "inicio", projeto: "projetos", editor: "admin" }[S.route.name] || S.route.name; }
 
 /* ---------- render ---------- */
 function render(force) {
@@ -927,26 +957,24 @@ function navItems() { const g = NAVDEF.slice(); if (S.admin) g.push(["Gestão", 
 const HNAV = [["inicio", "Início"], ["trilhas", "Trilhas"], ["quarenta", "Nova Fase"], ["eletrica", "Elétrica e Hardware"], ["lab", "Laboratório"], ["projetos", "Projetos"], ["desafios", "Treino"], ["noticias", "Notícias"], ["livros", "Livros"]].filter(([r]) => r !== "noticias" || NEWS_ON);
 function modeText() { return S.mode === "local" ? (DESK ? "Programa instalado" : "Versão web") : S.mode === "claude" ? (S.admin ? "Administrador" : S.uid ? "Aluno" : "Visitante") : "Carregando"; }
 const CHEV = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
-const MAIN_AREA = { id: "", route: "trilhas", name: "Trilhas", short: "Trilhas", ico: "trilhas", lead: "IA no trabalho, agentes, programação, dados, segurança e carreira." };
-const HIDE_AREAS = ["40"];
-const ALL_AREAS = () => [MAIN_AREA].concat(AREAS.filter(a => !HIDE_AREAS.includes(a.id)));
+const HIDE_AREAS = [];
+const ALL_AREAS = () => AREAS.filter(a => !HIDE_AREAS.includes(a.id));
 const trackShown = t => t && !HIDE_AREAS.includes(t.area || "");
 const lessonShown = l => trackShown(TRACKS.find(t => t.id === l.track));
 /* telas retiradas: laboratório, projetos, treino, livros, progresso, próximas etapas, Nova Fase */
-const GONE = ["lab", "caso", "correcao", "projetos", "projeto", "desafios", "livros", "progresso", "roteiro", "quarenta"];
+const GONE = ["lab", "caso", "correcao", "projetos", "projeto", "desafios", "livros", "progresso", "roteiro", "quarenta", "trilhas"];
 function curTrackId() { const r = S.route; if (r.name === "trilha") return r.id; if (r.name === "licao") return (find("lessons", r.id) || {}).track || ""; return ""; }
 function sideHTML() {
   const grp = navGroup(), ct = curTrackId(), r = S.route.name;
   const btn = (route, label, ico, count) => '<button data-act="go" data-r="' + route + '"' + (grp === route ? ' aria-current="page"' : "") + ">" + (IC[ico] || "") + "<span>" + label + "</span>" + (count ? '<span class="count">' + count + "</span>" : "") + "</button>";
   const area = a => {
     const ts = areaTracks(a.id), here = grp === a.route || ts.some(t => t.id === ct), open = here || S.ui.side[a.route];
-    return '<details data-sg="' + a.route + '"' + (open ? " open" : "") + '><summary class="' + (here ? "cur" : "") + '">' + (IC[a.ico] || "") + "<span>" + esc(a.short) + "</span>" + CHEV + '</summary><div class="subs"><button data-act="go" data-r="' + a.route + '"' + (r === a.route ? ' aria-current="page"' : "") + '><span class="nm">Visão geral</span></button>' +
-      ts.map((t, i) => '<button data-act="go" data-r="trilha" data-id="' + t.id + '" data-t="' + t.id + '"' + (ct === t.id ? ' aria-current="page"' : "") + ' title="' + esc(t.name) + '"><span class="dot"></span><span class="nm">' + (a.id ? i + 1 + ". " : "") + esc(t.short) + "</span>" + (trackPct(t.id) ? '<span class="count">' + trackPct(t.id) + "%</span>" : "") + "</button>").join("") + "</div></details>";
+    return '<details data-sg="' + a.route + '"' + (open ? " open" : "") + '><summary class="' + (here ? "cur" : "") + '">' + (IC[a.ico] || "") + "<span>" + esc(a.short) + "</span>" + CHEV + '</summary><div class="subs"><button data-act="go" data-r="' + a.route + '"' + (r === a.route ? ' aria-current="page"' : "") + '><span class="nm">Todos os temas</span></button>' +
+      ts.map((t, i) => '<button data-act="go" data-r="trilha" data-id="' + t.id + '" data-t="' + t.id + '"' + (ct === t.id ? ' aria-current="page"' : "") + ' title="' + esc(t.name) + '"><span class="dot"></span><span class="nm">' + esc(t.short) + "</span>" + (tracksLessons(t.id).length ? '<span class="count">' + tracksLessons(t.id).length + "</span>" : "") + "</button>").join("") + "</div></details>";
   };
   return btn("inicio", "Início", "inicio") +
-    '<div class="grp">Estudar</div>' + ALL_AREAS().map(area).join("") +
-    '<div class="grp">Meus projetos</div>' + btn("envase", "Linha de envase", "fabrica", envBlocks().length) +
-    '<div class="grp">Simuladores</div>' + btn("simuladores", "Todos os simuladores", "lab", simList().length) +
+    '<div class="grp">Assuntos</div>' + ALL_AREAS().map(area).join("") +
+    '<div class="grp">Ferramentas</div>' + btn("simuladores", "Simuladores", "lab", simList().length) + btn("envase", "Projeto da linha de envase", "fabrica", envBlocks().length) +
     '<div class="grp">Consultar</div>' + (NEWS_ON ? btn("noticias", "Notícias", "noticias", pub("news").length) : "") + btn("busca", "Buscar", "busca") + btn("favoritos", "Salvos", "favoritos", favCount() || "") +
     (S.admin ? '<div class="grp">Gestão</div>' + btn("admin", S.mode === "local" ? "Editor de conteúdo" : "Conteúdo", "admin") : "");
 }
@@ -1009,7 +1037,14 @@ const IC = {
   agente: svg('<rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 16.5h5M2 13h3M19 13h3"/>'),
   pessoas: svg('<circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0112 0M16 4.5a3.2 3.2 0 010 6.3M18 14.2A6 6 0 0121 20"/>'),
   escudo: svg('<path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M9 12l2 2 4-4"/>'),
-  carreira: svg('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2M3 13h18"/>')
+  carreira: svg('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2M3 13h18"/>'),
+  dente: svg('<path d="M7 3.5c-2.5 0-3.8 2-3.5 4.5.3 2.6 1.4 4 1.9 6.5.5 2.8.9 6 2.4 6 1.7 0 1.7-5 4.2-5s2.5 5 4.2 5c1.5 0 1.9-3.2 2.4-6 .5-2.5 1.6-3.9 1.9-6.5.3-2.5-1-4.5-3.5-4.5-2 0-3 1.2-5 1.2S9 3.5 7 3.5z"/>'),
+  caldeira: svg('<path d="M12 21c-3.9 0-6.5-2.6-6.5-6 0-3.3 2.4-5 3.5-8 1 1.6 1.4 2.8 1.5 4 1.1-1.2 2.3-3.6 2.2-7 3.3 2.5 5.8 6.3 5.8 11 0 3.4-2.6 6-6.5 6z"/><path d="M12 21c-1.6 0-2.7-1.1-2.7-2.6 0-1.7 1.4-2.6 2.7-4.4 1.3 1.8 2.7 2.7 2.7 4.4 0 1.5-1.1 2.6-2.7 2.6z"/>'),
+  janela: svg('<path d="M3 5.5l7.5-1v7H3zM12.5 4.2L21 3v8.5h-8.5zM3 13h7.5v7L3 19zM12.5 13H21v8l-8.5-1.2z"/>'),
+  terminal: svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M12.5 15H17"/>'),
+  maca: svg('<path d="M12 7.5c-1.3-1-2.6-1.4-4-1.2C5.3 6.7 3.8 9.3 4.3 12.8c.6 4.3 3.2 8.2 5.2 8.2 1 0 1.5-.6 2.5-.6s1.5.6 2.5.6c2 0 4.6-3.9 5.2-8.2.5-3.5-1-6.1-3.7-6.5-1.4-.2-2.7.2-4 1.2z"/><path d="M12 7.5c0-2.2 1.2-3.8 3.2-4.5"/>'),
+  palete: svg('<rect x="5" y="3" width="6" height="5" rx=".6"/><rect x="13" y="3" width="6" height="5" rx=".6"/><rect x="5" y="10" width="6" height="5" rx=".6"/><rect x="13" y="10" width="6" height="5" rx=".6"/><path d="M3 18h18M5 18v3M12 18v3M19 18v3"/>'),
+  gota: svg('<path d="M12 3s6.5 7.2 6.5 11.5A6.5 6.5 0 0112 21a6.5 6.5 0 01-6.5-6.5C5.5 10.2 12 3 12 3z"/><path d="M9 15a3 3 0 003 3"/>'),
 };
 
 /* ---------- simuladores: a parte interativa das lições de Elétrica e hardware ---------- */
@@ -4000,16 +4035,16 @@ function dailyCase() { const c = pub("cases").slice().sort((a, b) => a.id.locale
 
 /* ---------- capas (arte gerada para cada item) ---------- */
 const hash = str => { let h = 2166136261; for (const ch of String(str)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; } return h; };
-const KIND = { cases: "Desafio", lessons: "Lição", projects: "Projeto", news: "Notícia", books: "Livro", track: "Trilha" };
+const KIND = { cases: "Desafio", lessons: "Artigo", projects: "Projeto", news: "Notícia", books: "Livro", track: "Tema" };
 function lessonPct(id) { const p = S.prog.lessons[id]; if (!p) return 0; if (p.done) return 100; const l = find("lessons", id); const n = l ? arr(l.questions).length : 0; return n ? Math.round(Object.keys(p.answers || {}).length / n * 100) : 0; }
 function projPct(p) { const pr = S.prog.projects[p.id]; const n = arr(p.steps).length; if (!pr || !n) return 0; return Math.round(arr(p.steps).filter((s, i) => pr.steps && pr.steps[i]).length / n * 100); }
 function artOf(type, x) {
   if (type === "cases") return { t: x.track, ico: trackOf(x.track).ico, tag: "Desafio", title: x.title };
-  if (type === "lessons") { const i = tracksLessons(x.track).findIndex(l => l.id === x.id); return { t: x.track, ico: trackOf(x.track).ico, tag: "Lição " + (i + 1), title: x.title }; }
+  if (type === "lessons") { const i = tracksLessons(x.track).findIndex(l => l.id === x.id); return { t: x.track, ico: trackOf(x.track).ico, tag: "Artigo " + (i + 1), title: x.title }; }
   if (type === "projects") return { t: x.track, ico: "projetos", tag: "Projeto", title: x.title };
   if (type === "news") return { t: NEWS_T[x.category] || "red", ico: NEWS_IC[x.category] || "noticias", tag: x.sourceName || "Notícia", title: x.title };
   if (type === "books") return { t: BOOK_T[x.area] || "ia", ico: "livros", tag: "Livro", title: x.title };
-  return { t: x.id, ico: x.ico, tag: x.area ? "Etapa " + stepOf(x) : "Trilha", title: x.short };
+  return { t: x.id, ico: x.ico, tag: "Tema", title: x.short };
 }
 function art(type, x, cls, badge) {
   const a = artOf(type, x), h = hash(type + ":" + (x.id || ""));
@@ -4029,7 +4064,7 @@ const tLesson = l => tile("lessons", l, { pct: lessonPct(l.id), meta: "<span>" +
 const tProj = p => tile("projects", p, { pct: projPct(p), badge: S.prog.projects[p.id] && S.prog.projects[p.id].done ? '<span class="art-badge ok">Entregue</span>' : "", meta: "<span>" + esc(p.duration) + "</span><span>" + esc(p.level) + "</span>" });
 const tNews = n => tile("news", n, { badge: isNew(n) ? '<span class="art-badge">Nova</span>' : "", meta: "<span>" + esc(fmtDate(n.publishedAt)) + "</span>" });
 const tBook = b => tile("books", b, { cls: "poster book", meta: "<span>" + esc(b.authors) + "</span>" });
-const lessonsTxt = n => n + (n === 1 ? " lição" : " lições");
+const lessonsTxt = n => n + (n === 1 ? " artigo" : " artigos");
 const tTrack = t => tile("track", t, { cls: "poster", pct: trackPct(t.id), meta: "<span>" + (tracksLessons(t.id).length ? lessonsTxt(tracksLessons(t.id).length) : "Em breve") + "</span>" + (trackPct(t.id) ? "<span>" + trackPct(t.id) + "%</span>" : "") });
 
 VIEWS.inicio_streaming = () => {
@@ -4062,13 +4097,13 @@ VIEWS.inicio_streaming = () => {
 
 /* ===== Início: mapa de blocos ===== */
 function trackRow(t, n) {
-  const ls = tracksLessons(t.id), pc = trackPct(t.id);
-  return '<button data-act="go" data-r="trilha" data-id="' + t.id + '" data-t="' + t.id + '" title="' + esc(t.name) + '"><span class="n">' + n + '</span><span class="nm">' + esc(t.name) + '</span><span class="meter" aria-label="' + pc + '% concluído"><i style="width:' + pc + '%"></i></span></button>';
+  const ls = tracksLessons(t.id);
+  return '<button data-act="go" data-r="trilha" data-id="' + t.id + '" data-t="' + t.id + '" title="' + esc(t.name) + '"><span class="n"><span class="dot"></span></span><span class="nm">' + esc(t.name) + '</span><span class="small dim">' + (ls.length || "—") + "</span></button>";
 }
 function areaCard(a) {
   const ts = areaTracks(a.id), nl = ts.reduce((s, t) => s + tracksLessons(t.id).length, 0), done = ts.reduce((s, t) => s + tracksLessons(t.id).filter(l => lessonDone(l.id)).length, 0);
-  return '<section class="area"><div class="area-top"><span class="ico">' + (IC[a.ico] || "") + '</span><div style="min-width:0"><h3>' + esc(a.name) + "</h3><p>" + esc(a.id ? a.lead.split(".")[0] + "." : a.lead) + '</p></div></div><div class="area-list">' + ts.map((t, i) => trackRow(t, i + 1)).join("") +
-    '</div><div class="area-foot"><span>' + ts.length + (a.id ? " etapas · " : " trilhas · ") + lessonsTxt(nl) + (done ? " · " + done + " feitas" : "") + '</span><button class="btn sm" data-act="go" data-r="' + a.route + '">Abrir</button></div></section>';
+  return '<section class="area"><div class="area-top"><span class="ico">' + (IC[a.ico] || "") + '</span><div style="min-width:0"><h3>' + esc(a.name) + "</h3><p>" + esc(a.sub || a.lead) + '</p></div></div><div class="area-list">' + ts.map((t, i) => trackRow(t, i + 1)).join("") +
+    '</div><div class="area-foot"><span>' + ts.length + (ts.length === 1 ? " tema · " : " temas · ") + lessonsTxt(nl) + ""+ '</span><button class="btn sm" data-act="go" data-r="' + a.route + '">Abrir</button></div></section>';
 }
 function continueItems() {
   const out = [];
@@ -4077,9 +4112,9 @@ function continueItems() {
 }
 VIEWS.inicio = () => {
   const cont = continueItems(), f = dailyCase();
-  const blocks = [["envase", "Linha de envase", "Projeto e escopo da linha: " + envBlocks().length + " blocos"], ["simuladores", "Simuladores", simList().length + " simuladores interativos"], ["busca", "Buscar", "Encontre qualquer lição pelo assunto"], ["favoritos", "Salvos", (favCount() || "Nenhum") + " item(ns) salvo(s)"]];
-  return '<div class="stack hello" style="gap:28px">' + dbNotice() + head("Início", "Escolha um bloco para estudar. O menu à esquerda mostra todas as áreas e etapas; use a busca para achar qualquer lição.") +
-    '<section><div class="sec-h"><h2>Áreas de estudo</h2></div><div class="areas">' + ALL_AREAS().map(areaCard).join("") + "</div></section>" +
+  const blocks = [["simuladores", "Simuladores", simList().length + " simuladores interativos"], ["envase", "Projeto da linha de envase", "Mapa e escopo da linha: " + envBlocks().length + " blocos"], ["busca", "Buscar", "Encontre qualquer artigo ou ficha pelo nome"], ["favoritos", "Salvos", (favCount() || "Nenhum") + " item(ns) salvo(s)"]];
+  return '<div class="stack hello" style="gap:28px">' + dbNotice() + head("Arquivo de conhecimento", "Eletrônica, elétrica industrial, linha de produção, odontologia, informática, programação e IA, organizados por assunto. O menu à esquerda mostra todos os temas; a busca encontra qualquer artigo.") +
+    '<section><div class="sec-h"><h2>Assuntos</h2><span class="small dim">' + lessonsTxt(pub("lessons").filter(lessonShown).length) + '</span></div><div class="areas">' + ALL_AREAS().map(areaCard).join("") + "</div></section>" +
     '<section><div class="sec-h"><h2>Ferramentas</h2></div><div class="blocks">' + blocks.map(b => '<button class="blk" data-act="go" data-r="' + b[0] + '">' + (IC[b[0]] || "") + "<b>" + b[1] + "</b><span>" + esc(b[2]) + "</span></button>").join("") + "</div></section></div>";
 };
 
@@ -4105,7 +4140,7 @@ VIEWS.simuladores = id => {
   const card = x => { const t = tag(x), s = x[1], ls = x[2]; return '<button class="blk" data-t="' + t.id + '" data-act="go" data-r="simuladores" data-id="' + x[0] + '"><b>' + esc(simName(s)) + "</b><span>" + esc(ls[0] ? ls[0].title : s.fam ? s.hint.split(". ")[0].replace(/\.$/, "") + "." : "Linha de envase") + "</span></button>"; };
   const pill = ([gid, t, xs]) => '<button class="pill" data-act="simgrp" data-v="' + esc(gid) + '" aria-pressed="' + (grp && gid === grp[0]) + '">' + esc(t.name) + ' <span class="dim">' + xs.length + "</span></button>";
   const fams = groups.filter(g => g[0].startsWith("fam-")), outros = groups.filter(g => !g[0].startsWith("fam-"));
-  const tabs = '<div class="sim-tabs-w">' + [["Por tema", fams], ["Das lições", outros]].filter(x => x[1].length).map(([lab, gs]) => '<div class="sim-tabs" role="group" aria-label="' + lab + '"><span class="sim-tabs-l">' + lab + "</span>" + gs.map(pill).join("") + "</div>").join("") + "</div>";
+  const tabs = '<div class="sim-tabs-w">' + [["Por tema", fams], ["Dos artigos", outros]].filter(x => x[1].length).map(([lab, gs]) => '<div class="sim-tabs" role="group" aria-label="' + lab + '"><span class="sim-tabs-l">' + lab + "</span>" + gs.map(pill).join("") + "</div>").join("") + "</div>";
   if (!grp) return '<div class="stack" style="gap:20px">' + dbNotice() + head("Simuladores", "") + emptyBox("Nenhum simulador disponível.") + "</div>";
   const xs = grp[2];
   if (!cur) return '<div class="stack" style="gap:20px">' + dbNotice() + head("Simuladores", "Todos os simuladores do Volter num só lugar, separados por grupo. Escolha o grupo e depois o simulador; a lista do grupo fica ao lado enquanto você usa.") + tabs +
@@ -4113,22 +4148,20 @@ VIEWS.simuladores = id => {
   const i = xs.indexOf(cur), prev = xs[i - 1], next = xs[i + 1];
   const nav = '<nav class="sim-nav" aria-label="Simuladores do grupo ' + esc(grp[1].name) + '"><div class="small dim sim-nav-h">' + esc(grp[1].name) + " · " + (i + 1) + " de " + xs.length + "</div>" + xs.map((x, k) => '<button data-act="go" data-r="simuladores" data-id="' + x[0] + '"' + (x === cur ? ' aria-current="true"' : "") + '><span class="n">' + (k + 1) + "</span>" + esc(simName(x[1])) + "</button>").join("") + "</nav>";
   const pn = '<div class="row sim-pn">' + (prev ? '<button class="btn" data-act="go" data-r="simuladores" data-id="' + prev[0] + '">← ' + esc(simName(prev[1])) + "</button>" : "<span></span>") + (next ? '<button class="btn" data-act="go" data-r="simuladores" data-id="' + next[0] + '">' + esc(simName(next[1])) + " →</button>" : "<span></span>") + "</div>";
-  const les = cur[2].length ? '<div class="row" style="gap:8px;flex-wrap:wrap">' + cur[2].map(l => '<button class="btn" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">Abrir a lição: ' + esc(l.title) + " →</button>").join("") + "</div>" : "";
+  const les = cur[2].length ? '<div class="row" style="gap:8px;flex-wrap:wrap">' + cur[2].map(l => '<button class="btn" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">Abrir o artigo: ' + esc(l.title) + " →</button>").join("") + "</div>" : "";
   return '<div class="stack" style="gap:18px">' + dbNotice() + '<div class="row sim-top"><button class="btn sm" data-act="simgrp" data-v="' + esc(grp[0]) + '">← Todos de ' + esc(grp[1].name) + "</button></div>" + tabs +
     '<div class="sim-lay">' + nav + '<div class="stack" style="gap:14px;min-width:0" id="sim-main"><div data-t="' + (cur[2][0] ? cur[2][0].track : tag(cur).id) + '">' + simHTML(cur[0]) + "</div>" + pn + les + "</div></div></div>";
 };
 /* ===== trilhas e áreas em grade de blocos ===== */
 function trackCard(t, n, label) {
   const ls = tracksLessons(t.id), pl = arr(t.plan).length, pc = trackPct(t.id);
-  return '<button class="track" data-act="go" data-r="trilha" data-id="' + t.id + '" data-t="' + t.id + '"><span class="tag">' + label + " " + n + '</span><span class="ico">' + (IC[t.ico] || "") + "</span><h3>" + esc(t.name) + "</h3><p>" + esc(t.desc) + '</p><span class="tf"><span>' + (ls.length ? lessonsTxt(ls.length) : "Em breve") + (pl ? " · " + pl + " em breve" : "") + "</span><span>" + (pc ? pc + "%" : "") + '</span></span><span class="meter"><i style="width:' + pc + '%"></i></span></button>';
+  return '<button class="track" data-act="go" data-r="trilha" data-id="' + t.id + '" data-t="' + t.id + '"><span class="tag">' + label + '</span><span class="ico">' + (IC[t.ico] || "") + "</span><h3>" + esc(t.name) + "</h3><p>" + esc(t.desc) + '</p><span class="tf"><span>' + (ls.length ? lessonsTxt(ls.length) : "A escrever") + (pl ? " · " + pl + " a escrever" : "") + "</span><span></span></span></button>";
 }
-VIEWS.trilhas = () => '<div class="stack" style="gap:26px">' + dbNotice() + head("Trilhas", esc(MAIN_AREA.lead) + " Cada trilha termina com algo pronto para usar; o que ainda está sendo produzido aparece como Em breve.") +
-  '<div class="tgrid">' + MAIN_TRACKS.map((t, i) => trackCard(t, i + 1, "Trilha")).join("") + '</div><div class="stack" style="gap:18px">' + MAIN_TRACKS.map((t, i) => seqPanel(t, i + 1, "Trilha")).join("") + "</div></div>";
 function areaView(id) {
   const a = AREAS.find(x => x.id === id), ts = areaTracks(id);
-  const temas = ts.reduce((s, t) => s + tracksLessons(t.id).length + arr(t.plan).length, 0);
-  return '<div class="stack" style="gap:26px">' + dbNotice() + head(esc(a.name), esc(a.lead) + ' <span class="dim">' + ts.length + " etapas, " + temas + " temas.</span>") +
-    '<div class="tgrid">' + ts.map((t, i) => trackCard(t, i + 1, "Etapa")).join("") + '</div><div class="stack" style="gap:18px">' + ts.map((t, i) => seqPanel(t, i + 1)).join("") + "</div></div>";
+  const temas = ts.reduce((s, t) => s + tracksLessons(t.id).length, 0);
+  return '<div class="stack" style="gap:26px">' + dbNotice() + head(esc(a.name), esc(a.lead) + ' <span class="dim">' + ts.length + (ts.length === 1 ? " tema, " : " temas, ") + lessonsTxt(temas) + ".</span>") +
+    '<div class="tgrid">' + ts.map((t, i) => trackCard(t, i + 1, "Tema")).join("") + '</div><div class="stack" style="gap:18px">' + ts.map((t, i) => seqPanel(t, i + 1)).join("") + "</div></div>";
 }
 
 /* ===== busca ===== */
@@ -4136,12 +4169,12 @@ const norm = s => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ
 function hl(text, q) { const t = String(text || ""), i = norm(t).indexOf(q); return i < 0 ? esc(t) : esc(t.slice(0, i)) + "<mark>" + esc(t.slice(i, i + q.length)) + "</mark>" + esc(t.slice(i + q.length)); }
 VIEWS.busca = () => {
   const raw = (S.ui.busca || "").trim(), q = norm(raw);
-  const intro = head("Buscar", "Digite no campo de busca do menu para encontrar lições, etapas e simuladores.");
+  const intro = head("Buscar", "Digite no campo de busca do menu para encontrar artigos, fichas, temas e simuladores.");
   if (q.length < 2) return '<div class="stack" style="gap:20px">' + intro + emptyBox("Digite pelo menos duas letras.") + "</div>";
   const score = (title, rest) => norm(title).includes(q) ? 2 : norm(rest).includes(q) ? 1 : 0;
   const groups = [
-    ["Trilhas e etapas", TRACKS.filter(trackShown).map(t => [score(t.name, t.desc), t.name, t.desc, "trilha", t.id, t.id])],
-    ["Lições", pub("lessons").filter(lessonShown).map(l => [score(l.title, l.summary + " " + arr(l.keypoints).join(" ") + " " + l.body), l.title, l.summary, "licao", l.id, l.track])],
+    ["Temas", TRACKS.filter(trackShown).map(t => [score(t.name, t.desc), t.name, t.desc, "trilha", t.id, t.id])],
+    ["Artigos e fichas", pub("lessons").filter(lessonShown).map(l => [score(l.title, l.summary + " " + arr(l.keypoints).join(" ") + " " + l.body), l.title, l.summary, "licao", l.id, l.track])],
     ["Simuladores", simList().map(([k, s, ls]) => [score(s.title, s.hint), simName(s), s.hint, "simuladores", k, ls[0] ? ls[0].track : ""])]
   ].map(([g, its]) => [g, its.filter(x => x[0]).sort((a, b) => b[0] - a[0])]).filter(([, its]) => its.length);
   const n = groups.reduce((s, [, its]) => s + its.length, 0);
@@ -4341,7 +4374,7 @@ function renderModal() {
 function circ(k) { const on = isFav(k); return '<button class="circ" data-act="fav" data-k="' + esc(k) + '" aria-pressed="' + on + '" aria-label="' + (on ? "Remover dos salvos" : "Salvar") + '" title="' + (on ? "Remover dos salvos" : "Salvar") + '">' + (on ? IC.check : IC.plus) + "</button>"; }
 function planList(t) {
   const p = arr(t.plan); if (!p.length) return "";
-  return '<div class="list">' + p.map(([c, r]) => '<div><div style="min-width:0"><b>' + esc(c) + '</b></div><span class="chip">Em breve</span></div>').join("") + "</div>";
+  return '<div class="list">' + p.map(([c, r]) => '<div><div style="min-width:0"><b>' + esc(c) + '</b></div><span class="chip">A escrever</span></div>').join("") + "</div>";
 }
 function eps(trackId, curId) {
   const ls = tracksLessons(trackId);
@@ -4520,37 +4553,36 @@ VIEWS.correcao = id => {
 /* Abas com trilhas em sequência: cada trilha é uma etapa, com os temas numerados na ordem de estudo */
 function seqPanel(t, n, label) {
   const ls = tracksLessons(t.id), plan = arr(t.plan);
-  const rows = ls.map(l => ['<button class="link" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">' + esc(l.title) + '</button><p class="small muted" style="margin-top:2px">' + esc(l.summary) + "</p>", lessonDone(l.id) ? '<span class="chip ok">Lida</span>' : '<span class="chip go">Disponível</span>'])
-    .concat(plan.map(([c]) => ["<b>" + esc(c) + "</b>", '<span class="chip">Em breve</span>']));
-  return '<section class="panel seq" data-t="' + t.id + '"><div class="ph"><div style="min-width:0"><span class="seq-step">' + (label || "Etapa") + " " + n + '</span><h3 style="margin-top:4px">' + esc(t.name) + '</h3><p class="small muted" style="margin-top:4px">' + esc(t.desc) + '</p></div><button class="btn sm" data-act="go" data-r="trilha" data-id="' + esc(t.id) + '">Ver a trilha</button></div><div class="list">' +
-    rows.map(([txt, chip], i) => '<div><span class="seq-n">' + n + "." + (i + 1) + '</span><div style="min-width:0;flex:1">' + txt + "</div>" + chip + "</div>").join("") + "</div></section>";
+  const rows = ls.map(l => ['<button class="link" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">' + esc(l.title) + '</button><p class="small muted" style="margin-top:2px">' + esc(l.summary) + "</p>", l.kind === "ficha" ? '<span class="chip go">Ficha</span>' : '<span class="chip">Artigo</span>'])
+    .concat(plan.map(([c]) => ["<b>" + esc(c) + "</b>", '<span class="chip">A escrever</span>']));
+  return '<section class="panel seq" data-t="' + t.id + '"><div class="ph"><div style="min-width:0"><span class="seq-step">' + (label || "Tema") + '</span><h3 style="margin-top:4px">' + esc(t.name) + '</h3><p class="small muted" style="margin-top:4px">' + esc(t.desc) + '</p></div><button class="btn sm" data-act="go" data-r="trilha" data-id="' + esc(t.id) + '">Abrir o tema</button></div><div class="list">' +
+    rows.map(([txt, chip], i) => '<div><span class="seq-n">' + (i + 1) + '</span><div style="min-width:0;flex:1">' + txt + "</div>" + chip + "</div>").join("") + "</div></section>";
 }
 function seqNav(t) {
   const a = areaOf(t); if (!a) return "";
   const ts = areaTracks(t.area), i = ts.indexOf(t), prev = ts[i - 1], next = ts[i + 1];
-  return '<div class="row" style="justify-content:space-between">' + (prev ? '<button class="btn" data-act="go" data-r="trilha" data-id="' + esc(prev.id) + '">← Etapa ' + i + ": " + esc(prev.short) + "</button>" : "<span></span>") + (next ? '<button class="btn primary" data-act="go" data-r="trilha" data-id="' + esc(next.id) + '">Próxima etapa: ' + esc(next.name) + "</button>" : '<button class="btn" data-act="go" data-r="' + a.route + '">Ver todas as etapas</button>') + "</div>";
+  return '<div class="row" style="justify-content:space-between">' + (prev ? '<button class="btn" data-act="go" data-r="trilha" data-id="' + esc(prev.id) + '">← ' + esc(prev.short) + "</button>" : "<span></span>") + (next ? '<button class="btn primary" data-act="go" data-r="trilha" data-id="' + esc(next.id) + '">' + esc(next.name) + " →</button>" : '<button class="btn" data-act="go" data-r="' + a.route + '">Todos os temas de ' + esc(a.name) + "</button>") + "</div>";
 }
-VIEWS.quarenta = () => areaView("40");
-VIEWS.eletrica = () => areaView("hw");
+AREAS.forEach(a => { VIEWS[a.route] = () => areaView(a.id); });
 VIEWS.trilha = id => {
   const t = trackOf(id); const ls = tracksLessons(t.id); const firstOpen = ls.find(l => !lessonDone(l.id));
   const projs = [], cs = [];
-  return '<div data-t="' + t.id + '" class="stack" style="gap:26px"><div><button class="back" data-act="go" data-r="' + (areaOf(t) ? areaOf(t).route : "trilhas") + '">← ' + (areaOf(t) ? esc(areaOf(t).name) + "</button><br><span class=\"seq-step\">Etapa " + stepOf(t) + "</span>" : "Trilhas</button>") + '<div class="thead"' + (areaOf(t) ? ' style="margin-top:8px"' : "") + '><span class="ico">' + IC[t.ico] + '</span><div><h1>' + esc(t.name) + '</h1><p class="lead muted" style="margin-top:6px">' + esc(t.desc) + "</p></div></div></div>" +
-    '<div class="split"><div class="stack" style="gap:18px">' + (ls.length ? "" : '<div class="panel"><h3>Lições</h3><p class="muted">As primeiras lições desta trilha estão em produção.</p></div>') + (ls.length ? '<div class="panel"><div class="ph"><h3>Lições</h3><span class="chip">' + ls.filter(l => lessonDone(l.id)).length + " de " + ls.length + '</span></div><div class="timeline">' +
-    (ls.map((l, i) => { const p = S.prog.lessons[l.id]; const cls = p && p.done ? "done" : l === firstOpen ? "next" : ""; return '<div class="tl-item ' + cls + '"><span class="tl-dot">' + (p && p.done ? "✓" : i + 1) + '</span><div style="min-width:0"><h3><button class="link" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">' + esc(l.title) + '</button></h3><p class="small muted" style="margin-top:3px">' + esc(l.summary) + ' <span class="dim">' + (l.minutes || 5) + " min</span></p></div>" + (p && p.done ? '<span class="chip ok">' + p.score + "/" + arr(l.questions).length + "</span>" : l === firstOpen ? '<button class="btn sm primary" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">Estudar</button>' : "<span></span>") + "</div>"; }).join("") || '<p class="muted">Nenhuma lição publicada nesta trilha.</p>') +
-    '</div></div>' : "") + (arr(t.plan).length ? '<div class="panel"><div class="ph"><h3>Em breve</h3><span class="chip">' + arr(t.plan).length + (arr(t.plan).length === 1 ? " curso" : " cursos") + "</span></div>" + planList(t) + "</div>" : "") + '</div><div class="stack" style="gap:18px">' + (projs.length ? '<div class="panel"><h3>Projeto guiado</h3><div class="list">' + projs.map(p => '<div><button class="link" data-act="go" data-r="projeto" data-id="' + esc(p.id) + '">' + esc(p.title) + '</button><span class="small dim">' + esc(p.duration) + "</span></div>").join("") + "</div></div>" : "") +
+  return '<div data-t="' + t.id + '" class="stack" style="gap:26px"><div><button class="back" data-act="go" data-r="' + (areaOf(t) ? areaOf(t).route : "inicio") + '">← ' + (areaOf(t) ? esc(areaOf(t).name) + "</button>" : "Início</button>") + '<div class="thead"' + (areaOf(t) ? ' style="margin-top:8px"' : "") + '><span class="ico">' + IC[t.ico] + '</span><div><h1>' + esc(t.name) + '</h1><p class="lead muted" style="margin-top:6px">' + esc(t.desc) + "</p></div></div></div>" +
+    '<div class="split"><div class="stack" style="gap:18px">' + (ls.length ? "" : '<div class="panel"><h3>Conteúdo</h3><p class="muted">Este tema ainda não tem artigos publicados.</p></div>') + (ls.length ? '<div class="panel"><div class="ph"><h3>Conteúdo</h3><span class="chip">' + lessonsTxt(ls.length) + '</span></div><div class="timeline">' +
+    (ls.map((l, i) => { const p = S.prog.lessons[l.id]; return '<div class="tl-item"><span class="tl-dot">' + (i + 1) + '</span><div style="min-width:0"><h3><button class="link" data-act="go" data-r="licao" data-id="' + esc(l.id) + '">' + esc(l.title) + '</button></h3><p class="small muted" style="margin-top:3px">' + esc(l.summary) + ' <span class="dim">' + (l.minutes || 5) + " min</span></p></div>" + (l.kind === "ficha" ? '<span class="chip go">Ficha</span>' : "<span></span>") + "</div>"; }).join("") || '<p class="muted">Nenhum artigo publicado neste tema.</p>') +
+    '</div></div>' : "") + (arr(t.plan).length ? '<div class="panel"><div class="ph"><h3>A escrever</h3><span class="chip">' + arr(t.plan).length + (arr(t.plan).length === 1 ? " tema" : " temas") + "</span></div>" + planList(t) + "</div>" : "") + '</div><div class="stack" style="gap:18px">' + (projs.length ? '<div class="panel"><h3>Projeto guiado</h3><div class="list">' + projs.map(p => '<div><button class="link" data-act="go" data-r="projeto" data-id="' + esc(p.id) + '">' + esc(p.title) + '</button><span class="small dim">' + esc(p.duration) + "</span></div>").join("") + "</div></div>" : "") +
     (cs.length ? '<div class="panel"><h3>No Laboratório</h3><div class="list">' + cs.map(c => '<div><button class="link" data-act="go" data-r="caso" data-id="' + esc(c.id) + '">' + esc(c.title) + "</button>" + (S.prog.attempts[c.id] ? '<span class="chip ok">feito</span>' : "") + "</div>").join("") + "</div></div>" : "") + "</div></div>" + seqNav(t) + "</div>";
 };
 VIEWS.licao = id => {
-  const l0 = visible("lessons", id); if (l0 && !lessonShown(l0)) return emptyBox("Lição não encontrada.", '<button class="btn" data-act="go" data-r="inicio">Voltar</button>');
+  const l0 = visible("lessons", id); if (l0 && !lessonShown(l0)) return emptyBox("Artigo não encontrado.", '<button class="btn" data-act="go" data-r="inicio">Voltar</button>');
   if (l0 && !lessonDone(id)) { S.prog.lessons[id] = Object.assign(S.prog.lessons[id] || { answers: {} }, { done: true, readAt: new Date().toISOString() }); saveProg(); }
-  const l = l0; if (!l) return dbNotice() || emptyBox("Lição não encontrada.", '<button class="btn" data-act="go" data-r="trilhas">Voltar</button>');
+  const l = l0; if (!l) return dbNotice() || emptyBox("Artigo não encontrado.", '<button class="btn" data-act="go" data-r="inicio">Voltar</button>');
   const t = trackOf(l.track); const ls = tracksLessons(t.id), idx = ls.findIndex(x => x.id === id), next = ls[idx + 1], prev = ls[idx - 1];
   const p = S.prog.lessons[id] || { answers: {} }; const qs = arr(l.questions);
-  return '<div data-t="' + t.id + '" class="stack" style="gap:26px">' + head(esc(l.title), esc(l.summary), favBtn("lessons:" + id), ["trilha", t.short, t.id], tchip(t.id) + ' <span class="small dim" style="margin-left:8px">Lição ' + (idx + 1) + " de " + ls.length + ", " + (l.minutes || 5) + " min</span>") +
+  return '<div data-t="' + t.id + '" class="stack" style="gap:26px">' + head(esc(l.title), esc(l.summary), favBtn("lessons:" + id), ["trilha", t.short, t.id], tchip(t.id) +  (l.kind === "ficha" ? ' <span class="chip go" style="margin-left:6px">Ficha</span>' : "") + ' <span class="small dim" style="margin-left:8px">' + (idx + 1) + " de " + ls.length + ", " + (l.minutes || 5) + " min de leitura</span>") +
     '<div class="split"><div class="stack" style="gap:20px"><div class="panel"><div class="prose">' + md(l.body) + "</div></div>" + (l.bancada ? '<div class="panel story"><span class="seq-step">Da bancada · caso real</span><div class="prose" style="margin-top:8px">' + md(l.bancada) + '</div><p class="small dim" style="margin-top:12px">Relato real de um técnico com mais de 30 anos em eletrônica, automação industrial e manutenção de equipamentos.</p></div>' : "") + (l.sim ? simHTML(l.sim) : "") +
-    '<div class="row" style="justify-content:space-between">' + (prev ? '<button class="btn" data-act="go" data-r="licao" data-id="' + esc(prev.id) + '">← Anterior</button>' : "<span></span>") + (next ? '<button class="btn primary" data-act="go" data-r="licao" data-id="' + esc(next.id) + '">Próxima: ' + esc(next.title) + "</button>" : '<button class="btn primary" data-act="go" data-r="trilha" data-id="' + t.id + '">Ver projeto e desafios da trilha</button>') + "</div></div>" +
-    '<div class="stack" style="gap:18px"><div class="panel"><h3>Para lembrar</h3><ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">' + arr(l.keypoints).map(k => "<li>" + inl(k) + "</li>").join("") + '</ul></div><div class="panel"><h3>Nesta trilha</h3><div class="lnav">' + ls.map((x, i) => '<button data-act="go" data-r="licao" data-id="' + esc(x.id) + '"' + (x.id === id ? ' aria-current="page"' : "") + '><span class="d' + (lessonDone(x.id) ? " ok" : "") + '">' + (lessonDone(x.id) ? "✓" : i + 1) + "</span>" + esc(x.title) + "</button>").join("") + "</div></div></div></div></div>";
+    '<div class="row" style="justify-content:space-between">' + (prev ? '<button class="btn" data-act="go" data-r="licao" data-id="' + esc(prev.id) + '">← Anterior</button>' : "<span></span>") + (next ? '<button class="btn primary" data-act="go" data-r="licao" data-id="' + esc(next.id) + '">Próxima: ' + esc(next.title) + "</button>" : '<button class="btn primary" data-act="go" data-r="trilha" data-id="' + t.id + '">Voltar ao tema</button>') + "</div></div>" +
+    '<div class="stack" style="gap:18px"><div class="panel"><h3>Para lembrar</h3><ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">' + arr(l.keypoints).map(k => "<li>" + inl(k) + "</li>").join("") + '</ul></div><div class="panel"><h3>Neste tema</h3><div class="lnav">' + ls.map((x, i) => '<button data-act="go" data-r="licao" data-id="' + esc(x.id) + '"' + (x.id === id ? ' aria-current="page"' : "") + '><span class="d">' + (i + 1) + "</span>" + esc(x.title) + "</button>").join("") + "</div></div></div></div></div>";
 };
 function quizQ(q, chosen, kind, ref, qi, noNum) {
   const opts = q.type === "vf" ? ["Verdadeiro", "Falso"] : arr(q.options);
@@ -4676,7 +4708,7 @@ const FIELDS = {
     sec("Identificação"),
     { k: "title", l: "Título do problema", t: "text", req: 1, w: 1 },
     { k: "equipment", l: "Sistema ou tecnologia", t: "text", w: 1 },
-    { k: "track", l: "Trilha", t: "select", o: TRACK_OPTS },
+    { k: "track", l: "Tema", t: "select", o: TRACK_OPTS },
     { k: "level", l: "Nível", t: "select", o: LEVELS, num: 1 },
     { k: "demo", l: "Marcar como exemplo", t: "check" },
     { k: "summary", l: "Resumo para a lista", t: "textarea", w: 1 },
@@ -4704,12 +4736,13 @@ const FIELDS = {
   ],
   lessons: [
     { k: "title", l: "Título", t: "text", req: 1, w: 1 },
-    { k: "track", l: "Trilha", t: "select", o: TRACK_OPTS },
-    { k: "order", l: "Ordem na trilha", t: "number" },
+    { k: "track", l: "Tema", t: "select", o: TRACK_OPTS },
+    { k: "kind", l: "Tipo", t: "select", o: [["", "Artigo"], ["ficha", "Ficha de equipamento"]] },
+    { k: "order", l: "Ordem no tema", t: "number" },
     { k: "minutes", l: "Duração (min)", t: "number" },
     { k: "summary", l: "Resumo", t: "textarea", w: 1 },
     sec("Conteúdo"),
-    { k: "body", l: "Texto da lição", h: "Parágrafos separados por linha em branco. \"## \" cria título, \"- \" cria item de lista, **texto** fica em negrito, `código` fica em fonte de código e blocos entre ``` viram caixas de código.", t: "textarea", rows: 16, w: 1 },
+    { k: "body", l: "Texto", h: "Parágrafos separados por linha em branco. \"## \" cria título, \"- \" cria item de lista, **texto** fica em negrito, `código` fica em fonte de código e blocos entre ``` viram caixas de código.", t: "textarea", rows: 16, w: 1 },
     { k: "keypoints", l: "Para lembrar", h: "Um por linha", t: "lines", w: 1 },
     { k: "bancada", l: "Da bancada (experiência real)", h: "Opcional. Um caso vivido que ilustra a lição; aparece num quadro destacado logo abaixo do texto. Use a mesma formatação do texto da lição.", t: "textarea", rows: 6, w: 1 },
     { k: "sim", l: "Simulador interativo", h: "Aparece logo abaixo do texto da lição.", t: "select", o: SIM_OPTS },
@@ -4718,7 +4751,7 @@ const FIELDS = {
   ],
   projects: [
     { k: "title", l: "Título", t: "text", req: 1, w: 1 },
-    { k: "track", l: "Trilha", t: "select", o: TRACK_OPTS },
+    { k: "track", l: "Tema", t: "select", o: TRACK_OPTS },
     { k: "level", l: "Nível", t: "select", o: [["Iniciante", "Iniciante"], ["Intermediário", "Intermediário"], ["Avançado", "Avançado"]] },
     { k: "duration", l: "Duração estimada", h: "Ex.: 2 a 3 horas", t: "text" },
     { k: "summary", l: "Resumo", t: "textarea", w: 1 },

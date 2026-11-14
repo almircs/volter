@@ -15,6 +15,19 @@ Isso só é preciso na primeira vez.
 
 Não sabe qual é o seu Mac? Menu  → **Sobre este Mac**: se aparecer "Chip Apple M…", use o primeiro; se aparecer "Processador Intel", use o segundo.
 
+## Versão 3.0.0: o Volter vira um arquivo de conhecimento
+- **Sem trilhas:** o menu agora é organizado por **assunto**, e cada assunto abre os seus temas, com artigos e fichas
+- **Sete assuntos:** Eletrônica; Elétrica industrial e comandos; Linha de produção; Equipamentos odontológicos; Informática; Programação; Inteligência artificial
+- **38 fichas novas**, num formato padronizado (para que serve, como funciona, partes principais, dados típicos e segurança):
+  - **Elétrica industrial:** CLP Siemens S7, Profibus e Profinet, inversor de frequência e soft-starter
+  - **Linha de produção:** tratamento de água, xaroparia, mixer e carbonatador, limpeza CIP, enchedora KHS por contrapressão, linha asséptica Krones, rotuladora, transportadores e acúmulo, paletizadora convencional, paletização por robô, caldeira a vapor, ar comprimido e refrigeração industrial
+  - **Equipamentos odontológicos:** cadeira e equipo, ultrassom, fotopolimerizador, autoclave, cuba ultrassônica, destiladora, compressor odontológico e bomba de vácuo
+  - **Informática:** placa-mãe e processador, memória e armazenamento, fonte, vídeo e portas; Windows (estrutura, ferramentas e Registro, PowerShell); Linux (distribuições, terminal e permissões, pacotes e serviços); Apple (Intel e Apple Silicon, macOS, Terminal, Homebrew e Time Machine)
+- Todo o conteúdo anterior continua, redistribuído nos assuntos: as lições de eletricidade, eletrônica e IoT em Eletrônica; comandos e instalações em Elétrica industrial; sopradora e robôs KUKA em Linha de produção; programação, dados e carreira em Programação; e as trilhas de IA em Inteligência artificial
+- "IA por Profissão" passou a se chamar **Projetos com IA**
+- Os temas ainda sem texto aparecem como **A escrever**
+- No editor de conteúdo, cada artigo pode ser marcado como **Ficha de equipamento**
+
 ## Versão 2.20.0: simuladores de motores, comandos, pneumática e máquinas
 - **Tela Simuladores reorganizada:** os grupos ficam em abas (por tema e das lições). Ao abrir um simulador, a lista do grupo fica ao lado, com botões de anterior e próximo, e você continua no mesmo grupo para testar os outros
 - **Dezesseis simuladores novos**, montados a partir dos temas das animações didáticas, em três famílias:

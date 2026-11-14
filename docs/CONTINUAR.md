@@ -3,7 +3,10 @@
 ## Onde está cada coisa
 - `fonte/src/volter.html`: o código-fonte do app (uma página só).
 - `fonte/build.js`: gera `index.html` (programa instalado e web) e `fonte/dist/artifact.html` (versão do claude.ai). Rode `node fonte/build.js`.
-- `data/conteudo.js`: as lições e os dados.
+- `data/conteudo.js`: os artigos, as fichas e os dados.
+
+## Organização (versão 3.0.0)
+O Volter é um arquivo de conhecimento, sem trilhas. O menu tem assuntos (`AREAS`), e cada assunto tem temas (`TRACKS`, ligados pelo campo `area`). Os artigos ficam na coleção `lessons`; os que têm `kind: "ficha"` aparecem como **Ficha** e seguem as seções: para que serve, como funciona, partes principais, dados técnicos típicos e segurança e normas (sem foco em defeitos e manutenção). Temas sem texto aparecem como **A escrever** (campo `plan`).
 - Versão do claude.ai: https://claude.ai/artifact/StWbbbU4fAAufhz4XJxuwn (publicar `fonte/dist/artifact.html` nesse endereço).
 - Instaladores: subir a versão em `package.json`, escrever as notas em `.github/notas-da-versao.md` e enviar para `main`; o GitHub Actions gera os três instaladores.
 - Commits no nome de Carlos Almir (não reescrever o histórico).
