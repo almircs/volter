@@ -1,3 +1,6 @@
+## Versão 3.1.0: inspetor de garrafas vazias
+- **Ficha nova em Linha de produção → Sopro, envase e rotulagem:** inspetor de garrafas vazias (EBI) Krones Linatronic, com as estações de inspeção (fundo, boca, rosca, parede lateral, líquido residual), as garrafas de teste e o Linatronic AI com rede neural
+
 ## Como instalar
 
 **Windows** — baixe `Instalar-Volter-Windows.exe`, dê dois cliques e siga o instalador.

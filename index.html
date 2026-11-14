@@ -802,7 +802,7 @@ const TRACKS = [
   /* Linha de produção */
   { id: "xarope", area: "producao", color: "#38bdf8", name: "Água, xarope e carbonatação", short: "Xarope e CO₂", ico: "gota", desc: "Tratamento de água, xaroparia, mixer e carbonatador, e a limpeza CIP que mantém tudo higienizado.",
     plan: [] },
-  { id: "envase", area: "producao", color: "#22d3ee", name: "Sopro, envase e rotulagem", short: "Sopro e envase", ico: "fabrica", desc: "Da pré-forma à garrafa cheia e rotulada: sopradora, enchedora KHS, linha asséptica Krones, rotuladora e transportadores.",
+  { id: "envase", area: "producao", color: "#22d3ee", name: "Sopro, envase e rotulagem", short: "Sopro e envase", ico: "fabrica", desc: "Da pré-forma à garrafa cheia e rotulada: sopradora, inspetor de garrafas vazias Krones, enchedora KHS, linha asséptica, rotuladora e transportadores.",
     plan: [] },
   { id: "paletes", area: "producao", color: "#a3e635", name: "Paletização", short: "Paletização", ico: "palete", desc: "Paletizadoras convencionais (por camadas) e robotizadas: formação de camadas, elevador, filme e segurança da célula.",
     plan: [] },
@@ -854,7 +854,7 @@ const TRACK_IDS = new Set(TRACKS.map(t => t.id));
 const AREAS = [
   { id: "eletronica", route: "eletronica", name: "Eletrônica", short: "Eletrônica", ico: "onda", sub: "Eletricidade, componentes, circuitos e microcontroladores.", lead: "Fundamentos de eletricidade, componentes, circuitos analógicos e digitais, fontes e microcontroladores." },
   { id: "eletrica", route: "eletrica", name: "Elétrica industrial e comandos", short: "Elétrica industrial", ico: "eletrica", sub: "Motores, comandos, CLP, inversores, redes e instalações.", lead: "Motores, comandos elétricos, sensores, CLP, inversores, redes industriais e instalações elétricas." },
-  { id: "producao", route: "producao", name: "Linha de produção", short: "Linha de produção", ico: "fabrica", sub: "Fábrica de bebidas: xarope, sopro, envase, paletização e utilidades.", lead: "As máquinas de uma fábrica de bebidas: tratamento de água, xaroparia e carbonatação, sopro, enchedoras KHS, linha asséptica Krones, rotulagem, paletização convencional e por robô, caldeiras e utilidades." },
+  { id: "producao", route: "producao", name: "Linha de produção", short: "Linha de produção", ico: "fabrica", sub: "Fábrica de bebidas: xarope, sopro, envase, paletização e utilidades.", lead: "As máquinas de uma fábrica de bebidas: tratamento de água, xaroparia e carbonatação, sopro, inspetor de garrafas Krones, enchedoras KHS, linha asséptica, rotulagem, paletização convencional e por robô, caldeiras e utilidades." },
   { id: "odonto", route: "odonto", name: "Equipamentos odontológicos", short: "Odontologia", ico: "dente", sub: "Consultório, esterilização, ar comprimido e sucção.", lead: "Os equipamentos do consultório odontológico: cadeira e equipo, ultrassom, fotopolimerizador, autoclave, cuba ultrassônica, destiladora, compressor e bomba de vácuo." },
   { id: "info", route: "informatica", name: "Informática", short: "Informática", ico: "pc", sub: "Hardware, Windows, Linux e Apple.", lead: "Hardware e software: PCs, Windows, Linux e Apple (Mac e macOS), além do uso do computador no dia a dia." },
   { id: "dev", route: "programacao", name: "Programação", short: "Programação", ico: "codigo", sub: "Python, web, dados e carreira em tecnologia.", lead: "Lógica, Python e web, dados e SQL, e a transição de carreira para a tecnologia." },
